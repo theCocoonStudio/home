@@ -1,10 +1,12 @@
 # react-three-shader-passes
 
-This template provides a minimal setup to get [react-three-fiber](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) to run custom shader passes on a three.js material.
+Note: this library is currently in development
+
+This library provides a minimal setup to get [react-three-fiber](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) to run custom shader passes on a three.js material. It also exports some useful helpers.
 
 ## Exports
 
-**`GetParent` && `withParent`**
+**`GetParent` & `withParent`**
 
 Provides a `React` `ref` to the parent of non-`Object3D` primitives, as these do not have a built-in (`.parent`) reference to the containing object in the scene graph.
 
