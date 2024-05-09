@@ -1,25 +1,24 @@
 import { Environment, OrbitControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { useRef, useEffect, forwardRef } from 'react'
-import { GetParent } from '../src/components/canvas/GetParent'
+import { GetParent } from 'src/components/canvas/GetParent'
+import { withParent } from 'src/hoc/canvas/withParent'
 
 function App() {
   const ref = useRef()
   const ref2 = useRef()
-  useEffect(() => {
-    console.log(ref)
-  }, [ref])
+
   return (
     <div id='container'>
       <Canvas>
         <color attach='background' args={['#fff']} />
         <mesh ref={ref} scale={4}>
           <boxGeometry />
-          <meshStandardMaterial color='#999' />
+          <MyMaterialWithParentInternal color='red' />
         </mesh>
-        <mesh ref={ref2} scale={2} position={[-4, 0, 0]}>
+        <mesh onClick={() => console.log(ref2.current)} scale={2} position={[-4, 0, 0]}>
           <boxGeometry />
-          <Material color='blue' />
+          <MyMaterialWithParentExternal ref={ref2} color='blue' />
         </mesh>
         <Environment preset='warehouse' />
         <OrbitControls />
@@ -30,15 +29,21 @@ function App() {
 
 export default App
 
-function Material(props) {
+const MyMaterial = forwardRef(function MyMaterial(props, ref) {
+  return <meshStandardMaterial {...props} ref={ref} />
+})
+
+function MyMaterialWithParentInternal(props) {
   const parent = useRef()
   useEffect(() => {
-    console.log(parent), [parent]
+    console.log('Parent internal:')
+    console.log(parent.current), [parent]
   })
   return (
     <>
-      <meshStandardMaterial {...props} />
+      <MyMaterial {...props} />
       <GetParent ref={parent} />
     </>
   )
 }
+const MyMaterialWithParentExternal = withParent(MyMaterial)

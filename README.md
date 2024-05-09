@@ -4,14 +4,14 @@ This template provides a minimal setup to get [react-three-fiber](https://github
 
 ## Exports
 
-**`GetParent`**
+**`GetParent` && `withParent`**
 
 Provides a `React` `ref` to the parent of non-`Object3D` primitives, as these do not have a built-in (`.parent`) reference to the containing object in the scene graph.
 
-Usage:
+Using inside a component:
 
 ```jsx
-function MaterialWithParent(props) {
+function MaterialWithParentInternal(props) {
   const parent = useRef()
   useEffect(() => {
     console.log(parent), [parent]
@@ -25,13 +25,13 @@ function MaterialWithParent(props) {
 }
 ```
 
-Exposing `.parent` with ref:
+Using inside the component and exposing to parent:
 
 ```jsx
-forwardRef(function MaterialWithParent(props, ref) {
+forwardRef(function MaterialWithParentInternalAndExternal(props, ref) {
   const internal = useRef()
   const parent = useRef()
-  useImperativeHandleHandle(ref, () => ({ ...internal.current, parent: parent.current }))
+  useImperativeHandle(ref, () => ({ ...internal.current, parent: parent.current }))
   return (
     <>
       <meshStandardMaterial ref={internal} {...props} />
@@ -39,4 +39,36 @@ forwardRef(function MaterialWithParent(props, ref) {
     </>
   )
 })
+```
+
+Only exposing to parent:
+
+```jsx
+const MyMaterialWithParentExternal = withParent(MyMaterial)
+```
+
+```jsx
+const Anscestor = () => {
+  const descendentParent = useRef()
+  useEffect(() => {
+    console.log(descendentParent.current.parent)
+  }, [])
+  return <MyMaterialWithParentExternal ref={descendentParent} />
+}
+```
+
+Optional custom parent key:
+
+```jsx
+const MyMaterialWithParentExternal = withParent(MyMaterial, 'parentKey')
+```
+
+```jsx
+const Anscestor = () => {
+  const descendentParent = useRef()
+  useEffect(() => {
+    console.log(descendentParent.current.parentKey)
+  }, [])
+  return <MyMaterialWithParentExternal ref={descendantParent} />
+}
 ```
