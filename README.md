@@ -100,9 +100,10 @@ Use this component with `react-three-fiber` to create chained, modular shader pa
 
 ```jsx
 <mesh>
-  <rawShaderMaterial>
-  <ShaderPass >
-    <Geometry />
+  <Geometry />
+  <meshStandardMaterial map={ref.current.texture}>
+  <ShaderPass ref={ref} >
+    <planeGeometry />
   </ShaderPass>
 </mesh>
 ```
