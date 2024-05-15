@@ -16,7 +16,7 @@ function App() {
           <boxGeometry />
           <MyMaterialWithParentInternal color='red' />
         </mesh>
-        <mesh onClick={() => console.log(ref2.current)} scale={2} position={[-4, 0, 0]}>
+        <mesh onClick={() => console.log(ref2.current.parent.geometry.clone)} scale={2} position={[-4, 0, 0]}>
           <boxGeometry />
           <MyMaterialWithParentExternal ref={ref2} color='blue' />
         </mesh>

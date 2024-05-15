@@ -110,7 +110,7 @@ Use this component with `react-three-fiber` to create chained, modular shader pa
 
 &rarr; Configure custom shader passes and use the output FBO for textures or even for GPGPU calculations
 
-&rarr; Each instance sets up its own `WebGLRenderTarget` and live R3F scene in an isolated [portal](https://github.com/pmndrs/drei/?tab=readme-ov-file#portals).
+&rarr; Each instance sets up its own `THREE.WebGLRenderTarget` and live R3F scene in an isolated [portal](https://github.com/pmndrs/drei/?tab=readme-ov-file#portals).
 
 &rarr; Fully managed using [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) internally. All resources (FBOs, materials, geometries, etc.) are hooked into React, so they'll remain in memory while the component is mounted and autodispose when it unmounts.
 
