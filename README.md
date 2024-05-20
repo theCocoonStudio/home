@@ -46,7 +46,7 @@ Using [drei](https://github.com/pmndrs/drei/tree/master) alone, multiple shader 
 
 Moreover, there is no simple way to use the logic of a given pass to be used elsewhere in the GPU program without cumbersone React `ref` logic, which can be even more error-prone when you want your WebGL app to be synced with your React app.
 
-By removing the hierarchy required -- i.e., the nesting of `RenderTextures` -- you can put your `RenderTexture` instances (wrapped by `ShaderPass`) anywhere in the `ShaderPassesTexture` tree. This removes the one-way relationship of the FBO input-output chain.
+By removing the hierarchy required -- i.e., the nesting of `RenderTexture`s -- you can put your `RenderTexture` instances (wrapped by `ShaderPass`) anywhere in the `ShaderPassesTexture` tree. This removes the one-way relationship of the FBO input-output chain.
 
 This creates memory parity between your WebGL/React apps. If `RenderTexture1` is input for `RenderTexture2`, you can keep `RenderTexture1` in memory even if `RenderTexture2` unmounts because the latter does not need to be a parent of the former. Simply render a `RenderTexture` in React wherever it will adequately be privisioned and garbage-collected according to your WebGL program's needs.
 
