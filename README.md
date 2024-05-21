@@ -22,6 +22,10 @@ This library is designed for Three.js/React apps built on [react-three-fiber](ht
 
 Use with `react-three-fiber` to create chained, modular shader passes.
 
+```bash
+npm i [TODO]
+```
+
 `ShaderPass` is just a wrapper of [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) under the hood. You place instances of it in a `ShaderPassesTexture` to easily use the output texture of any other `ShaderPass` render.
 
 This is best illustrated with an example. The code below renders two scenes in a portal using `RenderPass` and accepts all props that `RenderTexture` does.
@@ -74,6 +78,10 @@ The code snippet below shows an invisible scene being rendered and its output be
 
 ### <a name="ShaderPassesTexture">**`ShaderPassesTexture`**</a>
 
+```js
+import { ShaderPassesTexture } from 'react-three-shader-passes'
+```
+
 Wraps any number of `ShaderPass` components among its `props.children` and registers their output textures to pass through to `ShaderPass` instances that need to use them (e.g., as a shader `uniform` input for further calculations).
 
 <table>
@@ -84,7 +92,7 @@ Wraps any number of `ShaderPass` components among its `props.children` and regis
   </tr>
   <tr>
     <td><code>children</code> </td>
-    <td><code>string | JSX.Element | JSX.Element[]</code></td>
+    <td><code>React.ReactNode | React.ReactNode[]</code></td>
     <td><code>ShaderPass</code> instances can be rendered at any level in the <code>children</code>  tree.<br/><br/>
     To benefit from this API, at least one of these <code>ShaderPass</code> instances should utilize the function-as-<code>children</code> pattern to access another <code>ShaderPass</code>'s output. <br/><br/>
     Otherwise, use <code>RenderTexture</code> instead of <code>ShaderPass</code> and omit this component. 
@@ -94,6 +102,14 @@ Wraps any number of `ShaderPass` components among its `props.children` and regis
 
 ### <a name="ShaderPass">**`ShaderPass`**</a>
 
+Behaves exactly as [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture), which it renders at the top level.
+
+The only difference is that `ShaderPass` must be rendered as a descendent of `ShaderPassesTexture` and can, in addition to a `React.ReactNode`, optionally take a single function `(fbos) => React.ReactNode` as children.
+
+```js
+import { ShaderPass } from 'react-three-shader-passes'
+```
+
 <table>
   <tr>
     <th>prop</th>
@@ -102,83 +118,48 @@ Wraps any number of `ShaderPass` components among its `props.children` and regis
   </tr>
   <tr>
     <td><code>children</code> </td>
-    <td><code>string | JSX.Element | JSX.Element[] | () => JSX.Element</code></td>
-    <td>Children for <code>@pmndrs/drei/RenderTexture</code>, which <code>ShaderPass</code> uses under the hood. Children are wrapped in a <code>&lt;mesh></code> and a <code><rawShaderMaterial></code> (or <code>&lt;shaderMaterial></code>) is appended to them. These children configure the properties of the <code>&lt;mesh></code> that is output to a <code>THREE.WebGLRenderTarget</code>. They typically just comprise a <code>THREE.BufferGeography</code>:
+    <td><code>React.ReactNode | (fbos) => React.ReactNode</code></td>
+    <td>As plain JSX, identical to <code>@pmndrs/drei/RenderTexture</code>'s <code>props.children</code>. <br/><br/> Alternatively, a function that returns the above. It will be called with one argument: an object containing the textures from any other <code>ShaderPass </code> in the same <code>ShaderPassesTexture</code>, keyed by <code>props.name</code>.
     <br/><br/>
-    <table>
-    <tr><th><center>Client code</center></th><th><center>Internal render</center></th>
-    <tr>
-    <td><pre>
-&lt;ShaderPass>
-  &lt;planeGeometry>
+    <code>
+      <pre>
+...
+&lt;ShaderPass name="somePass">
+  ...
 &lt;/ShaderPass>
-    </pre></td>
-    <td><pre>
-&lt;RenderTexture>
-  &lt;mesh>
-    &lt;rawShaderMaterial>
-    &lt;planeGeometry>
-  &lt;/mesh>
-&lt;/RenderTexture>
-    </pre></td>
-    </tr>
-    </table>
+&lt;ShaderPass name="someOtherPass" />
+  {
+    ({ somePass }) => 
+      &lt;>
+        ...
+        &lt;ShaderMaterial someUniform={somePass.current}/>
+        ...
+      &lt;/>
+  }
+&lt;/ShaderPass>
+      </pre>
+    </code>
   </tr>
   <tr>
-    <td><code>uniforms</code></td>
-    <td><code>Object</code></td>
-    <td><code>uniforms</code> property to set for the underlying <code>THREE.RawMeshMaterial</code> or <code>THREE.MeshMaterial</code> to which the shader program will apply.
-    </td>
-  </tr>
-  <tr>
-    <td><code>vert</code></td>
+    <td><code>name</code></td>
     <td><code>string</code></td>
-    <td>
-    <code>vertexShader</code> property to set for the underlying <code>THREE.RawMeshMaterial</code> or <code>THREE.MeshMaterial</code> to which the shader program will apply.
+    <td><strong>Required.</strong> In the object passed as argument to any <code>props.children</code> in function form, this will be used as a property name referencing the texture returned from the underlying <code>RenderTexture</code>
     </td>
   </tr>
   <tr>
-    <td><code>frag</code></td>
-    <td><code>string</code></td>
-    <td>
-    <code>fragmentShader</code> property to set for the underlying <code>THREE.RawMeshMaterial</code> or <code>THREE.MeshMaterial</code> to which the shader program will apply.
-    </td>
-  </tr>
-  <tr>
-    <td><code>renderPriority</code></td>
-    <td><code>number</code></td>
-    <td>
-    This is passed through to <code>R3F/useFrame</code> via <code>&lt;RenderTexture></code> This should not be consider optional and should implement the logic of your shader passes. Internally:
-    <pre>
-useFrame(({ gl }) => {
-  gl.render(scene, camera)
-}, props.renderPriority)</pre>
-    </td>
-  </tr>
-  <tr>
-    <td><code>renderTextureProps</code> (optional)</td>
+    <td><code>...RenderTextureProps</code></td>
     <td><code>Object</code></td>
     <td>
-    Sets the props of the underlying <code>@pmndrs/drei/RenderTexture</code> component. Use <code>props.children</code> and <code>props.renderPriority</code> instead of  <code>props.renderTextureProps.children</code> and <code>props.renderTextureProps.renderPriority</code>, respectively.
-    </td>
-  </tr>
-  <tr>
-    <td><code>meshProps</code> (optional)</td>
-    <td><code>Object</code></td>
-    <td>
-    Sets the props of the underlying <code>&ltmesh></code> component.
-    </td>
-  </tr>
-  <tr>
-    <td><code>raw</code> (optional)</td>
-    <td><code>boolean</code></td>
-    <td>
-    <strong>Default: <code>true</code></strong>. Set this to <code>false</code> to apply shaders to a <code>THREE.ShaderMaterial</code> instead of a <code>THREE.RawShaderMaterial</code>.
+    Props that go into a <code>RenderTexture</code>. E.g., setting <code>props.renderPriority</code> allows you to control the rendering order of the shader passes.
     </td>
   </tr>
 </table>
 
 ### <a name="getParent">**`GetParent` & `withParent`**</a>
+
+```js
+import { getParent, withParent } from 'react-three-shader-passes'
+```
 
 An alternative to using `instance.__r3f.parent` (see `useInstanceHandle` [here](https://docs.pmnd.rs/react-three-fiber/api/additional-exports)).
 
