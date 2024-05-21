@@ -2,67 +2,33 @@
 
 Note: `react-three-shader-passes` (`R3SP`) is currently still in pre-release stages.
 
-This library provides a minimal setup to get [react-three-fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) (R3F) to run custom shader passes on a Three.js material. It also exports some useful helpers.
+This library is designed for Three.js/React apps built on [react-three-fiber](https://docs.pmnd.rs/react-three-fiber/getting-started/introduction) (R3F). Check out and support the ecosystem and [@pmndrs](https://docs.pmnd.rs).
+
+&rarr; Easily chain shader passes, using the rendered texture from one scene as a `uniform` type input to any other shader pass
 
 &rarr; Ideal for raw physics simulations and for effects, post processing, optimization, and complex shader-based logic
 
-&rarr; Use output texture of any scene as an FBO input to another without cumbersome, hierarchical JSX code or complex `ref`-based code design
+&rarr; Use output textures of any scene or shader as an FBO input to another without cumbersome, hierarchical JSX code or complex `ref`-based code design
 
 &rarr; Use chaining capabilities as a GPGPU solution that's fully hooked into your React app, or as a simple framework for modular shader logic
 
 &rarr; Fully declarative API and implementation for a turnkey R3F integration
 
-&rarr; Exports all utilities and helpers for even more R3F syntactic sugar
+&rarr; Exports additional utilities and helpers for even more R3F syntactic sugar
 
 &rarr; Fully managed objects/components implemented on top of R3F ecosystem; you have full control of all objects but do not have to worry about memory if you don't need to
-
-## Why?
-
-Using [drei](https://github.com/pmndrs/drei/tree/master) alone, multiple shader passes using `uniform` FBO input-output chains become computationally heavy both in your React app and in your WebGL/R3F app. The deep nesting necessary is both unwieldy and inflexible.
-
-`SceneTexture_1` --uniform--> `SceneTexture_2` --uniform--> `SceneTexture_3`
-
-```jsx
-// Example code using `drei` as-is
-<mesh>
-  <Geometry />
-  <meshStandardMaterial>
-    <RenderTexture attach='map'>
-      <mesh>
-        <RawShaderMaterial>
-          <RenderTexture attach='someUniform'>
-            <mesh>
-              <RawShaderMaterial attach='someOtherUniform'>
-                <mesh />
-              </RawShaderMaterial>
-            </mesh>
-          </RenderTexture>
-        </RawShaderMaterial>
-      </mesh>
-    </RenderTexture>
-  </meshStandardMaterial>
-</mesh>
-```
-
-Moreover, there is no simple way to use the logic of a given pass to be used elsewhere in the GPU program without cumbersone React `ref` logic, which can be even more error-prone when you want your WebGL app to be synced with your React app.
-
-By removing the hierarchy required -- i.e., the nesting of `RenderTexture`s -- you can put your `RenderTexture` instances (wrapped by `ShaderPass`) anywhere in the `ShaderPassesTexture` tree. This removes the one-way relationship of the FBO input-output chain.
-
-This creates memory parity between your WebGL/React apps. If `RenderTexture1` is input for `RenderTexture2`, you can keep `RenderTexture1` in memory even if `RenderTexture2` unmounts because the latter does not need to be a parent of the former. Simply render a `RenderTexture` in React wherever it will adequately be privisioned and garbage-collected according to your WebGL program's needs.
-
-Note that this is only a pattern preference. There is no magic here, only syntactic sugar. However, this pattern can be extended to any architecture wherein your React components must both control and be in sync with a concurrent, parallel app that exposes its reference data in a React API.
 
 ## Usage
 
 Use this component with `react-three-fiber` to create chained, modular shader passes.
 
-This is best illustrated with an example. The code below renders two scenes in a portal using [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) under the hood. Each scene can contain anything you want, and `RenderPass` takes a superset of `RenderTexture`'s prop types.
+`ShaderPass` is just a wrapper of [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) under the hood. You place instances of it in a `ShaderPassesTexture` to easily use the output texture of any other `ShaderPass` render.
 
-The API makes it very simple for each `ShaderPass` in a `ShaderPassesTexture` to use the output texture of any other `ShaderPass` by using a function that receives as input an object containing all textures (FBOs).
+This is best illustrated with an example. The code below renders two scenes in a portal using `RenderPass` and accepts all props that `RenderTexture` does.
 
-That is, `ShaderPass` optionally takes a function that renders `props.children` as `props.children(fbos)`. `fbos` contains `ref`s to each scene's FBO output, keyed by the `name` prop of `ShaderPass`.
+In addition to accepting the same `children` as `RenderTexture`, `ShaderPass` optionally takes as `children` a function, `(fbos) => children`. `fbos` contains `ref`s to each scene's FBO texture output, keyed by the `name` prop of the corresponding `ShaderPass`.
 
-The code snippet below shows an invisible scene being rendered and its output being used as an input `uniform` FBO to the fragment shader of a `THREE.RawShaderMaterial` used in the second invisible scene. The output of the second scene is then attached as the `map` to a material in a third, visible scene.
+The code snippet below shows an invisible scene being rendered and its output being used as an input `uniform` FBO texture to the fragment shader of a `THREE.RawShaderMaterial` used in a second invisible scene. The output of the second scene is then attached as the `map` to a material in a third, visible scene.
 
 ```jsx
 // `drei` + `r3sp`
@@ -71,13 +37,11 @@ The code snippet below shows an invisible scene being rendered and its output be
   <meshStandardMaterial>
     <ShaderPassesTexture>
       <ShaderPass name="firstPass">
-      <>
         <Camera />
         <mesh>
           <Geography/>
           <ShaderMaterial {...uniforms} />
         </mesh>
-      </>
       </ShaderPass>
       <ShaderPass name="secondPass" attach="map">
         {(fbos) => (
@@ -108,18 +72,6 @@ The code snippet below shows an invisible scene being rendered and its output be
 <hr/>
 
 ### <a name="ShaderPass"></a>**(1) `ShaderPassesTexture` & `ShaderPass`**
-
-&rarr; Configure custom shader passes and use the output FBO for textures or even for GPGPU calculations
-
-&rarr; Each instance sets up its own `THREE.WebGLRenderTarget` and live R3F scene in an isolated [portal](https://github.com/pmndrs/drei/?tab=readme-ov-file#portals).
-
-&rarr; Fully managed using [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) internally. All resources (FBOs, materials, geometries, etc.) are hooked into React, so they'll remain in memory while the component is mounted and autodispose when it unmounts.
-
-&rarr; Use any arbitrary shader pass result as input for the next
-
-&rarr; Fully control the rendering order priority with only props
-
-&rarr; Customize logic and performance with easy access to all internal refs and props
 
 <table>
   <tr>
