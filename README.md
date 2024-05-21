@@ -43,7 +43,7 @@ The code snippet below shows an invisible scene being rendered and its output be
       <ShaderPass name="firstPass">
         <Camera />
         <mesh>
-          <Geography/>
+          <Geometry/>
           <ShaderMaterial {...uniforms} />
         </mesh>
       </ShaderPass>
@@ -52,7 +52,7 @@ The code snippet below shows an invisible scene being rendered and its output be
           <>
             <Camera2 />
             <mesh>
-              <Geography2/>
+              <Geometry/>
               <ShaderMaterial2
                 {
                 ...uniforms2,
