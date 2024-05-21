@@ -20,7 +20,7 @@ This library is designed for Three.js/React apps built on [react-three-fiber](ht
 
 ## Usage
 
-Use this component with `react-three-fiber` to create chained, modular shader passes.
+Use with `react-three-fiber` to create chained, modular shader passes.
 
 `ShaderPass` is just a wrapper of [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) under the hood. You place instances of it in a `ShaderPassesTexture` to easily use the output texture of any other `ShaderPass` render.
 
@@ -31,7 +31,7 @@ In addition to accepting the same `children` as `RenderTexture`, `ShaderPass` op
 The code snippet below shows an invisible scene being rendered and its output being used as an input `uniform` FBO texture to the fragment shader of a `THREE.RawShaderMaterial` used in a second invisible scene. The output of the second scene is then attached as the `map` to a material in a third, visible scene.
 
 ```jsx
-// `drei` + `r3sp`
+// Example
 <mesh>
   <Geometry />
   <meshStandardMaterial>
@@ -66,16 +66,37 @@ The code snippet below shows an invisible scene being rendered and its output be
 
 ## Exports
 
-1. [`ShaderPassesTexture` & `ShaderPass`](#ShaderPass)
-2. [`GetParent` & `withParent`](#getParent)
+1. [`ShaderPassesTexture`](#ShaderPassesTexture)
+2. [`ShaderPass`](#ShaderPass)
+3. [`GetParent` & `withParent`](#getParent)
 
 <hr/>
 
-### <a name="ShaderPass"></a>**(1) `ShaderPassesTexture` & `ShaderPass`**
+### <a name="ShaderPassesTexture">**`ShaderPassesTexture`**</a>
+
+Wraps any number of `ShaderPass` components among its `props.children` and registers their output textures to pass through to `ShaderPass` instances that need to use them (e.g., as a shader `uniform` input for further calculations).
 
 <table>
   <tr>
-    <th><code>RenderPass</code> props  </th>
+    <th>prop</th>
+    <th>type</th>
+    <th>description</th>
+  </tr>
+  <tr>
+    <td><code>children</code> </td>
+    <td><code>string | JSX.Element | JSX.Element[]</code></td>
+    <td><code>ShaderPass</code> instances can be rendered at any level in the <code>children</code>  tree.<br/><br/>
+    To benefit from this API, at least one of these <code>ShaderPass</code> instances should utilize the function-as-<code>children</code> pattern to access another <code>ShaderPass</code>'s output. <br/><br/>
+    Otherwise, use <code>RenderTexture</code> instead of <code>ShaderPass</code> and omit this component. 
+    </td>
+  </tr>
+</table>
+
+### <a name="ShaderPass">**`ShaderPass`**</a>
+
+<table>
+  <tr>
+    <th>prop</th>
     <th>type</th>
     <th>description</th>
   </tr>
@@ -83,7 +104,7 @@ The code snippet below shows an invisible scene being rendered and its output be
     <td><code>children</code> </td>
     <td><code>string | JSX.Element | JSX.Element[] | () => JSX.Element</code></td>
     <td>Children for <code>@pmndrs/drei/RenderTexture</code>, which <code>ShaderPass</code> uses under the hood. Children are wrapped in a <code>&lt;mesh></code> and a <code><rawShaderMaterial></code> (or <code>&lt;shaderMaterial></code>) is appended to them. These children configure the properties of the <code>&lt;mesh></code> that is output to a <code>THREE.WebGLRenderTarget</code>. They typically just comprise a <code>THREE.BufferGeography</code>:
-    <br/><br/.>
+    <br/><br/>
     <table>
     <tr><th><center>Client code</center></th><th><center>Internal render</center></th>
     <tr>
@@ -157,7 +178,7 @@ useFrame(({ gl }) => {
   </tr>
 </table>
 
-### <a name="getParent"></a>**(2) `GetParent` & `withParent`**
+### <a name="getParent">**`GetParent` & `withParent`**</a>
 
 An alternative to using `instance.__r3f.parent` (see `useInstanceHandle` [here](https://docs.pmnd.rs/react-three-fiber/api/additional-exports)).
 
