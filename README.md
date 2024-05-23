@@ -120,10 +120,7 @@ import { ShaderPass } from 'react-three-shader-passes'
     <td><code>children</code> </td>
     <td><code>React.ReactNode | (fbos) => React.ReactNode</code></td>
     <td>As plain JSX, identical to <code>@pmndrs/drei/RenderTexture</code>'s <code>props.children</code>. <br/><br/> Alternatively, a function that returns the above. It will be called with one argument: an object containing the textures from any other <code>ShaderPass </code> in the same <code>ShaderPassesTexture</code>, keyed by <code>props.name</code>.
-    <br/><br/>
-    <code>
       <pre>
-...
 &lt;ShaderPass name="somePass">
   ...
 &lt;/ShaderPass>
@@ -138,7 +135,7 @@ import { ShaderPass } from 'react-three-shader-passes'
   }
 &lt;/ShaderPass>
       </pre>
-    </code>
+    
   </tr>
   <tr>
     <td><code>name</code></td>
