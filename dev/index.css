@@ -14,3 +14,14 @@ body,
 body {
   background: #f0f0f0;
 }
+
+#hud {
+  position: fixed;
+  width: 20%;
+  height: 20%;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  background: red;
+}
