@@ -28,7 +28,7 @@ npm i [TODO]
 
 `ShaderPass` is just a wrapper of [`RenderTexture`](https://github.com/pmndrs/drei/?tab=readme-ov-file#rendertexture) under the hood. You place instances of it in a `ShaderPassesTexture` to easily use the output texture of any other `ShaderPass` render.
 
-This is best illustrated with an example. The code below renders two scenes in a portal using `RenderPass` and accepts all props that `RenderTexture` does.
+This is best illustrated with an example. The code below renders two scenes in a portal using `RenderTexture` and accepts all props that `RenderTexture` does.
 
 In addition to accepting the same `children` as `RenderTexture`, `ShaderPass` optionally takes as `children` a function, `(fbos) => children`. `fbos` contains `ref`s to each scene's FBO texture output, keyed by the `name` prop of the corresponding `ShaderPass`.
 
