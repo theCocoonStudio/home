@@ -12,6 +12,6 @@ export const usePointerDiff = () => {
     if (oldPointer.current.x === 0 && oldPointer.current.add.y === 0) {
       diff.current.set(0, 0)
     }
-    return diff.current
   })
+  return diff.current
 }
