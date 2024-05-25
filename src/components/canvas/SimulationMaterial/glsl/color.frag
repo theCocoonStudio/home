@@ -1,9 +1,9 @@
 precision highp float;
 uniform sampler2D velocity;
-varying vec2 uv;
+varying vec2 uvInternal;
 
 void main(){
-    vec2 vel = texture2D(velocity, uv).xy;
+    vec2 vel = texture2D(velocity, uvInternal).xy;
     float len = length(vel);
     vel = vel * 0.5 + 0.5;
     

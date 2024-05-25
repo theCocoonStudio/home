@@ -5,19 +5,19 @@ uniform bool isBFECC;
 // uniform float uvScale;
 uniform vec2 fboSize;
 uniform vec2 px;
-varying vec2 uv;
+varying vec2 uvInternal;
 
 void main(){
     vec2 ratio = max(fboSize.x, fboSize.y) / fboSize;
 
     if(isBFECC == false){
-        vec2 vel = texture2D(velocity, uv).xy;
-        vec2 uv2 = uv - vel * dt * ratio;
+        vec2 vel = texture2D(velocity, uvInternal).xy;
+        vec2 uv2 = uvInternal - vel * dt * ratio;
         vec2 newVel = texture2D(velocity, uv2).xy;
         gl_FragColor = vec4(newVel, 0.0, 0.0);
     } else {
-        vec2 spot_new = uv;
-        vec2 vel_old = texture2D(velocity, uv).xy;
+        vec2 spot_new = uvInternal;
+        vec2 vel_old = texture2D(velocity, uvInternal).xy;
         // back trace
         vec2 spot_old = spot_new - vel_old * dt * ratio;
         vec2 vel_new1 = texture2D(velocity, spot_old).xy;
