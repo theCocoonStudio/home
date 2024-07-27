@@ -1,8 +1,21 @@
-import { forwardRef, useImperativeHandle, useMemo, useEffect, useState, useCallback, useContext, useRef } from 'react'
-import { RenderTexture } from '@react-three/drei'
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react'
+import { RenderTexture, RenderCubeTexture } from '@react-three/drei'
+import { RenderTexture as RenderTexture3D } from 'src/components/canvas/RenderTexture'
 import { ShaderContext } from 'src/context/shader'
 
-export const ShaderPassesTexture = forwardRef(function ShaderPassesTexture({ children, ...props }, ref) {
+export const ShaderPassesTexture = forwardRef(function ShaderPassesTexture(
+  { children, ...props },
+  ref,
+) {
   const [fbos, setFbos] = useState({})
 
   const register = useCallback(
@@ -21,7 +34,10 @@ export const ShaderPassesTexture = forwardRef(function ShaderPassesTexture({ chi
     [setFbos],
   )
 
-  const value = useMemo(() => ({ fbos, register, deregister }), [deregister, fbos, register])
+  const value = useMemo(
+    () => ({ fbos, register, deregister }),
+    [deregister, fbos, register],
+  )
 
   useImperativeHandle(ref, () => fbos, [fbos])
 
@@ -32,11 +48,22 @@ export const ShaderPassesTexture = forwardRef(function ShaderPassesTexture({ chi
   )
 })
 
-export const ShaderPass = forwardRef(function ShaderPasses({ children, name, ...props }, ref) {
+const targets = {
+  '2d': RenderTexture,
+  '3d': RenderTexture3D,
+  cube: RenderCubeTexture,
+}
+
+export const ShaderPass = forwardRef(function ShaderPasses(
+  { children, name, type = '2D', ...props },
+  ref,
+) {
   const textureRef = useRef()
   useImperativeHandle(ref, () => textureRef.current)
 
   const { register, deregister, fbos } = useContext(ShaderContext)
+
+  const Target = useMemo(() => targets[type], [type])
 
   useEffect(() => {
     register(name, textureRef)
@@ -44,8 +71,8 @@ export const ShaderPass = forwardRef(function ShaderPasses({ children, name, ...
   }, [name, register, deregister])
 
   return (
-    <RenderTexture ref={textureRef} {...props}>
+    <Target ref={textureRef} {...props}>
       {typeof children === 'function' ? children(fbos) : children}
-    </RenderTexture>
+    </Target>
   )
 })
