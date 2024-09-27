@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  color-scheme: dark;
+}
+
 html,
 body,
 #root {
@@ -12,16 +16,155 @@ body,
 }
 
 body {
-  background: #f0f0f0;
+  background: transparent;
 }
 
-#hud {
-  position: fixed;
-  width: 20%;
-  height: 20%;
-  margin: 0;
-  padding: 0;
+html {
+  font-size: 62.5%; /* default 16px --> 10px for clear rem values */
+}
+h1 {
+  font-size: 2.4rem; /* font size = 24px */
+}
+h2 {
+  font-size: 1.6rem; /* font size = 16px */
+}
+p {
+  font-size: 1.8rem; /* font size = 12px */
+}
+
+/* @media (width <= 32rem) {
+  h1 {
+  	font-size: 2rem;
+  }
+}	 */
+
+body {
+  background: transparent;
+  color: #000;
+
+  font-weight: 400;
+  font-style: normal;
+  font-size: 22px;
+}
+
+#eventContainer {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
   top: 0;
   left: 0;
-  background: red;
+  margin: 0;
+  padding: 0;
+}
+
+.disable-scrollbars::-webkit-scrollbar {
+  background: transparent; /* Chrome/Safari/Webkit */
+  width: 0px;
+}
+
+.disable-scrollbars {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+#canvas,
+#main {
+  position: absolute !important;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#canvas {
+  z-index: -1;
+  pointer-events: none;
+}
+
+#main {
+  margin-top: calc(90px + 3rem);
+  margin-bottom: calc(80px + 3rem);
+}
+
+.content {
+  max-width: 1200px;
+  margin: auto;
+}
+
+#nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  vertical-align: middle;
+  padding: 3rem 0;
+}
+
+#navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#navItems > * {
+  display: inline-block;
+  padding: 0 1rem;
+}
+
+#tracking {
+  position: absolute;
+  width: 60%;
+  height: 100%;
+  border: 1px solid white;
+}
+
+#description {
+  position: absolute;
+  width: 40%;
+  height: 100%;
+  left: 60%;
+  padding: 0 3rem;
+  border: 1px solid red;
+  overflow-y: scroll;
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  height: 80px;
+  left: 0;
+  width: 100%;
+  border: 1px solid white;
+}
+
+/* variable weight 300-700 */
+.space-grotesk {
+  font-family: 'Space Grotesk', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.space-mono-regular {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-mono-bold {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.space-mono-regular-italic {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.space-mono-bold-italic {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-style: italic;
 }
