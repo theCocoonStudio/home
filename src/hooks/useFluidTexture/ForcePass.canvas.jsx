@@ -1,7 +1,6 @@
 import { AdditiveBlending, PlaneGeometry, Vector2 } from 'three'
 import fragmentShader from './glsl/externalForce.frag?raw'
 import vertexShader from './glsl/mouse.vert?raw'
-import { ShaderPass } from './ShaderPass'
 
 const materialConfig = {
   vertexShader,

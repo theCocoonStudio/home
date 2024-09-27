@@ -1,6 +1,5 @@
 import fragmentShader from './glsl/poisson.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
-import { ShaderPass } from './ShaderPass'
 
 const materialConfig = {
   vertexShader,

@@ -7,7 +7,6 @@ import {
 import fragmentShader from './glsl/advection.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
 import lineVert from './glsl/line.vert?raw'
-import { ShaderPass } from './ShaderPass'
 
 const materialConfig = {
   vertexShader,
