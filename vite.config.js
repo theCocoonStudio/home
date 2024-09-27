@@ -20,9 +20,9 @@ export default defineConfig({
       formats: ['es'],
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'src/index.js'),
-      name: 'R3SP',
+      name: 'izzy-web-lib',
       // the proper extensions will be added
-      fileName: 'react-three-shader-passes',
+      fileName: 'izzy',
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
