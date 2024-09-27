@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Vector2 } from 'three'
-import { advectionPassConfig } from './AdvectionPass'
-import { forcePassConfig } from './ForcePass'
-import { viscousPassConfig } from './ViscousPass'
-import { divergencePassConfig } from './DivergencePass'
-import { poissonPassConfig } from './PoissonPass'
-import { pressurePassConfig } from './PressurePass'
-import { outputPassConfig } from './OutputPass'
 import { useFBO } from '@react-three/drei'
+import { advectionPassConfig } from './AdvectionPass.canvas'
+import { forcePassConfig } from './ForcePass.canvas'
+import { viscousPassConfig } from './ViscousPass.canvas'
+import { divergencePassConfig } from './DivergencePass.canvas'
+import { poissonPassConfig } from './PoissonPass.canvas'
+import { pressurePassConfig } from './PressurePass.canvas'
+import { outputPassConfig } from './OutputPass.canvas'
+
 import { ShaderPass } from './ShaderPass'
 
 export const useFluidTexture = (

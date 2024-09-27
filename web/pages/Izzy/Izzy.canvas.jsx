@@ -1,6 +1,6 @@
 import { Environment, OrbitControls } from '@react-three/drei'
-import Monitor from 'web/components/canvas/Monitor'
-import { Effects } from 'web/components/canvas/Effects'
+import Monitor from 'web/components/Monitor.canvas'
+import { Effects } from 'web/components/Effects.canvas'
 import { usePage } from 'web/hooks/usePage'
 
 export default function Izzy() {

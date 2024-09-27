@@ -1,8 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
-import { FluidTexture } from './FluidTexture'
 import { DoubleSide } from 'three'
 import { PerspectiveCamera } from '@react-three/drei'
-import { useFluidTexture } from './useFluidTexture'
+import { useFluidTexture } from '../../src/hooks/useFluidTexture'
 import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */

@@ -1,27 +1,14 @@
 import { useRef } from 'react'
-import ThreeApp from '../canvas/ThreeApp'
+import ThreeApp from '../../components/ThreeApp.canvas'
 import { PageProvider } from 'web/context/PageProvider'
-import Video from 'public/10.mp4'
 import { Nav } from './Nav'
 import { Footer } from './Footer'
-import Izzy from '../../pages/canvas/Izzy'
+import Izzy from '../Izzy/Izzy.canvas'
+import { FluidSim } from 'web/components/FluidSim.canvas'
 
-import { FluidSim } from '../canvas/FluidQuad/FluidSim'
+const pages = [null, null, null, null, null, null, null, null, null, null]
 
-const pages = [
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-  Video,
-]
-
-export default function App() {
+export default function Layout() {
   const ref = useRef()
   return (
     <PageProvider pages={pages}>
