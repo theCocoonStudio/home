@@ -7,8 +7,13 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.glb', '**/*.hdr', '**/*.mp4', '**/*.ttf', '**/*.jpg'],
   resolve: {
-    alias: { src: resolve('./src'), dev: resolve('./dev') },
+    alias: {
+      src: resolve('./src'),
+      web: resolve('./web'),
+      public: resolve('./web/public'),
+    },
   },
   build: {
     lib: {
@@ -22,7 +27,9 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['react, react-dom, three, three-stdlib, @react-three-/fiber, @react-three/drei'],
+      external: [
+        'react, react-dom, three, three-stdlib, @react-three-/fiber, @react-three/drei',
+      ],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps

@@ -13,13 +13,16 @@ module.exports = {
   settings: {
     react: { version: '18.2' },
     'import/resolver': {
-      alias: { src: './src', dev: './dev' },
+      alias: { src: './src', web: './web', public: './web/public' },
     },
   },
   plugins: ['react-refresh'],
   rules: {
     'react/jsx-no-target-blank': 'off',
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
     'react/prop-types': 'off',
     'react/no-unknown-property': 'off',
   },
