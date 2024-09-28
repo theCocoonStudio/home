@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Vector2 } from 'three'
+import { Camera, PlaneGeometry, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
 import { advectionPassConfig } from './AdvectionPass.canvas'
 import { forcePassConfig } from './ForcePass.canvas'
@@ -33,6 +33,11 @@ export const useFluidTexture = (
     height,
   }))
 
+  // shared objects
+  const camera = useRef(new Camera())
+  const geometry = useRef(new PlaneGeometry(2.0, 2.0))
+
+  // intermediate values
   const pointerDiff = useRef(new Vector2(0, 0))
   const oldPointer = useRef(new Vector2(0, 0))
 
@@ -72,7 +77,11 @@ export const useFluidTexture = (
 
   // shader passes references
   const advectionPass = useRef(
-    new ShaderPass(advectionPassConfig)
+    new ShaderPass({
+      ...advectionPassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         boundarySpace: {
           value: uniforms.current.cellScale,
@@ -96,7 +105,11 @@ export const useFluidTexture = (
       .setFBO(vel1),
   )
   const forcePass = useRef(
-    new ShaderPass(forcePassConfig)
+    new ShaderPass({
+      ...forcePassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         px: {
           value: uniforms.current.cellScale,
@@ -114,7 +127,11 @@ export const useFluidTexture = (
       .setFBO(vel1),
   )
   const viscousPass = useRef(
-    new ShaderPass(viscousPassConfig)
+    new ShaderPass({
+      ...viscousPassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         boundarySpace: {
           value: uniforms.current.boundarySpace,
@@ -138,7 +155,11 @@ export const useFluidTexture = (
       .setFBO(visc1),
   )
   const divergencePass = useRef(
-    new ShaderPass(divergencePassConfig)
+    new ShaderPass({
+      ...divergencePassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         boundarySpace: {
           value: uniforms.current.boundarySpace,
@@ -156,7 +177,11 @@ export const useFluidTexture = (
       .setFBO(div),
   )
   const poissonPass = useRef(
-    new ShaderPass(poissonPassConfig)
+    new ShaderPass({
+      ...poissonPassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         boundarySpace: {
           value: uniforms.current.boundarySpace,
@@ -174,7 +199,11 @@ export const useFluidTexture = (
       .setFBO(pressure1),
   )
   const pressurePass = useRef(
-    new ShaderPass(pressurePassConfig)
+    new ShaderPass({
+      ...pressurePassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         boundarySpace: {
           value: uniforms.current.boundarySpace,
@@ -195,7 +224,11 @@ export const useFluidTexture = (
       .setFBO(vel0),
   )
   const outputPass = useRef(
-    new ShaderPass(outputPassConfig)
+    new ShaderPass({
+      ...outputPassConfig,
+      camera: camera.current,
+      geometry: geometry.current,
+    })
       .updateUniforms({
         velocity: {
           value: vel0.texture,
@@ -242,7 +275,6 @@ export const useFluidTexture = (
     uniforms.current.center.set(centerX, centerY)
     uniforms.current.scale.set(cursor_size, cursor_size)
 
-    console.log(forcePass.current.material.uniforms.force.value)
     forcePass.current.render(gl)
 
     // viscosity pass
@@ -322,7 +354,22 @@ export const useFluidTexture = (
     outputPass.current.render(gl)
   }, priority)
 
-  // TODO: dispose
+  // dispose on component unmount
+  useEffect(
+    () => () => {
+      // dispose passed-in values (useFBO autodisposes)
+      geometry.current.dispose()
+      // dispose internal values
+      advectionPass.current.dispose(true, false, false, true)
+      forcePass.current.dispose(true, false, false, true)
+      viscousPass.current.dispose(true, false, false, true)
+      divergencePass.current.dispose(true, false, false, true)
+      poissonPass.current.dispose(true, false, false, true)
+      pressurePass.current.dispose(true, false, false, true)
+      outputPass.current.dispose(true, false, false, true)
+    },
+    [],
+  )
 
   return output.texture
 }

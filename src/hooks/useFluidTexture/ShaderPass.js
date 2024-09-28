@@ -52,7 +52,7 @@ export class ShaderPass {
     if (geometry) {
       this.geometry = typeof geometry === 'function' ? geometry() : geometry
     } else {
-      this.geometry = this.geometry = geometry || new PlaneGeometry(2.0, 2.0)
+      this.geometry = new PlaneGeometry(2.0, 2.0)
     }
 
     this.mesh = new Mesh(this.geometry, this.material)
