@@ -281,7 +281,6 @@ export const useFluidTexture = (
     let vel = vel1
     if (isViscous) {
       let fbo_in, fbo_out
-      this.uniforms.v.value = viscous
       for (let i = 0; i < iterations_viscous; i++) {
         if (i % 2 == 0) {
           fbo_in = visc0

@@ -3,6 +3,7 @@ import {
   BufferGeometry,
   LineSegments,
   RawShaderMaterial,
+  ShaderMaterial,
 } from 'three'
 import fragmentShader from './glsl/advection.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
@@ -55,7 +56,7 @@ const children = ({ uniforms }) => {
   ])
   const geometry = new BufferGeometry()
   geometry.setAttribute('position', new BufferAttribute(positionBuffer, 3))
-  const material = new RawShaderMaterial(boundaryMaterialConfig)
+  const material = new ShaderMaterial(boundaryMaterialConfig)
   const boundary = new LineSegments(geometry, material)
   return boundary
 }
