@@ -9,6 +9,10 @@ void main(){
     
     vec3 colorInternal = vec3(vel.x, vel.y, 1.0);
     colorInternal = mix(vec3(1.0), colorInternal, len);
+    
+    // old
+    // gl_FragColor = vec4(colorInternal,  1.0);
 
-    gl_FragColor = vec4(colorInternal,  1.0);
+    // new
+    gl_FragColor = vec4(len,len,len,  1.0);
 }

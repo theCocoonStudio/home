@@ -34,9 +34,21 @@ export const FluidSim = forwardRef(function FluidSim(
   }, 2)
   return (
     <>
-      <mesh ref={meshRef} {...props} scale={[0.5 * aspect, 0.5, 0.5]}>
+      <mesh
+        onClick={() => {
+          console.log(texture)
+        }}
+        ref={meshRef}
+        {...props}
+        scale={[0.9 * aspect, 0.9, 0.9]}
+      >
         <planeGeometry />
-        <meshBasicMaterial side={DoubleSide} map={texture} />
+        <meshBasicMaterial
+          side={DoubleSide}
+          transparent
+          color='red'
+          alphaMap={texture}
+        />
       </mesh>
       <color attach='background' args={['#fff']} />
       <PerspectiveCamera makeDefault position-z={1} />
