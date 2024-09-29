@@ -2,7 +2,6 @@ import {
   BufferAttribute,
   BufferGeometry,
   LineSegments,
-  RawShaderMaterial,
   ShaderMaterial,
 } from 'three'
 import fragmentShader from './glsl/advection.frag?raw'
