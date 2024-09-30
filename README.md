@@ -74,7 +74,7 @@ const FiberComponent = () => {
 
 Outputs a fluid simulation to a `THREE.Texture` and returns it. Can be used as a `THREE.Material` `.map`, `.alphaMap`, or anywhere a texture would normally be used.
 
-See [this article](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-triangles/chapter-38-fast-fluid-dynamics-simulation-gpu]) for numerical computation details.
+Adapted from [fluid-three](https://github.com/mnmxmx/fluid-three).
 
 **params:**<br/>
 
