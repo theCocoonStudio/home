@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Camera, PlaneGeometry, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
@@ -9,7 +9,6 @@ import { divergencePassConfig } from './DivergencePass.canvas'
 import { poissonPassConfig } from './PoissonPass.canvas'
 import { pressurePassConfig } from './PressurePass.canvas'
 import { outputPassConfig } from './OutputPass.canvas'
-
 import { ShaderPass } from './ShaderPass'
 
 export const useFluidTexture = (
@@ -25,13 +24,18 @@ export const useFluidTexture = (
     isViscous = false,
     BFECC = true,
   } = {},
-  priority = 1,
+  priority = -1,
+  [fboWidth, fboHeight, fboOpts = {}] = [],
 ) => {
+  const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
-  const { width, height } = useThree(({ size: { width, height } }) => ({
-    width,
-    height,
-  }))
+  const { width, height } = useMemo(
+    () => ({
+      width: fboWidth || get().size.width,
+      height: fboHeight || get().size.height,
+    }),
+    [fboHeight, fboWidth, get],
+  )
 
   // shared objects
   const camera = useRef(new Camera())
@@ -42,14 +46,14 @@ export const useFluidTexture = (
   const oldPointer = useRef(new Vector2(0, 0))
 
   // fboReferences
-  const vel0 = useFBO(width, height)
-  const vel1 = useFBO(width, height)
-  const visc0 = useFBO(width, height)
-  const visc1 = useFBO(width, height)
-  const div = useFBO(width, height)
-  const pressure0 = useFBO(width, height)
-  const pressure1 = useFBO(width, height)
-  const output = useFBO(width, height)
+  const vel0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const vel1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const visc0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const visc1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const div = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const pressure0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const pressure1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const output = useFBO(width, height, { depthBuffer: false, ...fboOpts })
 
   // uniform references
   const uniforms = useRef({
@@ -251,6 +255,8 @@ export const useFluidTexture = (
         value: BFECC,
       },
     }).children.visible = isBounce
+    advectionPass.current.children.material.uniforms.px =
+      advectionPass.current.uniforms.px
     advectionPass.current.render(gl)
 
     // external force pass

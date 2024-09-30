@@ -70,7 +70,7 @@ const FiberComponent = () => {
 }
 ```
 
-### **`useFluidTexture(options, priority, fboProps) : THREE.Texture`**<br/>
+### **`useFluidTexture(options, priority, fboArgs) : THREE.Texture`**<br/>
 
 Outputs a fluid simulation to a `THREE.Texture` and returns it. Can be used as a `THREE.Material` `.map`, `.alphaMap`, or anywhere a texture would normally be used.
 
@@ -95,7 +95,7 @@ See [this article](https://developer.nvidia.com/gpugems/gpugems/part-vi-beyond-t
    ```
 2. `priority` (optional): `Number` (integer) representing the render priority in the internally-used [`useFrame`](https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is `-1`.
 
-3. `fboProps` (optional): `Object` containing the same props as [useFBO](https://drei.docs.pmnd.rs/misc/fbo-use-fbo#fbo-/-usefbo), used to defined the `THREE.WebGLRenderTarget` that contains the output texture. Default options are analogous to those of `useFBO`.
+3. `fboArgs` (optional): `Array` containing arguments to [useFBO](https://drei.docs.pmnd.rs/misc/fbo-use-fbo#fbo-/-usefbo), used to defined the `THREE.WebGLRenderTarget` that contains the output texture. Default options are analogous to those of `useFBO`.
 
 **example usage:**<br/>
 

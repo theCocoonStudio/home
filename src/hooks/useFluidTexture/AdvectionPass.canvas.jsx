@@ -7,6 +7,7 @@ import {
 import fragmentShader from './glsl/advection.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
 import lineVert from './glsl/line.vert?raw'
+import lineFrag from './glsl/boundary.frag?raw'
 
 const materialConfig = {
   vertexShader,
@@ -33,11 +34,11 @@ const materialConfig = {
   },
 }
 
-const children = ({ uniforms }) => {
+const children = () => {
   const boundaryMaterialConfig = {
     vertexShader: lineVert,
-    fragmentShader,
-    uniforms,
+    fragmentShader: lineFrag,
+    uniforms: { px: { value: null } },
   }
   // boundary buffer attribute
   const positionBuffer = new Float32Array([
@@ -57,6 +58,7 @@ const children = ({ uniforms }) => {
   geometry.setAttribute('position', new BufferAttribute(positionBuffer, 3))
   const material = new ShaderMaterial(boundaryMaterialConfig)
   const boundary = new LineSegments(geometry, material)
+  boundary.renderOrder = 1
   return boundary
 }
 
