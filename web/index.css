@@ -15,6 +15,11 @@ body,
   padding: 0;
 }
 
+div {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background: transparent;
 }
@@ -22,14 +27,25 @@ body {
 html {
   font-size: 62.5%; /* default 16px --> 10px for clear rem values */
 }
+body {
+  font-size: 2.2rem; /* font size = 16px */
+}
 h1 {
-  font-size: 2.4rem; /* font size = 24px */
+  font-size: 3.4rem; /* font size = 32px */
+  margin: 0;
+  margin-bottom: 1rem;
+  padding: 0;
 }
 h2 {
-  font-size: 1.6rem; /* font size = 16px */
+  font-size: 1.8rem; /* font size = 24px */
+  margin: 0;
+  padding: 0;
+  margin-bottom: 1.6rem;
 }
 p {
-  font-size: 1.8rem; /* font size = 12px */
+  margin: 0;
+  padding: 0.5rem 0;
+  font-size: 2.2rem; /* font size = 16px */
 }
 
 /* @media (width <= 32rem) {
@@ -40,11 +56,7 @@ p {
 
 body {
   background: transparent;
-  color: #000;
-
-  font-weight: 400;
-  font-style: normal;
-  font-size: 22px;
+  color: #fff;
 }
 
 #eventContainer {
@@ -82,8 +94,7 @@ body {
 }
 
 #main {
-  margin-top: calc(90px + 3rem);
-  margin-bottom: calc(80px + 3rem);
+  margin: 100px auto;
 }
 
 .content {
@@ -96,56 +107,61 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  height: 100px;
   vertical-align: middle;
-  padding: 3rem 0;
 }
 
 #navContent {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: 2rem;
 }
 
 #navItems > * {
   display: inline-block;
-  padding: 0 1rem;
+  padding-left: 2rem;
 }
 
 #tracking {
   position: absolute;
   width: 60%;
   height: 100%;
-  border: 1px solid white;
+  left: 40%;
 }
 
 #description {
   position: absolute;
+  top: 50%;
   width: 40%;
-  height: 100%;
-  left: 60%;
-  padding: 0 3rem;
-  border: 1px solid red;
+  max-height: 80%;
+  transform: translateY(-50%);
   overflow-y: scroll;
 }
 
 #footer {
   position: absolute;
   bottom: 0;
-  height: 80px;
+  height: 100px;
   left: 0;
   width: 100%;
-  border: 1px solid white;
 }
 
 /* variable weight 300-700 */
-.space-grotesk {
+.space-grotesk,
+body {
   font-family: 'Space Grotesk', sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+  line-height: 1.4em;
 }
 
-.space-mono-regular {
+.space-mono-regular,
+h2 {
   font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-style: normal;
@@ -167,4 +183,10 @@ body {
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   font-style: italic;
+}
+.righteous-regular,
+h1 {
+  font-family: 'Righteous', sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
