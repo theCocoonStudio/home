@@ -8,17 +8,10 @@ Source: https://sketchfab.com/3d-models/edison-light-bulb-aeb0e4832f04463280510e
 Title: Edison Light Bulb
 */
 
-import {
-  MeshTransmissionMaterial,
-  useGLTF,
-  AccumulativeShadows,
-  Center,
-  Environment,
-  RandomizedLight,
-} from '@react-three/drei'
+import { MeshTransmissionMaterial, useGLTF } from '@react-three/drei'
 
 import Model from 'public/models/Bulb-transformed.glb'
-import { Color, Layers } from 'three'
+import { Color } from 'three'
 
 import { useFrame } from '@react-three/fiber'
 import { forwardRef } from 'react'
@@ -75,7 +68,6 @@ const Bulb = forwardRef(function Bulb(props, ref) {
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <mesh
-        layers={1}
         geometry={nodes.Object_5.geometry}
         material={materials.PaletteMaterial004}
         rotation={[-Math.PI / 2, 0, 0]}
