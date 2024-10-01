@@ -10,7 +10,7 @@ const options = {
   iterations_poisson: 32,
   iterations_viscous: 32,
   mouse_force: 20,
-  resolution: 0.4,
+  resolution: 0.3,
   cursor_size: 40,
   viscous: 30,
   isBounce: true,
@@ -37,14 +37,7 @@ export const FluidSim = forwardRef(function FluidSim(
 
   return (
     <>
-      <mesh
-        onClick={() => {
-          console.log(texture)
-        }}
-        ref={meshRef}
-        {...props}
-        scale={[0.8, 0.45, 1]}
-      >
+      <mesh ref={meshRef} {...props} scale={[0.8, 0.45, 1]}>
         <planeGeometry />
         <meshBasicMaterial side={DoubleSide} transparent alphaMap={texture}>
           <VideoTexture video={Video} />
