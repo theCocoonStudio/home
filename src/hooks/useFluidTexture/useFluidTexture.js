@@ -39,7 +39,7 @@ export const useFluidTexture = (
     dt,
     isViscous,
     BFECC,
-  } = { ...options, ...defaultOpts }
+  } = { ...defaultOpts, ...options }
   const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
   const { width, height } = useMemo(
