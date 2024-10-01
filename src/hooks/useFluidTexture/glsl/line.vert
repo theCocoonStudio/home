@@ -10,5 +10,5 @@ void main(){
     vec2 n = sign(pos.xy);
     pos.xy = abs(pos.xy) - px * 1.0;
     pos.xy *= n;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( pos, 1.0 );
+    gl_Position = vec4( pos, 1.0 );
 }

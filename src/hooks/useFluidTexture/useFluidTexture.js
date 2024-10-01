@@ -11,22 +11,35 @@ import { pressurePassConfig } from './PressurePass.canvas'
 import { outputPassConfig } from './OutputPass.canvas'
 import { ShaderPass } from './ShaderPass'
 
+const defaultOpts = {
+  iterations_poisson: 32,
+  iterations_viscous: 32,
+  mouse_force: 20,
+  resolution: 0.5,
+  cursor_size: 100,
+  viscous: 30,
+  isBounce: false,
+  dt: 0.014,
+  isViscous: false,
+  BFECC: true,
+}
 export const useFluidTexture = (
-  {
-    iterations_poisson = 32,
-    iterations_viscous = 32,
-    mouse_force = 20,
-    resolution = 0.5,
-    cursor_size = 100,
-    viscous = 30,
-    isBounce = false,
-    dt = 0.014,
-    isViscous = false,
-    BFECC = true,
-  } = {},
+  options = {},
   priority = -1,
   [fboWidth, fboHeight, fboOpts = {}] = [],
 ) => {
+  const {
+    iterations_poisson,
+    iterations_viscous,
+    mouse_force,
+    resolution,
+    cursor_size,
+    viscous,
+    isBounce,
+    dt,
+    isViscous,
+    BFECC,
+  } = { ...options, ...defaultOpts }
   const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
   const { width, height } = useMemo(
@@ -255,8 +268,8 @@ export const useFluidTexture = (
         value: BFECC,
       },
     }).children.visible = isBounce
-    advectionPass.current.children.material.uniforms.px =
-      advectionPass.current.uniforms.px
+    advectionPass.current.children.material.uniforms =
+      advectionPass.current.uniforms
     advectionPass.current.render(gl)
 
     // external force pass
@@ -264,8 +277,8 @@ export const useFluidTexture = (
     oldPointer.current.copy(pointer)
 
     uniforms.current.force.set(
-      (pointerDiff.current.x / 2) * mouse_force,
-      (pointerDiff.current.y / 2) * mouse_force,
+      pointerDiff.current.x * mouse_force,
+      pointerDiff.current.y * mouse_force,
     )
     const cursorSizeX = cursor_size * uniforms.current.cellScale.x
     const cursorSizeY = cursor_size * uniforms.current.cellScale.y

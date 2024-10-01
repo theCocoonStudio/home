@@ -1,4 +1,4 @@
-import { AdditiveBlending, PlaneGeometry, Vector2 } from 'three'
+import { AdditiveBlending, Vector2 } from 'three'
 import fragmentShader from './glsl/externalForce.frag?raw'
 import vertexShader from './glsl/mouse.vert?raw'
 
@@ -22,10 +22,8 @@ const materialConfig = {
   blending: AdditiveBlending,
 }
 
-const geometry = () => new PlaneGeometry(1, 1)
-
 export const forcePassConfig = {
   materialConfig,
-  geometry,
+
   fboConfig: { isNull: true },
 }
