@@ -156,7 +156,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
         easing,
         eps
       },
-      // Overridden by setting computeScale. If true, the hook calculates the object's new scale is calculated so that it's new width matches the horizontal width of the bounds, while the objects new height remains relative to its width (to keep the 2D aspect constant). z-values of the scale are not changed. This only works if object3DRef.current.geometry.parameters contains .width and .height values. Examples are THREE.PlaneGeometry and THREE.BoxGeometry.
+      // Overridden by setting computeScale. If true, the hook calculates the object's new scale so that its new width matches the horizontal width of the bounds, while the objects new height remains relative to its width (to keep the 2D aspect constant). z-values of the scale are not changed. This only works if object3DRef.current.geometry.parameters contains .width and .height values. Examples are THREE.PlaneGeometry and THREE.BoxGeometry.
       scaleToFitWidth = true,
 
       /* A callback function to further customize the final target result. It has the following signature:
