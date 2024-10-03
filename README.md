@@ -206,7 +206,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
     min: THREE.Vector2,
     max: THREE.Vector2,
   },
-  // calculated target position, scale, and rotation. If scale or rotation aren't included in calculations, they are set as the objects current scale and rotation, respectively.
+  // calculated target position, scale, and rotation. If scale or rotation aren't included in calculations, they are set as the object's current scale and rotation, respectively.
   targets: {
     position: THREE.Vector3,
     scale: THREE.Vector3,
