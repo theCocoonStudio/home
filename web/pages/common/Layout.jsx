@@ -13,12 +13,7 @@ export default function Layout() {
   return (
     <PageProvider pages={pages}>
       <div id='eventContainer' ref={ref}>
-        <ThreeApp
-          id='canvas'
-          eventSource={ref}
-          eventPrefix={'client'}
-          tracking={tracking.current}
-        >
+        <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
           <Home tracking={tracking} />
         </ThreeApp>
         <Nav id='nav' className='space-mono-regular' />

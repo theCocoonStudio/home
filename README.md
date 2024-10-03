@@ -110,3 +110,146 @@ const FiberComponent = () => {
   )
 }
 ```
+
+### **`use2DBounds(object3DRef, Use2DBoundsOptions) : Use2DBoundsResults`**<br/>
+
+_Note: if you need to output your scene to a subset of the canvas, `gl.scissor` is likely more suitable (and performant, given that the resolution and buffer sizes will be smaller). [This component](https://drei.docs.pmnd.rs/portals/view#view) from the `drei` team is a turnkey solution._
+
+A convenient hook for aligning objects in a 3D scene to positions on the canvas or to a `THREE.Box2` corresponding to an HTML element contained within the canvas:
+
+- use the returned data to position the element yourself or let the hook do the work for you
+- works imperatively under the hood so canvas/viewport/object changes are automatically reflected in the result
+- position, rotation, and scale changes are automaticaly dampened using [maath/easing](https://github.com/pmndrs/maath/blob/main/README.md)
+- built in easing is fully customizeable
+- full customization of results: the new position, rotation, and scale can be updated based on the calculated targets before being applied using optional callbacks
+- easily pause the hook to optimize performance if you know your app won't need it
+
+**params:**<br/>
+
+1. `object3DRef` (required): `React.Ref` containing a `THREE.Object3D` to bind. Note that this is a ref so React won't waste compute resources on lifecycle updates unless needed.
+
+2. `Use2DBoundsOptions` (optional): `Object` with config options:
+
+   ```js
+    {
+      // React.ref to an HTML element contained fully within the Canvas. If trackingElement is true, the hook uses the element as the 2D bounds.
+      trackingElementRef,
+      // If false, the hook uses the Canvas as 2D bounds. If true, the hook uses the element as 2D bounds. Setting this to true assumes that the Canvas is set to fill the document exactly.
+      trackingElement = false,
+      // React.ref to a custom camera to use for calculations. The default camera is used if undefined.
+      customCameraRef,
+      // Number (integer) representing the render priority in the internally-used useFrame (https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is undefined.
+      renderPriority,
+      // A float between 0.0 and 1.0 representing a target x-position within the horizontal bounds. A value of 0.0 sets the target x-position at the left bound, while 1.0 at the right.
+      left = 0.5,
+      // A float between 0.0 and 1.0 representing a target y-position within the horizontal bounds. A value of 0.0 sets the target y-position at the top bound, while 1.0 at the bottom.
+      top = 0.5,
+      // If true, calculation stops. The calculation is always carried out at least once when the component mounts, even if pause is initially set to true.
+      pause = false,
+      // If true, the hook calculates and updates the bound object's position (and optionally, scale and rotation) each frame, and returns the calculated target results. If false, the target results are returned without any modification to the object.
+      damp = true,
+      // Args to pass to damp() functions. See https://github.com/pmndrs/maath/blob/main/README.md#easing for reference and defaults.
+      damping: {
+        smoothTime,
+        delta = THREE.Clock.getDelta(),
+        maxSpeed,
+        easing,
+        eps
+      },
+      // Overridden by setting computeScale. If true, the hook calculates the object's new scale is calculated so that it's new width matches the horizontal width of the bounds, while the objects new height remains relative to its width (to keep the 2D aspect constant). z-values of the scale are not changed. This only works if object3DRef.current.geometry.parameters contains .width and .height values. Examples are THREE.PlaneGeometry and THREE.BoxGeometry.
+      scaleToFitWidth = true,
+
+      /* A callback function to further customize the final target result. It has the following signature:
+
+      computePosition(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Vector3,
+
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target position. If not configured, the new target position will be fully reflected by other configuration options.
+
+      Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
+      computePosition,
+      /* A callback function to further customize the final target result. It has the following signature:
+
+      computeScale(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Vector3,
+
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target scale. If not configured, the new target scale will be fully reflected by scaleToFitWidth. If scaleToFitWidth = false, computeScale is undefined, scale is not calculated.
+
+      Setting this callback overrides scaleToFitWidth = true.
+
+      Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
+      computeScale,
+      /* A callback function to further customize the final target result. It has the following signature:
+
+      computeRotation(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Euler,
+
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Euler for the final target rotation. If not configured, the hook does not calculate rotation.
+
+      Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
+      computeRotation,
+    }
+   ```
+
+**return value:**<br/>
+
+`Use2DBoundsResults`, an object with the following properties:
+
+```js
+{
+  // Pixels-per-world-unit: Conversion factor for both x and y dimensions to convert from pixels to world-units and vice-versa. The two values should, in practice, be idential. 1 wu = ppwu pixels
+  ppwu: THREE.Vector2,
+  // The min and max bounds of the camera's viewport at the object's distance along the viewing angle, expressed in three.js world units. See THREE.PerspectiveCamera.getViewBounds().
+  viewBounds: {
+    min: THREE.Vector2,
+    max: THREE.Vector2
+  },
+  // If trackingElement = true, the min and max bounds of the HTML element set as trackingElementRef.current, at the object's distance along the viewing angle, expressed in three.js world units. If false, identical to viewBounds.
+  bounds: {
+    min: THREE.Vector2,
+    max: THREE.Vector2,
+  },
+  // calculated target position, scale, and rotation. If scale or rotation aren't included in calculations, they are set as the objects current scale and rotation, respectively.
+  targets: {
+    position: THREE.Vector3,
+    scale: THREE.Vector3,
+    rotation: THREE.Euler,
+  },
+  //  The object's distance to the camera along the camera's viewing angle. This number will always be greater than or equal to zero.
+  distance: Number
+}
+```
+
+_Important:_ internally, the `Use2DBoundsResults` is stored in a `React.ref`, since calculations are performed every frame. If you choose to update the object's properties yourself (by setting `damp = false`) or use the return values for other calculations, make sure not to tie them to the React lifecycle.
+
+❌ Incorrect usage:<br/>
+
+```jsx
+<mesh position={results.targets.position} />
+```
+
+✅ Better (only an example):
+
+```jsx
+const { targets: position } = use2DBounds(ref)
+const setPosition = useCallback(() => {
+  ref.current.position.copy(position)
+  ref.current.matrixWorldNeedsUpdate = true
+}, [])
+return <mesh ref={ref} onBeforeRender={setPosition} />
+```
+
+**example usage:**<br/>
+
+```jsx
+const FiberComponent = ({ trackingElementRef }) => {
+  const ref = useRef()
+  use2DBounds(ref, {
+    trackingElement: true,
+    trackingElementRef: trackingElementRef,
+  })
+  return (
+    <mesh ref={ref}>
+      <planeGeometry />
+      <meshBasicMaterial map={texture} />
+    </mesh>
+  )
+}
+```

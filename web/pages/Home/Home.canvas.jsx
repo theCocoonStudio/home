@@ -1,11 +1,10 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
-import { DoubleSide, PlaneGeometry } from 'three'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { DoubleSide, Vector3 } from 'three'
 import {
   Environment,
   OrbitControls,
   PerformanceMonitor,
   PerspectiveCamera,
-  ScreenQuad,
 } from '@react-three/drei'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { useThree } from '@react-three/fiber'
@@ -13,6 +12,7 @@ import { VideoTexture } from 'web/components/VideoTexture.canvas'
 import Bulb from 'web/components/Bulb.canvas'
 import Video from 'public/10.mp4'
 import { Effects } from 'web/components/Effects.canvas.jsx'
+import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 
 const options = {
   iterations_poisson: 32,
@@ -40,6 +40,14 @@ export const Home = forwardRef(function FluidSim({ tracking }, forwardedRef) {
     width * 0.45,
   ])
 
+  use2DBounds(meshRef, {
+    trackingElement: true,
+    trackingElementRef: tracking,
+  })
+
+  useEffect(() => {
+    meshRef.current.lookAt(new Vector3(0, 0, 1))
+  })
   return (
     <>
       <PerformanceMonitor>
@@ -48,12 +56,12 @@ export const Home = forwardRef(function FluidSim({ tracking }, forwardedRef) {
         {/* <Bulb scale={0.03} position-z={0.5} /> */}
         <PerspectiveCamera makeDefault position-z={1} />
         <Effects />
-        <mesh scale={[0.8, 0.45, 1]}>
+        <mesh scale={[0.8, 0.45, 1]} ref={meshRef}>
           <planeGeometry />
           <meshBasicMaterial
             side={DoubleSide}
             transparent
-            alphaMap={texture}
+            /* alphaMap={texture} */
             /* color='red' */
           >
             <VideoTexture video={Video} />
