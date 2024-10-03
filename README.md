@@ -142,7 +142,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
       renderPriority,
       // A float between 0.0 and 1.0 representing a target x-position within the horizontal bounds. A value of 0.0 sets the target x-position at the left bound, while 1.0 at the right.
       left = 0.5,
-      // A float between 0.0 and 1.0 representing a target y-position within the horizontal bounds. A value of 0.0 sets the target y-position at the top bound, while 1.0 at the bottom.
+      // A float between 0.0 and 1.0 representing a target y-position within the vertical bounds. A value of 0.0 sets the target y-position at the top bound, while 1.0 at the bottom.
       top = 0.5,
       // If true, calculation stops. The calculation is always carried out at least once when the component mounts, even if pause is initially set to true.
       pause = false,
@@ -241,6 +241,7 @@ return <mesh ref={ref} onBeforeRender={setPosition} />
 ```jsx
 const FiberComponent = ({ trackingElementRef }) => {
   const ref = useRef()
+  // center the mesh at the trackingElement centre and scale it proportionally so that its width fills the element.
   use2DBounds(ref, {
     trackingElement: true,
     trackingElementRef: trackingElementRef,
