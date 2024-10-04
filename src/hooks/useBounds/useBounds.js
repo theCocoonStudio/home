@@ -154,7 +154,7 @@ export const use2DBounds = (
         resultRef.current.targets.scale.copy(scale)
       }
       if (typeof computeRotation === 'function') {
-        const rot = computeScale(obj3d, returnRef.current, camera)
+        const rot = computeRotation(obj3d, returnRef.current, camera)
         targetRotation.current.copy(rot)
         resultRef.current.targets.rotation.copy(rot)
       }
@@ -165,7 +165,6 @@ export const use2DBounds = (
   // three engine: imperative updates
   useFrame(({ size: { width, height }, camera: fiberCamera }, delta) => {
     const camera = customCameraRef?.current || fiberCamera
-
     if (iterations.current < 1 || !pause) {
       if (
         obj3DRef.current instanceof Object3D &&
