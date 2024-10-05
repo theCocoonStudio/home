@@ -156,7 +156,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
         easing,
         eps
       },
-      // Overridden by setting computeScale. If true, the hook calculates the object's new scale so that its new width matches the horizontal width of the bounds, while the objects new height remains relative to its width (to keep the 2D aspect constant). z-values of the scale are not changed. This only works if object3DRef.current.geometry.parameters contains .width and .height values. Examples are THREE.PlaneGeometry and THREE.BoxGeometry.
+      // Overridden by setting computeScale. If true, the hook calculates the object's new scale so that its new width is the width of the bounds less the left and right margin (if set), while the new height is the height of the bounds less the top and bottom margin (if set). z-values of the scale are not changed. This only works if object3DRef.current.geometry.parameters contains .width and .height values. Examples are THREE.PlaneGeometry and THREE.BoxGeometry.
       scaleToFitWidth = true,
 
       /* A callback function to further customize the final target result. It has the following signature:
@@ -185,6 +185,10 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
 
       Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
       computeRotation,
+      /* A THREE.Vector4 containing values for the top, right, bottom, and left margin, respectively. Default is 0 for all values. The margin is only applied internally when setting the object's new scale if scaleToFitWidth = true, so if you're not using scaleToFitWidth = true, it is your responsibility to account for margin application using the intermediateResults parameter in the computeScale callback (and in computePosition, if your use case requires it). Vector units should be float proportions relative to the horizontal/vertical bound lengths if using UNITS.WU or integers if using UNITS.PX. E.g., 0.1 WU for the top margin will set it at 0.1 x the height of the bounds, will 100 PX for would set it to 100 / ppwu. If your object is using any textures, make sure to account for the change in aspect ratio when setting the texture/FBO dimensions.*/
+      margin,
+      /* Either UNITS.PX or UNITS.WU (default). UNITS is a named, top-level export.  */
+      marginUnits
     }
    ```
 
@@ -213,7 +217,9 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
     rotation: THREE.Euler,
   },
   //  The object's distance to the camera along the camera's viewing angle. This number will always be greater than or equal to zero.
-  distance: Number
+  distance: Number,
+  // The margin values passed-in to the margin config option, converted to world units (UNITS.WU) for usage in compute callbacks or outside of the hook. Note that the returned value is in UNITS.WU regardless of how the marginUnits config option is set.
+  margin: THREE.Vector4
 }
 ```
 

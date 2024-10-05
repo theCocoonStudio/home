@@ -19,14 +19,25 @@ export const deepClone = (obj) => {
 
 export const setScale = (obj, results) => {
   const scale = obj.scale.clone()
-  const width = obj.geometry.parameters.width
-  const aspect =
-    (results.bounds.max.getComponent(1) - results.bounds.min.getComponent(1)) /
-    (results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0))
-  const scaleX = Math.abs(
-    (results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)) /
-      width,
+  const { width, height } = obj.geometry.parameters
+
+  const boundsWidth =
+    results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)
+  const boundsHeight =
+    results.bounds.max.getComponent(1) - results.bounds.min.getComponent(1)
+  const widthLessMargin =
+    boundsWidth -
+    results.margin.getComponent(1) -
+    results.margin.getComponent(3)
+  const heightLessMargin =
+    boundsHeight -
+    results.margin.getComponent(0) -
+    results.margin.getComponent(2)
+
+  scale.set(
+    Math.abs(widthLessMargin / width),
+    Math.abs(heightLessMargin / height),
+    scale.getComponent(2),
   )
-  scale.set(scaleX, scaleX * aspect, scale.getComponent(2))
   return scale
 }

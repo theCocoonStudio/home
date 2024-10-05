@@ -1,8 +1,9 @@
 import { useFrame } from '@react-three/fiber'
 import { damp3, dampE } from 'maath/easing'
 import { useCallback, useRef } from 'react'
-import { Euler, Object3D, Vector2, Vector3 } from 'three'
+import { Euler, Object3D, Vector2, Vector3, Vector4 } from 'three'
 import { deepClone, setScale } from './helpers'
+import { UNITS } from 'src/constants'
 
 export const use2DBounds = (
   obj3DRef,
@@ -20,6 +21,8 @@ export const use2DBounds = (
     computePosition,
     computeScale,
     computeRotation,
+    margin,
+    marginUnits = UNITS.WU,
   },
 ) => {
   // independent state
@@ -37,12 +40,13 @@ export const use2DBounds = (
   const targetWPos = useRef(new Vector3())
   const targetScale = useRef(new Vector3())
   const targetRotation = useRef(new Euler())
+  const marginWU = useRef(new Vector4(0.0, 0.0, 0.0, 0.0))
   const resultRef = useRef({
     ppwu: ppwu.current,
     viewBounds: { min: minViewBounds.current, max: maxViewBounds.current },
     bounds: {
-      min: trackingElementRef ? minBounds.current : minViewBounds.current,
-      max: trackingElementRef ? maxBounds.current : maxViewBounds.current,
+      min: minBounds.current,
+      max: maxBounds.current,
     },
     targets: {
       position: targetWPos.current,
@@ -50,6 +54,7 @@ export const use2DBounds = (
       rotation: targetRotation.current,
     },
     distance: distance.current,
+    margin: marginWU.current,
   })
   const returnRef = useRef({})
   // updates
@@ -60,55 +65,74 @@ export const use2DBounds = (
     distance.current = Math.abs(wPos.getComponent(2))
   }, [])
 
-  const setPPWU = useCallback((camera, width, height, element) => {
-    // set view bounds
-    camera.getViewBounds(
-      distance.current,
-      minViewBounds.current,
-      maxViewBounds.current,
-    )
-    // set PPWU
-    ppwu.current.setX(
-      Math.abs(
-        width /
-          (maxViewBounds.current.getComponent(0) -
-            minViewBounds.current.getComponent(0)),
-      ),
-    )
-    ppwu.current.setY(
-      Math.abs(
-        height /
-          (maxViewBounds.current.getComponent(1) -
-            minViewBounds.current.getComponent(1)),
-      ),
-    )
-
-    // set bounds
-    if (element) {
-      const {
-        left,
-        top,
-        width: elementWidth,
-        height: elementHeight,
-      } = element.getBoundingClientRect()
-
-      const leftOffset =
-        minViewBounds.current.getComponent(0) +
-        left / ppwu.current.getComponent(0)
-      const topOffset =
-        maxViewBounds.current.getComponent(1) -
-        top / ppwu.current.getComponent(1)
-
-      minBounds.current.set(
-        leftOffset,
-        topOffset - elementHeight / ppwu.current.getComponent(1),
+  const setPPWU = useCallback(
+    (camera, width, height, element, margin, marginUnits) => {
+      // set view bounds
+      camera.getViewBounds(
+        distance.current,
+        minViewBounds.current,
+        maxViewBounds.current,
       )
-      maxBounds.current.set(
-        leftOffset + elementWidth / ppwu.current.getComponent(0),
-        topOffset,
+      // set PPWU
+      ppwu.current.setX(
+        Math.abs(
+          width /
+            (maxViewBounds.current.getComponent(0) -
+              minViewBounds.current.getComponent(0)),
+        ),
       )
-    }
-  }, [])
+      ppwu.current.setY(
+        Math.abs(
+          height /
+            (maxViewBounds.current.getComponent(1) -
+              minViewBounds.current.getComponent(1)),
+        ),
+      )
+
+      // set bounds
+      if (element) {
+        const {
+          left,
+          top,
+          width: elementWidth,
+          height: elementHeight,
+        } = element.getBoundingClientRect()
+
+        const leftOffset =
+          minViewBounds.current.getComponent(0) +
+          left / ppwu.current.getComponent(0)
+        const topOffset =
+          maxViewBounds.current.getComponent(1) -
+          top / ppwu.current.getComponent(1)
+
+        minBounds.current.set(
+          leftOffset,
+          topOffset - elementHeight / ppwu.current.getComponent(1),
+        )
+        maxBounds.current.set(
+          leftOffset + elementWidth / ppwu.current.getComponent(0),
+          topOffset,
+        )
+      } else {
+        minBounds.current.copy(minViewBounds.current)
+        maxBounds.current.copy(maxViewBounds.current)
+      }
+      //set margin
+      marginWU.current.set(0, 0, 0, 0)
+      if (margin) {
+        marginWU.current.copy(margin)
+        if (marginUnits === UNITS.PX) {
+          marginWU.current.divideScalar(ppwu.current.getComponent(0))
+        } else {
+          const boundsWidth =
+            maxBounds.current.getComponent(0) -
+            maxBounds.current.getComponent(1)
+          marginWU.current.multiplyScalar(boundsWidth)
+        }
+      }
+    },
+    [],
+  )
 
   const setTargetWPos = useCallback((camera, left, top, trackingElement) => {
     const _minBounds = trackingElement
@@ -176,6 +200,8 @@ export const use2DBounds = (
           width,
           height,
           trackingElement && trackingElementRef.current,
+          margin,
+          marginUnits,
         )
         setTargetWPos(camera, left, top, trackingElement)
         computeTargets(
