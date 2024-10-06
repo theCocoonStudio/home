@@ -19,7 +19,8 @@ export const deepClone = (obj) => {
 
 export const setScale = (obj, results) => {
   const scale = obj.scale.clone()
-  const { width, height } = obj.geometry.parameters
+  const width = obj.geometry.parameters.width || 1.0
+  const height = obj.geometry.parameters.width || 1.0
 
   const boundsWidth =
     results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)

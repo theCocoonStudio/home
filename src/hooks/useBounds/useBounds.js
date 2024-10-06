@@ -124,10 +124,23 @@ export const use2DBounds = (
         if (marginUnits === UNITS.PX) {
           marginWU.current.divideScalar(ppwu.current.getComponent(0))
         } else {
-          const boundsWidth =
+          const boundsWidth = Math.abs(
             maxBounds.current.getComponent(0) -
-            maxBounds.current.getComponent(1)
-          marginWU.current.multiplyScalar(boundsWidth)
+              minBounds.current.getComponent(0),
+          )
+          const boundsHeight = Math.abs(
+            maxBounds.current.getComponent(1) -
+              minBounds.current.getComponent(1),
+          )
+          console.log(boundsWidth)
+          console.log(boundsHeight)
+          marginWU.current.set(
+            margin.getComponent(0) * boundsHeight,
+            margin.getComponent(1) * boundsWidth,
+            margin.getComponent(2) * boundsHeight,
+            margin.getComponent(3) * boundsWidth,
+          )
+          console.log(marginWU.current)
         }
       }
     },
