@@ -262,5 +262,5 @@ export const use2DBounds = (
     }
   }, renderPriority)
 
-  return returnRef
+  return returnRef.current
 }
