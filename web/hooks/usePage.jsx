@@ -1,9 +1,35 @@
-import { useFrame } from '@react-three/fiber'
-import { useContext } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { PageContext } from 'web/context/PageContext'
 
-export const usePage = () => {
-  const { pageUp, pageDown, page, isPending } = useContext(PageContext)
+export const usePage = (key, pageData) => {
+  const {
+    pageUp,
+    pageDown,
+    page,
+    isPending,
+    register,
+    dispose,
+    data,
+    current,
+  } = useContext(PageContext)
 
-  return { pageUp, pageDown, page, isPending }
+  useEffect(() => {
+    register(key, pageData)
+    return () => {
+      dispose(key)
+    }
+  }, [dispose, key, pageData, register])
+
+  const memoized = useMemo(
+    () => ({
+      pageUp,
+      pageDown,
+      page,
+      isPending,
+      data,
+      current,
+    }),
+    [current, data, isPending, page, pageDown, pageUp],
+  )
+  return memoized
 }

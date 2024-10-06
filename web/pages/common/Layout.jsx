@@ -7,6 +7,14 @@ import { Home } from '../Home/Home.canvas'
 
 const pages = [null, null, null, null]
 
+const theme = {
+  charcoal: '#273B4E', // blue
+  purple: '#2B253A',
+  gunmetal: '#122629', // dark green
+  midnight: '#103334', // intermediate green
+  slate: '#134643', // green
+}
+
 export default function Layout() {
   const ref = useRef()
   const tracking = useRef()
@@ -14,7 +22,7 @@ export default function Layout() {
     <PageProvider pages={pages}>
       <div id='eventContainer' ref={ref}>
         <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-          <Home tracking={tracking} />
+          <Home tracking={tracking} colorTheme={theme} />
         </ThreeApp>
         <Nav id='nav' className='space-mono-regular' />
         <div id='main' className='content'>

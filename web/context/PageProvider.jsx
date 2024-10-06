@@ -1,9 +1,26 @@
 import { useCallback, useState, useTransition, useMemo } from 'react'
 import { PageContext } from './PageContext'
 
-export const PageProvider = ({ children, pages }) => {
+export const PageProvider = ({ children }) => {
   const [isPending, startTransition] = useTransition()
-  const [page, setPage] = useState(0)
+  const [current, setCurrent] = useState(0)
+  const [data, setData] = useState({})
+
+  const register = useCallback((key, data) => {
+    setData((prev) => ({ ...prev, [key]: data }))
+  }, [])
+
+  const dispose = useCallback((key) => {
+    setData((prev) => {
+      const newData = {}
+      for (const property in prev) {
+        if (property !== `${key}`) {
+          newData[key] = prev[key]
+        }
+      }
+      return newData
+    })
+  }, [])
 
   const pageUp = useCallback(
     (e) => {
@@ -12,10 +29,10 @@ export const PageProvider = ({ children, pages }) => {
       }
 
       startTransition(() => {
-        setPage((page) => (page + 1) % pages.length)
+        setCurrent((current) => (current + 1) % Object.keys(data).length)
       })
     },
-    [pages.length],
+    [data],
   )
 
   const pageDown = useCallback(
@@ -25,15 +42,15 @@ export const PageProvider = ({ children, pages }) => {
       }
 
       startTransition(() => {
-        setPage((page) => (page - 1) % pages.length)
+        setCurrent((current) => (current - 1) % Object.keys(data).length)
       })
     },
-    [pages.length],
+    [data],
   )
 
   const context = useMemo(
-    () => ({ pageUp, pageDown, page, isPending }),
-    [isPending, page, pageDown, pageUp],
+    () => ({ pageUp, pageDown, current, isPending, dispose, register, data }),
+    [isPending, current, pageDown, pageUp, dispose, register, data],
   )
 
   return <PageContext.Provider value={context}>{children}</PageContext.Provider>
