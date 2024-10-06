@@ -20,7 +20,7 @@ export const deepClone = (obj) => {
 export const setScale = (obj, results) => {
   const scale = obj.scale.clone()
   const width = obj.geometry.parameters.width || 1.0
-  const height = obj.geometry.parameters.width || 1.0
+  const height = obj.geometry.parameters.height || 1.0
 
   const boundsWidth =
     results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)
@@ -40,5 +40,6 @@ export const setScale = (obj, results) => {
     Math.abs(heightLessMargin / height),
     scale.getComponent(2),
   )
+
   return scale
 }
