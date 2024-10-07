@@ -19,19 +19,22 @@ export class RubiksCube3 {
     meshPosition: [],
   }
 
-  #baseColors = [
-    new Color('red'), // x = -1
-    new Color('white'), // x = 1
-    new Color('blue'), // y = -1
-    new Color('yellow'), // y = 1
-    new Color('green'), // z = -1
-    new Color('orange'), // z = 1
-  ]
+  #baseColors
   #scale = new Vector3(0.9, 0.9, 0.9)
   #size
 
-  constructor(size = 3) {
-    this.#size = size
+  constructor(
+    colors = [
+      new Color('red'), // x = -1
+      new Color('white'), // x = 1
+      new Color('blue'), // y = -1
+      new Color('yellow'), // y = 1
+      new Color('green'), // z = -1
+      new Color('orange'), // z = 1
+    ],
+  ) {
+    this.#baseColors = colors
+    this.#size = 3
     this.#initState()
     this.#initAttributes()
   }
@@ -87,6 +90,9 @@ export class RubiksCube3 {
     )
   }
 
+  get colors() {
+    return this.#baseColors.map((color) => color.clone())
+  }
   get positions() {
     let ordered = []
     this.#state.forEach(({ index, position }) => {
@@ -172,12 +178,11 @@ export class RubiksCube3 {
         plane.push(index, val)
       }
     })
+
     const transform = new Matrix4().makeRotationAxis(rotationAxis, angle)
     const old = new Matrix4()
     this.#state.forEach(({ position, rotation, scale }) => {
-      if (
-        Math.trunc(position.getComponent(plane[0])) === Math.trunc(plane[1])
-      ) {
+      if (Math.round(position.getComponent(plane[0])) === plane[1]) {
         old
           .compose(position, rotation, scale)
           .premultiply(transform)
