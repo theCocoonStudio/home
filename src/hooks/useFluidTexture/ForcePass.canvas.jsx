@@ -1,10 +1,11 @@
 import { AdditiveBlending, Vector2 } from 'three'
 import fragmentShader from './glsl/externalForce.frag?raw'
+import fragmentShader_alt from './glsl/externalForce_alt.frag?raw'
 import vertexShader from './glsl/mouse.vert?raw'
 
 const materialConfig = {
   vertexShader,
-  fragmentShader,
+  fragmentShader /* : fragmentShader_alt */,
   uniforms: {
     px: {
       value: null,

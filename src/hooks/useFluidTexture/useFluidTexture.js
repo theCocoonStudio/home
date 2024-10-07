@@ -22,6 +22,10 @@ const defaultOpts = {
   dt: 0.014,
   isViscous: false,
   BFECC: true,
+  forceCallback: (delta, clock, pointer, pointerDiff) => ({
+    force: pointerDiff,
+    center: pointer,
+  }),
 }
 export const useFluidTexture = (
   options = {},
@@ -39,6 +43,7 @@ export const useFluidTexture = (
     dt,
     isViscous,
     BFECC,
+    forceCallback,
   } = { ...defaultOpts, ...options }
   const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
@@ -258,7 +263,7 @@ export const useFluidTexture = (
   )
 
   // simulation updates
-  useFrame(({ gl, pointer }) => {
+  useFrame(({ gl, pointer, clock }, delta) => {
     // advection pass
     advectionPass.current.updateUniforms({
       dt: {
@@ -276,22 +281,16 @@ export const useFluidTexture = (
     pointerDiff.current.subVectors(pointer, oldPointer.current)
     oldPointer.current.copy(pointer)
 
-    uniforms.current.force.set(
-      pointerDiff.current.x * mouse_force,
-      pointerDiff.current.y * mouse_force,
+    const { force, center } = forceCallback(
+      delta,
+      clock.getElapsedTime(),
+      pointer.clone(),
+      pointerDiff.current.clone(),
     )
-    const cursorSizeX = cursor_size * uniforms.current.cellScale.x
-    const cursorSizeY = cursor_size * uniforms.current.cellScale.y
-
-    const centerX = Math.min(
-      Math.max(pointer.x, -1 + cursorSizeX + uniforms.current.cellScale.x * 2),
-      1 - cursorSizeX - uniforms.current.cellScale.x * 2,
-    )
-    const centerY = Math.min(
-      Math.max(pointer.y, -1 + cursorSizeY + uniforms.current.cellScale.y * 2),
-      1 - cursorSizeY - uniforms.current.cellScale.y * 2,
-    )
-    uniforms.current.center.set(centerX, centerY)
+    /* console.log(force)
+    console.log(center) */
+    uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
+    uniforms.current.center.set(center.x, center.y)
     uniforms.current.scale.set(cursor_size, cursor_size)
 
     forcePass.current.render(gl)
