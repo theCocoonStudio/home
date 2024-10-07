@@ -195,7 +195,7 @@ export class RubiksCube3 {
     if (instancedMesh) {
       this.#state.forEach(({ position, rotation, scale, index }) => {
         let matrix = new Matrix4().compose(position, rotation, scale)
-        dampM(this.#targets[index].matrix, matrix, 0.15, clockDelta)
+        dampM(this.#targets[index].matrix, matrix, 0.25, clockDelta)
         instancedMesh.setMatrixAt(index, this.#targets[index].matrix)
       })
       instancedMesh.instanceMatrix.needsUpdate = true
