@@ -44,21 +44,26 @@ export const RubiksCube = forwardRef(function RubiksCube(
     ? { ref: rigidBody, instances: rigidBodiesProps, colliders: 'cuboid' }
     : {}
 
-  useFrame((state, delta) => {
+  const secsElapsed = useRef(0)
+  useFrame(({ clock }, delta) => {
+    // rotation
+    groupRef.current.rotation.y = clock.elapsedTime / 5
+    groupRef.current.rotation.x = clock.elapsedTime / 5
+    groupRef.current.rotation.z = clock.elapsedTime / 5
+    // random rotatePlane
+    secsElapsed.current += delta
+    if (secsElapsed.current > 1.3) {
+      secsElapsed.current = 0
+      const index = Math.floor(Math.random() * 3)
+      const val = Math.floor(Math.random() * 2) ? 1 : -1
+      const v = new Vector3(0, 0, 0).setComponent(index, val)
+      rubiks.rotatePlane(v)
+    }
+    // update position
     rubiks.render(instancedMesh.current, delta)
   }, -1)
   return (
-    <group
-      ref={groupRef}
-      {...props}
-      onClick={(e) => {
-        e.stopPropagation()
-        const index = Math.floor(Math.random() * 3)
-        const val = Math.floor(Math.random() * 2) ? 1 : -1
-        const v = new Vector3(0, 0, 0).setComponent(index, val)
-        rubiks.rotatePlane(v)
-      }}
-    >
+    <group ref={groupRef} {...props}>
       <Wrapper {...wrapperProps}>
         <instancedMesh
           ref={instancedMesh}
@@ -68,10 +73,7 @@ export const RubiksCube = forwardRef(function RubiksCube(
           <bufferGeometry attributes={attributes} />
           <meshStandardMaterial
             roughness={0.2}
-            metalness={0.8}
-            /*    transparent
-            opacity={0.8} */
-            color='red'
+            metalness={0.4}
             onBeforeCompile={(shader) => {
               shader.fragmentShader = `
               varying vec3 setColor;
