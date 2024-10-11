@@ -26,7 +26,7 @@ export const usePage = (key, pageData) => {
       pageDown,
       page,
       isPending,
-      data,
+      data: data.current,
       current,
     }),
     [current, data, isPending, page, pageDown, pageUp],

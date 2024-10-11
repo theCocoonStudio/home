@@ -1,25 +1,17 @@
-import { useCallback, useState, useTransition, useMemo } from 'react'
+import { useCallback, useState, useTransition, useMemo, useRef } from 'react'
 import { PageContext } from './PageContext'
 
-export const PageProvider = ({ children }) => {
+export const PageProvider = ({ children, theme }) => {
   const [isPending, startTransition] = useTransition()
   const [current, setCurrent] = useState(0)
-  const [data, setData] = useState({})
+  const data = useRef({ theme })
 
-  const register = useCallback((key, data) => {
-    setData((prev) => ({ ...prev, [key]: data }))
+  const register = useCallback((key, componentData) => {
+    data.current = { ...data.current, [key]: componentData }
   }, [])
 
   const dispose = useCallback((key) => {
-    setData((prev) => {
-      const newData = {}
-      for (const property in prev) {
-        if (property !== `${key}`) {
-          newData[key] = prev[key]
-        }
-      }
-      return newData
-    })
+    delete data.current[key]
   }, [])
 
   const pageUp = useCallback(
@@ -49,8 +41,16 @@ export const PageProvider = ({ children }) => {
   )
 
   const context = useMemo(
-    () => ({ pageUp, pageDown, current, isPending, dispose, register, data }),
-    [isPending, current, pageDown, pageUp, dispose, register, data],
+    () => ({
+      pageUp,
+      pageDown,
+      current,
+      isPending,
+      dispose,
+      register,
+      data,
+    }),
+    [isPending, current, pageDown, pageUp, dispose, register],
   )
 
   return <PageContext.Provider value={context}>{children}</PageContext.Provider>

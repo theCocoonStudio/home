@@ -31,10 +31,11 @@ body {
   font-size: 2.2rem; /* font size = 16px */
 }
 h1 {
-  font-size: 3.4rem; /* font size = 32px */
+  font-size: 6rem; /* font size = 32px */
   margin: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.7rem;
   padding: 0;
+  line-height: 0.95em;
 }
 h2 {
   font-size: 1.8rem; /* font size = 24px */
@@ -46,6 +47,7 @@ p {
   margin: 0;
   padding: 0.5rem 0;
   font-size: 2.2rem; /* font size = 16px */
+  line-height: 1.4em;
 }
 
 /* @media (width <= 32rem) {
@@ -126,28 +128,87 @@ body {
   padding-left: 2rem;
 }
 
+#socials,
+#settings {
+  width: 250px;
+}
+
+#socials,
+#settings {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 24px;
+}
+
+#socials > *,
+#settings > * {
+  flex-shrink: 1;
+  flex-grow: 1;
+  margin: 12px 0;
+}
+
+#pageInfo {
+  flex-grow: 1;
+}
+
 #tracking {
   position: absolute;
-  width: 60%;
+  width: 40%;
   height: 100%;
-  left: 40%;
+  left: 60%;
 }
 
 #description {
   position: absolute;
   top: 50%;
-  width: 40%;
+  width: 60%;
   max-height: 80%;
   transform: translateY(-50%);
   overflow-y: scroll;
+  padding: 2em;
 }
 
 #footer {
   position: absolute;
   bottom: 0;
   height: 100px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+#progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  top: calc(-10px - 2rem);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 24px;
+}
+#progress > * {
+  background: #134643;
+  flex-shrink: 1;
+  flex-grow: 1;
+  opacity: 0.8;
+  border-radius: 3px;
+}
+
+#progress > *.complete {
+  background-color: #fff;
+}
+
+#progress > *.current {
+  background: linear-gradient(to right, white 50%, #134643 50%);
 }
 
 /* variable weight 300-700 */
@@ -157,7 +218,6 @@ body {
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
-  line-height: 1.4em;
 }
 
 .space-mono-regular,
