@@ -79,20 +79,37 @@ Adapted from [fluid-three](https://github.com/mnmxmx/fluid-three).
 **params:**<br/>
 
 1. `options` (optional): `Object` with simulation options; excluded options will use default values:
+
    ```js
-   {
-     iterations_poisson = 32,
-     iterations_viscous = 32,
-     mouse_force = 20,
-     resolution = 0.5,
-     cursor_size = 100,
-     viscous = 30,
-     isBounce = false,
-     dt = 0.014,
-     isViscous = false,
-     BFECC = true,
+   const options = {
+      iterations_poisson = 32,
+      iterations_viscous = 32,
+      mouse_force = 20,
+      resolution = 0.5,
+      cursor_size = 100,
+      viscous = 30,
+      isBounce = false,
+      dt = 0.014,
+      isViscous = false,
+      BFECC = true,
+      forceCallback
    }
    ```
+
+   where `forceCallback` is a callback used to determine, at each frame, what (if any) external force to add to the simulation. It has following signature:<br/>
+
+   ```ts
+   (delta: Number, clock: THREE.Clock, pointer: THREE.Vector2, pointerDiff: THREE.Vector2) :
+    {
+      force: THREE.Vector2, // normalized, centric coords: [-1, 1]
+      center: THREE.Vector2, // normalized, centric coords: [-1, 1]
+    }`
+   ```
+
+   At each frame, the simulation runs the callback and adds a force to the fluid in a rectangular area centered at `center`. The aspect of the rectangle equals the FBO aspect and scaled by `cursor_size`. Note that `cursor_size` refers to the number of simulation cells, the total number of which is equal to `resolution` multiplied by the FBO width or height. The strength of the force at each fluid "cell" is determined by `mouse_force` and scaled by the returned `force`.
+
+   `forceCallback` takes `useFrame`'s `delta`, `clock`, and `pointer` as parameters, as well as `pointerDiff`, representing the pointer diff for the given frame.
+
 2. `priority` (optional): `Number` (integer) representing the render priority in the internally-used [`useFrame`](https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is `-1`.
 
 3. `fboArgs` (optional): `Array` containing arguments to [useFBO](https://drei.docs.pmnd.rs/misc/fbo-use-fbo#fbo-/-usefbo), used to defined the `THREE.WebGLRenderTarget` that contains the output texture. Default options are analogous to those of `useFBO`.
