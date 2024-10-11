@@ -18,6 +18,7 @@ export const use2DBounds = (
     damp = true,
     damping = {},
     scaleToFitWidth = true,
+    geometrySize,
     computePosition,
     computeScale,
     computeRotation,
@@ -56,7 +57,7 @@ export const use2DBounds = (
     distance: distance.current,
     margin: marginWU.current,
   })
-  const returnRef = useRef({})
+
   // updates
   const setDistance = useCallback((obj3D, camera) => {
     const wPos = new Vector3()
@@ -132,15 +133,13 @@ export const use2DBounds = (
             maxBounds.current.getComponent(1) -
               minBounds.current.getComponent(1),
           )
-          console.log(boundsWidth)
-          console.log(boundsHeight)
+
           marginWU.current.set(
             margin.getComponent(0) * boundsHeight,
             margin.getComponent(1) * boundsWidth,
             margin.getComponent(2) * boundsHeight,
             margin.getComponent(3) * boundsWidth,
           )
-          console.log(marginWU.current)
         }
       }
     },
@@ -174,24 +173,25 @@ export const use2DBounds = (
       computeRotation,
       camera,
       scaleToFitWidth,
+      geometrySize,
     ) => {
       targetScale.current.copy(obj3d.scale)
       targetRotation.current.copy(obj3d.rotation)
-      returnRef.current = deepClone(resultRef.current)
+
       if (typeof computePosition === 'function') {
-        const pos = computePosition(obj3d, returnRef.current, camera)
+        const pos = computePosition(obj3d, resultRef.current, camera)
         targetWPos.current.copy(pos)
         resultRef.current.targets.position.copy(pos)
       }
       if (typeof computeScale === 'function' || scaleToFitWidth) {
         const compute =
           typeof computeScale === 'function' ? computeScale : setScale
-        const scale = compute(obj3d, returnRef.current, camera)
+        const scale = compute(obj3d, resultRef.current, camera, geometrySize)
         targetScale.current.copy(scale)
         resultRef.current.targets.scale.copy(scale)
       }
       if (typeof computeRotation === 'function') {
-        const rot = computeRotation(obj3d, returnRef.current, camera)
+        const rot = computeRotation(obj3d, resultRef.current, camera)
         targetRotation.current.copy(rot)
         resultRef.current.targets.rotation.copy(rot)
       }
@@ -224,6 +224,7 @@ export const use2DBounds = (
           computeRotation,
           camera,
           scaleToFitWidth,
+          geometrySize,
         )
         iterations.current++
       }
@@ -275,5 +276,5 @@ export const use2DBounds = (
     }
   }, renderPriority)
 
-  return returnRef.current
+  return resultRef.current
 }

@@ -287,8 +287,7 @@ export const useFluidTexture = (
       pointer.clone(),
       pointerDiff.current.clone(),
     )
-    /* console.log(force)
-    console.log(center) */
+
     uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
     uniforms.current.center.set(center.x, center.y)
     uniforms.current.scale.set(cursor_size, cursor_size)

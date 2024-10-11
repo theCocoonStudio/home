@@ -17,11 +17,10 @@ export const deepClone = (obj) => {
   return result
 }
 
-export const setScale = (obj, results) => {
+export const setScale = (obj, results, camera, dimensions) => {
   const scale = obj.scale.clone()
-  const width = obj.geometry.parameters.width || 1.0
-  const height = obj.geometry.parameters.height || 1.0
-
+  const width = obj?.geometry?.parameters.width || dimensions?.x || 1.0
+  const height = obj?.geometry?.parameters.height || dimensions?.y || 1.0
   const boundsWidth =
     results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)
   const boundsHeight =
@@ -34,7 +33,6 @@ export const setScale = (obj, results) => {
     boundsHeight -
     results.margin.getComponent(0) -
     results.margin.getComponent(2)
-
   scale.set(
     Math.abs(widthLessMargin / width),
     Math.abs(heightLessMargin / height),

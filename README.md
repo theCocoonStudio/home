@@ -156,14 +156,16 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
         easing,
         eps
       },
-      // Overridden by setting computeScale. If true, the hook calculates the object's new scale so that its new width is the width of the bounds less the left and right margin (if set), while the new height is the height of the bounds less the top and bottom margin (if set). z-values of the scale are not changed. If object3DRef.current.geometry.parameters does not contain .width and .height values, a default of 1.0 is used. Geometries with these parameters include THREE.PlaneGeometry and THREE.BoxGeometry. In contrast, @drei/RoundedBox's geometry does not include these parameters. For this types of geometry, make sure your x- and y- geometry args are set to 1 so that the default will result in an accurate target scale.
+      /* Overridden by setting computeScale. If true, the hook calculates the object's new scale so that its new width is the width of the bounds less the left and right margin (if set), while the new height is the height of the bounds less the top and bottom margin (if set). z-values of the scale are not changed.
+
+      If object3DRef.current.geometry.parameters does not contain .width and .height values, set geometrySize as the base, unscaled geometry dimensions. If neither is defined, a default of 1.0 is used for the base geometry dimensions. Geometries with width and height parameters include THREE.PlaneGeometry and THREE.BoxGeometry. In contrast, @drei/RoundedBox's geometry does not include these parameters. */
       scaleToFitWidth = true,
 
       /* A callback function to further customize the final target result. It has the following signature:
 
       computePosition(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Vector3,
 
-      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target position. If not configured, the new target position will be fully reflected by other configuration options.
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations for the frame before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target position. If not configured, the new target position will be fully reflected by other configuration options.
 
       Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
       computePosition,
@@ -171,7 +173,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
 
       computeScale(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Vector3,
 
-      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target scale. If not configured, the new target scale will be fully reflected by scaleToFitWidth. If scaleToFitWidth = false, computeScale is undefined, scale is not calculated.
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations for the frame before your updates, and camera is the camera used by the hook. The callback should return a THREE.Vector3 for the final target scale. If not configured, the new target scale will be fully reflected by scaleToFitWidth. If scaleToFitWidth = false, computeScale is undefined, scale is not calculated.
 
       Setting this callback overrides scaleToFitWidth = true.
 
@@ -181,7 +183,7 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
 
       computeRotation(obj3d: THREE.Object3D,  intermediateResults: Use2DBoundsResults, camera: THREE.Camera) : THREE.Euler,
 
-      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations before your updates, and camera is the camera used by the hook. The callback should return a THREE.Euler for the final target rotation. If not configured, the hook does not calculate rotation.
+      where obj3D is a direct reference to the bound object, intermediateResults contains the target calculations for the frame before your updates, and camera is the camera used by the hook. The callback should return a THREE.Euler for the final target rotation. If not configured, the hook does not calculate rotation.
 
       Note that this function is called each frame, so try to limit the computation as much as possible for performance or use pause = true when you can. */
       computeRotation,
