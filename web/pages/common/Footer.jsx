@@ -1,4 +1,4 @@
-import { forwardRef, useRef } from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
 import { usePage } from '../../hooks/usePage'
 import styles from 'web/styles/Footer.module.css'
 
@@ -24,9 +24,9 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div ref={settings1} />
       </div>
       <div id='progress' className={styles.progress}>
-        <div className={`${styles.complete}`} />
-        <div className={`${styles.complete}`} />
-        <div className={`${styles.current}`} />
+        <div />
+        <div />
+        <div />
         <div />
         <div />
       </div>

@@ -4,6 +4,38 @@
 
 :root {
   color-scheme: dark;
+  --charcoal: #273b4e;
+  --purple: #2b253a;
+  --gunmetal: #122629;
+  --midnight: #103334;
+  --slate: #134643;
+  --white: #ffffff;
+}
+
+@property --p0 {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+@property --p1 {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+@property --p2 {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+@property --p3 {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+@property --p4 {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
 }
 
 html,

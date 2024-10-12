@@ -79,7 +79,11 @@ export const Home = forwardRef(function FluidSim({ ...props }, forwardedRef) {
 
   const { width, height } = useThree(({ size }) => size)
 
-  const progress = useRef(0.0)
+  const progress = useRef(0)
+  const container = useRef()
+  useEffect(() => {
+    container.current = document.getElementById('progress')
+  }, [])
 
   const image = useTexture(image1)
 
@@ -164,7 +168,14 @@ export const Home = forwardRef(function FluidSim({ ...props }, forwardedRef) {
           ref={settings}
           colorTheme={colorTheme}
           onClick={() => {
-            progress.current += 0.1
+            progress.current += 10
+            for (let i = 0; i <= 4; i++) {
+              console.log(container.current.children[i].style)
+              container.current.children[i].style.setProperty(
+                `--p${i}`,
+                `${Math.max(0, progress.current - i * 100)}%`,
+              )
+            }
           }}
         />
         {/* <Bulb scale={0.03} position-z={0.5} /> */}

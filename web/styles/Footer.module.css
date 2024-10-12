@@ -12,6 +12,7 @@
 }
 
 .progress {
+  /* styles */
   position: absolute;
   left: 0;
   right: 0;
@@ -23,16 +24,69 @@
   align-items: stretch;
   column-gap: 24px;
   > * {
-    background: #134643;
     flex-shrink: 1;
     flex-grow: 1;
     opacity: 0.8;
     border-radius: 3px;
-  }
-  > .complete {
-    background-color: #fff;
-  }
-  > *.current {
-    background: linear-gradient(to right, white 50%, #134643 50%);
+    &:nth-child(1) {
+      --p0: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p0),
+        var(--slate) var(--p0),
+        var(--slate) 0%
+      );
+
+      transition: --p0 1s;
+    }
+    &:nth-child(2) {
+      --p1: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p1),
+        var(--slate) var(--p1),
+        var(--slate) 0%
+      );
+
+      transition: --p1 1s;
+    }
+    &:nth-child(3) {
+      --p2: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p2),
+        var(--slate) var(--p2),
+        var(--slate) 0%
+      );
+
+      transition: --p2 1s;
+    }
+    &:nth-child(4) {
+      --p3: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p3),
+        var(--slate) var(--p3),
+        var(--slate) 0%
+      );
+
+      transition: --p3 1s;
+    }
+    &:nth-child(5) {
+      --p4: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p4),
+        var(--slate) var(--p4),
+        var(--slate) 0%
+      );
+
+      transition: --p4 1s;
+    }
   }
 }
