@@ -1,5 +1,6 @@
 import { forwardRef, useRef } from 'react'
 import { usePage } from '../../hooks/usePage'
+import styles from 'web/styles/Footer.module.css'
 
 export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   const socials1 = useRef()
@@ -10,7 +11,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   usePage('footer', { socials1, socials2, socials3, settings1 })
 
   return (
-    <div ref={forwardRef} {...props}>
+    <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
       <div id='socials'>
         <div ref={socials1} />
         <div ref={socials2} />
@@ -22,10 +23,10 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div />
         <div ref={settings1} />
       </div>
-      <div id='progress'>
-        <div className='complete' />
-        <div className='complete' />
-        <div className='current' />
+      <div id='progress' className={styles.progress}>
+        <div className={`${styles.complete}`} />
+        <div className={`${styles.complete}`} />
+        <div className={`${styles.current}`} />
         <div />
         <div />
       </div>

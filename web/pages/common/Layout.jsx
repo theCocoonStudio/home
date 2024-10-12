@@ -25,7 +25,7 @@ export default function Layout() {
           <p>{text}</p>
         </div>
       </div>
-      <Footer id='footer' className='content' />
+      <Footer />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
         <Home />

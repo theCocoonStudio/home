@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Layout from 'web/pages/common/Layout.jsx'
 import { PageProvider } from './context/PageProvider'
 
-import './index.css'
+import './styles/index.css'
 
 const theme = {
   charcoal: '#273B4E', // blue

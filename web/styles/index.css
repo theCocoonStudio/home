@@ -130,7 +130,7 @@ body {
 
 #socials,
 #settings {
-  width: 250px;
+  width: 200px;
 }
 
 #socials,
@@ -168,47 +168,6 @@ body {
   transform: translateY(-50%);
   overflow-y: scroll;
   padding: 2em;
-}
-
-#footer {
-  position: absolute;
-  bottom: 0;
-  height: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: stretch;
-}
-
-#progress {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 10px;
-  top: calc(-10px - 2rem);
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: stretch;
-  column-gap: 24px;
-}
-#progress > * {
-  background: #134643;
-  flex-shrink: 1;
-  flex-grow: 1;
-  opacity: 0.8;
-  border-radius: 3px;
-}
-
-#progress > *.complete {
-  background-color: #fff;
-}
-
-#progress > *.current {
-  background: linear-gradient(to right, white 50%, #134643 50%);
 }
 
 /* variable weight 300-700 */

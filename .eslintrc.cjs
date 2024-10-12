@@ -1,11 +1,12 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2020: true, node: true },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
+    'plugin:css-modules/recommended',
     'prettier',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
@@ -16,7 +17,7 @@ module.exports = {
       alias: { src: './src', web: './web', public: './web/public' },
     },
   },
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'css-modules'],
   rules: {
     'react/jsx-no-target-blank': 'off',
     'react-refresh/only-export-components': [
