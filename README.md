@@ -458,7 +458,7 @@ const FiberComponent = () => {
     } else if (progress > 0.5 && progress < 1.0 && state.current[index] !== 1) {
       state.current[index] = 1
       child.style.setProperty(cssVar, '50%')
-    } else if (progress > 1.0 && state.current[index] != 2) {
+    } else if (progress > 1.0 && state.current[index] !== 2) {
       state.current[index] = 2
       child.style.setProperty(cssVar, '100%')
     }
