@@ -464,7 +464,7 @@ const FiberComponent = () => {
     }
   }, [])
 
-  useProgress(3, 3.0, false, 'carousel', 'carousel', updateCallback) // custom prefix and manual style updates
+  useProgress(3, 5.0, false, 'carousel', 'carousel', updateCallback) // custom prefix and manual style updates
   /* return ... */
 }
 
