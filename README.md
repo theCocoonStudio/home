@@ -313,7 +313,7 @@ This hook requires a very basic markup/css setup. See example usage for details.
 - **`child`** is equal to `document.getElementById(id).children[i]`, `id` being the corresponding hook argument and `i` described below.
 - **`progress`** is a `Number` from `0.0` to `1.0` representing the current progress of `child`, configured with hook params.
 - **`index`** is a `Number` (integer) in the range `[0, count - 1]` , correspoding to the current child node being updated. <br/>_Note:_ `CSS` pseudo-classes like `:nth-child()` use ordinal numbers as indexes, which start at `1` (with values in the range `[1, count]`). Make sure to map `index` to the correct value if used in CSS code.
-- **`cssVar`** is a `String` the template literal `` `--${prefix}${index}` ``, where `prefix` is the corresponding hook argument and `index` is defined as above.
+- **`cssVar`** is a `String` -- the template literal `` `--${prefix}${index}` `` -- where `prefix` is the corresponding hook argument and `index` is defined as above.
 - **`clock`** and **`delta`** correspond to `r3f`'s [`useFrame` callback parameters](https://r3f.docs.pmnd.rs/api/hooks#useframe) `state.clock` and `delta`, respectively.
 
   See example usage for an example implementation. If `updateCallback` is `undefined`, the hook's default behaviour is identical to setting `useCallback` to:
