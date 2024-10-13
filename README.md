@@ -310,19 +310,19 @@ This hook requires a very basic markup/css setup. See example usage for details.
 
    where:
 
-- **`child`** is equal to `document.getElementById(id).children[i]`, `id` being the corresponding hook argument and `i` described below.
-- **`progress`** is a `Number` from `0.0` to `1.0` representing the current progress of `child`, configured with hook params.
-- **`index`** is a `Number` (integer) in the range `[0, count - 1]` , correspoding to the current child node being updated. <br/>_Note:_ `CSS` pseudo-classes like `:nth-child()` use ordinal numbers as indexes, which start at `1` (with values in the range `[1, count]`). Make sure to map `index` to the correct value if used in CSS code.
-- **`cssVar`** is a `String` -- the template literal `` `--${prefix}${index}` `` -- where `prefix` is the corresponding hook argument and `index` is defined as above.
-- **`clock`** and **`delta`** correspond to `r3f`'s [`useFrame` callback parameters](https://r3f.docs.pmnd.rs/api/hooks#useframe) `state.clock` and `delta`, respectively.
+   - **`child`** is equal to `document.getElementById(id).children[i]`, `id` being the corresponding hook argument and `i` described below.
+   - **`progress`** is a `Number` from `0.0` to `1.0` representing the current progress of `child`, configured with hook params.
+   - **`index`** is a `Number` (integer) in the range `[0, count - 1]` , correspoding to the current child node being updated. <br/>_Note:_ `CSS` pseudo-classes like `:nth-child()` use ordinal numbers as indexes, which start at `1` (with values in the range `[1, count]`). Make sure to map `index` to the correct value if used in CSS code.
+   - **`cssVar`** is a `String` -- the template literal `` `--${prefix}${index}` `` -- where `prefix` is the corresponding hook argument and `index` is defined as above.
+   - **`clock`** and **`delta`** correspond to `r3f`'s [`useFrame` callback parameters](https://r3f.docs.pmnd.rs/api/hooks#useframe) `state.clock` and `delta`, respectively.
 
-  See example usage for an example implementation. If `updateCallback` is `undefined`, the hook's default behaviour is identical to setting `useCallback` to:
+   See example usage for an example implementation. If `updateCallback` is `undefined`, the hook's default behaviour is identical to setting `useCallback` to:
 
-  ```js
-  const updateCallback = (child, progress, index, cssVar, clock, delta) => {
-    child.style.setProperty(cssVar, `${progress * 100}%`)
-  }
-  ```
+   ```js
+   const updateCallback = (child, progress, index, cssVar, clock, delta) => {
+     child.style.setProperty(cssVar, `${progress * 100}%`)
+   }
+   ```
 
 7. `renderPriority` (optional): `Number` (integer) representing the render priority in the internally-used [useFrame](https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is undefined.
 
@@ -453,13 +453,13 @@ const FiberComponent = () => {
   const state = useRef([0, 0, 0])
   const updateCallback = useCallack((child, progress, index, cssVar) => {
     if (progress < 0.5 && state.current[index] !== 0) {
-      state.current[index] === 0
+      state.current[index] = 0
       child.style.setProperty(cssVar, '0%')
     } else if (progress > 0.5 && progress < 1.0 && state.current[index] !== 1) {
-      state.current[index] === 1
+      state.current[index] = 1
       child.style.setProperty(cssVar, '50%')
     } else if (progress > 1.0 && state.current[index] != 2) {
-      state.current[index] === 2
+      state.current[index] = 2
       child.style.setProperty(cssVar, '100%')
     }
   }, [])
