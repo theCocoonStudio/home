@@ -13,7 +13,7 @@ import { Icon } from '../../components/Socials/Icon'
 import { Gear } from '../../components/Gear'
 import { usePage } from '../../hooks/usePage'
 import { CubeScene } from './scenes/CubeScene.canvas'
-import { useProgress } from '../../hooks/useProgress'
+import { useProgress } from 'src/hooks'
 
 /* simulation mesh */
 export function Home() {

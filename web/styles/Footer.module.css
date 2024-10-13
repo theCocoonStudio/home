@@ -34,8 +34,7 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p0),
-        var(--slate) var(--p0),
-        var(--slate) 0%
+        var(--slate) var(--p0)
       );
 
       /* transition: --p0 1s; */
@@ -46,8 +45,7 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p1),
-        var(--slate) var(--p1),
-        var(--slate) 0%
+        var(--slate) var(--p1)
       );
 
       /* transition: --p1 1s; */
@@ -58,8 +56,7 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p2),
-        var(--slate) var(--p2),
-        var(--slate) 0%
+        var(--slate) var(--p2)
       );
 
       /* transition: --p2 1s; */
@@ -70,8 +67,7 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p3),
-        var(--slate) var(--p3),
-        var(--slate) 0%
+        var(--slate) var(--p3)
       );
 
       /* transition: --p3 1s; */
@@ -82,8 +78,7 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p4),
-        var(--slate) var(--p4),
-        var(--slate) 0%
+        var(--slate) var(--p4)
       );
 
       /* transition: --p4 1s; */
