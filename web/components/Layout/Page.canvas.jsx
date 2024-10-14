@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn'
 import { Github } from 'web/components/Socials/Github'
@@ -10,16 +10,27 @@ import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 
 export const Page = function Page() {
+  // three refs
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
   const settings = useRef()
+  // html refs
+  const s1 = useRef()
+  const s2 = useRef()
+  const s3 = useRef()
+  const s4 = useRef()
+
+  useEffect(() => {
+    const socials = document.getElementById('socials')
+    s1.current = socials.children[0]
+    s2.current = socials.children[1]
+    s3.current = socials.children[2]
+    s4.current = document.getElementById('settings').children[2]
+  }, [])
 
   const {
-    data: {
-      theme: colorTheme,
-      footer: { socials1: s1, socials2: s2, socials3: s3, settings1 },
-    },
+    data: { theme: colorTheme },
   } = usePage()
 
   use2DBounds(socials1, {
@@ -50,9 +61,8 @@ export const Page = function Page() {
   use2DBounds(settings, {
     scaleToFitWidth: false,
     trackingElement: true,
-    trackingElementRef: settings1,
+    trackingElementRef: s4,
     computeScale: setScaleXYOfXZOfX,
-
     pause: true,
     damping: { smoothTime: 0.0 },
   })

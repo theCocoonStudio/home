@@ -1,18 +1,15 @@
 import { useRef } from 'react'
-import ThreeApp from '../../components/ThreeApp.canvas'
+import ThreeApp from './ThreeApp.canvas'
 import { Page } from './Page.canvas'
 import { Nav } from './Nav'
 import { Footer } from './Footer'
-import { Home } from '../Home/Home.canvas'
-import { usePage } from '../../hooks/usePage'
+import { Home } from 'web/pages/Home/Home.canvas'
 
 export default function Layout() {
   const ref = useRef()
 
   const tracking = useRef()
   const description = useRef()
-
-  usePage('layout', { tracking, description })
 
   return (
     <div id='eventContainer' ref={ref}>
@@ -29,7 +26,7 @@ export default function Layout() {
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
         <Page />
-        <Home />
+        <Home tracking={tracking} description={description} />
       </ThreeApp>
     </div>
   )

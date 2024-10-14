@@ -13,7 +13,6 @@ import {
 import { BlendFunction } from 'postprocessing'
 import { LayerMaterial, Color, Depth } from 'lamina'
 import { useFrame, useThree } from '@react-three/fiber'
-import { usePage } from 'web/hooks/usePage'
 import { useEffect, useState } from 'react'
 import { damp, dampC, dampLookAt } from 'maath/easing'
 
@@ -22,12 +21,10 @@ export const Effects = () => {
 
   const get = useThree((state) => state.get)
 
-  const { page } = usePage()
-
   useEffect(() => {
     const { scene } = get()
     setSun(scene.getObjectByProperty('name', 'activeSun'))
-  }, [get, page])
+  }, [get])
 
   return (
     <EffectComposer disableNormalPass multisampling={8}>

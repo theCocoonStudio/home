@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-import Layout from 'web/pages/common/Layout.jsx'
+import Layout from 'web/components/Layout'
 import { PageProvider } from './context/PageProvider'
 
 import './styles/index.css'

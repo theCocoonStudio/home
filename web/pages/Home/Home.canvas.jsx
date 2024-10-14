@@ -11,14 +11,11 @@ import { Display } from '../../components/Display.canvas'
 import { useProgress } from 'src/hooks'
 
 /* simulation mesh */
-export function Home() {
+export function Home({ tracking }) {
   const camera = useRef()
 
   const {
-    data: {
-      theme: colorTheme,
-      layout: { tracking },
-    },
+    data: { theme: colorTheme },
   } = usePage()
 
   useProgress(5, 5)

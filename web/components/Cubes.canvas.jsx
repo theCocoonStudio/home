@@ -5,12 +5,10 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { usePage } from 'web/hooks/usePage'
+
 import { Cube } from './Cube'
 
 function Items({ scaleFactor, children, ...props }, forwardRef) {
-  const { page } = usePage()
-
   const cubes = useRef()
   useImperativeHandle(forwardRef, () => cubes.current)
 
@@ -85,13 +83,13 @@ function Items({ scaleFactor, children, ...props }, forwardRef) {
           options[index] && (
             <Cube
               key={index}
-              page={page}
-              name={index === page ? 'activeSun' : 'inactiveSun'}
+              /* page={page}
+              name={index === page ? 'activeSun' : 'inactiveSun'} */
               index={index}
               scaleFactor={scaleFactor}
               {...option}
               position-y={option.position[1] + 0.05}
-              edges={index !== page}
+              /* edges={index !== page} */
             >
               {children[index]}
             </Cube>
