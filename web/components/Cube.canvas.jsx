@@ -21,13 +21,13 @@ export const Cube = forwardRef(function Cube(
   return (
     <mesh ref={cube} {...props}>
       <boxGeometry args={[1, 1, 1]} />
-      {children || <meshBasicMaterial transparent opacity={0.5} color='red' />}
+      {children || <meshBasicMaterial transparent opacity={0.3} color='red' />}
       {/*  <mesh scale={1 - 0.05} position={[0, 0, -0.01]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshBasicMaterial
           ref={backlight}
           transparent
-          opacity={0.5}
+          opacity={0.3}
           color='#050505'
         />
       </mesh> */}

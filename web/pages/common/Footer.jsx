@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import { usePage } from '../../hooks/usePage'
 import styles from 'web/styles/Footer.module.css'
 

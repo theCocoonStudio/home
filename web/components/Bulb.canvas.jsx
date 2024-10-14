@@ -18,7 +18,6 @@ import { forwardRef } from 'react'
 
 const Bulb = forwardRef(function Bulb(props, ref) {
   const { nodes, materials } = useGLTF(Model)
-  console.log(materials)
 
   materials.PaletteMaterial002.opacity = 0.4
 
@@ -29,7 +28,7 @@ const Bulb = forwardRef(function Bulb(props, ref) {
 
   useFrame((state) => {
     materials.PaletteMaterial004.emissiveIntensity =
-      3 + Math.sin(0.5 * state.clock.elapsedTime)
+      3 + Math.sin(1.5 * state.clock.elapsedTime)
   })
 
   return (
