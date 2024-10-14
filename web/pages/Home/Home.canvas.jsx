@@ -8,6 +8,7 @@ import {
 import { usePage } from '../../hooks/usePage'
 import { CubeScene } from './scenes/CubeScene.canvas'
 import { Display } from '../../components/Display.canvas'
+import { useProgress } from 'src/hooks'
 
 /* simulation mesh */
 export function Home() {
@@ -20,6 +21,8 @@ export function Home() {
     },
   } = usePage()
 
+  useProgress(5, 5)
+
   return (
     <>
       <PerformanceMonitor>
@@ -29,7 +32,7 @@ export function Home() {
         {/* <Bulb scale={0.03} position-z={0.5} /> */}
         <PerspectiveCamera makeDefault position-z={1} ref={camera} />
 
-        <Display />
+        {/* <Display /> */}
         <Environment
           preset='studio'
           background={false}

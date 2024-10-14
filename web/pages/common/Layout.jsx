@@ -28,9 +28,8 @@ export default function Layout() {
       <Footer />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-        <Page>
-          <Home />
-        </Page>
+        <Page />
+        <Home />
       </ThreeApp>
     </div>
   )

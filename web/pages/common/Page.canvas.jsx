@@ -1,21 +1,20 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { useRef } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn'
 import { Github } from 'web/components/Socials/Github'
 import { Instagram } from 'web/components/Socials/Instagram'
 import { Icon } from 'web/components/Socials/Icon'
 import { Gear } from 'web/components/Gear'
-import { use2DBounds, useProgress } from 'src/hooks'
+import { use2DBounds } from 'src/hooks'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 
-export const Page = forwardRef(function Page({ children, ...props }, ref) {
+export const Page = function Page() {
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
   const settings = useRef()
 
-  useImperativeHandle(ref, () => progress)
   const {
     data: {
       theme: colorTheme,
@@ -23,7 +22,6 @@ export const Page = forwardRef(function Page({ children, ...props }, ref) {
     },
   } = usePage()
 
-  const progress = useProgress(5, 5)
   use2DBounds(socials1, {
     trackingElement: true,
     trackingElementRef: s1,
@@ -60,7 +58,6 @@ export const Page = forwardRef(function Page({ children, ...props }, ref) {
   })
   return (
     <>
-      {children}
       <Effects />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
@@ -74,4 +71,4 @@ export const Page = forwardRef(function Page({ children, ...props }, ref) {
       <Gear ref={settings} colorTheme={colorTheme} />
     </>
   )
-})
+}
