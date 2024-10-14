@@ -31,9 +31,9 @@ export const Effects = () => {
 
   return (
     <EffectComposer disableNormalPass multisampling={8}>
-      {/* {sun && <GodRays sun={sun} exposure={0.1} weight={0.2} blur />} */}
-      {/* <Bloom
-        luminanceThreshold={0}
+      {sun && <GodRays sun={sun} exposure={0.5} weight={0.8} blur />}
+      {/*   <Bloom
+        luminanceThreshold={0.0}
         mipmapBlur
         luminanceSmoothing={0.0}
         intensity={1}
@@ -43,7 +43,7 @@ export const Effects = () => {
         brightness={0} // brightness. min: -1, max: 1
         contrast={-0.2} // contrast: min -1, max: 1
       /> */}
-      {/* <Vignette opacity={0.4} /> */}
+      {/* <Vignette opacity={0.7} /> */}
       {/*  <ColorAverage blendFunction={BlendFunction.DST} /> */}
       {/*  <DepthOfField
         focusDistance={1} // where to focus

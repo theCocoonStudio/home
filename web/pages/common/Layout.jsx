@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import ThreeApp from '../../components/ThreeApp.canvas'
-
+import { Page } from './Page.canvas'
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import { Home } from '../Home/Home.canvas'
@@ -21,14 +21,16 @@ export default function Layout() {
         <div id='tracking' ref={tracking} />
         <div id='description' ref={description} className='disable-scrollbars'>
           <h1>Just getting started.</h1>
-          <h2>An introduction</h2>
+          <h2>an introduction</h2>
           <p>{text}</p>
         </div>
       </div>
       <Footer />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-        <Home />
+        <Page>
+          <Home />
+        </Page>
       </ThreeApp>
     </div>
   )
