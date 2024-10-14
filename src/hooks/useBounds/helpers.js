@@ -1,4 +1,4 @@
-export const deepClone = (obj) => {
+/* export const deepClone = (obj) => {
   const result = {}
   for (const property in obj) {
     // base condition 1
@@ -16,8 +16,8 @@ export const deepClone = (obj) => {
   }
   return result
 }
-
-export const setScale = (obj, results, camera, dimensions) => {
+ */
+export const setScaleXY = (obj, results, camera, dimensions) => {
   const scale = obj.scale.clone()
   const width = obj?.geometry?.parameters.width || dimensions?.x || 1.0
   const height = obj?.geometry?.parameters.height || dimensions?.y || 1.0

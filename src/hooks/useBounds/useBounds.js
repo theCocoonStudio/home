@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { damp3, dampE } from 'maath/easing'
 import { useCallback, useRef } from 'react'
 import { Euler, Object3D, Vector2, Vector3, Vector4 } from 'three'
-import { deepClone, setScale } from './helpers'
+import { setScaleXY } from './helpers'
 import { UNITS } from 'src/constants'
 
 export const use2DBounds = (
@@ -185,7 +185,7 @@ export const use2DBounds = (
       }
       if (typeof computeScale === 'function' || scaleToFitWidth) {
         const compute =
-          typeof computeScale === 'function' ? computeScale : setScale
+          typeof computeScale === 'function' ? computeScale : setScaleXY
         const scale = compute(obj3d, resultRef.current, camera, geometrySize)
         targetScale.current.copy(scale)
         resultRef.current.targets.scale.copy(scale)
