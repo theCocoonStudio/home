@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ThreeApp from './ThreeApp.canvas'
 import { Page } from './Page.canvas'
 import { Nav } from './Nav'
@@ -6,6 +6,7 @@ import { Footer } from './Footer'
 import { Home } from 'web/pages/Home/Home.canvas'
 
 export default function Layout() {
+  // imperative
   const ref = useRef()
   const footer = useRef()
   const tracking = useRef()
@@ -22,6 +23,8 @@ export default function Layout() {
     s3.current = footer.current.children[0].children[2]
     s4.current = footer.current.children[2].children[2]
   }, [])
+  // declarative
+  const [menu, setMenu] = useState(false)
 
   return (
     <div id='eventContainer' ref={ref}>
@@ -34,11 +37,16 @@ export default function Layout() {
           <p>{text}</p>
         </div>
       </div>
-      <Footer ref={footer} />
+      <Footer ref={footer} setMenu={setMenu} menu={menu} />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-        <Page s1={s1} s2={s2} s3={s3} s4={s4} />
-        <Home tracking={tracking} description={description} />
+        <Page s1={s1} s2={s2} s3={s3} s4={s4} menu={menu} setMenu={setMenu} />
+        <Home
+          tracking={tracking}
+          description={description}
+          setMenu={setMenu}
+          menu={menu}
+        />
       </ThreeApp>
     </div>
   )

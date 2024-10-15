@@ -1,8 +1,18 @@
-import { forwardRef } from 'react'
+import { forwardRef, useCallback } from 'react'
 
 import styles from 'web/styles/Footer.module.css'
 
-export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
+export const Footer = forwardRef(function Footer(
+  { menu, setMenu, ...props },
+  forwardRef,
+) {
+  const toggleMenu = useCallback(
+    (e) => {
+      e.preventDefault()
+      setMenu((prev) => !prev)
+    },
+    [setMenu],
+  )
   return (
     <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
       <div id='socials'>
@@ -14,7 +24,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
       <div id='settings'>
         <div />
         <div />
-        <div />
+        <div onClick={toggleMenu} />
       </div>
       <div id='progress' className={styles.progress}>
         <div />

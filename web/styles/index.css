@@ -179,15 +179,15 @@ body {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: stretch;
-  column-gap: 24px;
+  align-items: center;
+  column-gap: 20px;
 }
 
 #socials > *,
 #settings > * {
   flex-shrink: 1;
   flex-grow: 1;
-  margin: 12px 0;
+  aspect-ratio: 1/1;
   &:hover {
     cursor: pointer;
   }

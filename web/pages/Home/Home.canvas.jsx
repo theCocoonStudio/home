@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import {
   Environment,
-  OrbitControls,
   PerformanceMonitor,
   PerspectiveCamera,
 } from '@react-three/drei'
@@ -22,7 +21,6 @@ export function Home({ tracking }) {
   return (
     <>
       <PerformanceMonitor>
-        <OrbitControls />
         <CubeScene tracking={tracking} colorTheme={colorTheme} />
 
         {/* <Bulb scale={0.03} position-z={0.5} /> */}

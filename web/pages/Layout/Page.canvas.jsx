@@ -12,13 +12,13 @@ import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Vector4 } from 'three'
 
-export const Page = function Page({ s1, s2, s3, s4 }) {
+export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
   // three refs
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
   const settings1 = useRef()
-  const menu = useRef()
+  const menuRef = useRef()
   const {
     data: { theme: colorTheme },
   } = usePage()
@@ -57,7 +57,7 @@ export const Page = function Page({ s1, s2, s3, s4 }) {
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(menu, {
+  use2DBounds(menuRef, {
     margin: new Vector4(100, 0, 100, 0),
     marginUnits: UNITS.PX,
     damping: { smoothTime: 0.0 },
@@ -65,8 +65,8 @@ export const Page = function Page({ s1, s2, s3, s4 }) {
 
   return (
     <>
-      <Effects />
-      <Menu ref={menu} position-z={-10} />
+      <Effects menu={menu} />
+      <Menu ref={menuRef} position-z={-10} visible={false} />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
@@ -76,7 +76,7 @@ export const Page = function Page({ s1, s2, s3, s4 }) {
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Gear ref={settings1} colorTheme={colorTheme} />
+      <Gear ref={settings1} colorTheme={colorTheme} menu={menu} />
     </>
   )
 }
