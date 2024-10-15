@@ -33,7 +33,8 @@ export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
   }, [nodes.Object_2.geometry])
 
   useFrame(({ clock }, delta) => {
-    group.current.rotation.z = Math.PI * Math.sin(clock.getElapsedTime() / 2)
+    group.current.rotation.z =
+      (Math.PI / 4) * Math.sin(clock.getElapsedTime() / 2)
   })
   return (
     <group ref={group} {...props}>
