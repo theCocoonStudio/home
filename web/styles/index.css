@@ -157,12 +157,21 @@ body {
 
 #navItems > * {
   display: inline-block;
-  padding-left: 2rem;
+  margin-left: 2rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+#logo {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 #socials,
 #settings {
-  width: 200px;
+  width: 185px;
 }
 
 #socials,
@@ -179,6 +188,9 @@ body {
   flex-shrink: 1;
   flex-grow: 1;
   margin: 12px 0;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 #pageInfo {
