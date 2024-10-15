@@ -43,19 +43,15 @@ export const CubeScene = forwardRef(function CubeScene(
   use2DBounds(meshRef, {
     margin: new Vector4(100, 0, 100, 0),
     marginUnits: UNITS.PX,
-    pause: true,
+    damping: { smoothTime: 0.0 },
   })
   use2DBounds(cube, {
     damping: { smoothTime: 0.0 },
     trackingElement: true,
     trackingElementRef: tracking,
     scaleToFitWidth: false,
-    pause: true,
   })
-  const texture = useFluidTexture(options, undefined, [
-    width - 200,
-    height - 200,
-  ])
+  const texture = useFluidTexture(options, undefined, [width, height - 200])
 
   return (
     <>
@@ -71,13 +67,8 @@ export const CubeScene = forwardRef(function CubeScene(
             rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
           />
         </Physics>
-        <mesh
-          ref={meshRef}
-          position-z={-15}
-          scale-x={width / height}
-          name='activeSun'
-        >
-          <planeGeometry />
+        <mesh ref={meshRef} position-z={-15} name='activeSun'>
+          <planeGeometry args={[1, (1 * (height - 200)) / width]} />
           <meshBasicMaterial
             side={DoubleSide}
             transparent
