@@ -161,8 +161,8 @@ A convenient hook for aligning objects in a 3D scene to positions on the canvas 
       left = 0.5,
       // A float between 0.0 and 1.0 representing a target y-position within the vertical bounds. A value of 0.0 sets the target y-position at the top bound, while 1.0 at the bottom.
       top = 0.5,
-      // If true, calculation stops. The calculation is always carried out at least once when the component mounts, even if pause is initially set to true.
-      pause = false,
+      // If true, calculation stops. The calculation is always carried out at least once when the component mounts and when the target bounds change (i.e., it is Reactive), even if pause is initially set to true.
+      pause = true,
       // If true, the hook calculates and updates the bound object's position (and optionally, scale and rotation) each frame, and returns the calculated target results. If false, the target results are returned without any modification to the object.
       damp = true,
       // Args to pass to damp() functions. See https://github.com/pmndrs/maath/blob/main/README.md#easing for reference and defaults.
