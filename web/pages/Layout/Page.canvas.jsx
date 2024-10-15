@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn'
 import { Github } from 'web/components/Socials/Github'
@@ -9,25 +9,12 @@ import { use2DBounds } from 'src/hooks'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 
-export const Page = function Page() {
+export const Page = function Page({ s1, s2, s3, s4 }) {
   // three refs
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
-  const settings = useRef()
-  // html refs
-  const s1 = useRef()
-  const s2 = useRef()
-  const s3 = useRef()
-  const s4 = useRef()
-
-  useEffect(() => {
-    const socials = document.getElementById('socials')
-    s1.current = socials.children[0]
-    s2.current = socials.children[1]
-    s3.current = socials.children[2]
-    s4.current = document.getElementById('settings').children[2]
-  }, [])
+  const settings1 = useRef()
 
   const {
     data: { theme: colorTheme },
@@ -58,7 +45,7 @@ export const Page = function Page() {
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(settings, {
+  use2DBounds(settings1, {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: s4,
@@ -78,7 +65,7 @@ export const Page = function Page() {
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Gear ref={settings} colorTheme={colorTheme} />
+      <Gear ref={settings1} colorTheme={colorTheme} />
     </>
   )
 }

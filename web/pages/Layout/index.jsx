@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import ThreeApp from './ThreeApp.canvas'
 import { Page } from './Page.canvas'
 import { Nav } from './Nav'
@@ -7,9 +7,21 @@ import { Home } from 'web/pages/Home/Home.canvas'
 
 export default function Layout() {
   const ref = useRef()
-
+  const footer = useRef()
   const tracking = useRef()
   const description = useRef()
+
+  const s1 = useRef()
+  const s2 = useRef()
+  const s3 = useRef()
+  const s4 = useRef()
+
+  useEffect(() => {
+    s1.current = footer.current.children[0].children[0]
+    s2.current = footer.current.children[0].children[1]
+    s3.current = footer.current.children[0].children[2]
+    s4.current = footer.current.children[2].children[2]
+  }, [])
 
   return (
     <div id='eventContainer' ref={ref}>
@@ -22,10 +34,10 @@ export default function Layout() {
           <p>{text}</p>
         </div>
       </div>
-      <Footer />
+      <Footer ref={footer} />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-        <Page />
+        <Page s1={s1} s2={s2} s3={s3} s4={s4} />
         <Home tracking={tracking} description={description} />
       </ThreeApp>
     </div>

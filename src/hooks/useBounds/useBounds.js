@@ -14,7 +14,7 @@ export const use2DBounds = (
     renderPriority,
     left = 0.5,
     top = 0.5,
-    pause = false,
+    pause = true,
     damp = true,
     damping = {},
     scaleToFitWidth = true,
@@ -36,7 +36,7 @@ export const use2DBounds = (
   )
 
   // dependent state
-
+  const prevTrackingDimensions = useRef(new Vector2())
   const iterations = useRef(0)
   const distance = useRef(null)
   const ppwu = useRef(new Vector2())
@@ -104,7 +104,7 @@ export const use2DBounds = (
           width: elementWidth,
           height: elementHeight,
         } = element.getBoundingClientRect()
-
+        prevTrackingDimensions.current.set(elementWidth, elementHeight)
         const leftOffset =
           minViewBounds.current.getComponent(0) +
           left / ppwu.current.getComponent(0)
@@ -208,11 +208,44 @@ export const use2DBounds = (
   // react engine: imperative updates
   useEffect(() => {
     iterations.current = 0
-  }, [reactiveWidth, reactiveHeight])
+  }, [
+    trackingElementRef,
+    trackingElement,
+    customCameraRef,
+    renderPriority,
+    left,
+    top,
+    pause,
+    damp,
+    scaleToFitWidth,
+    geometrySize,
+    computePosition,
+    computeScale,
+    computeRotation,
+    margin,
+    marginUnits,
+    smoothTime,
+    customDelta,
+    maxSpeed,
+    easing,
+    eps,
+    reactiveWidth,
+    reactiveHeight,
+  ])
 
   // three engine: imperative updates
   useFrame(({ size: { width, height }, camera: fiberCamera }, delta) => {
     const camera = customCameraRef?.current || fiberCamera
+    if (trackingElement && trackingElementRef.current) {
+      const { width: elementWidth, height: elementHeight } =
+        trackingElementRef.current.getBoundingClientRect()
+      if (
+        prevTrackingDimensions.current.x !== elementWidth ||
+        prevTrackingDimensions.current.y !== elementHeight
+      ) {
+        iterations.current = 0
+      }
+    }
     if (iterations.current < 1 || !pause) {
       if (
         obj3DRef.current instanceof Object3D &&
