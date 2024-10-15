@@ -1,6 +1,6 @@
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { damp3, dampE } from 'maath/easing'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Euler, Object3D, Vector2, Vector3, Vector4 } from 'three'
 import { setScaleXY } from './helpers'
 import { UNITS } from 'src/constants'
@@ -28,6 +28,12 @@ export const use2DBounds = (
 ) => {
   // independent state
   const { smoothTime, delta: customDelta, maxSpeed, easing, eps } = damping
+  const { width: reactiveWidth, height: reactiveHeight } = useThree(
+    ({ size: { width, height } }) => ({
+      width,
+      height,
+    }),
+  )
 
   // dependent state
 
@@ -58,7 +64,7 @@ export const use2DBounds = (
     margin: marginWU.current,
   })
 
-  // updates
+  // update callbacks
   const setDistance = useCallback((obj3D, camera) => {
     const wPos = new Vector3()
     obj3D.getWorldPosition(wPos)
@@ -198,6 +204,11 @@ export const use2DBounds = (
     },
     [],
   )
+
+  // react engine: imperative updates
+  useEffect(() => {
+    iterations.current = 0
+  }, [reactiveWidth, reactiveHeight])
 
   // three engine: imperative updates
   useFrame(({ size: { width, height }, camera: fiberCamera }, delta) => {
