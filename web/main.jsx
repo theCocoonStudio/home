@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
-import Layout from 'web/components/Layout'
+import Layout from 'web/pages/Layout'
 import { PageProvider } from './context/PageProvider'
 
 import './styles/index.css'
@@ -16,7 +16,7 @@ const theme = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Suspense>
+    <Suspense fallback={<div>hello</div>}>
       <PageProvider theme={theme}>
         <Layout />
       </PageProvider>
