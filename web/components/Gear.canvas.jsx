@@ -11,6 +11,7 @@ Title: 3D Icon gear
 import Model from 'public/models/gear.glb'
 import { useGLTF } from '@react-three/drei'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
 
 export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
   const { nodes } = useGLTF(Model)
@@ -31,6 +32,9 @@ export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
     }
   }, [nodes.Object_2.geometry])
 
+  useFrame((state, delta) => {
+    group.current.rotation.z += (2 * Math.PI) / (15 / delta)
+  })
   return (
     <group ref={group} {...props}>
       <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>

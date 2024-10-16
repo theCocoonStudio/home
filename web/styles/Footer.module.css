@@ -1,7 +1,6 @@
 .footer {
   position: absolute;
   bottom: 0;
-  height: 100px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -9,6 +8,9 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: stretch;
+  > * {
+    height: 100px;
+  }
 }
 
 .progress {

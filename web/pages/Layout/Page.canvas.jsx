@@ -11,6 +11,7 @@ import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Vector4 } from 'three'
+import { PerformanceMonitor } from '@react-three/drei'
 
 export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
   // three refs
@@ -65,6 +66,7 @@ export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
 
   return (
     <>
+      <PerformanceMonitor onChange={({ fps }) => console.log(fps)} />
       <Effects menu={menu} />
       <Menu ref={menuRef} position-z={-10} visible={false} />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
