@@ -19,8 +19,10 @@
  */
 export const setScaleXY = (obj, results, camera, dimensions) => {
   const scale = obj.scale.clone()
-  const width = obj?.geometry?.parameters.width || dimensions?.x || 1.0
-  const height = obj?.geometry?.parameters.height || dimensions?.y || 1.0
+  const width =
+    obj?.geometry?.parameters?.width || (dimensions && dimensions?.x) || 1.0
+  const height =
+    obj?.geometry?.parameters?.height || (dimensions && dimensions?.y) || 1.0
   const boundsWidth =
     results.bounds.max.getComponent(0) - results.bounds.min.getComponent(0)
   const boundsHeight =
