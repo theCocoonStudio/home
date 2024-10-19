@@ -25,8 +25,8 @@ export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
 
     const factor = 0.75 / (Math.abs(max.x) + Math.abs(min.x))
 
-    nodes.Object_2.geometry.scale(factor, factor / 6, factor)
-
+    nodes.Object_2.geometry.scale(factor, factor / 3, factor)
+    nodes.Object_2.geometry.center()
     return () => {
       nodes.Object_2.geometry?.dispose()
     }
