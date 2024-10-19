@@ -11,14 +11,17 @@ import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Vector4 } from 'three'
-import { PerformanceMonitor } from '@react-three/drei'
+import { OrbitControls, PerformanceMonitor } from '@react-three/drei'
+import { Play } from 'web/components/Play.canvas'
 
-export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
+export const Page = function Page({ s1, s2, s3, s4, s5, s6, menu, setMenu }) {
   // three refs
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
   const settings1 = useRef()
+  const settings2 = useRef()
+  const settings3 = useRef()
   const menuRef = useRef()
   const {
     data: { theme: colorTheme },
@@ -45,16 +48,21 @@ export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
     trackingElementRef: s3,
     scaleToFitWidth: false,
     computeScale: setScaleXYOfXZOfX,
-
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(settings1, {
+  use2DBounds(settings2, {
     scaleToFitWidth: false,
     trackingElement: true,
-    trackingElementRef: s4,
+    trackingElementRef: s5,
     computeScale: setScaleXYOfXZOfX,
-
+    damping: { smoothTime: 0.0 },
+  })
+  use2DBounds(settings3, {
+    scaleToFitWidth: false,
+    trackingElement: true,
+    trackingElementRef: s6,
+    computeScale: setScaleXYOfXZOfX,
     damping: { smoothTime: 0.0 },
   })
 
@@ -66,9 +74,11 @@ export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
 
   return (
     <>
+      <OrbitControls />
       <PerformanceMonitor onChange={({ fps }) => console.log(fps)} />
       <Effects menu={menu} />
       <Menu ref={menuRef} position-z={-10} visible={false} />
+      <Play colorTheme={colorTheme} ref={settings2} />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
@@ -78,7 +88,7 @@ export const Page = function Page({ s1, s2, s3, s4, menu, setMenu }) {
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Gear ref={settings1} colorTheme={colorTheme} menu={menu} />
+      <Gear ref={settings3} colorTheme={colorTheme} menu={menu} />
     </>
   )
 }

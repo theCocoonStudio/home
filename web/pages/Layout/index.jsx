@@ -20,12 +20,16 @@ export default function Layout() {
   const s2 = useRef()
   const s3 = useRef()
   const s4 = useRef()
+  const s5 = useRef()
+  const s6 = useRef()
 
   useEffect(() => {
     s1.current = footer.current.children[0].children[0]
     s2.current = footer.current.children[0].children[1]
     s3.current = footer.current.children[0].children[2]
-    s4.current = footer.current.children[2].children[2]
+    s4.current = footer.current.children[2].children[0]
+    s5.current = footer.current.children[2].children[1]
+    s6.current = footer.current.children[2].children[2]
   }, [])
   // declarative
   const [menu, setMenu] = useState(false)
@@ -59,7 +63,16 @@ export default function Layout() {
       <Footer ref={footer} setMenu={setMenu} menu={menu} />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
-        <Page s1={s1} s2={s2} s3={s3} s4={s4} menu={menu} setMenu={setMenu} />
+        <Page
+          s1={s1}
+          s2={s2}
+          s3={s3}
+          s4={s4}
+          s5={s5}
+          s6={s6}
+          menu={menu}
+          setMenu={setMenu}
+        />
         <Home
           tracking={tracking}
           description={description}
