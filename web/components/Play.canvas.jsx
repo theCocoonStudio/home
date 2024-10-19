@@ -40,7 +40,7 @@ export const Play = forwardRef(function Play(
   )
   return (
     <group ref={ref} {...props}>
-      <mesh geometry={geometry} rotation-x={Math.PI}>
+      <mesh geometry={geometry} rotation-x={Math.PI} scale={0.9}>
         <meshStandardMaterial
           roughness={0.2}
           metalness={0.4}

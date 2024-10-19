@@ -11,16 +11,18 @@ import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Vector4 } from 'three'
-import { OrbitControls, PerformanceMonitor } from '@react-three/drei'
+import { PerformanceMonitor } from '@react-three/drei'
 import { Play } from 'web/components/Play.canvas'
+import { Pause } from 'web/components/Pause.canvas'
 
-export const Page = function Page({ s1, s2, s3, s4, s5, s6, menu, setMenu }) {
+export const Page = function Page({ s1, s2, s3, s4, s5, s6, pause, menu }) {
   // three refs
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
   const settings1 = useRef()
-  const settings2 = useRef()
+  const settings2a = useRef()
+  const settings2b = useRef()
   const settings3 = useRef()
   const menuRef = useRef()
   const {
@@ -51,7 +53,22 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, menu, setMenu }) {
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(settings2, {
+  use2DBounds(settings1, {
+    scaleToFitWidth: false,
+    trackingElement: true,
+    trackingElementRef: s4,
+    computeScale: setScaleXYOfXZOfX,
+    damping: { smoothTime: 0.0 },
+  })
+
+  use2DBounds(settings2a, {
+    scaleToFitWidth: false,
+    trackingElement: true,
+    trackingElementRef: s5,
+    computeScale: setScaleXYOfXZOfX,
+    damping: { smoothTime: 0.0 },
+  })
+  use2DBounds(settings2b, {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: s5,
@@ -74,11 +91,14 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, menu, setMenu }) {
 
   return (
     <>
-      <OrbitControls />
       <PerformanceMonitor onChange={({ fps }) => console.log(fps)} />
-      <Effects menu={menu} />
+      <Effects />
       <Menu ref={menuRef} position-z={-10} visible={false} />
-      <Play colorTheme={colorTheme} ref={settings2} />
+      {pause ? (
+        <Play colorTheme={colorTheme} ref={settings2a} />
+      ) : (
+        <Pause colorTheme={colorTheme} ref={settings2b} />
+      )}
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
@@ -88,7 +108,7 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, menu, setMenu }) {
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Gear ref={settings3} colorTheme={colorTheme} menu={menu} />
+      <Gear ref={settings3} colorTheme={colorTheme} />
     </>
   )
 }

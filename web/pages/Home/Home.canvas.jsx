@@ -5,7 +5,7 @@ import { CubeScene } from './scenes/CubeScene.canvas'
 import { useProgress } from 'src/hooks'
 
 /* simulation mesh */
-export function Home({ tracking }) {
+export function Home({ tracking, pause }) {
   const cubeScene = useRef()
   const camera = useRef()
 
@@ -13,7 +13,7 @@ export function Home({ tracking }) {
     data: { theme: colorTheme },
   } = usePage()
 
-  useProgress(5, 5)
+  useProgress(5, 5, pause)
 
   return (
     <>
