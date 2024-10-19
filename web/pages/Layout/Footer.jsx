@@ -26,13 +26,6 @@ export const Footer = forwardRef(function Footer(
         <div />
         <div onClick={toggleMenu} />
       </div>
-      <div id='progress' className={styles.progress}>
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
     </div>
   )
 })

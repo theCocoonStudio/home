@@ -1,0 +1,113 @@
+.tracking {
+  width: 40%;
+  height: 100%;
+  left: 60%;
+  border-radius: 3px;
+}
+
+.description {
+  position: absolute;
+  top: 50%;
+  width: 60%;
+  /* overflow-y: scroll; */
+  padding: 2em;
+  border-radius: 3px;
+}
+
+.code {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 3px;
+}
+
+.options {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 3px;
+}
+
+.menu {
+  bottom: var(--mainElementPadding);
+  left: 0;
+  right: 0;
+  background: red;
+  border-radius: 3px;
+  height: calc(var(--menuHeight) - var(--mainElementPadding));
+}
+
+.progress {
+  /* styles */
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  bottom: calc(var(--mainElementPadding) + var(--menuHeight));
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 24px;
+  > * {
+    flex-shrink: 1;
+    flex-grow: 1;
+    opacity: 0.8;
+    border-radius: 3px;
+    &:nth-child(1) {
+      --p0: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p0),
+        var(--slate) var(--p0)
+      );
+
+      /* transition: --p0 1s; */
+    }
+    &:nth-child(2) {
+      --p1: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p1),
+        var(--slate) var(--p1)
+      );
+
+      /* transition: --p1 1s; */
+    }
+    &:nth-child(3) {
+      --p2: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p2),
+        var(--slate) var(--p2)
+      );
+
+      /* transition: --p2 1s; */
+    }
+    &:nth-child(4) {
+      --p3: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p3),
+        var(--slate) var(--p3)
+      );
+
+      /* transition: --p3 1s; */
+    }
+    &:nth-child(5) {
+      --p4: 0%;
+      background: linear-gradient(
+        to right,
+        var(--white) 0%,
+        var(--white) var(--p4),
+        var(--slate) var(--p4)
+      );
+
+      /* transition: --p4 1s; */
+    }
+  }
+}

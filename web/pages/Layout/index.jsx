@@ -4,6 +4,7 @@ import { Page } from './Page.canvas'
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import { Home } from 'web/pages/Home/Home.canvas'
+import styles from 'web/styles/Layout.module.css'
 
 export default function Layout() {
   // imperative
@@ -11,6 +12,9 @@ export default function Layout() {
   const footer = useRef()
   const tracking = useRef()
   const description = useRef()
+  const code = useRef()
+  const options = useRef()
+  const menuRef = useRef()
 
   const s1 = useRef()
   const s2 = useRef()
@@ -30,13 +34,28 @@ export default function Layout() {
     <div id='eventContainer' ref={ref}>
       <Nav id='nav' className='space-mono-regular' />
       <div id='main' className='content'>
-        <div id='tracking' ref={tracking} />
-        <div id='description' ref={description} className='disable-scrollbars'>
+        <div id='tracking' ref={tracking} className={styles.tracking} />
+        <div
+          id='description'
+          ref={description}
+          className={`disable-scrollbars ${styles.description}`}
+        >
           <h1>Just getting started.</h1>
           <h2>an introduction</h2>
           <p>{text}</p>
         </div>
+        <div id='code' ref={code} className={styles.code} />
+        <div id='options' ref={options} className={styles.options} />
+        <div id='menu' ref={menuRef} className={styles.menu} />
+        <div id='progress' className={styles.progress}>
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
       </div>
+
       <Footer ref={footer} setMenu={setMenu} menu={menu} />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
