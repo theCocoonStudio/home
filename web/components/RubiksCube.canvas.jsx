@@ -12,7 +12,7 @@ import { Color, Vector3 } from 'three'
 
 export const RubiksCube = forwardRef(function RubiksCube(
   {
-    pause = false,
+    pause,
     sideCount = 3, // make arbitrary in future
     physics = false,
     colorTheme,
@@ -46,12 +46,11 @@ export const RubiksCube = forwardRef(function RubiksCube(
 
   const secsElapsed = useRef(0)
   const rotation = useRef(0.0)
-  const tail = useRef(0.0)
+
   // eslint-disable-next-line
   useFrame(({ clock }, delta) => {
-    if (!pause) {
+    if (!pause.current) {
       secsElapsed.current += delta
-      tail.current = 0.0
       rotation.current += delta / 4
       if (secsElapsed.current > 1.3) {
         secsElapsed.current = 0
@@ -59,12 +58,6 @@ export const RubiksCube = forwardRef(function RubiksCube(
         const val = Math.floor(Math.random() * 2) ? 1 : -1
         const v = new Vector3(0, 0, 0).setComponent(index, val)
         rubiks.rotatePlane(v)
-      }
-    } else {
-      secsElapsed.current = 0.0
-      tail.current += delta
-      if (tail.current < 0.2) {
-        rotation.current += delta / 4
       }
     }
 

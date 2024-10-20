@@ -31,6 +31,7 @@ export const useFluidTexture = (
   options = {},
   priority = -1,
   [fboWidth, fboHeight, fboOpts = {}] = [],
+  pause,
 ) => {
   const {
     iterations_poisson,
@@ -264,110 +265,112 @@ export const useFluidTexture = (
 
   // simulation updates
   useFrame(({ gl, pointer, clock }, delta) => {
-    // advection pass
-    advectionPass.current.updateUniforms({
-      dt: {
-        value: dt,
-      },
-      isBFECC: {
-        value: BFECC,
-      },
-    }).children.visible = isBounce
-    advectionPass.current.children.material.uniforms =
-      advectionPass.current.uniforms
-    advectionPass.current.render(gl)
+    if (!pause?.current) {
+      // advection pass
+      advectionPass.current.updateUniforms({
+        dt: {
+          value: dt,
+        },
+        isBFECC: {
+          value: BFECC,
+        },
+      }).children.visible = isBounce
+      advectionPass.current.children.material.uniforms =
+        advectionPass.current.uniforms
+      advectionPass.current.render(gl)
 
-    // external force pass
-    pointerDiff.current.subVectors(pointer, oldPointer.current)
-    oldPointer.current.copy(pointer)
+      // external force pass
+      pointerDiff.current.subVectors(pointer, oldPointer.current)
+      oldPointer.current.copy(pointer)
 
-    const { force, center } = forceCallback(
-      delta,
-      clock.getElapsedTime(),
-      pointer.clone(),
-      pointerDiff.current.clone(),
-    )
+      const { force, center } = forceCallback(
+        delta,
+        clock.getElapsedTime(),
+        pointer.clone(),
+        pointerDiff.current.clone(),
+      )
 
-    uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
-    uniforms.current.center.set(center.x, center.y)
-    uniforms.current.scale.set(cursor_size, cursor_size)
+      uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
+      uniforms.current.center.set(center.x, center.y)
+      uniforms.current.scale.set(cursor_size, cursor_size)
 
-    forcePass.current.render(gl)
+      forcePass.current.render(gl)
 
-    // viscosity pass
-    let vel = vel1
-    if (isViscous) {
-      let fbo_in, fbo_out
-      for (let i = 0; i < iterations_viscous; i++) {
-        if (i % 2 == 0) {
-          fbo_in = visc0
-          fbo_out = visc1
-        } else {
-          fbo_in = visc1
-          fbo_out = visc0
+      // viscosity pass
+      let vel = vel1
+      if (isViscous) {
+        let fbo_in, fbo_out
+        for (let i = 0; i < iterations_viscous; i++) {
+          if (i % 2 == 0) {
+            fbo_in = visc0
+            fbo_out = visc1
+          } else {
+            fbo_in = visc1
+            fbo_out = visc0
+          }
+          viscousPass.current
+            .updateUniforms({
+              v: {
+                value: viscous,
+              },
+              dt: {
+                value: dt,
+              },
+              velocity_new: {
+                value: fbo_in.texture,
+              },
+            })
+            .setFBO(fbo_out)
+            .render(gl)
         }
-        viscousPass.current
-          .updateUniforms({
-            v: {
-              value: viscous,
-            },
-            dt: {
-              value: dt,
-            },
-            velocity_new: {
-              value: fbo_in.texture,
-            },
-          })
-          .setFBO(fbo_out)
+        vel = fbo_out
+      }
+
+      // divergence pass
+      divergencePass.current
+        .updateUniforms({
+          velocity: { value: vel.texture },
+          dt: {
+            value: dt,
+          },
+        })
+        .render(gl)
+
+      // poisson pass
+      let p_in, p_out
+      for (let i = 0; i < iterations_poisson; i++) {
+        if (i % 2 == 0) {
+          p_in = pressure0
+          p_out = pressure1
+        } else {
+          p_in = pressure1
+          p_out = pressure0
+        }
+        poissonPass.current
+          .updateUniforms({ pressure: { value: p_in.texture } })
+          .setFBO(p_out)
           .render(gl)
       }
-      vel = fbo_out
-    }
+      const pressure = p_out
 
-    // divergence pass
-    divergencePass.current
-      .updateUniforms({
-        velocity: { value: vel.texture },
-        dt: {
-          value: dt,
-        },
-      })
-      .render(gl)
-
-    // poisson pass
-    let p_in, p_out
-    for (let i = 0; i < iterations_poisson; i++) {
-      if (i % 2 == 0) {
-        p_in = pressure0
-        p_out = pressure1
-      } else {
-        p_in = pressure1
-        p_out = pressure0
-      }
-      poissonPass.current
-        .updateUniforms({ pressure: { value: p_in.texture } })
-        .setFBO(p_out)
+      // pressure pass
+      pressurePass.current
+        .updateUniforms({
+          dt: {
+            value: dt,
+          },
+          velocity: {
+            value: vel.texture,
+          },
+          pressure: {
+            value: pressure.texture,
+          },
+        })
         .render(gl)
+
+      // output pass
+      outputPass.current.render(gl)
     }
-    const pressure = p_out
-
-    // pressure pass
-    pressurePass.current
-      .updateUniforms({
-        dt: {
-          value: dt,
-        },
-        velocity: {
-          value: vel.texture,
-        },
-        pressure: {
-          value: pressure.texture,
-        },
-      })
-      .render(gl)
-
-    // output pass
-    outputPass.current.render(gl)
   }, priority)
 
   // dispose on component unmount

@@ -1,4 +1,4 @@
-import { useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
 import { DoubleSide, Vector2, Vector4 } from 'three'
 import { UNITS } from 'src/constants'
@@ -51,8 +51,27 @@ export const CubeScene = forwardRef(function CubeScene(
     trackingElementRef: tracking,
     scaleToFitWidth: false,
   })
-  const texture = useFluidTexture(options, undefined, [width, height - 200])
 
+  const elapsed = useRef(0)
+  const pauseRef = useRef(false)
+
+  const texture = useFluidTexture(
+    options,
+    undefined,
+    [width, height - 200],
+    pauseRef,
+  )
+
+  useFrame((state, delta) => {
+    if (pauseRef.current === pause) {
+      elapsed.current = 0
+    } else {
+      elapsed.current += delta
+      if (elapsed.current > 0.1) {
+        pauseRef.current = pause
+      }
+    }
+  })
   return (
     <>
       <Suspense>
@@ -65,7 +84,7 @@ export const CubeScene = forwardRef(function CubeScene(
             itemScale={0.6}
             position={[0, 0, -2]}
             rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
-            pause={pause}
+            pause={pauseRef}
           />
         </Physics>
         <mesh ref={meshRef} position-z={-15} name='activeSun'>
