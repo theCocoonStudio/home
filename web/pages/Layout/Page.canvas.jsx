@@ -10,10 +10,8 @@ import { UNITS } from 'src/constants'
 import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
-import { Vector4 } from 'three'
 import { PerformanceMonitor } from '@react-three/drei'
-import { Play } from 'web/components/Play.canvas'
-import { Pause } from 'web/components/Pause.canvas'
+import { PlayPause } from 'web/components/PlayPause.canvas'
 
 export const Page = function Page({
   s1,
@@ -31,8 +29,7 @@ export const Page = function Page({
   const socials2 = useRef()
   const socials3 = useRef()
   const settings1 = useRef()
-  const settings2a = useRef()
-  const settings2b = useRef()
+  const settings2 = useRef()
   const settings3 = useRef()
   const menuRef = useRef()
   const {
@@ -71,20 +68,14 @@ export const Page = function Page({
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(settings2a, {
+  use2DBounds(settings2, {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: s5,
     computeScale: setScaleXYOfXZOfX,
     damping: { smoothTime: 0.0 },
   })
-  use2DBounds(settings2b, {
-    scaleToFitWidth: false,
-    trackingElement: true,
-    trackingElementRef: s5,
-    computeScale: setScaleXYOfXZOfX,
-    damping: { smoothTime: 0.0 },
-  })
+
   use2DBounds(settings3, {
     scaleToFitWidth: false,
     trackingElement: true,
@@ -93,18 +84,17 @@ export const Page = function Page({
     damping: { smoothTime: 0.0 },
   })
 
-  const x = use2DBounds(menuRef, {
+  use2DBounds(menuRef, {
     marginUnits: UNITS.PX,
     scaleToFitWidth: true,
     trackingElement: true,
     trackingElementRef: menuMarkup,
-    pause: false,
     damping: { smoothTime: 0.0 },
   })
 
   return (
     <>
-      <PerformanceMonitor onChange={({ fps }) => console.log(fps)} />
+      <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
       <Effects />
       <Menu
         ref={menuRef}
@@ -112,11 +102,8 @@ export const Page = function Page({
         visible={true}
         colorTheme={colorTheme}
       />
-      {pause ? (
-        <Play colorTheme={colorTheme} ref={settings2a} />
-      ) : (
-        <Pause colorTheme={colorTheme} ref={settings2b} />
-      )}
+
+      <PlayPause colorTheme={colorTheme} pause={pause} ref={settings2} />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
