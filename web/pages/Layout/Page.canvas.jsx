@@ -15,7 +15,17 @@ import { PerformanceMonitor } from '@react-three/drei'
 import { Play } from 'web/components/Play.canvas'
 import { Pause } from 'web/components/Pause.canvas'
 
-export const Page = function Page({ s1, s2, s3, s4, s5, s6, pause, menu }) {
+export const Page = function Page({
+  s1,
+  s2,
+  s3,
+  s4,
+  s5,
+  s6,
+  pause,
+  menu,
+  menuRef: menuMarkup,
+}) {
   // three refs
   const socials1 = useRef()
   const socials2 = useRef()
@@ -83,9 +93,12 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, pause, menu }) {
     damping: { smoothTime: 0.0 },
   })
 
-  use2DBounds(menuRef, {
-    margin: new Vector4(100, 0, 100, 0),
+  const x = use2DBounds(menuRef, {
     marginUnits: UNITS.PX,
+    scaleToFitWidth: true,
+    trackingElement: true,
+    trackingElementRef: menuMarkup,
+    pause: false,
     damping: { smoothTime: 0.0 },
   })
 
@@ -93,7 +106,12 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, pause, menu }) {
     <>
       <PerformanceMonitor onChange={({ fps }) => console.log(fps)} />
       <Effects />
-      <Menu ref={menuRef} position-z={-10} visible={false} />
+      <Menu
+        ref={menuRef}
+        position-z={-10}
+        visible={true}
+        colorTheme={colorTheme}
+      />
       {pause ? (
         <Play colorTheme={colorTheme} ref={settings2a} />
       ) : (

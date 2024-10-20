@@ -36,8 +36,8 @@ export const setScaleXY = (obj, results, camera, dimensions) => {
     results.margin.getComponent(0) -
     results.margin.getComponent(2)
   scale.set(
-    Math.abs(widthLessMargin / width),
-    Math.abs(heightLessMargin / height),
+    Math.abs(width === 0 ? width : widthLessMargin / width),
+    Math.abs(height === 0 ? height : heightLessMargin / height),
     scale.getComponent(2),
   )
 
