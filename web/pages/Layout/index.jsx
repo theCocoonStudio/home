@@ -15,6 +15,7 @@ export default function Layout() {
   const code = useRef()
   const options = useRef()
   const menuRef = useRef()
+  const progress = useRef()
 
   const s1 = useRef()
   const s2 = useRef()
@@ -52,8 +53,16 @@ export default function Layout() {
         </div>
         <div id='code' ref={code} className={styles.code} />
         <div id='options' ref={options} className={styles.options} />
-        <div id='menu' ref={menuRef} className={styles.menu} />
-        <div id='progress' className={styles.progress}>
+        <div
+          id='menu'
+          ref={menuRef}
+          className={`${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+        />
+        <div
+          id='progress'
+          className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}
+          ref={progress}
+        >
           <div />
           <div />
           <div />
@@ -74,6 +83,12 @@ export default function Layout() {
           s6={s6}
           pause={pause}
           setMenu={setMenu}
+          menu={menu}
+          tracking={tracking}
+          description={description}
+          menuRef={menuRef}
+          code={code}
+          progress={progress}
         />
         <Home tracking={tracking} description={description} pause={pause} />
       </ThreeApp>

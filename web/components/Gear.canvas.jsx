@@ -12,8 +12,12 @@ import Model from 'public/models/gear.glb'
 import { useGLTF } from '@react-three/drei'
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { damp } from 'maath/easing'
 
-export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
+export const Gear = forwardRef(function Gear(
+  { menu, colorTheme, ...props },
+  ref,
+) {
   const { nodes } = useGLTF(Model)
 
   const group = useRef()
@@ -33,10 +37,16 @@ export const Gear = forwardRef(function Gear({ colorTheme, ...props }, ref) {
   }, [nodes.Object_2.geometry])
 
   useFrame((state, delta) => {
-    group.current.rotation.z += (2 * Math.PI) / (15 / delta)
+    damp(
+      group.current.rotation,
+      'z',
+      menu ? Math.PI / 4 : -Math.PI / 4,
+      0.2,
+      delta,
+    )
   })
   return (
-    <group ref={group} {...props}>
+    <group ref={group} {...props} rotation-z={-Math.PI / 4}>
       <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>
         <meshStandardMaterial
           roughness={0.2}

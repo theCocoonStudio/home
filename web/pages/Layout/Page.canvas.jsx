@@ -108,7 +108,7 @@ export const Page = function Page({ s1, s2, s3, s4, s5, s6, pause, menu }) {
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Gear ref={settings3} colorTheme={colorTheme} />
+      <Gear ref={settings3} colorTheme={colorTheme} menu={menu} />
     </>
   )
 }
