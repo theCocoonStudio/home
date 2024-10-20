@@ -1,4 +1,3 @@
-import { MeshTransmissionMaterial } from '@react-three/drei'
 import { InstancedRigidBodies } from '@react-three/rapier'
 import {
   forwardRef,
@@ -13,6 +12,7 @@ import { Color, Vector3 } from 'three'
 
 export const RubiksCube = forwardRef(function RubiksCube(
   {
+    pause = false,
     sideCount = 3, // make arbitrary in future
     physics = false,
     colorTheme,
@@ -45,21 +45,34 @@ export const RubiksCube = forwardRef(function RubiksCube(
     : {}
 
   const secsElapsed = useRef(0)
+  const rotation = useRef(0.0)
+  const tail = useRef(0.0)
+  // eslint-disable-next-line
   useFrame(({ clock }, delta) => {
-    // rotation
-    groupRef.current.rotation.y = clock.elapsedTime / 5
-    groupRef.current.rotation.x = clock.elapsedTime / 5
-    groupRef.current.rotation.z = clock.elapsedTime / 5
-    // random rotatePlane
-    secsElapsed.current += delta
-    if (secsElapsed.current > 1.3) {
-      secsElapsed.current = 0
-      const index = Math.floor(Math.random() * 3)
-      const val = Math.floor(Math.random() * 2) ? 1 : -1
-      const v = new Vector3(0, 0, 0).setComponent(index, val)
-      rubiks.rotatePlane(v)
+    if (!pause) {
+      secsElapsed.current += delta
+      tail.current = 0.0
+      rotation.current += delta / 4
+      if (secsElapsed.current > 1.3) {
+        secsElapsed.current = 0
+        const index = Math.floor(Math.random() * 3)
+        const val = Math.floor(Math.random() * 2) ? 1 : -1
+        const v = new Vector3(0, 0, 0).setComponent(index, val)
+        rubiks.rotatePlane(v)
+      }
+    } else {
+      secsElapsed.current = 0.0
+      tail.current += delta
+      if (tail.current < 0.2) {
+        rotation.current += delta / 4
+      }
     }
-    // update position
+
+    groupRef.current.rotation.y = rotation.current
+    groupRef.current.rotation.x = rotation.current
+    groupRef.current.rotation.z = rotation.current
+
+    // update position and rotation
     rubiks.render(instancedMesh.current, delta)
   }, -1)
   return (

@@ -30,7 +30,7 @@ const options = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { tracking, colorTheme },
+  { tracking, colorTheme, pause },
   forwardedRef,
 ) {
   const cube = useRef()
@@ -65,6 +65,7 @@ export const CubeScene = forwardRef(function CubeScene(
             itemScale={0.6}
             position={[0, 0, -2]}
             rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
+            pause={pause}
           />
         </Physics>
         <mesh ref={meshRef} position-z={-15} name='activeSun'>

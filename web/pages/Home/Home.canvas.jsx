@@ -24,7 +24,12 @@ export function Home({ tracking, pause }) {
       />
       <color attach='background' args={['#101010']} />
       <PerspectiveCamera makeDefault position-z={1} ref={camera} />
-      <CubeScene tracking={tracking} colorTheme={colorTheme} ref={cubeScene} />
+      <CubeScene
+        tracking={tracking}
+        colorTheme={colorTheme}
+        ref={cubeScene}
+        pause={pause}
+      />
     </>
   )
 }
