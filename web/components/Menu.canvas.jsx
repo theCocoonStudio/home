@@ -3,7 +3,6 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { DotScreenShader } from 'three/examples/jsm/Addons.js'
 
 import { Vector2 } from 'three'
-import { Text } from '@react-three/drei'
 
 export const Menu = forwardRef(function Menu(
   { colorTheme, menu, menuRef, ...props },
@@ -63,13 +62,12 @@ export const Menu = forwardRef(function Menu(
                 `vec4 diffuseColor = vec4( diffuse, opacity );`,
                 `vec4 diffuseColor = vec4( diffuse, opacity );
                 vec4 newColor = vec4(diffuseColor);
-                
                 float average = ( newColor.r + newColor.g + newColor.b ) / 3.0;
                 diffuseColor = vec4( vec3( average * 10.0 - 5.0 + pattern() ), newColor.a );
                 `,
               )}`
           }}
-          color={'green'}
+          color={colorTheme.slate}
           opacity={0.001}
           transparent
         />

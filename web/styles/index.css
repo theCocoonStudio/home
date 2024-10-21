@@ -224,6 +224,7 @@ body {
 }
 
 #menu > * {
+  padding: calc(1 * var(--mainElementPadding));
   flex-shrink: 1;
   flex-grow: 1;
 }

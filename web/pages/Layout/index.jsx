@@ -62,7 +62,10 @@ export default function Layout() {
           ref={menuRef}
           className={`space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
         >
-          <div />
+          <div>
+            <pre>{`hello {
+            }`}</pre>
+          </div>
           <div />
           <div />
         </div>
