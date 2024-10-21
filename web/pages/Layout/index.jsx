@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ThreeApp from './ThreeApp.canvas'
 import { Page } from './Page.canvas'
 import { Nav } from './Nav'
@@ -41,11 +41,15 @@ export default function Layout() {
     <div id='eventContainer' ref={ref}>
       <Nav id='nav' className='space-mono-regular' />
       <div id='main' className='content'>
-        <div id='tracking' ref={tracking} className={styles.tracking} />
+        <div
+          id='tracking'
+          ref={tracking}
+          className={`${styles.tracking} ${menu ? styles['tracking-open'] : ''}`}
+        />
         <div
           id='description'
           ref={description}
-          className={`disable-scrollbars ${styles.description}`}
+          className={`disable-scrollbars ${styles.description} ${menu ? styles['description-open'] : ''}`}
         >
           <h1>Just getting started.</h1>
           <h2>an introduction</h2>
@@ -90,7 +94,12 @@ export default function Layout() {
           code={code}
           progress={progress}
         />
-        <Home tracking={tracking} description={description} pause={pause} />
+        <Home
+          tracking={tracking}
+          description={description}
+          pause={pause}
+          menu={menu}
+        />
       </ThreeApp>
     </div>
   )

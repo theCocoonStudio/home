@@ -6,6 +6,7 @@ export const Footer = forwardRef(function Footer(
   { setPause, setMenu, ...props },
   forwardRef,
 ) {
+  // TODO: transition API
   const toggleMenu = useCallback(
     (e) => {
       e.preventDefault()

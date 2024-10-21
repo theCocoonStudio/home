@@ -18,7 +18,7 @@
   --socialsSettingsWidth: 185px;
   --mainElementPadding: 2rem;
   --menuHeight: calc(
-    40vh - var(--navFooterHeight) - var(--mainElementPadding) - 10px
+    50vh - var(--navFooterHeight) - var(--mainElementPadding) - 10px
   );
 }
 

@@ -1,5 +1,11 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
+import {
+  forwardRef,
+  Suspense,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { DoubleSide, Vector2, Vector4 } from 'three'
 import { UNITS } from 'src/constants'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
@@ -7,8 +13,9 @@ import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { Physics } from '@react-three/rapier'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
+import { damp } from 'maath/easing'
 
-const options = {
+const opts = {
   iterations_poisson: 32,
   iterations_viscous: 32,
   mouse_force: 20,
@@ -19,18 +26,11 @@ const options = {
   dt: 0.014,
   isViscous: true,
   BFECC: true,
-  forceCallback: (delta, elapsedTime) => {
-    const force = new Vector2(
-      Math.cos(elapsedTime),
-      Math.sin(elapsedTime),
-    ).multiplyScalar(0.5)
-    const center = new Vector2(0.5, 0)
-    return { force, center }
-  },
+  forceCallback: undefined,
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { tracking, colorTheme, pause },
+  { tracking, colorTheme, pause, menu },
   forwardedRef,
 ) {
   const cube = useRef()
@@ -54,6 +54,21 @@ export const CubeScene = forwardRef(function CubeScene(
 
   const elapsed = useRef(0)
   const pauseRef = useRef(false)
+  const center = useRef(new Vector2(0.5, 0))
+
+  const options = useMemo(
+    () => ({
+      ...opts,
+      forceCallback: (delta, elapsedTime) => {
+        const force = new Vector2(
+          Math.cos(elapsedTime),
+          Math.sin(elapsedTime),
+        ).multiplyScalar(0.5)
+        return { force, center: center.current }
+      },
+    }),
+    [],
+  )
 
   const texture = useFluidTexture(
     options,
@@ -71,6 +86,14 @@ export const CubeScene = forwardRef(function CubeScene(
         pauseRef.current = pause
       }
     }
+    const expected = menu ? 0.5 : 0
+    const current = pauseRef.current
+    if (center.current.y !== expected) {
+      pauseRef.current = false
+    } else {
+      pauseRef.current = current
+    }
+    damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
   })
   return (
     <>

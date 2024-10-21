@@ -1,17 +1,27 @@
 .tracking {
   width: 40%;
-  height: 100%;
+  top: 0;
   left: 60%;
   border-radius: 3px;
+  bottom: 0;
+  transition: bottom 0.5s;
+}
+.tracking-open {
+  bottom: calc(50% + var(--mainElementPadding));
 }
 
 .description {
   position: absolute;
-  top: 50%;
+  transform: translateY(50%);
   width: 60%;
   /* overflow-y: scroll; */
   padding: 2em;
   border-radius: 3px;
+  bottom: calc(50%);
+  transition: bottom 0.5s;
+}
+.description-open {
+  bottom: calc(75% + var(--mainElementPadding));
 }
 
 .code {
