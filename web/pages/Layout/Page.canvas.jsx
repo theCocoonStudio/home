@@ -84,15 +84,13 @@ export const Page = function Page({
     damping: { smoothTime: 0.0 },
   })
 
-  const { ppwu } = use2DBounds(menuRef, {
+  use2DBounds(menuRef, {
     marginUnits: UNITS.PX,
     scaleToFitWidth: true,
     trackingElement: true,
     trackingElementRef: menuMarkup,
     damping: { smoothTime: 0.0 },
   })
-
-  const ppwuRef = useRef(ppwu)
 
   return (
     <>
@@ -104,7 +102,6 @@ export const Page = function Page({
         visible={true}
         colorTheme={colorTheme}
         menu={menu}
-        ppwuRef={ppwuRef}
         menuRef={menuMarkup}
       />
 
