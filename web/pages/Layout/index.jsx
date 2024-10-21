@@ -60,8 +60,12 @@ export default function Layout() {
         <div
           id='menu'
           ref={menuRef}
-          className={`${styles.menu} ${menu ? styles['menu-open'] : ''}`}
-        />
+          className={`space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+        >
+          <div />
+          <div />
+          <div />
+        </div>
         <div
           id='progress'
           className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}

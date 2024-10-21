@@ -213,6 +213,21 @@ body {
   position: absolute;
 }
 
+#menu {
+  color: var(--white);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: var(--mainElementPadding);
+  font-size: 1.8rem;
+}
+
+#menu > * {
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
 /* variable weight 300-700 */
 .space-grotesk,
 body {
