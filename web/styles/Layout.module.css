@@ -48,7 +48,7 @@
 }
 
 .menu-open {
-  height: calc(var(--menuHeight) - var(--mainElementPadding));
+  height: calc(var(--menuHeight));
 }
 
 .progress {
@@ -128,5 +128,7 @@
 }
 
 .progress-menu {
-  bottom: calc(var(--mainElementPadding) + var(--menuHeight));
+  bottom: calc(
+    var(--mainElementPadding) + var(--mainElementPadding) + var(--menuHeight)
+  );
 }

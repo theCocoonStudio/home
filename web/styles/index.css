@@ -17,9 +17,7 @@
   --maxContent: 1200px;
   --socialsSettingsWidth: 185px;
   --mainElementPadding: 2rem;
-  --menuHeight: calc(
-    50vh - var(--navFooterHeight) - var(--mainElementPadding) - 10px
-  );
+  --menuHeight: calc(50vh - var(--navFooterHeight) - var(--mainElementPadding));
 }
 
 @property --p0 {
