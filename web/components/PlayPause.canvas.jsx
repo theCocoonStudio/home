@@ -6,7 +6,7 @@ import {
   useEffect,
 } from 'react'
 import { ExtrudeGeometry, Shape } from 'three'
-import { damp, damp3, sine } from 'maath/easing'
+import { damp, damp3 } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
 export const PlayPause = forwardRef(function PlayPause(
