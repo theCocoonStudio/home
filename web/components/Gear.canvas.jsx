@@ -27,7 +27,7 @@ export const Gear = forwardRef(function Gear(
     nodes.Object_2.geometry.center()
     const { min, max } = nodes.Object_2.geometry.boundingBox
 
-    const factor = 0.75 / (Math.abs(max.x) + Math.abs(min.x))
+    const factor = 0.68 / (Math.abs(max.x) + Math.abs(min.x))
 
     nodes.Object_2.geometry.scale(factor, factor / 3, factor)
     nodes.Object_2.geometry.center()
@@ -52,7 +52,7 @@ export const Gear = forwardRef(function Gear(
           roughness={0.2}
           metalness={0.7}
           color={colorTheme.white}
-          opacity={0.5}
+          opacity={0.4}
           transparent
         />
       </mesh>

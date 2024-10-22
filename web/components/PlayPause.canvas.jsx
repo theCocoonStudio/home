@@ -71,9 +71,9 @@ export const PlayPause = forwardRef(function PlayPause(
       mesh2.current.scale.y = 0
       damp(mesh.current.morphTargetInfluences, '0', 1, 0.18, delta)
       damp(mesh.current.position, 'x', 0, 0.18, delta)
-      damp3(mesh.current.scale, [0.9, 0.9, 0.9], 0.18, delta)
+      damp3(mesh.current.scale, [0.8, 0.8, 0.8], 0.18, delta)
     } else {
-      damp(material.current, 'opacity', 0.3, 0.18, delta)
+      damp(material.current, 'opacity', 0.2, 0.18, delta)
       damp3(mesh.current.scale, [0.375 * 0.58, 0.58, 0.58], 0.18, delta)
       damp3(mesh2.current.scale, [0.375 * 0.58, 0.58, 0.58], 0.18, delta)
       damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
@@ -86,7 +86,7 @@ export const PlayPause = forwardRef(function PlayPause(
         ref={mesh}
         geometry={geometry}
         rotation-x={Math.PI}
-        scale={pause ? 0.9 : [0.375 * 0.58, 0.58, 0.58]}
+        scale={pause ? 0.8 : [0.375 * 0.58, 0.58, 0.58]}
         morphTargetInfluences={[0]}
         position-x={0.58 * 0.35}
       >
@@ -94,7 +94,7 @@ export const PlayPause = forwardRef(function PlayPause(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.3}
+          opacity={0.2}
           transparent
         />
       </mesh>
@@ -111,7 +111,7 @@ export const PlayPause = forwardRef(function PlayPause(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.3}
+          opacity={0.2}
           transparent
         />
       </mesh>
