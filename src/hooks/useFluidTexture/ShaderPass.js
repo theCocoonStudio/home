@@ -95,9 +95,9 @@ export class ShaderPass {
     material && this.material.dispose()
     geometry && this.geometry.dispose()
     fbo && this.#fbo.dispose()
-    onDispose &&
-      typeof this.#onDispose === 'function' &&
-      onDispose(this.#children)
+    if (onDispose && typeof this.#onDispose === 'function') {
+      this.#onDispose(this.#children)
+    }
   }
 
   setFBO(fbo) {
