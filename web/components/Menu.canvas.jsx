@@ -1,27 +1,17 @@
 import { useThree } from '@react-three/fiber'
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { DotScreenShader } from 'three/examples/jsm/Addons.js'
-
 import { Vector2 } from 'three'
 
 export const Menu = forwardRef(function Menu(
-  { colorTheme, menu, menuRef, ...props },
+  { colorTheme, menu, ...props },
   forwardedRef,
 ) {
   const { width, height } = useThree(({ size }) => size)
   const mesh = useRef()
   useImperativeHandle(forwardedRef, () => mesh.current)
-  const sub1 = useRef()
-  const sub2 = useRef()
-  const sub3 = useRef()
   const material = useRef()
   const tSize = useRef(new Vector2(600, 250))
-
-  useEffect(() => {
-    sub1.current = menuRef.current.children[0]
-    sub2.current = menuRef.current.children[1]
-    sub3.current = menuRef.current.children[2]
-  }, [menuRef])
 
   return (
     <>

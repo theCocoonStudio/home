@@ -52,7 +52,7 @@ export const Gear = forwardRef(function Gear(
           roughness={0.2}
           metalness={0.7}
           color={colorTheme.white}
-          opacity={0.8}
+          opacity={0.5}
           transparent
         />
       </mesh>

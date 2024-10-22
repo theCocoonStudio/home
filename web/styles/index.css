@@ -55,7 +55,8 @@ body,
   padding: 0;
 }
 
-div {
+div,
+pre {
   margin: 0;
   padding: 0;
 }
@@ -221,6 +222,7 @@ body {
   align-items: stretch;
   column-gap: var(--mainElementPadding);
   font-size: 1.8rem;
+  opacity: 0.9;
 }
 
 #menu > * {

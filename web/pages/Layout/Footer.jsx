@@ -3,7 +3,7 @@ import { forwardRef, useCallback } from 'react'
 import styles from 'web/styles/Footer.module.css'
 
 export const Footer = forwardRef(function Footer(
-  { setPause, setMenu, ...props },
+  { setPause, setMenu, setInfo, ...props },
   forwardRef,
 ) {
   // TODO: transition API
@@ -22,6 +22,13 @@ export const Footer = forwardRef(function Footer(
     },
     [setPause],
   )
+  const toggleInfo = useCallback(
+    (e) => {
+      e.preventDefault()
+      setInfo((prev) => !prev)
+    },
+    [setInfo],
+  )
   return (
     <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
       <div id='socials'>
@@ -31,7 +38,7 @@ export const Footer = forwardRef(function Footer(
       </div>
       <div id='pageInfo'></div>
       <div id='settings'>
-        <div />
+        <div onClick={toggleInfo} />
         <div onClick={togglePause} />
         <div onClick={toggleMenu} />
       </div>

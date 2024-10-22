@@ -49,6 +49,7 @@
 
 .menu-open {
   height: calc(var(--menuHeight));
+  border: 1px solid black;
 }
 
 .progress {

@@ -23,6 +23,10 @@ export default function Layout() {
   const s4 = useRef()
   const s5 = useRef()
   const s6 = useRef()
+  const s7 = useRef()
+  const sub1 = useRef()
+  const sub2 = useRef()
+  const sub3 = useRef()
 
   useEffect(() => {
     s1.current = footer.current.children[0].children[0]
@@ -31,11 +35,16 @@ export default function Layout() {
     s4.current = footer.current.children[2].children[0]
     s5.current = footer.current.children[2].children[1]
     s6.current = footer.current.children[2].children[2]
+    s7.current = footer.current.children[1]
+    sub1.current = menuRef.current.children[0]
+    sub2.current = menuRef.current.children[1]
+    sub3.current = menuRef.current.children[2]
   }, [])
 
   // declarative
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(false)
+  const [info, setInfo] = useState(false)
 
   return (
     <div id='eventContainer' ref={ref}>
@@ -62,12 +71,16 @@ export default function Layout() {
           ref={menuRef}
           className={`space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
         >
-          <div>
-            <pre>{`hello {
+          {menu && (
+            <>
+              <div>
+                <pre>{`hello {
             }`}</pre>
-          </div>
-          <div />
-          <div />
+              </div>
+              <div />
+              <div />
+            </>
+          )}
         </div>
         <div
           id='progress'
@@ -82,7 +95,12 @@ export default function Layout() {
         </div>
       </div>
 
-      <Footer ref={footer} setMenu={setMenu} setPause={setPause} />
+      <Footer
+        ref={footer}
+        setMenu={setMenu}
+        setPause={setPause}
+        setInfo={setInfo}
+      />
 
       <ThreeApp id='canvas' eventSource={ref} eventPrefix={'client'}>
         <Page
@@ -92,9 +110,13 @@ export default function Layout() {
           s4={s4}
           s5={s5}
           s6={s6}
+          sub1={sub1}
+          sub2={sub2}
+          sub3={sub3}
           pause={pause}
           setMenu={setMenu}
           menu={menu}
+          info={info}
           tracking={tracking}
           description={description}
           menuRef={menuRef}

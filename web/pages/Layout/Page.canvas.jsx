@@ -12,6 +12,7 @@ import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { PerformanceMonitor } from '@react-three/drei'
 import { PlayPause } from 'web/components/PlayPause.canvas'
+import { Info } from 'web/components/Info.canvas'
 
 export const Page = function Page({
   s1,
@@ -20,9 +21,14 @@ export const Page = function Page({
   s4,
   s5,
   s6,
+  s7,
+  sub1,
+  sub2,
+  sub3,
   pause,
   menu,
   menuRef: menuMarkup,
+  info,
 }) {
   // three refs
   const socials1 = useRef()
@@ -102,10 +108,11 @@ export const Page = function Page({
         visible={true}
         colorTheme={colorTheme}
         menu={menu}
-        menuRef={menuMarkup}
+        sub1={sub1}
+        sub2={sub2}
+        sub3={sub3}
       />
 
-      <PlayPause colorTheme={colorTheme} pause={pause} ref={settings2} />
       <Icon ref={socials1} colorTheme={colorTheme.gunmetal}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
@@ -115,6 +122,8 @@ export const Page = function Page({
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
+      <Info colorTheme={colorTheme} ref={settings1} info={info} />
+      <PlayPause colorTheme={colorTheme} pause={pause} ref={settings2} />
       <Gear ref={settings3} colorTheme={colorTheme} menu={menu} />
     </>
   )
