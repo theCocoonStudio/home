@@ -69,13 +69,16 @@ export default function Layout() {
         <div
           id='menu'
           ref={menuRef}
-          className={`space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+          className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
         >
           <div>
             <pre>
-              <code>{`// fluid simulation settings
-
-useFluidTexture({`}</code>
+              <code>
+                {`// fluid simulation settings`}
+                <br />
+                <br />
+                {`useFluidTexture({`}
+              </code>
             </pre>
             <pre>
               <code>
