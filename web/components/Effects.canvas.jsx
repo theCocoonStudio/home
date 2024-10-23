@@ -11,7 +11,7 @@ import {
   Vignette,
 } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
-import { LayerMaterial, Color, Depth } from 'lamina'
+// import { LayerMaterial, Color, Depth } from 'lamina'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
 import { damp, dampC, dampLookAt } from 'maath/easing'

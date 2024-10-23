@@ -62,7 +62,7 @@ export const Info = forwardRef(function Info(
   })
   return (
     <group ref={group} {...props}>
-      <mesh geometry={geometry} scale={0.7} {...props}>
+      <mesh geometry={geometry} scale={0.65} {...props}>
         <meshStandardMaterial
           roughness={0.2}
           metalness={0.7}
