@@ -93,6 +93,22 @@ export class RubiksCube3 {
   get colors() {
     return this.#baseColors.map((color) => color.clone())
   }
+
+  setColors(colors) {
+    this.#baseColors.forEach((color, i) => color.copy(colors[i]))
+    for (const vertex of vertices) {
+      let color = new Color(0, 0, 0)
+      if (vertex.norm[0]) {
+        color = this.#baseColors[vertex.norm[0] < 0 ? 0 : 1]
+      } else if (vertex.norm[1]) {
+        color = this.#baseColors[vertex.norm[1] < 0 ? 2 : 3]
+      } else if (vertex.norm[2]) {
+        color = this.#baseColors[vertex.norm[2] < 0 ? 4 : 5]
+      }
+      this.#attributes.color.push(color.r, color.g, color.b)
+    }
+    return this
+  }
   get positions() {
     let ordered = []
     this.#state.forEach(({ index, position }) => {
