@@ -71,13 +71,13 @@ export const PlayPause = forwardRef(function PlayPause(
       mesh2.current.scale.y = 0
       damp(mesh.current.morphTargetInfluences, '0', 1, 0.18, delta)
       damp(mesh.current.position, 'x', 0, 0.18, delta)
-      damp3(mesh.current.scale, [0.8, 0.8, 0.8], 0.18, delta)
+      damp3(mesh.current.scale, [0.9, 0.9, 0.9], 0.18, delta)
     } else {
       damp(material.current, 'opacity', 0.2, 0.18, delta)
-      damp3(mesh.current.scale, [0.375 * 0.58, 0.58, 0.58], 0.18, delta)
-      damp3(mesh2.current.scale, [0.375 * 0.58, 0.58, 0.58], 0.18, delta)
+      damp3(mesh.current.scale, [0.375 * 0.68, 0.68, 0.68], 0.18, delta)
+      damp3(mesh2.current.scale, [0.375 * 0.68, 0.68, 0.68], 0.18, delta)
       damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
-      damp(mesh.current.position, 'x', 0.58 * 0.35, 0.18, delta)
+      damp(mesh.current.position, 'x', 0.68 * 0.35, 0.18, delta)
     }
   })
   return (
@@ -86,9 +86,9 @@ export const PlayPause = forwardRef(function PlayPause(
         ref={mesh}
         geometry={geometry}
         rotation-x={Math.PI}
-        scale={pause ? 0.8 : [0.375 * 0.58, 0.58, 0.58]}
+        scale={pause ? 0.9 : [0.375 * 0.68, 0.68, 0.68]}
         morphTargetInfluences={[0]}
-        position-x={0.58 * 0.35}
+        position-x={0.68 * 0.35}
       >
         <meshStandardMaterial
           roughness={0.2}
@@ -101,8 +101,8 @@ export const PlayPause = forwardRef(function PlayPause(
       <mesh
         ref={mesh2}
         geometry={geometry}
-        scale={[0.375 * 0.58, 0.58, 0.58]}
-        position-x={-0.58 * 0.35}
+        scale={[0.375 * 0.68, 0.68, 0.68]}
+        position-x={-0.68 * 0.35}
         rotation-x={Math.PI}
         morphTargetInfluences={[0]}
       >
