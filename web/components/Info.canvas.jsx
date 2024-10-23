@@ -58,7 +58,7 @@ export const Info = forwardRef(function Info(
   )
 
   useFrame((state, delta) => {
-    damp(group.current.rotation, 'z', info ? Math.PI / 2 : 0, 0.2, delta)
+    damp(group.current.rotation, 'z', info ? -Math.PI / 2 : 0, 0.2, delta)
   })
   return (
     <group ref={group} {...props}>
