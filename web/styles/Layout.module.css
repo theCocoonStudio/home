@@ -46,7 +46,8 @@
   height: 0px;
   transition:
     height 0.5s,
-    opacity 0.5s;
+    opacity 0.5s,
+    padding 0.5s;
   opacity: 0;
   overflow: hidden;
   pre {
@@ -60,8 +61,24 @@
   display: auto;
   opacity: 0.9;
   height: calc(var(--menuHeight));
+  padding: calc(1 * var(--mainElementPadding));
 }
 
+.menu-colors {
+  vertical-align: middle;
+}
+.menu-colors > span {
+  &:hover {
+    cursor: pointer;
+  }
+  &:nth-child(2) {
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    background-color: blue;
+  }
+}
 .progress {
   /* styles */
   position: absolute;

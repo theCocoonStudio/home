@@ -73,7 +73,9 @@ export default function Layout() {
         >
           <div>
             <pre>
-              <code>{`useFluidTexture({`}</code>
+              <code>{`// fluid simulation settings
+
+useFluidTexture({`}</code>
             </pre>
             <pre>
               <code>
@@ -203,8 +205,87 @@ export default function Layout() {
               <code>{`})`}</code>
             </pre>
           </div>
-          <div />
-          <div />
+          <div>
+            <pre>
+              <code>{`// Rubik's cube settings
+              
+cube.setColors([`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span style={{ background: `${'#fff'}` }} />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code className={`${styles['menu-colors']}`}>
+                {'  '}
+                {`new Color(`}
+                <span> #ffffff </span>
+                <span />
+              </code>
+              <code>{` ),`}</code>
+              <br />
+              <code>{`])`}</code>
+            </pre>
+          </div>
+
+          <div>
+            {' '}
+            <pre>
+              <code>
+                {`// scene effects settings
+
+<Effects>
+  <GodRays 
+    visible={true}
+    exposure={0.5}
+    weight={0.8}
+  />
+  <Noise visible={false} opacity={0.11} />
+  <DotScreen visible={false} scale={1.0} />
+  <BrightnessContrast
+    visible={false}
+    brightness={0} 
+    contrast={-0.2}
+  />
+</Effects>`}
+              </code>
+            </pre>
+          </div>
         </div>
         <div
           id='progress'
