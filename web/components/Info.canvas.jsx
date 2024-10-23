@@ -74,12 +74,12 @@ export const Info = forwardRef(function Info(
           center
           /* color={'white'} */
           depthOffset={-0.05}
-          scale={0.7}
-          characters='i'
+          scale={0.5}
+          characters='</>'
           material={material}
           fontWeight={'bold'}
         >
-          i
+          {'</>'}
         </Text>
       </mesh>
     </group>
