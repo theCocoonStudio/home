@@ -219,16 +219,26 @@ body {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: stretch;
+  align-items: center;
   column-gap: var(--mainElementPadding);
-  font-size: 1.8rem;
-  opacity: 0.9;
+  font-size: 1.7rem;
+
+  /* overflow-y: scroll; */
 }
 
 #menu > * {
-  padding: calc(1 * var(--mainElementPadding));
+  padding: 0 calc(1.5 * var(--mainElementPadding));
   flex-shrink: 1;
   flex-grow: 1;
+  max-width: calc((100% - (2 * var(--mainElementPadding))) / 3);
+}
+
+.menu-checkbox {
+  height: 1em;
+  width: 1em;
+  margin: 0;
+  font-size: 1em;
+  vertical-align: middle;
 }
 
 /* variable weight 300-700 */

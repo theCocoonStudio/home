@@ -71,16 +71,140 @@ export default function Layout() {
           ref={menuRef}
           className={`space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
         >
-          {menu && (
-            <>
-              <div>
-                <pre>{`hello {
-            }`}</pre>
-              </div>
-              <div />
-              <div />
-            </>
-          )}
+          <div>
+            <pre>
+              <code>{`useFluidTexture({`}</code>
+            </pre>
+            <pre>
+              <code>
+                {'  '}
+                <label>poissonIterations:</label>
+                {'   '}
+                <input
+                  name='poissonIterations'
+                  maxLength={2}
+                  size={7}
+                  placeholder='32'
+                  defaultValue={32}
+                />
+                ,<br />
+                {'  '}
+                <label>viscosityIterations:</label>{' '}
+                <input
+                  name='viscosityIterations'
+                  maxLength={2}
+                  size={7}
+                  placeholder='32'
+                  defaultValue={32}
+                />
+                ,<br />
+                {'  '}
+                <label>mouseForce:</label>
+                {'          '}
+                <input
+                  name='mouseForce'
+                  maxLength={2}
+                  size={7}
+                  placeholder='20'
+                  defaultValue={20}
+                />
+                ,<br />
+                {'  '}
+                <label>resolution:</label>
+                {'          '}
+                <input
+                  name='resolution'
+                  maxLength={3}
+                  size={7}
+                  placeholder='0.5'
+                  defaultValue={0.5}
+                />
+                ,<br />
+                {'  '}
+                <label>cursorSize:</label>
+                {'          '}
+                <input
+                  name='cursorSize'
+                  maxLength={3}
+                  size={7}
+                  placeholder='50'
+                  defaultValue={50}
+                />
+                ,<br />
+                {'  '}
+                <label>viscous:</label>
+                {'             '}
+                <input
+                  name='poissonIterations'
+                  maxLength={2}
+                  size={7}
+                  placeholder='40'
+                  defaultValue={40}
+                />
+                ,<br />
+                {'  '}
+                <label>isBounce:</label>
+                {'            '}
+                <input
+                  className='menu-checkbox'
+                  type='checkbox'
+                  name='isBounce'
+                  value={true}
+                  checked
+                />
+                {'    '}
+                ,<br />
+                {'  '}
+                <label>dt:</label>
+                {'                  '}
+                <input
+                  name='dt'
+                  maxLength={5}
+                  size={7}
+                  placeholder='0.014'
+                  defaultValue={0.014}
+                />
+                ,<br />
+                {'  '}
+                <label>isViscous:</label>
+                {'           '}
+                <input
+                  className='menu-checkbox'
+                  type='checkbox'
+                  name='isViscous'
+                  value={true}
+                  checked
+                />
+                {'    '}
+                ,<br />
+                {'  '}
+                <label>bfecc:</label>
+                {'               '}
+                <input
+                  className='menu-checkbox'
+                  type='checkbox'
+                  name='bfecc'
+                  value={true}
+                  checked
+                />
+                {'    '}
+                ,<br />
+                {'  '}
+                <label>forceCallback:</label>
+                {'       '}
+                <select name='pets' id='pet-select'>
+                  <option value='cube'>cube</option>
+                  <option value='cursor'>cursor</option>
+                </select>
+                ,<br />
+              </code>
+            </pre>
+            <pre>
+              <code>{`})`}</code>
+            </pre>
+          </div>
+          <div />
+          <div />
         </div>
         <div
           id='progress'

@@ -44,12 +44,22 @@
   right: 0;
   border-radius: 3px;
   height: 0px;
-  transition: height 0.5s;
+  transition:
+    height 0.5s,
+    opacity 0.5s;
+  opacity: 0;
+  overflow: hidden;
+  pre {
+    display: inline-block;
+    width: 100%;
+    line-height: 1.5em;
+  }
 }
 
 .menu-open {
+  display: auto;
+  opacity: 0.9;
   height: calc(var(--menuHeight));
-  border: 1px solid black;
 }
 
 .progress {
