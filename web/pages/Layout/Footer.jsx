@@ -22,24 +22,20 @@ export const Footer = forwardRef(function Footer(
     },
     [setPause],
   )
-  const toggleInfo = useCallback(
-    (e) => {
-      e.preventDefault()
-      setInfo((prev) => !prev)
-    },
-    [setInfo],
-  )
+
   return (
     <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
       <div id='socials'>
         <div />
         <div />
         <div />
+        <div />
       </div>
       <div id='pageInfo'></div>
       <div id='settings'>
-        <div onClick={toggleInfo} />
+        <div />
         <div onClick={togglePause} />
+        <div />
         <div onClick={toggleMenu} />
       </div>
     </div>

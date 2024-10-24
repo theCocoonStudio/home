@@ -27,7 +27,7 @@ export const Gear = forwardRef(function Gear(
     nodes.Object_2.geometry.center()
     const { min, max } = nodes.Object_2.geometry.boundingBox
 
-    const factor = 0.8 / (Math.abs(max.x) + Math.abs(min.x))
+    const factor = 0.9 / (Math.abs(max.x) + Math.abs(min.x))
 
     nodes.Object_2.geometry.scale(factor, factor / 3, factor)
     nodes.Object_2.geometry.center()

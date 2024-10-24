@@ -12,7 +12,8 @@ import { setScaleXYOfXZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { PerformanceMonitor } from '@react-three/drei'
 import { PlayPause } from 'web/components/PlayPause.canvas'
-import { Info } from 'web/components/Info.canvas'
+
+import { Next } from 'web/components/Next.canvas'
 
 export const Page = function Page({
   s1,
@@ -37,6 +38,7 @@ export const Page = function Page({
   const settings1 = useRef()
   const settings2 = useRef()
   const settings3 = useRef()
+  const settings4 = useRef()
   const menuRef = useRef()
   const {
     data: { theme: colorTheme },
@@ -85,6 +87,14 @@ export const Page = function Page({
   use2DBounds(settings3, {
     scaleToFitWidth: false,
     trackingElement: true,
+    trackingElementRef: s7,
+    computeScale: setScaleXYOfXZOfX,
+    damping: { smoothTime: 0.0 },
+  })
+
+  use2DBounds(settings4, {
+    scaleToFitWidth: false,
+    trackingElement: true,
     trackingElementRef: s6,
     computeScale: setScaleXYOfXZOfX,
     damping: { smoothTime: 0.0 },
@@ -122,8 +132,9 @@ export const Page = function Page({
       <Icon ref={socials3} colorTheme={colorTheme.gunmetal}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Info colorTheme={colorTheme} ref={settings1} info={info} />
+      <Next colorTheme={colorTheme} ref={settings1} info={info} prev />
       <PlayPause colorTheme={colorTheme} pause={pause} ref={settings2} />
+      <Next ref={settings4} colorTheme={colorTheme} info={info} />
       <Gear ref={settings3} colorTheme={colorTheme} menu={menu} />
     </>
   )

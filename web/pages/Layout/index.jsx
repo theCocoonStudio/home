@@ -24,6 +24,7 @@ export default function Layout() {
   const s5 = useRef()
   const s6 = useRef()
   const s7 = useRef()
+  const s8 = useRef()
   const sub1 = useRef()
   const sub2 = useRef()
   const sub3 = useRef()
@@ -35,7 +36,8 @@ export default function Layout() {
     s4.current = footer.current.children[2].children[0]
     s5.current = footer.current.children[2].children[1]
     s6.current = footer.current.children[2].children[2]
-    s7.current = footer.current.children[1]
+    s7.current = footer.current.children[2].children[3]
+    s8.current = footer.current.children[1]
     sub1.current = menuRef.current.children[0]
     sub2.current = menuRef.current.children[1]
     sub3.current = menuRef.current.children[2]
@@ -318,6 +320,8 @@ cube.setColors([`}</code>
           s4={s4}
           s5={s5}
           s6={s6}
+          s7={s7}
+          s8={s8}
           sub1={sub1}
           sub2={sub2}
           sub3={sub3}
