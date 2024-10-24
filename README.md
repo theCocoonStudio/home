@@ -280,7 +280,7 @@ const FiberComponent = ({ trackingElementRef }) => {
 }
 ```
 
-### **`useProgress(count, time, pause, id, prefix, updateCallback) : Number[]`**<br/>
+### **`useProgress(count, time, pause, id, prefix, renderPriority) : { progress: Number[], setElapsed: Function }`**<br/>
 
 A convenient hook to easily create `linear-gradient()`-based CSS progress bars in a `three.js`/`r3f` scene.
 
@@ -298,52 +298,43 @@ This hook requires a very basic markup/css setup. See example usage for details.
 
 5. `prefix` (optional): `String` representing a CSS variable prefix to use in order to update the style of the progress-tracking elements. Default is `"p"`.
 
-6. `updateCallback` (optional): `Function` that runs each frame when `pause = false` wherein you can manually update the styles of the children of the container with id `id` based on progress values at that frame.
-
-   If set, the hook does not update styles (and `prefix` isn't used), and updates should be manually implemented. This callback is a preferred alternative to using the hook's returned value: by using the callback pattern you eliminate the chance of accidentally tying the hook's returned value to the React lifecycle (see returned value section for more info).
-
-   At each frame, the callback is run `count` times, with the following signature:
-
-   ```ts
-   (child: Element, progress: Number, index: Number, cssVar: String, clock: THREE.Clock, delta: Number) : undefined
-   ```
-
-   where:
-
-   - **`child`** is equal to `document.getElementById(id).children[i]`, `id` being the corresponding hook argument and `i` described below.
-   - **`progress`** is a `Number` from `0.0` to `1.0` representing the current progress of `child`, configured with hook params.
-   - **`index`** is a `Number` (integer) in the range `[0, count - 1]` , correspoding to the current child node being updated. <br/>_Note:_ `CSS` pseudo-classes like `:nth-child()` use ordinal numbers as indexes, which start at `1` (with values in the range `[1, count]`). Make sure to map `index` to the correct value if used in CSS code.
-   - **`cssVar`** is a `String` -- the template literal `` `--${prefix}${index}` `` -- where `prefix` is the corresponding hook argument and `index` is defined as above.
-   - **`clock`** and **`delta`** correspond to `r3f`'s [`useFrame` callback parameters](https://r3f.docs.pmnd.rs/api/hooks#useframe) `state.clock` and `delta`, respectively.
-
-   See example usage for an example implementation. If `updateCallback` is `undefined`, the hook's default behaviour is identical to setting `useCallback` to:
-
-   ```js
-   const updateCallback = (child, progress, index, cssVar, clock, delta) => {
-     child.style.setProperty(cssVar, `${progress * 100}%`)
-   }
-   ```
-
-7. `renderPriority` (optional): `Number` (integer) representing the render priority in the internally-used [useFrame](https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is undefined.
+6. `renderPriority` (optional): `Number` (integer) representing the render priority in the internally-used [useFrame](https://r3f.docs.pmnd.rs/api/hooks#taking-over-the-render-loop) hook. Default is undefined.
 
 **return value:**<br/>
 
-An array with length configured by the `count` param representing with values corresponding to the progress configured by the `time` param and dependent on the elapsed time and the `pause` param. After `count * time` unpaused seconds have elapsed, the progress is reset. E.g:
+An `Object` with the following properties:
 
-```js
-useProgress(5, 5)
+- **progress**: An `Array` with length configured by the `count` param representing with values corresponding to the progress configured by the `time` param and dependent on the elapsed time and the `pause` param. After `count * time` unpaused seconds have elapsed, the progress is reset. E.g:
 
-// unpaused time elapsed: 2.5 seconds
-// returned array: [0.5, 0, 0, 0, 0]
+  ```js
+  const { progress } = useProgress(5, 5)
 
-// unpaused time elapsed: 17 seconds
-// returned array: [1.0, 1.0, 1.0, 0.4, 0]
+  // unpaused time elapsed: 2.5 seconds
+  // progress array: [0.5, 0, 0, 0, 0]
 
-// unpaused time elapsed: 35 seconds (reset after 25 seconds)
-// returned array: [1.0, 1.0, 0, 0, 0]
-```
+  // unpaused time elapsed: 17 seconds
+  // progress array: [1.0, 1.0, 1.0, 0.4, 0]
 
-_Important:_ internally, the returned array is stored in a `React.ref`, since calculations are performed every frame. If you use the returned values, do not tie them into the React lifecycle much like you would not set state in a `r3f` `useFrame` callback. This does mean, however, that you can imperatively update the progress values from outside the hook.
+  // unpaused time elapsed: 35 seconds (reset after 25 seconds)
+  // progress array: [1.0, 1.0, 0, 0, 0]
+  ```
+
+  _Important:_ internally, the returned array is stored in a `React.ref`, since calculations are performed every frame. If you use the returned values, do not tie them into the React lifecycle much like you would not set state in a `r3f` `useFrame` callback. If you want to imperatively update the progress value, use `setElapsed`.
+
+- **setElapsed**: An `Function` that takes a single `Number` as an argument. Used to imperatively update the progress outside of the hook. E.g.:
+
+  ```js
+  const { setElapsed } = useProgress(5, 5)
+
+  useEffect(() => {
+    // if page === 1 then elapsed = 5.
+    // progress array set to: [1, 0, 0, 0, 0]
+
+    // if page === 4.5 then elapsed = 22.5.
+    // progress array set to: [1, 1, 1, 1, 0.5]
+    setElapsed(page * 5)
+  }, [page])
+  ```
 
 **example usage:**<br/>
 
@@ -441,7 +432,7 @@ const App = () => {
 }
 ```
 
-Custom carousel UI element, manually updated, custom prefix:
+Custom carousel UI element sets progress on item click.
 
 ```jsx
 /* App.jsx */
@@ -450,22 +441,16 @@ Custom carousel UI element, manually updated, custom prefix:
 
 const FiberComponent = () => {
   // manual updates: animates with 1 second css transition (see App.css) 3 times instead of each frame.
-  const state = useRef([0, 0, 0])
-  const updateCallback = useCallack((child, progress, index, cssVar) => {
-    if (progress < 0.5 && state.current[index] !== 0) {
-      state.current[index] = 0
-      child.style.setProperty(cssVar, '0%')
-    } else if (progress > 0.5 && progress < 1.0 && state.current[index] !== 1) {
-      state.current[index] = 1
-      child.style.setProperty(cssVar, '50%')
-    } else if (progress > 1.0 && state.current[index] !== 2) {
-      state.current[index] = 2
-      child.style.setProperty(cssVar, '100%')
-    }
-  }, [])
+  const page = useRef(0)
 
-  useProgress(3, 5.0, false, 'carousel', 'carousel', updateCallback) // custom prefix and manual style updates
-  /* return ... */
+  const { setElapsed } = useProgress(3, 5.0, false, 'carousel', 'carousel')
+  return (
+    <>
+      <FirstCarouselItem onClick={setElapsed(0.0)}>
+      <SecondCarouselItem onClick={setElapsed(5.0)}>
+      <ThirdCarouselItem onClick={setElapsed(10.0)}>
+    </>
+  )
 }
 
 // const App defined as in previous example
