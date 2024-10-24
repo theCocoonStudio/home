@@ -321,7 +321,7 @@ An `Object` with the following properties:
 
   _Important:_ internally, the returned array is stored in a `React.ref`, since calculations are performed every frame. If you use the returned values, do not tie them into the React lifecycle much like you would not set state in a `r3f` `useFrame` callback. If you want to imperatively update the progress value, use `setElapsed`.
 
-- **setElapsed**: An `Function` that takes a single `Number` as an argument. Used to imperatively update the progress outside of the hook. E.g.:
+- **setElapsed**: A `Function` that takes a single `Number` as an argument. Used to imperatively update the progress outside of the hook. E.g.:
 
   ```js
   const { setElapsed } = useProgress(5, 5)
@@ -441,7 +441,6 @@ Custom carousel UI element sets progress on item click.
 
 const FiberComponent = () => {
   // manual updates: animates with 1 second css transition (see App.css) 3 times instead of each frame.
-  const page = useRef(0)
 
   const { setElapsed } = useProgress(3, 5.0, false, 'carousel', 'carousel')
   return (
