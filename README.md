@@ -438,10 +438,7 @@ Custom carousel UI element sets progress on item click.
 /* App.jsx */
 
 // const Carousel defined as in previous example
-
 const FiberComponent = () => {
-  // manual updates: animates with 1 second css transition (see App.css) 3 times instead of each frame.
-
   const { setElapsed } = useProgress(3, 5.0, false, 'carousel', 'carousel')
   return (
     <>
