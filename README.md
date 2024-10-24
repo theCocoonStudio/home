@@ -432,7 +432,7 @@ const App = () => {
 }
 ```
 
-Custom carousel UI element sets progress on item click.
+Custom carousel UI element sets progress on item click. Custom prefix.
 
 ```jsx
 /* App.jsx */
