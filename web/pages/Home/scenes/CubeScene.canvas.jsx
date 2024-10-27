@@ -30,23 +30,28 @@ const opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { tracking, colorTheme, pause, menu },
+  { tracking, colorTheme, pause, menu, progress },
   forwardedRef,
 ) {
   const cube = useRef()
   const meshRef = useRef()
+  const smoothTime = useRef(0.0)
 
   useImperativeHandle(forwardedRef, () => meshRef.current)
 
   const { width, height } = useThree(({ size }) => size)
 
-  use2DBounds(meshRef, {
+  const {
+    off,
+    on,
+    results: { ppwu },
+  } = use2DBounds(meshRef, {
     margin: new Vector4(100, 0, 100, 0),
     marginUnits: UNITS.PX,
-    damping: { smoothTime: 0.0 },
+    damping: { smoothTime: smoothTime.current },
   })
-  use2DBounds(cube, {
-    damping: { smoothTime: 0.0 },
+  const { off: off2, on: on2 } = use2DBounds(cube, {
+    damping: { smoothTime: smoothTime.current },
     trackingElement: true,
     trackingElementRef: tracking,
     scaleToFitWidth: false,
@@ -94,6 +99,28 @@ export const CubeScene = forwardRef(function CubeScene(
       pauseRef.current = current
     }
     damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
+
+    if (progress[0] >= 1.0) {
+      if (
+        Math.abs(meshRef.current.position.x - -width / ppwu.x) <
+        10 / ppwu.x
+      ) {
+        meshRef.current.visible = false
+        cube.current.visible = false
+        smoothTime.current = 0.2
+        pauseRef.current = true
+      } else {
+        off()
+        off2()
+        damp(meshRef.current.position, 'x', -width / ppwu.x, 0.2, delta)
+        damp(cube.current.position, 'x', -width / ppwu.x, 0.2, delta)
+      }
+    } else if (progress[0] < 1.0) {
+      meshRef.current.visible = true
+      cube.current.visible = true
+      on()
+      on2()
+    }
   })
   return (
     <>

@@ -13,7 +13,7 @@ export function Home({ tracking, pause, menu }) {
     data: { theme: colorTheme },
   } = usePage()
 
-  useProgress(5, 5, pause)
+  const { progress } = useProgress(5, 5, pause)
 
   return (
     <>
@@ -30,6 +30,7 @@ export function Home({ tracking, pause, menu }) {
         ref={cubeScene}
         pause={pause}
         menu={menu}
+        progress={progress}
       />
     </>
   )
