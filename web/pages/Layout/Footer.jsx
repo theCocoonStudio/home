@@ -1,11 +1,13 @@
 import { forwardRef, useCallback } from 'react'
 
 import styles from 'web/styles/Footer.module.css'
+import { usePage } from '../../hooks/usePage'
 
-export const Footer = forwardRef(function Footer(
-  { setPause, setMenu, setInfo, ...props },
-  forwardRef,
-) {
+export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
+  const {
+    setState: { menu: setMenu, pause: setPause },
+  } = usePage()
+
   // TODO: transition API
   const toggleMenu = useCallback(
     (e) => {

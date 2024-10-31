@@ -2,55 +2,47 @@ import { useCallback, useState, useTransition, useMemo, useRef } from 'react'
 import { PageContext } from './PageContext'
 
 export const PageProvider = ({ children, theme }) => {
-  const [isPending, startTransition] = useTransition()
-  const [current, setCurrent] = useState(0)
-  const data = useRef({ theme })
+  /* const [isPending, startTransition] = useTransition() */
 
-  const register = useCallback((key, componentData) => {
-    data.current = { ...data.current, [key]: componentData }
-  }, [])
+  const [menu, setMenu] = useState(false)
+  const [pause, setPause] = useState(false)
 
-  const dispose = useCallback((key) => {
-    delete data.current[key]
-  }, [])
+  const refs = useRef({})
 
-  const pageUp = useCallback(
-    (e) => {
-      if (e) {
-        e.stopPropagation()
-      }
-
-      startTransition(() => {
-        setCurrent((current) => (current + 1) % Object.keys(data).length)
-      })
-    },
-    [data],
+  const state = useMemo(
+    () => ({
+      menu,
+      pause,
+    }),
+    [menu, pause],
   )
 
-  const pageDown = useCallback(
-    (e) => {
-      if (e) {
-        e?.stopPropagation()
-      }
-
-      startTransition(() => {
-        setCurrent((current) => (current - 1) % Object.keys(data).length)
-      })
-    },
-    [data],
+  const setState = useMemo(
+    () => ({
+      menu: setMenu,
+      pause: setPause,
+    }),
+    [],
   )
+
+  const addRef = useCallback((key, pageData) => {
+    refs.current[key] = pageData
+  }, [])
+
+  const disposeRef = useCallback((key) => {
+    delete refs.current[key]
+  }, [])
 
   const context = useMemo(
     () => ({
-      pageUp,
-      pageDown,
-      current,
-      isPending,
-      dispose,
-      register,
-      data,
+      theme,
+      addRef,
+      disposeRef,
+      refs: refs.current,
+      state,
+      setState,
     }),
-    [isPending, current, pageDown, pageUp, dispose, register],
+    [addRef, disposeRef, setState, state, theme],
   )
 
   return <PageContext.Provider value={context}>{children}</PageContext.Provider>

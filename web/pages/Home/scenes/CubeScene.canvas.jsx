@@ -12,8 +12,9 @@ import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { Physics } from '@react-three/rapier'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
-import { GradientTexture } from '@react-three/drei'
+import { Environment, GradientTexture } from '@react-three/drei'
 import { damp } from 'maath/easing'
+import { usePage } from '../../../hooks/usePage'
 
 const opts = {
   iterations_poisson: 32,
@@ -30,7 +31,7 @@ const opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { tracking, colorTheme, pause, menu, progress },
+  { progress },
   forwardedRef,
 ) {
   const cube = useRef()
@@ -40,6 +41,14 @@ export const CubeScene = forwardRef(function CubeScene(
   useImperativeHandle(forwardedRef, () => meshRef.current)
 
   const { width, height } = useThree(({ size }) => size)
+
+  const {
+    refs: {
+      markup: { tracking },
+    },
+    theme: colorTheme,
+    state: { pause, menu },
+  } = usePage()
 
   const {
     off,
@@ -125,6 +134,7 @@ export const CubeScene = forwardRef(function CubeScene(
   return (
     <>
       <Suspense>
+        <Environment preset='studio' background={false} />
         <Physics gravity={[0, -1, 0]}>
           <RubiksCube
             colorTheme={colorTheme}

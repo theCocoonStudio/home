@@ -2,34 +2,28 @@ import { useContext, useEffect, useMemo } from 'react'
 import { PageContext } from 'web/context/PageContext'
 
 export const usePage = (key, pageData) => {
-  const {
-    pageUp,
-    pageDown,
-    page,
-    isPending,
-    register,
-    dispose,
-    data,
-    current,
-  } = useContext(PageContext)
+  const { theme, refs, addRef, disposeRef, state, setState } =
+    useContext(PageContext)
 
   useEffect(() => {
-    register(key, pageData)
-    return () => {
-      dispose(key)
+    if (key && typeof pageData === 'object') {
+      addRef(key, pageData)
     }
-  }, [dispose, key, pageData, register])
+    return () => {
+      if (key) {
+        disposeRef(key)
+      }
+    }
+  }, [addRef, disposeRef, key, pageData])
 
   const memoized = useMemo(
     () => ({
-      pageUp,
-      pageDown,
-      page,
-      isPending,
-      data: data.current,
-      current,
+      theme,
+      refs,
+      state,
+      setState,
     }),
-    [current, data, isPending, page, pageDown, pageUp],
+    [refs, setState, state, theme],
   )
   return memoized
 }
