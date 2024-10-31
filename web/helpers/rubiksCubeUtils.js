@@ -6,7 +6,7 @@ import {
   Quaternion,
   Vector3,
 } from 'three'
-import { dampM, circ, linear, dampQ, damp3 } from 'maath/easing'
+import { dampM } from 'maath/easing'
 
 export class RubiksCube3 {
   #state = []
@@ -207,11 +207,11 @@ export class RubiksCube3 {
     })
   }
 
-  render(instancedMesh, clockDelta) {
+  render(instancedMesh, clockDelta, smoothTime = 0.25) {
     if (instancedMesh) {
       this.#state.forEach(({ position, rotation, scale, index }) => {
         let matrix = new Matrix4().compose(position, rotation, scale)
-        dampM(this.#targets[index].matrix, matrix, 0.25, clockDelta)
+        dampM(this.#targets[index].matrix, matrix, smoothTime, clockDelta)
         instancedMesh.setMatrixAt(index, this.#targets[index].matrix)
       })
       instancedMesh.instanceMatrix.needsUpdate = true
