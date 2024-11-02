@@ -1,3 +1,4 @@
+import { useFrame, useThree } from '@react-three/fiber'
 import {
   Bloom,
   BrightnessContrast,
@@ -14,25 +15,23 @@ import { BlendFunction } from 'postprocessing'
 // import { LayerMaterial, Color, Depth } from 'lamina'
 import { useEffect, useState } from 'react'
 
-export const Effects = ({ cubeScene, gallery, current }) => {
+export const Effects = ({ current, sun }) => {
+  // godrays props
   const [godRaysProps, setGodRaysProps] = useState({
-    sun: cubeScene.current,
     exposure: 0.5,
     weight: 0.8,
   })
-
   useEffect(() => {
     const props = [
-      { sun: cubeScene.current, exposure: 0.5, weight: 0.8 },
-      { sun: gallery.current, exposure: 0.3, weight: 0.25 },
+      { exposure: 0.5, weight: 0.8 },
+      { exposure: 0.3, weight: 0.25 },
     ][current - 1]
-    console.log(props)
     setGodRaysProps(props)
-  }, [cubeScene, gallery, current])
+  }, [current])
 
   return (
     <EffectComposer disableNormalPass multisampling={8}>
-      {godRaysProps?.sun && <GodRays {...godRaysProps} blur />}
+      {sun && <GodRays sun={sun} {...godRaysProps} blur />}
       {/*   <Bloom
         luminanceThreshold={0.0}
         mipmapBlur

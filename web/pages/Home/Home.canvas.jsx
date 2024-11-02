@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { PerspectiveCamera, Preload } from '@react-three/drei'
 import { usePage } from '../../hooks/usePage'
 import { useProgress } from 'src/hooks'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
 import { Effects } from 'web/components/Effects.canvas.jsx'
+import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
 export function Home({ time = 10 }) {
@@ -12,6 +13,7 @@ export function Home({ time = 10 }) {
   const gallery = useRef()
 
   const [current, setCurrent] = useState(1)
+  const [sun, setSun] = useState()
 
   const {
     state: { pause },
@@ -23,28 +25,33 @@ export function Home({ time = 10 }) {
     pause,
     (progress, curr) => {
       setCurrent(curr)
+      setSun([cubeScene, gallery][curr - 1].current)
     },
   )
 
   return (
     <>
-      <Effects cubeScene={cubeScene} gallery={gallery} current={current} />
+      <Effects current={current} sun={sun} />
       <Preload all />
       <color attach='background' args={['#101010']} />
       <PerspectiveCamera makeDefault position-z={1} />
 
-      <CubeScene
-        ref={cubeScene}
-        progressRef={progressRef}
-        time={time}
-        active={current === 1}
-      />
-      <Gallery
-        ref={gallery}
-        progressRef={progressRef}
-        time={time}
-        active={current === 2}
-      />
+      {(current === 1 || current === 5) && (
+        <CubeScene
+          ref={cubeScene}
+          progressRef={progressRef}
+          time={time}
+          active={current === 1}
+        />
+      )}
+      {current <= 2 && (
+        <Gallery
+          ref={gallery}
+          progressRef={progressRef}
+          time={time}
+          active={current === 2}
+        />
+      )}
     </>
   )
 }
