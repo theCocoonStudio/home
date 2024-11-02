@@ -1,11 +1,9 @@
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
 import { DoubleSide, MeshBasicMaterial } from 'three'
-
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import {
   useTexture,
-  OrbitControls,
   MeshReflectorMaterial,
   Clouds,
   Cloud,
@@ -19,14 +17,15 @@ import kitesUrl from 'public/kites.jpg'
 import spiderUrl from 'public/spider.jpeg'
 import { usePage } from '../../../hooks/usePage'
 
-export const Gallery = forwardRef(function Gallery({ ...props }, forwardedRef) {
+export const Gallery = forwardRef(function Gallery(
+  { progressRef, time, active },
+  forwardedRef,
+) {
   const group = useRef()
-  const cloudsbg = useRef()
-  const cloudsRef = useRef()
+  const cloudPic = useRef()
+  const cloudBG = useRef()
 
-  useImperativeHandle(forwardedRef, () => group.current)
-
-  const { width, height } = useThree(({ size }) => size)
+  useImperativeHandle(forwardedRef, () => cloudPic.current)
 
   // TODO useTexture.preload at correct time
   const [clouds, dragonfly, kites, spider] = useTexture([
@@ -41,38 +40,45 @@ export const Gallery = forwardRef(function Gallery({ ...props }, forwardedRef) {
       markup: { tracking },
     },
     theme: colorTheme,
+    state: { pause, menu },
   } = usePage()
 
-  const {
-    off,
-    on,
-    results: { ppwu },
-  } = use2DBounds(cloudsRef, {
+  const smoothTime = useRef(0.2)
+  const { off, on } = use2DBounds(cloudBG, {
     trackingElement: true,
-    damping: { smoothTime: 0.0 },
+    damping: { smoothTime: smoothTime.current },
     trackingElementRef: tracking,
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
   })
 
-  useFrame((state, delta) => {})
+  useFrame((state, delta) => {
+    if (progressRef.current[1] >= 1 - 0.5 / time) {
+      off()
+      damp(group.current.position, 'x', -10, 0.5, delta)
+    } else if (progressRef.current[0] > 1 - 0.2 / time) {
+      on()
+      damp(group.current.position, 'x', 0, 0.7, delta)
+    }
+  })
   return (
     <>
-      <fog attach='fog' args={['#050505', 0, 13]} />
-      <Environment
-        preset='studio'
-        background={false}
-        environmentIntensity={0.5}
-      />
-      <group ref={group}>
+      {active && <fog attach='fog' args={['#050505', 0, 13]} />}
+
+      {active && (
+        <Environment
+          preset='studio'
+          background={false}
+          environmentIntensity={0.5}
+        />
+      )}
+      <group ref={group} position-x={20} visible={active}>
         <Suspense>
-          <OrbitControls />
-          <mesh receiveShadow castShadow ref={cloudsRef} position-z={-2}>
+          <mesh ref={cloudBG} position-z={-2}>
             <planeGeometry args={[1, 4 / 3]} />
-            <meshBasicMaterial side={DoubleSide} fog={false} color={'#000'} />
+            <meshBasicMaterial fog={false} color={'#000'} />
             <mesh
-              receiveShadow
-              castShadow
+              ref={cloudPic}
               scale={0.85}
               position-z={0.01}
               name='activeSun'
@@ -109,7 +115,7 @@ export const Gallery = forwardRef(function Gallery({ ...props }, forwardedRef) {
             <Cloud
               position={[0, 3, -5]}
               segments={40}
-              bounds={[15, 0.2, 0.4]}
+              bounds={[10, 0.2, 0.4]}
               volume={2}
               color={colorTheme.white}
               speed={0.5}

@@ -12,23 +12,27 @@ import {
 } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 // import { LayerMaterial, Color, Depth } from 'lamina'
-import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useState } from 'react'
-import { damp, dampC, dampLookAt } from 'maath/easing'
 
-export const Effects = () => {
-  const [sun, setSun] = useState()
-
-  const get = useThree((state) => state.get)
+export const Effects = ({ cubeScene, gallery, current }) => {
+  const [godRaysProps, setGodRaysProps] = useState({
+    sun: cubeScene.current,
+    exposure: 0.5,
+    weight: 0.8,
+  })
 
   useEffect(() => {
-    const { scene } = get()
-    setSun(scene.getObjectByProperty('name', 'activeSun'))
-  }, [get])
+    const props = [
+      { sun: cubeScene.current, exposure: 0.5, weight: 0.8 },
+      { sun: gallery.current, exposure: 0.3, weight: 0.25 },
+    ][current - 1]
+    console.log(props)
+    setGodRaysProps(props)
+  }, [cubeScene, gallery, current])
 
   return (
     <EffectComposer disableNormalPass multisampling={8}>
-      {sun && <GodRays sun={sun} exposure={0.5} weight={0.8} blur />}
+      {godRaysProps?.sun && <GodRays {...godRaysProps} blur />}
       {/*   <Bloom
         luminanceThreshold={0.0}
         mipmapBlur

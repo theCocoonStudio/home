@@ -31,12 +31,12 @@ const opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { progress },
+  { progressRef, time },
   forwardedRef,
 ) {
   const cube = useRef()
   const meshRef = useRef()
-  const smoothTime = useRef(0.0)
+  const smoothTime = useRef(0.2)
 
   useImperativeHandle(forwardedRef, () => meshRef.current)
 
@@ -92,6 +92,7 @@ export const CubeScene = forwardRef(function CubeScene(
   )
 
   useFrame((state, delta) => {
+    // delayed pause
     if (pauseRef.current === pause) {
       elapsed.current = 0
     } else {
@@ -99,6 +100,11 @@ export const CubeScene = forwardRef(function CubeScene(
       if (elapsed.current > 0.1) {
         pauseRef.current = pause
       }
+    }
+
+    // menu
+    if (menu) {
+      smoothTime.current = 0.0
     }
     const expected = menu ? 0.5 : 0
     const current = pauseRef.current
@@ -109,24 +115,12 @@ export const CubeScene = forwardRef(function CubeScene(
     }
     damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
 
-    if (progress[0] >= 1.0) {
-      if (
-        Math.abs(meshRef.current.position.x - -width / ppwu.x) <
-        10 / ppwu.x
-      ) {
-        meshRef.current.visible = false
-        cube.current.visible = false
-        smoothTime.current = 0.2
-        pauseRef.current = true
-      } else {
-        off()
-        off2()
-        damp(meshRef.current.position, 'x', -width / ppwu.x, 0.2, delta)
-        damp(cube.current.position, 'x', -width / ppwu.x, 0.2, delta)
-      }
-    } else if (progress[0] < 1.0) {
-      meshRef.current.visible = true
-      cube.current.visible = true
+    if (progressRef.current[0] >= 1 - 0.2 / time) {
+      off()
+      off2()
+      damp(meshRef.current.position, 'x', -width / ppwu.x, 0.2, delta)
+      damp(cube.current.position, 'x', -width / ppwu.x, 0.2, delta)
+    } else {
       on()
       on2()
     }

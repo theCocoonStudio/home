@@ -9,7 +9,6 @@ import { use2DBounds } from 'src/hooks'
 import { UNITS } from 'src/constants'
 import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
-import { Effects } from 'web/components/Effects.canvas.jsx'
 import { PerformanceMonitor } from '@react-three/drei'
 import { PlayPause } from 'web/components/PlayPause.canvas'
 
@@ -113,7 +112,6 @@ export const Page = function Page() {
   return (
     <>
       <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
-      <Effects />
       <Menu
         ref={menuRef}
         position-z={-10}
