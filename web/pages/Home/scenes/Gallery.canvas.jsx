@@ -77,12 +77,7 @@ export const Gallery = forwardRef(function Gallery(
           <mesh ref={cloudBG} position-z={-2}>
             <planeGeometry args={[1, 4 / 3]} />
             <meshBasicMaterial fog={false} color={'#000'} />
-            <mesh
-              ref={cloudPic}
-              scale={0.85}
-              position-z={0.01}
-              name='activeSun'
-            >
+            <mesh ref={cloudPic} scale={0.85} position-z={0.01}>
               <planeGeometry args={[1, 4 / 3]} />
               <meshBasicMaterial map={clouds} side={DoubleSide} fog={false} />
             </mesh>

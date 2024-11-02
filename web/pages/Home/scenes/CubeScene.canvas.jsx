@@ -118,7 +118,7 @@ export const CubeScene = forwardRef(function CubeScene(
   })
   return (
     <>
-      <Environment preset='studio' background={false} />
+      {active && <Environment preset='studio' background={false} />}
 
       <RubiksCube
         colorTheme={colorTheme}
@@ -129,9 +129,10 @@ export const CubeScene = forwardRef(function CubeScene(
         position={[0, 0, -2]}
         rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
         pause={pauseRef}
+        visible={active}
       />
 
-      <mesh ref={meshRef} position-z={-15} name='activeSun'>
+      <mesh ref={meshRef} position-z={-15} visible={active}>
         <planeGeometry args={[1, (1 * (height - 200)) / width]} />
         <meshBasicMaterial
           side={DoubleSide}
