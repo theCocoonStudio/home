@@ -14,7 +14,7 @@ import { PlayPause } from 'web/components/PlayPause.canvas'
 
 import { Next } from 'web/components/Next.canvas'
 
-export const Page = function Page() {
+export const Page = function Page({ progressColor }) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
@@ -123,13 +123,13 @@ export const Page = function Page() {
         sub3={menu3}
       />
 
-      <Icon ref={s1} colorTheme={colorTheme.gunmetal}>
+      <Icon ref={s1} colorTheme={progressColor}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s2} colorTheme={colorTheme.gunmetal}>
+      <Icon ref={s2} colorTheme={progressColor}>
         <Github colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s3} colorTheme={colorTheme.gunmetal}>
+      <Icon ref={s3} colorTheme={progressColor}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
       <Next colorTheme={colorTheme} ref={se1} prev />

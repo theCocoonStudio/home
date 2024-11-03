@@ -12,6 +12,7 @@ const theme = {
   midnight: '#103334', // intermediate green
   slate: '#134643', // green
   white: '#ffffff',
+  black: '#101010',
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

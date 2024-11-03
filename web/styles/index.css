@@ -10,8 +10,9 @@
   --gunmetal: #122629;
   --midnight: #103334;
   --slate: #134643;
+  --black: #101010;
   --white: #ffffff;
-
+  --progress: var(--slate);
   /* lengths */
   --navFooterHeight: 100px;
   --maxContent: 1200px;

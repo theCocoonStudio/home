@@ -5,10 +5,9 @@ import { useProgress } from 'src/hooks'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
 import { Effects } from 'web/components/Effects.canvas.jsx'
-import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
-export function Home({ time = 10 }) {
+export function Home({ time = 20, setProgressColor }) {
   const cubeScene = useRef()
   const gallery = useRef()
 
@@ -16,6 +15,7 @@ export function Home({ time = 10 }) {
   const [sun, setSun] = useState()
 
   const {
+    theme: colorTheme,
     state: { pause },
   } = usePage()
 
@@ -26,6 +26,9 @@ export function Home({ time = 10 }) {
     (progress, curr) => {
       setCurrent(curr)
       setSun([cubeScene, gallery][curr - 1].current)
+      const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
+      setProgressColor(newColor)
+      document.documentElement.style.setProperty('--progress', newColor)
     },
   )
 
@@ -33,7 +36,7 @@ export function Home({ time = 10 }) {
     <>
       <Effects current={current} sun={sun} />
       <Preload all />
-      <color attach='background' args={['#101010']} />
+      <color attach='background' args={[colorTheme.black]} />
       <PerspectiveCamera makeDefault position-z={1} />
 
       {(current === 1 || current === 5) && (
