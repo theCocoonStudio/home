@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
 import { PerspectiveCamera, Preload } from '@react-three/drei'
 import { usePage } from '../../hooks/usePage'
 import { useProgress } from 'src/hooks'
@@ -11,6 +17,7 @@ export function Home({ time = 20, setProgressColor }) {
   const cubeScene = useRef()
   const gallery = useRef()
 
+  const [isPending, startTransition] = useTransition()
   const [current, setCurrent] = useState(1)
   const [sun, setSun] = useState()
 
@@ -24,10 +31,12 @@ export function Home({ time = 20, setProgressColor }) {
     time,
     pause,
     (progress, curr) => {
-      setCurrent(curr)
-      setSun([cubeScene, gallery][curr - 1].current)
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
-      setProgressColor(newColor)
+      startTransition(() => {
+        setCurrent(curr)
+        setSun([cubeScene, gallery][curr - 1].current)
+        setProgressColor(newColor)
+      })
       document.documentElement.style.setProperty('--progress', newColor)
     },
   )

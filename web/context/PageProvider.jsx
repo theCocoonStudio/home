@@ -2,7 +2,7 @@ import { useCallback, useState, useTransition, useMemo, useRef } from 'react'
 import { PageContext } from './PageContext'
 
 export const PageProvider = ({ children, theme }) => {
-  /* const [isPending, startTransition] = useTransition() */
+  const [isPending, startTransition] = useTransition()
 
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(false)
@@ -11,16 +11,17 @@ export const PageProvider = ({ children, theme }) => {
 
   const state = useMemo(
     () => ({
+      isPending,
       menu,
       pause,
     }),
-    [menu, pause],
+    [menu, pause, isPending],
   )
 
   const setState = useMemo(
     () => ({
       menu: setMenu,
-      pause: setPause,
+      pause: (newState) => startTransition(() => setPause(newState)),
     }),
     [],
   )
