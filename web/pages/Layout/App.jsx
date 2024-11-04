@@ -1,11 +1,41 @@
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import styles from 'web/styles/Layout.module.css'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { CubeScene } from 'web/pages/Home/menus/CubeScene'
 import { usePage } from '../../hooks/usePage'
 
-export const App = function App({ Description = <></> }) {
+const HomeMarkup = () => (
+  <>
+    <h1>Creative, technically.</h1>
+    <h2>limitless possibilities.</h2>
+    <p>
+      Background: real-time fluid simulation running fully in the browser using
+      WebGL2 with custom GPU shader passes; used as a material alpha-map
+      texture.
+    </p>
+    <p>
+      Foreground: Playable 3D Rubik&#39;s cube implementation using a Three.js
+      InstancedMesh and custom shaders to override material parameters.
+    </p>
+  </>
+)
+
+const GalleryMarkup = () => (
+  <>
+    <h1>Sense and sensibility</h1>
+    <h2>combining technical knowledge and visual nuance.</h2>
+    <p>
+      Background: 3D Cloud simulation powered by the creative OSS powerhouse
+      pmndrs and its contributors.
+    </p>
+    <p>Foreground: Select photography with added post-processing effects.</p>
+  </>
+)
+
+const markupArr = [<HomeMarkup key='home' />, <GalleryMarkup key='gallery' />]
+
+export const App = function App() {
   const menuMarkup = useRef(CubeScene)
   const footer = useRef()
   const tracking = useRef()
@@ -61,9 +91,14 @@ export const App = function App({ Description = <></> }) {
     progress,
   }
   const {
-    state: { menu },
+    state: { menu, current },
   } = usePage('markup', refs)
 
+  const [Description, setDescription] = useState(markupArr[0])
+
+  useLayoutEffect(() => {
+    setDescription(markupArr[current - 1])
+  }, [current])
   return (
     <>
       <Nav id='nav' className='space-mono-regular' />
