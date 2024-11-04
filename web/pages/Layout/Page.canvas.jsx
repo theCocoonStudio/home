@@ -135,14 +135,13 @@ export const Page = function Page({ count = 5, time = 20 }) {
 
   const prev = useCallback(() => {
     const factor = current === 1 ? count - 1 : current - 2
-    console.log('prev')
+
     setElapsed(factor * time * 0.95)
   }, [count, current, setElapsed, time])
 
   const next = useCallback(() => {
     const factor = current === count ? 0 : current
     setElapsed(factor * time * 0.95)
-    console.log('next')
   }, [count, current, setElapsed, time])
 
   return (
