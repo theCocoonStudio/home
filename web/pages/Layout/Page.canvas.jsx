@@ -46,6 +46,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
       },
     },
     state: { pause, menu },
+    setState: { pause: setPause },
   } = usePage()
 
   use2DBounds(s1, {
@@ -134,15 +135,16 @@ export const Page = function Page({ count = 5, time = 20 }) {
   )
 
   const prev = useCallback(() => {
+    setPause(false)
     const factor = current === 1 ? count - 1 : current - 2
-
     setElapsed(factor * time * 0.95)
-  }, [count, current, setElapsed, time])
+  }, [count, current, setElapsed, setPause, time])
 
   const next = useCallback(() => {
+    setPause(false)
     const factor = current === count ? 0 : current
     setElapsed(factor * time * 0.95)
-  }, [count, current, setElapsed, time])
+  }, [count, current, setElapsed, setPause, time])
 
   return (
     <>
