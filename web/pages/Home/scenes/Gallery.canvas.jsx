@@ -44,7 +44,11 @@ export const Gallery = forwardRef(function Gallery(
   } = usePage()
 
   const smoothTime = useRef(0.2)
-  const { off, on } = use2DBounds(cloudBG, {
+  const {
+    off,
+    on,
+    results: { ppwu },
+  } = use2DBounds(cloudBG, {
     trackingElement: true,
     damping: { smoothTime: smoothTime.current },
     trackingElementRef: tracking,
@@ -77,7 +81,11 @@ export const Gallery = forwardRef(function Gallery(
           <mesh ref={cloudBG} position-z={-2}>
             <planeGeometry args={[1, 4 / 3]} />
             <meshBasicMaterial fog={false} color={'#000'} />
-            <mesh ref={cloudPic} scale={0.85} position-z={0.01}>
+            <mesh
+              ref={cloudPic}
+              scale={[1 - 20 / ppwu.x, 1 - 20 / ppwu.y, 1]}
+              position-z={0.01}
+            >
               <planeGeometry args={[1, 4 / 3]} />
               <meshBasicMaterial map={clouds} side={DoubleSide} fog={false} />
             </mesh>
