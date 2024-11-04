@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useTransition } from 'react'
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn.canvas'
 import { Github } from 'web/components/Socials/Github.canvas'
@@ -16,7 +16,37 @@ import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Home } from 'web/pages/Home/Home.canvas'
 
-export const Page = function Page({ count = 5, time = 20 }) {
+const HomeMarkup = () => (
+  <>
+    <h1>Creative, technically.</h1>
+    <h2>limitless possibilities.</h2>
+    <p>
+      Background: real-time fluid simulation running fully in the browser using
+      WebGL2 with custom GPU shader passes; used as a material alpha-map
+      texture.
+    </p>
+    <p>
+      Foreground: Playable 3D Rubik&#39;s cube implementation using a Three.js
+      InstancedMesh and custom shaders to override material parameters.
+    </p>
+  </>
+)
+
+const GalleryMarkup = () => (
+  <>
+    <h1>Sense and sensibility</h1>
+    <h2>combining technical knowledge and visual nuance.</h2>
+    <p>
+      Background: 3D Cloud simulation powered by the creative OSS powerhouse
+      pmndrs and its contributors.
+    </p>
+    <p>Foreground: Select photography with added post-processing effects.</p>
+  </>
+)
+
+const description = [<HomeMarkup key='home' />, <GalleryMarkup key='gallery' />]
+
+export const Page = function Page({ count = 5, time = 20, setDescription }) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
@@ -145,6 +175,10 @@ export const Page = function Page({ count = 5, time = 20 }) {
     const factor = current === count ? 0 : current
     setElapsed(factor * time * 0.95)
   }, [count, current, setElapsed, setPause, time])
+
+  useEffect(() => {
+    setDescription(description[current - 1])
+  }, [current, setDescription])
 
   return (
     <>

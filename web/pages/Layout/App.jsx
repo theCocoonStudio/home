@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { CubeScene } from 'web/pages/Home/menus/CubeScene'
 import { usePage } from '../../hooks/usePage'
 
-export const App = function App() {
+export const App = function App({ Description = <></> }) {
   const menuMarkup = useRef(CubeScene)
   const footer = useRef()
   const tracking = useRef()
@@ -64,8 +64,6 @@ export const App = function App() {
     state: { menu },
   } = usePage('markup', refs)
 
-  const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam purus felis, blandit non neque non, mollis convallis elit.`
-
   return (
     <>
       <Nav id='nav' className='space-mono-regular' />
@@ -80,9 +78,7 @@ export const App = function App() {
           ref={description}
           className={`disable-scrollbars ${styles.description} ${menu ? styles['description-open'] : ''}`}
         >
-          <h1>Just getting started.</h1>
-          <h2>an introduction</h2>
-          <p>{text}</p>
+          {Description}
         </div>
         <div id='code' ref={code} className={styles.code} />
         <div id='options' ref={options} className={styles.options} />
