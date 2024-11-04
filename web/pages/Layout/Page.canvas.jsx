@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useCallback, useRef, useState, useTransition } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn.canvas'
 import { Github } from 'web/components/Socials/Github.canvas'
@@ -11,10 +11,12 @@ import { Menu } from 'web/components/Menu.canvas'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { PerformanceMonitor } from '@react-three/drei'
 import { PlayPause } from 'web/components/PlayPause.canvas'
-
 import { Next } from 'web/components/Next.canvas'
+import { useProgress } from 'src/hooks'
+import { Effects } from 'web/components/Effects.canvas.jsx'
+import { Home } from 'web/pages/Home/Home.canvas'
 
-export const Page = function Page({ progressColor }) {
+export const Page = function Page({ count = 5, time = 20 }) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
@@ -24,6 +26,7 @@ export const Page = function Page({ progressColor }) {
   const se3 = useRef()
   const se4 = useRef()
   const menuRef = useRef()
+  const home = useRef()
 
   const {
     theme: colorTheme,
@@ -109,8 +112,42 @@ export const Page = function Page({ progressColor }) {
     damping: { smoothTime: 0.0 },
   })
 
+  // state
+  const [progressColor, setProgressColor] = useState(colorTheme.slate)
+  const [isPending, startTransition] = useTransition()
+  const [current, setCurrent] = useState(1)
+  const [sun, setSun] = useState()
+
+  const { progressRef, setElapsed } = useProgress(
+    count,
+    time,
+    pause,
+    (progress, curr) => {
+      const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
+      setCurrent(curr)
+      startTransition(() => {
+        setSun(home.current[curr - 1].current)
+        setProgressColor(newColor)
+      })
+      document.documentElement.style.setProperty('--progress', newColor)
+    },
+  )
+
+  const prev = useCallback(() => {
+    const factor = current === 1 ? count - 1 : current - 2
+    console.log('prev')
+    setElapsed(factor * time * 0.95)
+  }, [count, current, setElapsed, time])
+
+  const next = useCallback(() => {
+    const factor = current === count ? 0 : current
+    setElapsed(factor * time * 0.95)
+    console.log('next')
+  }, [count, current, setElapsed, time])
+
   return (
     <>
+      <Effects current={current} sun={sun} />
       <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
       <Menu
         ref={menuRef}
@@ -132,10 +169,17 @@ export const Page = function Page({ progressColor }) {
       <Icon ref={s3} colorTheme={progressColor}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Next colorTheme={colorTheme} ref={se1} prev />
+      <Next colorTheme={colorTheme} ref={se1} prev onPointerDown={prev} />
       <PlayPause colorTheme={colorTheme} pause={pause} ref={se2} />
-      <Next ref={se3} colorTheme={colorTheme} />
+      <Next ref={se3} colorTheme={colorTheme} onPointerDown={next} />
       <Gear ref={se4} colorTheme={colorTheme} menu={menu} />
+      <Home
+        ref={home}
+        time={time}
+        progressRef={progressRef}
+        current={current}
+        isPending={isPending}
+      />
     </>
   )
 }
