@@ -75,8 +75,8 @@ export const Page = function Page({ count = 5, time = 20, setDescription }) {
         menu: menuHTML,
       },
     },
-    state: { pause, menu },
-    setState: { pause: setPause },
+    state: { pause, menu, current },
+    setState: { pause: setPause, current: setCurrent },
   } = usePage()
 
   use2DBounds(s1, {
@@ -146,7 +146,6 @@ export const Page = function Page({ count = 5, time = 20, setDescription }) {
   // state
   const [progressColor, setProgressColor] = useState(colorTheme.slate)
   const [isPending, startTransition] = useTransition()
-  const [current, setCurrent] = useState(1)
   const [sun, setSun] = useState()
 
   const { progressRef, setElapsed } = useProgress(

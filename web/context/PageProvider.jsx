@@ -6,6 +6,7 @@ export const PageProvider = ({ children, theme }) => {
 
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(false)
+  const [current, setCurrent] = useState(1)
 
   const refs = useRef({})
 
@@ -14,14 +15,16 @@ export const PageProvider = ({ children, theme }) => {
       isPending,
       menu,
       pause,
+      current,
     }),
-    [menu, pause, isPending],
+    [menu, pause, isPending, current],
   )
 
   const setState = useMemo(
     () => ({
       menu: setMenu,
       pause: (newState) => startTransition(() => setPause(newState)),
+      current: setCurrent,
     }),
     [],
   )
