@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { forwardRef, Suspense, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { DoubleSide, MeshBasicMaterial } from 'three'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import {
@@ -77,65 +77,63 @@ export const Gallery = forwardRef(function Gallery(
         />
       )}
       <group ref={group} position-x={20} visible={active}>
-        <Suspense>
-          <mesh ref={cloudBG} position-z={-2}>
+        <mesh ref={cloudBG} position-z={-2}>
+          <planeGeometry args={[1, 4 / 3]} />
+          <meshBasicMaterial fog={false} color={'#000'} />
+          <mesh
+            ref={cloudPic}
+            scale={[1 - 20 / ppwu.x, 1 - 20 / ppwu.y, 1]}
+            position-z={0.01}
+          >
             <planeGeometry args={[1, 4 / 3]} />
-            <meshBasicMaterial fog={false} color={'#000'} />
-            <mesh
-              ref={cloudPic}
-              scale={[1 - 20 / ppwu.x, 1 - 20 / ppwu.y, 1]}
-              position-z={0.01}
-            >
-              <planeGeometry args={[1, 4 / 3]} />
-              <meshBasicMaterial map={clouds} side={DoubleSide} fog={false} />
-            </mesh>
+            <meshBasicMaterial map={clouds} side={DoubleSide} fog={false} />
           </mesh>
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-0.85}>
-            <planeGeometry args={[50, 50]} />
-            <MeshReflectorMaterial
-              blur={[300, 100]}
-              resolution={2048}
-              mixBlur={1}
-              mixStrength={220}
-              roughness={1.2}
-              depthScale={1.1}
-              minDepthThreshold={0.4}
-              maxDepthThreshold={1.4}
-              color='#050505'
-              metalness={0.6}
-            />
-          </mesh>
-          <mesh position-z={-15}>
-            <planeGeometry args={[50, 50]} />
-            <meshStandardMaterial
-              /* opacity={0.9}
+        </mesh>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-0.85}>
+          <planeGeometry args={[50, 50]} />
+          <MeshReflectorMaterial
+            blur={[300, 100]}
+            resolution={2048}
+            mixBlur={1}
+            mixStrength={220}
+            roughness={1.2}
+            depthScale={1.1}
+            minDepthThreshold={0.4}
+            maxDepthThreshold={1.4}
+            color='#050505'
+            metalness={0.6}
+          />
+        </mesh>
+        <mesh position-z={-15}>
+          <planeGeometry args={[50, 50]} />
+          <meshStandardMaterial
+            /* opacity={0.9}
             transparent */
-              color={'#050505'}
-              metalness={0.5}
-            />
-          </mesh>
-          <Clouds material={MeshBasicMaterial}>
-            <Cloud
-              position={[0, 3, -5]}
-              segments={40}
-              bounds={[10, 0.2, 0.4]}
-              volume={2}
-              color={colorTheme.white}
-              speed={0.5}
-              fade={90}
-            />
-            <Cloud
-              position={[0, 3, -5]}
-              segments={30}
-              bounds={[12, 0.05, 0.4]}
-              volume={3}
-              color={colorTheme.white}
-              speed={0.25}
-              fade={40}
-            />
-            {/* <Cloud seed={1} scale={2} volume={5} color='hotpink' fade={100} /> */}
-          </Clouds>
-        </Suspense>
+            color={'#050505'}
+            metalness={0.5}
+          />
+        </mesh>
+        <Clouds material={MeshBasicMaterial}>
+          <Cloud
+            position={[0, 3, -5]}
+            segments={40}
+            bounds={[10, 0.2, 0.4]}
+            volume={2}
+            color={colorTheme.white}
+            speed={0.5}
+            fade={90}
+          />
+          <Cloud
+            position={[0, 3, -5]}
+            segments={30}
+            bounds={[12, 0.05, 0.4]}
+            volume={3}
+            color={colorTheme.white}
+            speed={0.25}
+            fade={40}
+          />
+          {/* <Cloud seed={1} scale={2} volume={5} color='hotpink' fade={100} /> */}
+        </Clouds>
       </group>
     </>
   )

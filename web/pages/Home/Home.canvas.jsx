@@ -24,22 +24,19 @@ export const Home = forwardRef(function Home(
       <color attach='background' args={[colorTheme.black]} />
       <PerspectiveCamera makeDefault position-z={1} />
 
-      {/* {(current === 1 || current === 5) && ( */}
       <CubeScene
         ref={cubeScene}
         progressRef={progressRef}
         time={time}
         active={current === 1}
       />
-      {/* )} */}
-      {/* {current <= 2 && ( */}
+
       <Gallery
         ref={gallery}
         progressRef={progressRef}
         time={time}
         active={current === 2}
       />
-      {/* )} */}
     </>
   )
 })
