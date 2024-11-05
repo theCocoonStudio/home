@@ -99,9 +99,7 @@ export const App = function App() {
 
   useLayoutEffect(() => {
     setDescription(markupArr[current - 1])
-    if (current === 1) {
-      setStyleKey(['home', 'gallery'][current - 1])
-    }
+    setStyleKey(['home', 'gallery'][current - 1])
   }, [current])
   return (
     <>
