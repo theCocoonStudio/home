@@ -131,7 +131,7 @@ export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
       document.documentElement.style.setProperty('--progress', newColor)
       setCurrent(curr)
       startTransition(() => {
-        setSun(home.current[curr - 1].current)
+        setSun(home.current[curr - 1])
         setProgressColor(newColor)
       })
     },

@@ -1,5 +1,5 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import { forwardRef, useMemo, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { DoubleSide, Vector2, Vector4 } from 'three'
 import { UNITS } from 'src/constants'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
@@ -24,9 +24,10 @@ const opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { bufferTime, progressRef, time, active },
-  meshRef,
+  { bufferTime, active },
+  forwardedRef,
 ) {
+  const meshRef = useRef()
   const cube = useRef()
   const smoothTime = useRef(bufferTime)
 
@@ -77,42 +78,53 @@ export const CubeScene = forwardRef(function CubeScene(
     pauseRef,
   )
 
-  useFrame((state, delta) => {
-    // delayed pause
-    if (pauseRef.current === pause) {
-      elapsed.current = 0
-    } else {
-      elapsed.current += delta
-      if (elapsed.current > 0.1) {
-        pauseRef.current = pause
-      }
-    }
+  useImperativeHandle(
+    forwardedRef,
+    () => ({
+      sun: meshRef.current,
+      inactive: (delta) => {
+        off()
+        off2()
+        smoothTime.current = bufferTime
 
-    // menu
-    if (menu && active) {
-      smoothTime.current = 0.0
-    }
-    const expected = menu ? 0.5 : 0
-    const current = pauseRef.current
-    if (center.current.y !== expected) {
-      pauseRef.current = false
-    } else {
-      pauseRef.current = current
-    }
-    damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
-
-    if (progressRef.current[0] >= 1 - bufferTime / time) {
-      off()
-      off2()
-      smoothTime.current = bufferTime
-      if (active) {
         damp3(meshRef.current.scale, [0, 0, 0], bufferTime, delta)
         damp3(cube.current.scale, [0, 0, 0], bufferTime, delta)
+      },
+      active: (delta) => {
+        damp3(cube.current.scale, [0.18, 0.18, 0.18], bufferTime, delta)
+        on()
+        on2()
+      },
+    }),
+    [bufferTime, off, off2, on, on2],
+  )
+
+  useFrame((state, delta) => {
+    if (active) {
+      // delayed pause
+      if (pauseRef.current === pause) {
+        elapsed.current = 0
+      } else {
+        elapsed.current += delta
+        if (elapsed.current > 0.1) {
+          pauseRef.current = pause
+        }
       }
+
+      // menu
+      if (menu && active) {
+        smoothTime.current = 0.0
+      }
+      const expected = menu ? 0.5 : 0
+      const current = pauseRef.current
+      if (center.current.y !== expected) {
+        pauseRef.current = false
+      } else {
+        pauseRef.current = current
+      }
+      damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
     } else {
-      damp3(cube.current.scale, [0.18, 0.18, 0.18], bufferTime, delta)
-      on()
-      on2()
+      center.current.y = menu ? 0.5 : 0
     }
   })
   return (
@@ -129,7 +141,7 @@ export const CubeScene = forwardRef(function CubeScene(
         visible={active}
       />
 
-      <mesh ref={meshRef} position-z={-15} visible={active}>
+      <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>
         <planeGeometry args={[1, (1 * (height - 200)) / width]} />
         <meshBasicMaterial
           side={DoubleSide}
