@@ -6,7 +6,7 @@ import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
-import { damp } from 'maath/easing'
+import { damp, damp3 } from 'maath/easing'
 import { usePage } from '../../../hooks/usePage'
 
 const opts = {
@@ -28,7 +28,7 @@ export const CubeScene = forwardRef(function CubeScene(
   meshRef,
 ) {
   const cube = useRef()
-  const smoothTime = useRef(0.2)
+  const smoothTime = useRef(bufferTime)
 
   const { width, height } = useThree(({ size }) => size)
 
@@ -40,11 +40,7 @@ export const CubeScene = forwardRef(function CubeScene(
     state: { pause, menu },
   } = usePage()
 
-  const {
-    off,
-    on,
-    results: { ppwu },
-  } = use2DBounds(meshRef, {
+  const { off, on } = use2DBounds(meshRef, {
     margin: new Vector4(100, 0, 100, 0),
     marginUnits: UNITS.PX,
     damping: { smoothTime: smoothTime.current },
@@ -110,10 +106,11 @@ export const CubeScene = forwardRef(function CubeScene(
       off2()
       smoothTime.current = bufferTime
       if (active) {
-        damp(meshRef.current.position, 'x', -width / ppwu.x, bufferTime, delta)
-        damp(cube.current.position, 'x', -width / ppwu.x, bufferTime, delta)
+        damp3(meshRef.current.scale, [0, 0, 0], bufferTime, delta)
+        damp3(cube.current.scale, [0, 0, 0], bufferTime, delta)
       }
     } else {
+      damp3(cube.current.scale, [0.18, 0.18, 0.18], bufferTime, delta)
       on()
       on2()
     }
@@ -123,7 +120,7 @@ export const CubeScene = forwardRef(function CubeScene(
       <RubiksCube
         colorTheme={colorTheme}
         ref={cube}
-        scale={0.18}
+        scale={0}
         physics={false}
         itemScale={0.6}
         position={[0, 0, -2]}

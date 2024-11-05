@@ -50,7 +50,7 @@ export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
       },
     },
     state: { pause, menu, current },
-    setState: { pause: setPause, current: setCurrent },
+    setState: { pause: setPause, current: setCurrent, menu: setMenu },
   } = usePage()
 
   use2DBounds(s1, {
