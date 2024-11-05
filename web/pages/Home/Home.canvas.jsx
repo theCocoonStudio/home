@@ -21,7 +21,7 @@ export const Home = forwardRef(function Home(
     theme: colorTheme,
     state: { current },
   } = usePage()
-  console.log(current)
+
   useFrame((state, delta) => {
     // cube scene
     if (progressRef.current[0] < 1 - bufferTime / time && current === 1) {
