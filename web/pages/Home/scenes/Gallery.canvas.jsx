@@ -40,8 +40,6 @@ export const Gallery = forwardRef(function Gallery(
 
   const smoothTime = useRef(0.2)
   const {
-    off,
-    on,
     results: { ppwu },
   } = use2DBounds(cloudBG, {
     trackingElement: true,
@@ -55,16 +53,10 @@ export const Gallery = forwardRef(function Gallery(
     forwardedRef,
     () => ({
       sun: cloudPic.current,
-      inactive: (delta) => {
-        off()
-        damp3(group.current.scale, [0, 0, 0], bufferTime, delta)
-      },
-      active: (delta) => {
-        on()
-        damp3(group.current.scale, [1, 1, 1], bufferTime, delta)
-      },
+      inactive: (delta) => {},
+      active: (delta) => {},
     }),
-    [bufferTime, off, on],
+    [],
   )
 
   return (
