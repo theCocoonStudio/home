@@ -128,10 +128,9 @@ export const Page = function Page({ count = 5, time = 20 }) {
     pause,
     (progress, curr) => {
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
-
+      document.documentElement.style.setProperty('--progress', newColor)
+      setCurrent(curr)
       startTransition(() => {
-        document.documentElement.style.setProperty('--progress', newColor)
-        setCurrent(curr)
         setSun(home.current[curr - 1].current)
         setProgressColor(newColor)
       })
