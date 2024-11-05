@@ -16,6 +16,10 @@ import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Home } from 'web/pages/Home/Home.canvas'
 
+const scaleFactored = (obj, results) => {
+  return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
+}
+
 export const Page = function Page({ count = 5, time = 20 }) {
   // three refs
   const s1 = useRef()
@@ -77,7 +81,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings1,
-    computeScale: setScaleXYZOfX,
+    computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
   })
 
@@ -85,7 +89,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings2,
-    computeScale: setScaleXYZOfX,
+    computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
   })
 
@@ -93,7 +97,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings3,
-    computeScale: setScaleXYZOfX,
+    computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
   })
 
@@ -101,7 +105,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings4,
-    computeScale: setScaleXYZOfX,
+    computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
   })
 
@@ -124,8 +128,8 @@ export const Page = function Page({ count = 5, time = 20 }) {
     pause,
     (progress, curr) => {
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
-      setCurrent(curr)
       startTransition(() => {
+        setCurrent(curr)
         setSun(home.current[curr - 1].current)
         setProgressColor(newColor)
       })
@@ -136,13 +140,13 @@ export const Page = function Page({ count = 5, time = 20 }) {
   const prev = useCallback(() => {
     setPause(false)
     const factor = current === 1 ? count - 1 : current - 2
-    setElapsed(factor * time * 0.95)
+    setElapsed(factor * time /* * 0.95 */)
   }, [count, current, setElapsed, setPause, time])
 
   const next = useCallback(() => {
     setPause(false)
     const factor = current === count ? 0 : current
-    setElapsed(factor * time * 0.95)
+    setElapsed(factor * time /* * 0.95 */)
   }, [count, current, setElapsed, setPause, time])
 
   return (

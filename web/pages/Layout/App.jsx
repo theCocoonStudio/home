@@ -7,8 +7,8 @@ import { usePage } from '../../hooks/usePage'
 
 const HomeMarkup = () => (
   <>
-    <h1>Creative, technically.</h1>
-    <h2>limitless possibilities.</h2>
+    <h1>Captivate your audience</h1>
+    <h2>with unleashed creativity.</h2>
     <p>
       Background: real-time fluid simulation running fully in the browser using
       WebGL2 with custom GPU shader passes; used as a material alpha-map
@@ -98,6 +98,9 @@ export const App = function App() {
 
   useLayoutEffect(() => {
     setDescription(markupArr[current - 1])
+    if (current === 1) {
+      // set styles
+    }
   }, [current])
   return (
     <>
