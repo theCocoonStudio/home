@@ -3,7 +3,6 @@ import styles from 'web/styles/Layout.module.css'
 export const CubeScene = () => {
   return (
     <>
-      {' '}
       <div>
         <pre>
           <code>

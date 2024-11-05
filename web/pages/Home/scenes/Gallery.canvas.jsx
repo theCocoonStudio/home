@@ -7,7 +7,6 @@ import {
   MeshReflectorMaterial,
   Clouds,
   Cloud,
-  Environment,
 } from '@react-three/drei'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { damp } from 'maath/easing'
@@ -67,15 +66,6 @@ export const Gallery = forwardRef(function Gallery(
   })
   return (
     <>
-      {active && <fog attach='fog' args={['#050505', 0, 13]} />}
-
-      {active && (
-        <Environment
-          preset='studio'
-          background={false}
-          environmentIntensity={0.5}
-        />
-      )}
       <group ref={group} position-x={20} visible={active}>
         <mesh ref={cloudBG} position-z={-2}>
           <planeGeometry args={[1, 4 / 3]} />

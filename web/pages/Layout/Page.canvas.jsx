@@ -20,7 +20,7 @@ const scaleFactored = (obj, results) => {
   return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
 }
 
-export const Page = function Page({ count = 5, time = 20 }) {
+export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
@@ -140,14 +140,13 @@ export const Page = function Page({ count = 5, time = 20 }) {
   const prev = useCallback(() => {
     setPause(false)
     const factor = current === 1 ? count - 1 : current - 2
-    setElapsed(factor * time /* * 0.95 */)
+    setElapsed(factor * time)
   }, [count, current, setElapsed, setPause, time])
 
   const next = useCallback(() => {
     setPause(false)
-    const factor = current === count ? 0 : current
-    setElapsed(factor * time /* * 0.95 */)
-  }, [count, current, setElapsed, setPause, time])
+    setElapsed(current * time - bufferTime)
+  }, [bufferTime, current, setElapsed, setPause, time])
 
   return (
     <>
@@ -180,6 +179,7 @@ export const Page = function Page({ count = 5, time = 20 }) {
       <Home
         ref={home}
         time={time}
+        bufferTime={bufferTime}
         progressRef={progressRef}
         current={current}
         isPending={isPending}

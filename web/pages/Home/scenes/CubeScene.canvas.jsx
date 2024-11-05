@@ -5,7 +5,7 @@ import { UNITS } from 'src/constants'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
-import { Environment, GradientTexture } from '@react-three/drei'
+import { GradientTexture } from '@react-three/drei'
 import { damp } from 'maath/easing'
 import { usePage } from '../../../hooks/usePage'
 
@@ -24,7 +24,7 @@ const opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { progressRef, time, active },
+  { bufferTime, progressRef, time, active },
   meshRef,
 ) {
   const cube = useRef()
@@ -93,7 +93,7 @@ export const CubeScene = forwardRef(function CubeScene(
     }
 
     // menu
-    if (menu) {
+    if (menu && active) {
       smoothTime.current = 0.0
     }
     const expected = menu ? 0.5 : 0
@@ -105,11 +105,14 @@ export const CubeScene = forwardRef(function CubeScene(
     }
     damp(center.current, 'y', menu ? 0.5 : 0, 0.1, delta)
 
-    if (progressRef.current[0] >= 1 - 0.2 / time) {
+    if (progressRef.current[0] >= 1 - bufferTime / time) {
       off()
       off2()
-      damp(meshRef.current.position, 'x', -width / ppwu.x, 0.2, delta)
-      damp(cube.current.position, 'x', -width / ppwu.x, 0.2, delta)
+      smoothTime.current = bufferTime
+      if (active) {
+        damp(meshRef.current.position, 'x', -width / ppwu.x, bufferTime, delta)
+        damp(cube.current.position, 'x', -width / ppwu.x, bufferTime, delta)
+      }
     } else {
       on()
       on2()
@@ -117,8 +120,6 @@ export const CubeScene = forwardRef(function CubeScene(
   })
   return (
     <>
-      {active && <Environment preset='studio' background={false} />}
-
       <RubiksCube
         colorTheme={colorTheme}
         ref={cube}
