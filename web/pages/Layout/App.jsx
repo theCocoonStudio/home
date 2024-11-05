@@ -95,11 +95,12 @@ export const App = function App() {
   } = usePage('markup', refs)
 
   const [Description, setDescription] = useState(markupArr[0])
+  const [styleKey, setStyleKey] = useState('home')
 
   useLayoutEffect(() => {
     setDescription(markupArr[current - 1])
     if (current === 1) {
-      // set styles
+      setStyleKey(['home', 'gallery'][current - 1])
     }
   }, [current])
   return (
@@ -109,17 +110,21 @@ export const App = function App() {
         <div
           id='tracking'
           ref={tracking}
-          className={`${styles.tracking} ${menu ? styles['tracking-open'] : ''}`}
+          className={`${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''}`}
         />
         <div
           id='description'
           ref={description}
-          className={`disable-scrollbars ${styles.description} ${menu ? styles['description-open'] : ''}`}
+          className={`disable-scrollbars ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''}`}
         >
           {Description}
         </div>
-        <div id='code' ref={code} className={styles.code} />
-        <div id='options' ref={options} className={styles.options} />
+        <div id='code' ref={code} className={styles[`code-${styleKey}`]} />
+        <div
+          id='options'
+          ref={options}
+          className={styles[`options-${styleKey}`]}
+        />
         <div
           id='menu'
           ref={menuRef}

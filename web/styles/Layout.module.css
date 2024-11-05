@@ -1,4 +1,4 @@
-.tracking {
+.tracking-home {
   width: 40%;
   top: 0;
   left: 60%;
@@ -6,11 +6,11 @@
   bottom: 0;
   transition: bottom 0.5s;
 }
-.tracking-open {
+.tracking-home-open {
   bottom: calc(50% + var(--mainElementPadding));
 }
 
-.description {
+.description-home {
   position: absolute;
   transform: translateY(50%);
   width: 60%;
@@ -20,18 +20,18 @@
   bottom: calc(50%);
   transition: bottom 0.5s;
 }
-.description-open {
+.description-home-open {
   bottom: calc(75% + var(--mainElementPadding));
 }
 
-.code {
+.code-home {
   bottom: 0;
   left: 0;
   right: 0;
   border-radius: 3px;
 }
 
-.options {
+.options-home {
   bottom: 0;
   left: 0;
   right: 0;
