@@ -2,23 +2,45 @@
   width: 40%;
   top: 0;
   left: 60%;
-  border-radius: 3px;
   bottom: 0;
-  transition: bottom 0.5s;
 }
+.tracking-gallery {
+  left: 60%;
+  right: 0;
+  top: 0%;
+  bottom: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  row-gap: 24px;
+  > * {
+    flex-shrink: 1;
+    flex-grow: 1;
+    width: 20%;
+  }
+}
+
 .tracking-home-open {
   bottom: calc(50% + var(--mainElementPadding));
 }
 
 .description-home {
-  position: absolute;
   transform: translateY(50%);
   width: 60%;
   /* overflow-y: scroll; */
   padding: 2em;
-  border-radius: 3px;
   bottom: calc(50%);
-  transition: bottom 0.5s;
+}
+
+.description-gallery {
+  top: 50%;
+  left: 0;
+  width: 60%;
+  transform: translateY(-50%);
+  /* overflow-y: scroll; */
+  padding: 2em;
 }
 .description-home-open {
   bottom: calc(75% + var(--mainElementPadding));
@@ -28,14 +50,12 @@
   bottom: 0;
   left: 0;
   right: 0;
-  border-radius: 3px;
 }
 
 .options-home {
   bottom: 0;
   left: 0;
   right: 0;
-  border-radius: 3px;
 }
 
 .menu {
@@ -101,10 +121,10 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p0),
-        var(--progress) var(--p0)
+        transparent var(--p0)
       );
-
-      /* transition: --p0 1s; */
+      background-color: var(--progress);
+      transition: background-color 1.5s;
     }
     &:nth-child(2) {
       --p1: 0%;
@@ -112,10 +132,11 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p1),
-        var(--progress) var(--p1)
+        transparent var(--p1)
       );
 
-      /* transition: --p1 1s; */
+      background-color: var(--progress);
+      transition: background-color 1.5s;
     }
     &:nth-child(3) {
       --p2: 0%;
@@ -123,10 +144,11 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p2),
-        var(--progress) var(--p2)
+        transparent var(--p2)
       );
 
-      /* transition: --p2 1s; */
+      background-color: var(--progress);
+      transition: background-color 1.5s;
     }
     &:nth-child(4) {
       --p3: 0%;
@@ -134,10 +156,11 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p3),
-        var(--progress) var(--p3)
+        transparent var(--p3)
       );
 
-      /* transition: --p3 1s; */
+      background-color: var(--progress);
+      transition: background-color 1.5s;
     }
     &:nth-child(5) {
       --p4: 0%;
@@ -145,10 +168,11 @@
         to right,
         var(--white) 0%,
         var(--white) var(--p4),
-        var(--progress) var(--p4)
+        transparent var(--p4)
       );
 
-      /* transition: --p4 1s; */
+      background-color: var(--progress);
+      transition: background-color 1.5s;
     }
   }
 }

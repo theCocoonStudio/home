@@ -1,39 +1,10 @@
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import styles from 'web/styles/Layout.module.css'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { CubeScene } from 'web/pages/Home/menus/CubeScene'
 import { usePage } from '../../hooks/usePage'
-
-const HomeMarkup = () => (
-  <>
-    <h1>Captivate your audience</h1>
-    <h2>with unleashed creativity.</h2>
-    <p>
-      Background: real-time fluid simulation running fully in the browser using
-      WebGL2 with custom GPU shader passes; used as a material alpha-map
-      texture.
-    </p>
-    <p>
-      Foreground: Playable 3D Rubik&#39;s cube implementation using a Three.js
-      InstancedMesh and custom shaders to override material parameters.
-    </p>
-  </>
-)
-
-const GalleryMarkup = () => (
-  <>
-    <h1>Sense and sensibility</h1>
-    <h2>combining technical knowledge and visual nuance.</h2>
-    <p>
-      Background: 3D Cloud simulation powered by the creative OSS powerhouse
-      pmndrs and its contributors.
-    </p>
-    <p>Foreground: Select photography with added post-processing effects.</p>
-  </>
-)
-
-const markupArr = [<HomeMarkup key='home' />, <GalleryMarkup key='gallery' />]
+import { descriptionArr, trackingArr } from '../Home/markups'
 
 export const App = function App() {
   const menuMarkup = useRef(CubeScene)
@@ -94,13 +65,19 @@ export const App = function App() {
     state: { menu, current },
   } = usePage('markup', refs)
 
-  const [Description, setDescription] = useState(markupArr[0])
+  const [isPending, startTransition] = useTransition()
+  const [Description, setDescription] = useState(descriptionArr[0])
+  const [Tracking, setTracking] = useState(trackingArr[0])
   const [styleKey, setStyleKey] = useState('home')
 
-  useLayoutEffect(() => {
-    setDescription(markupArr[current - 1])
-    setStyleKey(['home', 'gallery'][current - 1])
+  useEffect(() => {
+    startTransition(() => {
+      setStyleKey(['home', 'gallery'][current - 1])
+      setDescription(descriptionArr[current - 1])
+      setTracking(trackingArr[current - 1])
+    })
   }, [current])
+
   return (
     <>
       <Nav id='nav' className='space-mono-regular' />
@@ -108,25 +85,31 @@ export const App = function App() {
         <div
           id='tracking'
           ref={tracking}
-          className={`${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''}`}
-        />
+          className={`${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
+        >
+          {Tracking}
+        </div>
         <div
           id='description'
           ref={description}
-          className={`disable-scrollbars ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''}`}
+          className={`disable-scrollbars ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
         >
           {Description}
         </div>
-        <div id='code' ref={code} className={styles[`code-${styleKey}`]} />
+        <div
+          id='code'
+          ref={code}
+          className={`${styles[`code-${styleKey}`]} `}
+        />
         <div
           id='options'
           ref={options}
-          className={styles[`options-${styleKey}`]}
+          className={`${styles[`options-${styleKey}`]} `}
         />
         <div
           id='menu'
           ref={menuRef}
-          className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+          className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''} `}
         >
           <menuMarkup.current />
         </div>

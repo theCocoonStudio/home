@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
+import { useCallback, useRef, useState, useTransition } from 'react'
 import { usePage } from 'web/hooks/usePage'
 import { LinkedIn } from 'web/components/Socials/LinkedIn.canvas'
 import { Github } from 'web/components/Socials/Github.canvas'
@@ -128,12 +128,13 @@ export const Page = function Page({ count = 5, time = 20 }) {
     pause,
     (progress, curr) => {
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
+
       startTransition(() => {
+        document.documentElement.style.setProperty('--progress', newColor)
         setCurrent(curr)
         setSun(home.current[curr - 1].current)
         setProgressColor(newColor)
       })
-      document.documentElement.style.setProperty('--progress', newColor)
     },
   )
 

@@ -12,13 +12,18 @@
   --slate: #134643;
   --black: #101010;
   --white: #ffffff;
-  --progress: var(--slate);
   /* lengths */
   --navFooterHeight: 100px;
   --maxContent: 1200px;
   --socialsSettingsWidth: 185px;
   --mainElementPadding: 2rem;
   --menuHeight: calc(50vh - var(--navFooterHeight) - var(--mainElementPadding));
+}
+
+@property --progress {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: var(--slate);
 }
 
 @property --p0 {
@@ -111,6 +116,7 @@ body {
   left: 0;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .disable-scrollbars::-webkit-scrollbar {
@@ -212,12 +218,14 @@ body {
 #tracking,
 #description,
 #code,
-#options,
-#menu {
+#options {
   position: absolute;
+  border-radius: 3px;
+  transition: all 0.5s ease;
 }
 
 #menu {
+  position: absolute;
   color: var(--white);
   display: flex;
   flex-wrap: nowrap;

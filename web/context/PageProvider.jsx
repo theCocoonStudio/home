@@ -22,9 +22,9 @@ export const PageProvider = ({ children, theme }) => {
 
   const setState = useMemo(
     () => ({
-      menu: setMenu,
+      menu: (newState) => startTransition(() => setMenu(newState)),
       pause: (newState) => startTransition(() => setPause(newState)),
-      current: setCurrent,
+      current: (newState) => startTransition(() => setCurrent(newState)),
     }),
     [],
   )
