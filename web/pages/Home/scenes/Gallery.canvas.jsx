@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { DoubleSide, MeshBasicMaterial } from 'three'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
 import {
@@ -36,10 +36,14 @@ export const Gallery = forwardRef(function Gallery(
       markup: { tracking },
     },
     theme: colorTheme,
+    state: { current },
   } = usePage()
 
-  const smoothTime = useRef(0.2)
+  const smoothTime = useRef(bufferTime)
+
   const {
+    off,
+    on,
     results: { ppwu },
   } = use2DBounds(cloudBG, {
     trackingElement: true,
@@ -49,14 +53,20 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: setScaleXYZOfX,
   })
 
+  useEffect(() => {
+    current && on()
+  }, [on, current])
   useImperativeHandle(
     forwardedRef,
     () => ({
       sun: cloudPic.current,
-      inactive: (delta) => {},
-      active: (delta) => {},
+      inactive: (delta) => {
+        off()
+        damp3(cloudBG.current.scale, [0, 0, 1], bufferTime, delta)
+      },
+      active: () => {},
     }),
-    [],
+    [bufferTime, off],
   )
 
   return (
