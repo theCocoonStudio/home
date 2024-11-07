@@ -8,7 +8,7 @@ import {
   Cloud,
 } from '@react-three/drei'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
-import { damp3 } from 'maath/easing'
+import { damp } from 'maath/easing'
 import cloudsUrl from 'public/clouds.jpg'
 import dragonflyUrl from 'public/dragonfly.jpeg'
 import kitesUrl from 'public/kites.jpg'
@@ -36,14 +36,11 @@ export const Gallery = forwardRef(function Gallery(
       markup: { tracking },
     },
     theme: colorTheme,
-    state: { current },
   } = usePage()
 
   const smoothTime = useRef(bufferTime)
 
   const {
-    off,
-    on,
     results: { ppwu },
   } = use2DBounds(cloudBG, {
     trackingElement: true,
@@ -53,20 +50,18 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: setScaleXYZOfX,
   })
 
-  useEffect(() => {
-    current && on()
-  }, [on, current])
   useImperativeHandle(
     forwardedRef,
     () => ({
       sun: cloudPic.current,
       inactive: (delta) => {
-        off()
-        damp3(cloudBG.current.scale, [0, 0, 1], bufferTime, delta)
+        damp(group.current.position, 'x', -10, bufferTime, delta)
       },
-      active: () => {},
+      active: (delta) => {
+        damp(group.current.position, 'x', 0, bufferTime, delta)
+      },
     }),
-    [bufferTime, off],
+    [bufferTime],
   )
 
   return (
