@@ -55,7 +55,7 @@ export const Gallery = forwardRef(function Gallery(
     () => ({
       sun: cloudPic.current,
       inactive: (delta) => {
-        damp(group.current.position, 'x', -10, bufferTime, delta)
+        damp(group.current.position, 'x', 10, bufferTime, delta)
       },
       active: (delta) => {
         damp(group.current.position, 'x', 0, bufferTime, delta)
