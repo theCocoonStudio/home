@@ -47,6 +47,7 @@ export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
         menu2,
         menu3,
         menu: menuHTML,
+        description,
       },
     },
     state: { pause, menu, current },
@@ -139,9 +140,10 @@ export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
 
   const prev = useCallback(() => {
     setPause(false)
+    description.current.style.opacity = '0'
     const factor = current === 1 ? count - 1 : current - 2
     setElapsed(factor * time)
-  }, [count, current, setElapsed, setPause, time])
+  }, [count, current, description, setElapsed, setPause, time])
 
   const next = useCallback(() => {
     setPause(false)

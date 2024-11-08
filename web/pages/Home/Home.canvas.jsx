@@ -20,11 +20,16 @@ export const Home = forwardRef(function Home(
   const {
     theme: colorTheme,
     state: { current },
+    refs: {
+      markup: { description },
+    },
   } = usePage()
 
   useFrame((state, delta) => {
     // cube scene
+    let opacity = '0'
     if (progressRef.current[0] < 1 - bufferTime / time && current === 1) {
+      opacity = '1'
       cubeScene.current.active(delta)
     } else {
       cubeScene.current.inactive(delta)
@@ -32,8 +37,17 @@ export const Home = forwardRef(function Home(
     // gallery scene
     if (progressRef.current[1] < 1 - bufferTime / time && current === 2) {
       gallery.current.active(delta)
+      opacity = '1'
     } else {
       gallery.current.inactive(delta)
+    }
+
+    // opacity
+    const op = window
+      .getComputedStyle(description.current)
+      .getPropertyValue('opacity')
+    if (op !== opacity && (op === '1' || op === '0')) {
+      description.current.style.opacity = opacity
     }
   })
 
