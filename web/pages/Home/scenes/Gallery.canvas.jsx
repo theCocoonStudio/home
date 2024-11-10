@@ -36,6 +36,7 @@ export const Gallery = forwardRef(function Gallery(
   const kitesPic = useRef()
   const spiderBG = useRef()
   const spidePic = useRef()
+  const reflector = useRef()
 
   // TODO useTexture.preload at correct time
   const [clouds, dragonfly, kites, spider] = useTexture([
@@ -80,6 +81,7 @@ export const Gallery = forwardRef(function Gallery(
     scaleToFitWidth: false,
     computeScale: index === 4 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
+    top: index === 4 ? undefined : 1 - 4 / 6,
   })
 
   use2DBounds(dragonflyBG, {
@@ -89,6 +91,7 @@ export const Gallery = forwardRef(function Gallery(
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
     damp: visible,
+    top: 1 - 0.7074005419 / 2,
   })
   use2DBounds(kitesBG, {
     trackingElement: true,
@@ -97,6 +100,7 @@ export const Gallery = forwardRef(function Gallery(
     scaleToFitWidth: false,
     computeScale: index === 2 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
+    top: index === 2 ? undefined : 1 - 4 / 6,
   })
   use2DBounds(spiderBG, {
     trackingElement: true,
@@ -105,6 +109,7 @@ export const Gallery = forwardRef(function Gallery(
     scaleToFitWidth: false,
     computeScale: index === 1 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
+    top: index === 1 ? undefined : 1 - 1.162826899 / 2,
   })
 
   useImperativeHandle(
@@ -113,9 +118,11 @@ export const Gallery = forwardRef(function Gallery(
       sun: dragonflyPic.current,
       inactive: (delta) => {
         damp(group.current.position, 'x', 10, bufferTime, delta)
+        reflector.current.position.y = -10
       },
       active: (delta) => {
         damp(group.current.position, 'x', 0, bufferTime, delta)
+        damp(reflector.current.position, 'y', -0.59, bufferTime, delta)
       },
     }),
     [bufferTime],
@@ -153,45 +160,46 @@ export const Gallery = forwardRef(function Gallery(
 
   return (
     <group ref={group} visible={visible}>
-      <group ref={cloudBG} position-z={-5}>
+      <group ref={cloudBG} position-z={-2}>
         <mesh ref={cloudPic}>
           <planeGeometry args={index === 4 ? [3 / 4, 1] : [1, 4 / 3]} />
-          <meshBasicMaterial map={clouds} fog={false} />
+          <meshBasicMaterial map={clouds} />
         </mesh>
       </group>
-      <group ref={dragonflyBG} position-z={-5}>
+      <group ref={dragonflyBG} position-z={-2}>
         <mesh ref={dragonflyPic}>
           <planeGeometry args={[1, 0.7074005419]} />
-          <meshBasicMaterial map={dragonfly} fog={false} />
+          <meshBasicMaterial map={dragonfly} />
         </mesh>
       </group>
-      <group ref={kitesBG} position-z={-5}>
+      <group ref={kitesBG} position-z={-2}>
         <mesh ref={kitesPic}>
           <planeGeometry args={index === 2 ? [3 / 4, 1] : [1, 4 / 3]} />
-          <meshBasicMaterial map={kites} fog={false} />
+          <meshBasicMaterial map={kites} />
         </mesh>
       </group>
-      <group ref={spiderBG} position-z={-5}>
+      <group ref={spiderBG} position-z={-2}>
         <mesh ref={spidePic}>
           <planeGeometry
             args={index === 1 ? [1 / 1.162826899, 1] : [1, 1.162826899]}
           />
-          <meshBasicMaterial map={spider} fog={false} />
+          <meshBasicMaterial map={spider} />
         </mesh>
       </group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position-y={-1.87}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} ref={reflector}>
         <planeGeometry args={[50, 50]} />
         <MeshReflectorMaterial
-          blur={[300, 300]}
+          blur={[400, 300]}
           resolution={1024}
-          mixBlur={0.7}
-          mixStrength={90}
+          mixBlur={0.81}
+          mixContrast={1.15}
+          mixStrength={59}
           roughness={1}
-          metalness={0.6}
-          depthScale={1.1}
-          minDepthThreshold={0.5}
-          maxDepthThreshold={2.4}
+          metalness={0.5}
+          depthScale={0.2}
+          /* maxDepthThreshold={0.9} */
           color='#050505'
+          opacity={0.9}
         />
       </mesh>
       <mesh position-z={-15}>
@@ -203,32 +211,33 @@ export const Gallery = forwardRef(function Gallery(
           metalness={0.5}
         />
       </mesh>
-      <Clouds material={MeshBasicMaterial} position-z={-8}>
+      <Clouds material={MeshBasicMaterial} position-z={-9} position-y={0.39}>
         <Cloud
           scale={0.8}
           seed={2}
-          position-y={3}
+          position-y={4.5}
           segments={40}
-          bounds={[10, 0.2, 0.4]}
-          volume={2.5}
+          bounds={[10, 0.2, 1.4]}
+          volume={3}
           color={colorTheme.white}
-          speed={0.5}
-          fade={30}
+          speed={0.1}
+          opacity={0.9}
+          fade={20}
         />
         <Cloud
           scale={0.8}
           seed={3}
           position-y={4}
+          position-z={1}
           segments={30}
           bounds={[10, 0.05, 0.2]}
-          volume={2.2}
-          color={colorTheme.white}
-          speed={0.25}
-          fade={40}
+          volume={2.5}
+          color={colorTheme.black}
+          speed={0.15}
+          opacity={0.4}
+          fade={10}
         />
       </Clouds>
-
-      <ambientLight />
     </group>
   )
 })

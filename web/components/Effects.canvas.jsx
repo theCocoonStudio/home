@@ -24,7 +24,7 @@ export const Effects = ({ current, sun }) => {
   useEffect(() => {
     const props = [
       { exposure: 0.5, weight: 0.8 },
-      { exposure: 0.07, weight: 0.9 },
+      { exposure: 0.008, weight: 2.6 },
     ][current - 1]
     setGodRaysProps(props)
   }, [current])

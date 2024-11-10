@@ -63,7 +63,7 @@ export const Home = forwardRef(function Home(
         background={false}
         environmentIntensity={[1, 0.5, 1, 1, 1][current - 1]}
       />
-      {current === 2 && <fog attach='fog' args={['#050505', 0, 13]} />}
+      {current === 2 && <fog attach='fog' args={['#050505', 0, 12]} />}
       <CubeScene
         ref={cubeScene}
         active={current === 1}
