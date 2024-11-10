@@ -7,7 +7,7 @@ import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
 export const Home = forwardRef(function Home(
-  { time, bufferTime, progressRef },
+  { time, bufferTime, progressRef, setSun },
   forwardedRef,
 ) {
   const cubeScene = useRef()
@@ -43,11 +43,13 @@ export const Home = forwardRef(function Home(
     }
 
     // opacity
-    const op = window
-      .getComputedStyle(description.current)
-      .getPropertyValue('opacity')
-    if (op !== opacity && (op === '1' || op === '0')) {
-      description.current.style.opacity = opacity
+    if (window && description.current) {
+      const op = window
+        .getComputedStyle(description.current)
+        .getPropertyValue('opacity')
+      if (op !== opacity && (op === '1' || op === '0')) {
+        description.current.style.opacity = opacity
+      }
     }
   })
 
@@ -68,7 +70,13 @@ export const Home = forwardRef(function Home(
         bufferTime={bufferTime}
       />
 
-      <Gallery ref={gallery} active={current === 2} bufferTime={bufferTime} />
+      <Gallery
+        ref={gallery}
+        active={current === 2}
+        bufferTime={bufferTime}
+        setSun={setSun}
+        time={time}
+      />
     </>
   )
 })

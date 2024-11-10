@@ -221,11 +221,17 @@ body {
 #options {
   position: absolute;
   border-radius: 3px;
+  transition: all 0.5s;
 }
 
 #description {
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    top 0.5s,
+    bottom 0.5s,
+    left 0.5s,
+    right 0.5s;
 }
 
 #menu {
@@ -308,4 +314,5 @@ h1 {
   font-family: 'Righteous', sans-serif;
   font-weight: 400;
   font-style: normal;
+  line-height: 1.05em;
 }

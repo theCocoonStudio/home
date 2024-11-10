@@ -16,8 +16,8 @@ export const HomeDescription = () => (
 
 export const GalleryDescription = () => (
   <>
-    <h1>Sense and sensibility</h1>
-    <h2>combining technical knowledge and visual nuance.</h2>
+    <h1>Sense, meet sensibility.</h1>
+    <h2>Combining technical knowledge and visual nuance.</h2>
     <p>
       Background: 3D Cloud simulation powered by the creative OSS powerhouse
       pmndrs and its contributors.

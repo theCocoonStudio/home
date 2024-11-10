@@ -185,6 +185,7 @@ export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
         progressRef={progressRef}
         current={current}
         isPending={isPending}
+        setSun={setSun}
       />
     </>
   )
