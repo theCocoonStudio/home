@@ -192,14 +192,15 @@ export const Gallery = forwardRef(function Gallery(
           blur={[400, 300]}
           resolution={1024}
           mixBlur={0.81}
-          mixContrast={1.15}
-          mixStrength={59}
+          mixContrast={1.05}
+          mixStrength={79}
           roughness={1}
-          metalness={0.5}
-          depthScale={0.2}
-          /* maxDepthThreshold={0.9} */
-          color='#050505'
-          opacity={0.9}
+          metalness={0.6}
+          depthScale={0.5}
+          minDepthThreshold={0.5}
+          maxDepthThreshold={2}
+          /* color='#050505' */
+          color={colorTheme.black}
         />
       </mesh>
       <mesh position-z={-15}>
@@ -211,7 +212,7 @@ export const Gallery = forwardRef(function Gallery(
           metalness={0.5}
         />
       </mesh>
-      <Clouds material={MeshBasicMaterial} position-z={-9} position-y={0.39}>
+      <Clouds material={MeshBasicMaterial} position-z={-8.5} position-y={0.29}>
         <Cloud
           scale={0.8}
           seed={2}
@@ -221,8 +222,7 @@ export const Gallery = forwardRef(function Gallery(
           volume={3}
           color={colorTheme.white}
           speed={0.1}
-          opacity={0.9}
-          fade={20}
+          fade={10}
         />
         <Cloud
           scale={0.8}
@@ -234,8 +234,8 @@ export const Gallery = forwardRef(function Gallery(
           volume={2.5}
           color={colorTheme.black}
           speed={0.15}
-          opacity={0.4}
-          fade={10}
+          opacity={0.6}
+          fade={20}
         />
       </Clouds>
     </group>

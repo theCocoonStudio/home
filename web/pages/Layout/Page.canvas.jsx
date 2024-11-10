@@ -20,7 +20,7 @@ const scaleFactored = (obj, results) => {
   return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
 }
 
-export const Page = function Page({ count = 5, time = 20, bufferTime = 0.2 }) {
+export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
