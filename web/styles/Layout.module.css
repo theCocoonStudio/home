@@ -26,6 +26,9 @@
 .tracking-home-open {
   bottom: calc(50% + var(--mainElementPadding));
 }
+.tracking-gallery-open {
+  bottom: calc(50% + 10px + (2 * var(--mainElementPadding)));
+}
 
 .description-home {
   transform: translateY(50%);
@@ -39,11 +42,15 @@
   width: 50%;
   /* overflow-y: scroll; */
   padding: 0 2em;
-
-  bottom: 50%;
+  top: 50%;
+  transform: translateY(-100%);
 }
 .description-home-open {
   bottom: calc(75% + var(--mainElementPadding));
+}
+.description-gallery-open {
+  top: 0;
+  transform: translateY(0);
 }
 
 .code-home {
@@ -58,6 +65,12 @@
   aspect-ratio: 1/1;
   left: 50%;
   right: 0;
+}
+
+.code-gallery-open {
+  top: 0;
+  aspect-ratio: auto;
+  bottom: calc(50% + 10px + (2 * var(--mainElementPadding)));
 }
 
 .options-home {

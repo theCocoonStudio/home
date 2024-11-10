@@ -156,13 +156,14 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
       <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
       <Menu
         ref={menuRef}
-        position-z={-10}
+        position-z={-1}
         visible={true}
         colorTheme={colorTheme}
         menu={menu}
         sub1={menu1}
         sub2={menu2}
         sub3={menu3}
+        current={current}
       />
 
       <Icon ref={s1} colorTheme={progressColor}>

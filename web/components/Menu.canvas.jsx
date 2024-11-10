@@ -2,7 +2,7 @@ import { useThree } from '@react-three/fiber'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 
 export const Menu = forwardRef(function Menu(
-  { colorTheme, menu, ...props },
+  { colorTheme, current, ...props },
   forwardedRef,
 ) {
   const { width, height } = useThree(({ size }) => size)
@@ -16,8 +16,8 @@ export const Menu = forwardRef(function Menu(
         <planeGeometry args={[1, (1 * (height - 200)) / width]} />
         <meshStandardMaterial
           ref={material}
-          color={colorTheme.slate}
-          opacity={0.03}
+          color={[colorTheme.slate, colorTheme.black][current - 1]}
+          opacity={[0.03, 0.2][current - 1]}
           transparent
         />
       </mesh>

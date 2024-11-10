@@ -99,7 +99,7 @@ export const App = function App() {
         <div
           id='code'
           ref={code}
-          className={`${styles[`code-${styleKey}`]} `}
+          className={`${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
         />
         <div
           id='options'

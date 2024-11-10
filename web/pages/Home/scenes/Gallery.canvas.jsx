@@ -51,7 +51,7 @@ export const Gallery = forwardRef(function Gallery(
       markup: { tracking, code },
     },
     theme: colorTheme,
-    state: { current, pause },
+    state: { current, pause, menu },
   } = usePage()
 
   const smoothTime = useRef(bufferTime)
@@ -89,9 +89,9 @@ export const Gallery = forwardRef(function Gallery(
     damping: { smoothTime: smoothTime.current },
     trackingElementRef: [child2, child3, code, child1][index - 1],
     scaleToFitWidth: false,
-    computeScale: setScaleXYZOfX,
+    computeScale: menu && index === 3 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
-    top: 1 - 0.7074005419 / 2,
+    top: menu && index === 3 ? undefined : 1 - 0.7074005419 / 2,
   })
   use2DBounds(kitesBG, {
     trackingElement: true,
@@ -122,10 +122,16 @@ export const Gallery = forwardRef(function Gallery(
       },
       active: (delta) => {
         damp(group.current.position, 'x', 0, bufferTime, delta)
-        damp(reflector.current.position, 'y', -0.59, bufferTime, delta)
+        damp(
+          reflector.current.position,
+          'y',
+          menu ? -1 : -0.59,
+          bufferTime,
+          delta,
+        )
       },
     }),
-    [bufferTime],
+    [bufferTime, menu],
   )
 
   useEffect(() => {
@@ -168,7 +174,11 @@ export const Gallery = forwardRef(function Gallery(
       </group>
       <group ref={dragonflyBG} position-z={-2}>
         <mesh ref={dragonflyPic}>
-          <planeGeometry args={[1, 0.7074005419]} />
+          <planeGeometry
+            args={
+              menu && index === 3 ? [1 / 0.7074005419, 1] : [1, 0.7074005419]
+            }
+          />
           <meshBasicMaterial map={dragonfly} />
         </mesh>
       </group>
