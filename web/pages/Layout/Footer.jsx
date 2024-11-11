@@ -33,13 +33,13 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div />
         <div />
       </div>
-      <div id='pageInfo'></div>
       <div id='settings'>
         <div />
         <div onClick={togglePause} />
         <div />
         <div onClick={toggleMenu} />
       </div>
+      <div id='pageInfo'></div>
     </div>
   )
 })

@@ -186,7 +186,8 @@ body {
 }
 
 #socials,
-#settings {
+#settings,
+#pageInfo {
   width: var(--socialsSettingsWidth);
 }
 
@@ -211,9 +212,9 @@ body {
   }
 }
 
-#pageInfo {
+/* #pageInfo {
   flex-grow: 1;
-}
+} */
 
 #tracking,
 #description,
