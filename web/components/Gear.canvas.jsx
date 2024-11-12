@@ -59,4 +59,4 @@ export const Gear = forwardRef(function Gear(
     </group>
   )
 })
-useGLTF.preload('/models/gear.glb')
+useGLTF.preload(Model)

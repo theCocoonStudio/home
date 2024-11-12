@@ -51,3 +51,5 @@ export const Icon = forwardRef(function Icon(
     </mesh>
   )
 })
+
+useGLTF.preload(Model)
