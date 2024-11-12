@@ -13,7 +13,7 @@ export const PageProvider = ({ children, theme }) => {
   const [isPending, startTransition] = useTransition()
   const [loaded, setLoaded] = useState(false)
   const [menu, setMenu] = useState(false)
-  const [pause, setPause] = useState(false)
+  const [pause, setPause] = useState(true)
   const [current, setCurrent] = useState(1)
 
   const refs = useRef({})
@@ -59,9 +59,14 @@ export const PageProvider = ({ children, theme }) => {
     [addRef, disposeRef, setState, state, theme],
   )
 
+  const onReady = useCallback(() => setPause(false), [])
+
   return (
-    <PageContext.Provider value={context}>
-      <Suspense fallback={<Loader />}>{children}</Suspense>
-    </PageContext.Provider>
+    <>
+      <PageContext.Provider value={context}>
+        <Suspense fallback={null}>{children}</Suspense>
+      </PageContext.Provider>
+      <Loader onReady={onReady} />
+    </>
   )
 }

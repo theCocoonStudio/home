@@ -13,8 +13,6 @@
   }
 }
 .overlay {
-  opacity: 0.95;
-  transition: opacity 0.2s ease;
   animation: op1 2.9s ease-out alternate infinite;
   position: absolute;
   top: 0;
