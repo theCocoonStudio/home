@@ -54,4 +54,4 @@ export const Instagram = forwardRef(function Instagram(
     </group>
   )
 })
-useGLTF.preload(Model)
+// useGLTF.preload(Model)

@@ -2,11 +2,12 @@
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import preload from 'vite-plugin-preload'
 import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), preload()],
   assetsInclude: ['**/*.glb', '**/*.hdr', '**/*.mp4', '**/*.ttf', '**/*.jpg'],
   resolve: {
     alias: {

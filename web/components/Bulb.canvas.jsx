@@ -75,6 +75,6 @@ const Bulb = forwardRef(function Bulb(props, ref) {
   )
 })
 
-useGLTF.preload(Model)
+// useGLTF.preload(Model)
 
 export default Bulb

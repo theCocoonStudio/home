@@ -52,4 +52,4 @@ export const Icon = forwardRef(function Icon(
   )
 })
 
-useGLTF.preload(Model)
+// useGLTF.preload(Model)

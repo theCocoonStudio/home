@@ -97,5 +97,5 @@ function Monitor(props) {
   )
 }
 
-useGLTF.preload(Model)
+// useGLTF.preload(Model)
 export default Monitor

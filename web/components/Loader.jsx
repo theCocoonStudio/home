@@ -1,6 +1,5 @@
 import { useProgress } from '@react-three/drei'
 import { forwardRef, useEffect, useState } from 'react'
-import styles from 'web/styles/Loader.module.css'
 
 export const Loader = forwardRef(function Loader(
   { onReady, ...props },
@@ -34,14 +33,14 @@ export const Loader = forwardRef(function Loader(
 
   if (show || timeLeft) {
     return (
-      <div ref={forwardedRef} className={styles.container} {...props}>
-        <div className={styles.loaderContainer}>
-          <div className={styles.loader} />
+      <div ref={forwardedRef} id='loadingContainer' {...props}>
+        <div className={'loaderContainer'}>
+          <div className={'loader'} />
         </div>
-        <div className={styles.labelContainer}>
-          <div className={`${styles.label} .space-mono-bold`} />
+        <div className={'labelContainer'}>
+          <div className={`label .space-mono-bold`} />
         </div>
-        <div className={`${styles.overlay}`} />
+        <div className='overlay' />
       </div>
     )
   }

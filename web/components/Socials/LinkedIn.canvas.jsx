@@ -47,4 +47,4 @@ export const LinkedIn = forwardRef(function LinkedIn(
     </group>
   )
 })
-useGLTF.preload(Model)
+// useGLTF.preload(Model)
