@@ -1,9 +1,17 @@
-import { useCallback, useState, useTransition, useMemo, useRef } from 'react'
+import {
+  Suspense,
+  useCallback,
+  useState,
+  useTransition,
+  useMemo,
+  useRef,
+} from 'react'
 import { PageContext } from './PageContext'
+import { Loader } from 'web/components/Loader'
 
 export const PageProvider = ({ children, theme }) => {
   const [isPending, startTransition] = useTransition()
-
+  const [loaded, setLoaded] = useState(false)
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(false)
   const [current, setCurrent] = useState(1)
@@ -16,8 +24,9 @@ export const PageProvider = ({ children, theme }) => {
       menu,
       pause,
       current,
+      loaded,
     }),
-    [menu, pause, isPending, current],
+    [current, isPending, loaded, menu, pause],
   )
 
   const setState = useMemo(
@@ -25,6 +34,7 @@ export const PageProvider = ({ children, theme }) => {
       menu: (newState) => startTransition(() => setMenu(newState)),
       pause: (newState) => startTransition(() => setPause(newState)),
       current: (newState) => startTransition(() => setCurrent(newState)),
+      loaded: setLoaded,
     }),
     [],
   )
@@ -49,5 +59,9 @@ export const PageProvider = ({ children, theme }) => {
     [addRef, disposeRef, setState, state, theme],
   )
 
-  return <PageContext.Provider value={context}>{children}</PageContext.Provider>
+  return (
+    <PageContext.Provider value={context}>
+      <Suspense fallback={<Loader />}>{children}</Suspense>
+    </PageContext.Provider>
+  )
 }

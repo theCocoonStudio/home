@@ -52,6 +52,12 @@
   initial-value: 0%;
 }
 
+@property --loaderBG {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
 html,
 body,
 #root {
