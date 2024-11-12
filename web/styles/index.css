@@ -305,14 +305,14 @@ body {
   /* text-transform: uppercase; */
 }
 
-.space-mono-regular-italic {
+.space-mono-regular-italic,
+h2 {
   font-family: 'Space Mono', monospace;
   font-weight: 400;
   font-style: italic;
 }
 
-.space-mono-bold-italic,
-h2 {
+.space-mono-bold-italic {
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   font-style: italic;
