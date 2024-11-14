@@ -6,7 +6,7 @@ import { CubeScene } from './scenes/CubeScene.canvas'
 import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
-export const Home = forwardRef(function Home(
+export const Showcase = forwardRef(function Showcase(
   { time, bufferTime, progressRef, setSun, opts },
   forwardedRef,
 ) {

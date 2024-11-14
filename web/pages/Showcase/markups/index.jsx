@@ -1,4 +1,4 @@
-export const HomeDescription = () => (
+export const CubeSceneDescription = () => (
   <>
     <h1>Captivate your audience</h1>
     <h2>with unleashed creativity.</h2>
@@ -34,7 +34,7 @@ const GalleryTracking = () => (
   </>
 )
 export const descriptionArr = [
-  <HomeDescription key='homeDescription' />,
+  <CubeSceneDescription key='homeDescription' />,
   <GalleryDescription key='galleryDescription' />,
 ]
 

@@ -14,7 +14,7 @@ import { PlayPause } from 'web/components/PlayPause.canvas'
 import { Next } from 'web/components/Next.canvas'
 import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
-import { Home } from 'web/pages/Home/Home.canvas'
+import { Showcase } from 'web/pages/Showcase/Showcase.canvas'
 
 const scaleFactored = (obj, results) => {
   return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
@@ -190,7 +190,7 @@ export const Page = function Page({
       <Next ref={se3} colorTheme={colorTheme} onPointerDown={next} />
       <Gear ref={se4} colorTheme={colorTheme} menu={menu} />
       {/* Showcase slides */}
-      <Home
+      <Showcase
         opts={opts}
         ref={home}
         time={time}
