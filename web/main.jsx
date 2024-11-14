@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from 'web/pages/Layout'
 import { PageProvider } from './context/PageProvider'
