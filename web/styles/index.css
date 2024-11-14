@@ -408,16 +408,25 @@ h1 {
 
 #loadingContainer .label {
   opacity: 0.65;
-  width: fit-content;
+  width: 120px;
+  text-align: left;
   font-size: 22px;
-  clip-path: inset(0 3ch 0 0);
-  animation: l4 1.45s steps(4) infinite;
 }
 #loadingContainer .label:before {
   content: 'Loading...';
+  animation: l4 1.45s linear infinite;
 }
 @keyframes l4 {
-  to {
-    clip-path: inset(0 -1ch 0 0);
+  25% {
+    content: 'Loading..';
+  }
+  50% {
+    content: 'Loading.';
+  }
+  75% {
+    content: 'Loading';
+  }
+  100% {
+    content: 'Loading...';
   }
 }

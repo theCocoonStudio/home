@@ -17,10 +17,8 @@ const theme = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Suspense fallback={<div>hello</div>}>
-      <PageProvider theme={theme}>
-        <Layout />
-      </PageProvider>
-    </Suspense>
+    <PageProvider theme={theme}>
+      <Layout />
+    </PageProvider>
   </React.StrictMode>,
 )
