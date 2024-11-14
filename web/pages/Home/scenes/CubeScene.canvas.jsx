@@ -9,22 +9,23 @@ import { GradientTexture } from '@react-three/drei'
 import { damp, damp3 } from 'maath/easing'
 import { usePage } from '../../../hooks/usePage'
 
-const opts = {
-  iterations_poisson: 32,
-  iterations_viscous: 32,
-  mouse_force: 20,
-  resolution: 0.5,
-  cursor_size: 50,
-  viscous: 40,
-  isBounce: true,
-  dt: 0.014,
-  isViscous: true,
-  BFECC: true,
-  forceCallback: undefined,
-}
-
 export const CubeScene = forwardRef(function CubeScene(
-  { bufferTime, active },
+  {
+    bufferTime,
+    active,
+    opts: {
+      iterations_poisson,
+      iterations_viscous,
+      mouse_force,
+      resolution,
+      cursor_size,
+      viscous,
+      isBounce,
+      dt,
+      isViscous,
+      BFECC,
+    },
+  },
   forwardedRef,
 ) {
   const meshRef = useRef()
@@ -59,7 +60,16 @@ export const CubeScene = forwardRef(function CubeScene(
 
   const options = useMemo(
     () => ({
-      ...opts,
+      iterations_poisson,
+      iterations_viscous,
+      mouse_force,
+      resolution,
+      cursor_size,
+      viscous,
+      isBounce,
+      dt,
+      isViscous,
+      BFECC,
       forceCallback: (delta, elapsedTime) => {
         const force = new Vector2(
           Math.cos(elapsedTime),
@@ -68,7 +78,18 @@ export const CubeScene = forwardRef(function CubeScene(
         return { force, center: center.current }
       },
     }),
-    [],
+    [
+      BFECC,
+      cursor_size,
+      dt,
+      isBounce,
+      isViscous,
+      iterations_poisson,
+      iterations_viscous,
+      mouse_force,
+      resolution,
+      viscous,
+    ],
   )
 
   const texture = useFluidTexture(

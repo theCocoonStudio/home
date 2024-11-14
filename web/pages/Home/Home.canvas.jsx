@@ -7,7 +7,7 @@ import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
 export const Home = forwardRef(function Home(
-  { time, bufferTime, progressRef, setSun },
+  { time, bufferTime, progressRef, setSun, opts },
   forwardedRef,
 ) {
   const cubeScene = useRef()
@@ -65,12 +65,14 @@ export const Home = forwardRef(function Home(
       />
       {current === 2 && <fog attach='fog' args={['#050505', 0, 12]} />}
       <CubeScene
+        opts={opts}
         ref={cubeScene}
         active={current === 1}
         bufferTime={bufferTime}
       />
 
       <Gallery
+        opts={opts}
         ref={gallery}
         active={current === 2}
         bufferTime={bufferTime}
