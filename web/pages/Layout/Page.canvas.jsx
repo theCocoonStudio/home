@@ -20,7 +20,12 @@ const scaleFactored = (obj, results) => {
   return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
 }
 
-export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
+export const Page = function Page({
+  count = 5,
+  time = 10,
+  bufferTime = 0.2,
+  opts,
+}) {
   // three refs
   const s1 = useRef()
   const s2 = useRef()
@@ -123,10 +128,7 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   const [isPending, startTransition] = useTransition()
   const [sun, setSun] = useState()
 
-  const { progressRef, setElapsed } = useProgress(
-    count,
-    time,
-    pause,
+  const progressCallback = useCallback(
     (progress, curr) => {
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
       document.documentElement.style.setProperty('--progress', newColor)
@@ -136,6 +138,13 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
         setProgressColor(newColor)
       })
     },
+    [colorTheme.black, colorTheme.slate, setCurrent],
+  )
+  const { progressRef, setElapsed } = useProgress(
+    count,
+    time,
+    pause,
+    progressCallback,
   )
 
   const prev = useCallback(() => {
@@ -152,6 +161,7 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
 
   return (
     <>
+      {/* r3f globals (will be Showcase globals) */}
       <Effects current={current} sun={sun} />
       <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
       <Menu
@@ -165,7 +175,7 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
         sub3={menu3}
         current={current}
       />
-
+      {/* footer */}
       <Icon ref={s1} colorTheme={progressColor}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
@@ -179,7 +189,9 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
       <PlayPause colorTheme={colorTheme} pause={pause} ref={se2} />
       <Next ref={se3} colorTheme={colorTheme} onPointerDown={next} />
       <Gear ref={se4} colorTheme={colorTheme} menu={menu} />
+      {/* Showcase slides */}
       <Home
+        opts={opts}
         ref={home}
         time={time}
         bufferTime={bufferTime}
