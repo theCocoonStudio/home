@@ -13,6 +13,7 @@ export const CubeScene = forwardRef(function CubeScene(
   {
     bufferTime,
     active,
+    renderPriority,
     opts: {
       iterations_poisson,
       iterations_viscous,
@@ -46,12 +47,14 @@ export const CubeScene = forwardRef(function CubeScene(
     margin: new Vector4(100, 0, 100, 0),
     marginUnits: UNITS.PX,
     damping: { smoothTime: smoothTime.current },
+    renderPriority,
   })
   const { off: off2, on: on2 } = use2DBounds(cube, {
     damping: { smoothTime: smoothTime.current },
     trackingElement: true,
     trackingElementRef: tracking,
     scaleToFitWidth: false,
+    renderPriority,
   })
 
   const elapsed = useRef(0)
@@ -94,7 +97,7 @@ export const CubeScene = forwardRef(function CubeScene(
 
   const texture = useFluidTexture(
     options,
-    undefined,
+    renderPriority,
     [width, height - 200],
     pauseRef,
   )
@@ -147,10 +150,11 @@ export const CubeScene = forwardRef(function CubeScene(
     } else {
       center.current.y = menu ? 0.5 : 0
     }
-  })
+  }, renderPriority)
   return (
     <>
       <RubiksCube
+        renderPriority={renderPriority}
         colorTheme={colorTheme}
         ref={cube}
         scale={0}

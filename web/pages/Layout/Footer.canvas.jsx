@@ -17,7 +17,7 @@ const scaleFactored = (obj, results) => {
 }
 
 export const FooterHUD = forwardRef(function FooterHud(
-  { progressColor, count, time, bufferTime, setElapsed },
+  { progressColor, count, time, bufferTime, setElapsed, renderPriority },
   forwardedRef,
 ) {
   const s1 = useRef()
@@ -55,16 +55,16 @@ export const FooterHUD = forwardRef(function FooterHud(
     trackingElementRef: socials1,
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
-
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
   use2DBounds(s2, {
     trackingElement: true,
     trackingElementRef: socials2,
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
-
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
   use2DBounds(s3, {
     trackingElement: true,
@@ -72,6 +72,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
 
   use2DBounds(se1, {
@@ -80,6 +81,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     trackingElementRef: settings1,
     computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
 
   use2DBounds(se2, {
@@ -88,6 +90,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     trackingElementRef: settings2,
     computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
 
   use2DBounds(se3, {
@@ -96,6 +99,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     trackingElementRef: settings3,
     computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
 
   use2DBounds(se4, {
@@ -104,6 +108,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     trackingElementRef: settings4,
     computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
+    renderPriority,
   })
 
   const prev = useCallback(() => {
@@ -138,8 +143,19 @@ export const FooterHUD = forwardRef(function FooterHud(
       <Icon ref={s3} colorTheme={progressColor}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Next colorTheme={colorTheme} ref={se1} prev onPointerDown={prev} />
-      <PlayPause colorTheme={colorTheme} pause={pause} ref={se2} />
+      <Next
+        colorTheme={colorTheme}
+        ref={se1}
+        prev
+        onPointerDown={prev}
+        renderPriority={renderPriority}
+      />
+      <PlayPause
+        colorTheme={colorTheme}
+        pause={pause}
+        ref={se2}
+        renderPriority={renderPriority}
+      />
       <Next ref={se3} colorTheme={colorTheme} onPointerDown={next} />
       <Gear ref={se4} colorTheme={colorTheme} menu={menu} />
     </>

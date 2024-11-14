@@ -34,6 +34,7 @@ export const Page = function Page({
     trackingElement: true,
     trackingElementRef: menuHTML,
     damping: { smoothTime: 0.0 },
+    renderPriority: -1,
   })
 
   // state
@@ -58,6 +59,9 @@ export const Page = function Page({
     time,
     pause,
     progressCallback,
+    undefined,
+    undefined,
+    -2,
   )
 
   return (
@@ -78,6 +82,7 @@ export const Page = function Page({
       />
       {/* footer */}
       <FooterHUD
+        renderPriority={-2}
         progressColor={progressColor}
         count={count}
         time={time}
@@ -86,6 +91,7 @@ export const Page = function Page({
       />
       {/* Showcase slides */}
       <Showcase
+        renderPriority={-1}
         opts={opts}
         ref={home}
         time={time}

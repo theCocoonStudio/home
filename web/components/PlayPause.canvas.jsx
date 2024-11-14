@@ -10,7 +10,7 @@ import { damp, damp3 } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
 export const PlayPause = forwardRef(function PlayPause(
-  { pause, colorTheme, ...props },
+  { pause, colorTheme, renderPriority, ...props },
   forwardedRef,
 ) {
   const geometry = useMemo(() => {
@@ -79,7 +79,7 @@ export const PlayPause = forwardRef(function PlayPause(
       damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
       damp(mesh.current.position, 'x', 0.8 * 0.35, 0.18, delta)
     }
-  })
+  }, renderPriority)
   return (
     <group ref={ref} {...props}>
       <mesh

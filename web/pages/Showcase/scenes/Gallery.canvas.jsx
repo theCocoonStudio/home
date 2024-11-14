@@ -24,7 +24,7 @@ import { setScaleXYZOfY } from 'web/helpers/use2DBoundsScaleUtils'
 import { MeshBasicMaterial } from 'three'
 
 export const Gallery = forwardRef(function Gallery(
-  { bufferTime, setSun, time },
+  { bufferTime, setSun, time, renderPriority },
   forwardedRef,
 ) {
   const group = useRef()
@@ -82,6 +82,7 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: index === 4 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
     top: index === 4 ? undefined : 1 - 4 / 6,
+    renderPriority,
   })
 
   use2DBounds(dragonflyBG, {
@@ -92,6 +93,7 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: menu && index === 3 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
     top: menu && index === 3 ? undefined : 1 - 0.7074005419 / 2,
+    renderPriority,
   })
   use2DBounds(kitesBG, {
     trackingElement: true,
@@ -101,6 +103,7 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: index === 2 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
     top: index === 2 ? undefined : 1 - 4 / 6,
+    renderPriority,
   })
   use2DBounds(spiderBG, {
     trackingElement: true,
@@ -110,6 +113,7 @@ export const Gallery = forwardRef(function Gallery(
     computeScale: index === 1 ? setScaleXYZOfY : setScaleXYZOfX,
     damp: visible,
     top: index === 1 ? undefined : 1 - 1.162826899 / 2,
+    renderPriority,
   })
 
   useImperativeHandle(

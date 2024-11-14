@@ -15,7 +15,7 @@ import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 
 export const Gear = forwardRef(function Gear(
-  { menu, colorTheme, ...props },
+  { menu, colorTheme, renderPriority, ...props },
   ref,
 ) {
   const { nodes } = useGLTF(Model)
@@ -44,7 +44,7 @@ export const Gear = forwardRef(function Gear(
       0.2,
       delta,
     )
-  })
+  }, renderPriority)
   return (
     <group ref={group} {...props} rotation-z={-Math.PI / 4}>
       <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>

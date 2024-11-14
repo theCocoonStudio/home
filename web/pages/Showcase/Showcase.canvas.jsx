@@ -7,7 +7,7 @@ import { useFrame } from '@react-three/fiber'
 
 /* simulation mesh */
 export const Showcase = forwardRef(function Showcase(
-  { time, bufferTime, progressRef, setSun, opts },
+  { time, bufferTime, progressRef, setSun, renderPriority, opts },
   forwardedRef,
 ) {
   const cubeScene = useRef()
@@ -51,7 +51,7 @@ export const Showcase = forwardRef(function Showcase(
         description.current.style.opacity = opacity
       }
     }
-  })
+  }, renderPriority)
 
   return (
     <>
@@ -65,6 +65,7 @@ export const Showcase = forwardRef(function Showcase(
       />
       {current === 2 && <fog attach='fog' args={['#050505', 0, 12]} />}
       <CubeScene
+        renderPriority={renderPriority}
         opts={opts}
         ref={cubeScene}
         active={current === 1}
@@ -72,6 +73,7 @@ export const Showcase = forwardRef(function Showcase(
       />
 
       <Gallery
+        renderPriority={renderPriority}
         opts={opts}
         ref={gallery}
         active={current === 2}

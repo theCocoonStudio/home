@@ -16,6 +16,7 @@ export const RubiksCube = forwardRef(function RubiksCube(
     sideCount = 3, // make arbitrary in future
     physics = false,
     colorTheme,
+    renderPriority,
     ...props
   },
   forwardedRef,
@@ -67,7 +68,7 @@ export const RubiksCube = forwardRef(function RubiksCube(
 
     // update position and rotation
     rubiks.render(instancedMesh.current, delta)
-  }, -1)
+  }, renderPriority)
   return (
     <group ref={groupRef} {...props}>
       <Wrapper {...wrapperProps}>
