@@ -3,11 +3,17 @@ import { usePage } from 'web/hooks/usePage'
 import { use2DBounds } from 'src/hooks'
 import { UNITS } from 'src/constants'
 import { Menu } from 'web/components/Menu.canvas'
-import { PerformanceMonitor } from '@react-three/drei'
+import { Hud, PerformanceMonitor } from '@react-three/drei'
 import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Showcase } from 'web/pages/Showcase/Showcase.canvas'
 import { FooterHUD } from './Footer.canvas'
+
+const renderOrder = Object.freeze({
+  footerHud: 2,
+  showcase: 1,
+  global: 1,
+})
 
 export const Page = function Page({
   count = 5,
@@ -34,7 +40,7 @@ export const Page = function Page({
     trackingElement: true,
     trackingElementRef: menuHTML,
     damping: { smoothTime: 0.0 },
-    renderPriority: -1,
+    renderPriority: renderOrder.global,
   })
 
   // state
@@ -61,13 +67,28 @@ export const Page = function Page({
     progressCallback,
     undefined,
     undefined,
-    -2,
+    renderOrder.global,
   )
 
   return (
     <>
+      {/* footer */}
+      <Hud renderPriority={renderOrder.footerHud}>
+        <FooterHUD
+          renderPriority={renderOrder.footerHud}
+          progressColor={progressColor}
+          count={count}
+          time={time}
+          bufferTime={bufferTime}
+          setElapsed={setElapsed}
+        />
+      </Hud>
       {/* r3f globals (will be Showcase globals) */}
-      <Effects current={current} sun={sun} />
+      <Effects
+        current={current}
+        sun={sun}
+        renderPriority={renderOrder.global}
+      />
       <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
       <Menu
         ref={menuRef}
@@ -80,18 +101,10 @@ export const Page = function Page({
         sub3={menu3}
         current={current}
       />
-      {/* footer */}
-      <FooterHUD
-        renderPriority={-2}
-        progressColor={progressColor}
-        count={count}
-        time={time}
-        bufferTime={bufferTime}
-        setElapsed={setElapsed}
-      />
+
       {/* Showcase slides */}
       <Showcase
-        renderPriority={-1}
+        renderPriority={renderOrder.showcase}
         opts={opts}
         ref={home}
         time={time}

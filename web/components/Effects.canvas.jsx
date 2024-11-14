@@ -15,7 +15,7 @@ import { BlendFunction } from 'postprocessing'
 // import { LayerMaterial, Color, Depth } from 'lamina'
 import { useEffect, useState } from 'react'
 
-export const Effects = ({ current, sun }) => {
+export const Effects = ({ current, sun, renderPriority }) => {
   // godrays props
   const [godRaysProps, setGodRaysProps] = useState({
     exposure: 0.5,
@@ -29,8 +29,17 @@ export const Effects = ({ current, sun }) => {
     setGodRaysProps(props)
   }, [current])
 
+  const { camera: mainCamera, scene: mainScene } = useThree(
+    ({ scene, camera }) => ({ scene, camera }),
+  )
   return (
-    <EffectComposer disableNormalPass multisampling={8}>
+    <EffectComposer
+      disableNormalPass
+      multisampling={8}
+      scene={mainScene}
+      camera={mainCamera}
+      renderPriority={renderPriority}
+    >
       {sun && <GodRays sun={sun} {...godRaysProps} blur />}
       {/*   <Bloom
         luminanceThreshold={0.0}

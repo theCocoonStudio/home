@@ -8,7 +8,7 @@ import {
 import { ExtrudeGeometry, Shape } from 'three'
 
 export const Next = forwardRef(function Next(
-  { prev, colorTheme, ...props },
+  { prev, colorTheme, opacity = 0.7, ...props },
   forwardedRef,
 ) {
   const { triangleGeometry, geometry } = useMemo(() => {
@@ -75,7 +75,7 @@ export const Next = forwardRef(function Next(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.2}
+          opacity={opacity}
           transparent
         />
       </mesh>
@@ -91,7 +91,7 @@ export const Next = forwardRef(function Next(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.2}
+          opacity={opacity}
           transparent
         />
       </mesh>

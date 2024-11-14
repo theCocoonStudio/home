@@ -127,13 +127,13 @@ export const FooterHUD = forwardRef(function FooterHud(
 
   return (
     <>
-      {/* <Environment
+      <Environment
         preset='studio'
         background={false}
         environmentIntensity={1}
         scene={hudScene}
       />
-      <PerspectiveCamera makeDefault position-z={1} /> */}
+      <PerspectiveCamera makeDefault position-z={1} />
       <Icon ref={s1} colorTheme={progressColor}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>

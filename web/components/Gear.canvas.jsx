@@ -15,7 +15,7 @@ import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 
 export const Gear = forwardRef(function Gear(
-  { menu, colorTheme, renderPriority, ...props },
+  { menu, colorTheme, renderPriority, opacity = 0.9, ...props },
   ref,
 ) {
   const { nodes } = useGLTF(Model)
@@ -52,7 +52,7 @@ export const Gear = forwardRef(function Gear(
           roughness={0.2}
           metalness={0.7}
           color={colorTheme.white}
-          opacity={0.4}
+          opacity={opacity}
           transparent
         />
       </mesh>

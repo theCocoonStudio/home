@@ -3,7 +3,7 @@ import { Environment, PerspectiveCamera, Preload } from '@react-three/drei'
 import { usePage } from '../../hooks/usePage'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 
 /* simulation mesh */
 export const Showcase = forwardRef(function Showcase(
@@ -53,6 +53,10 @@ export const Showcase = forwardRef(function Showcase(
     }
   }, renderPriority)
 
+  const { scene: mainScene } = useThree(({ scene }) => ({
+    scene,
+  }))
+
   return (
     <>
       <Preload all />
@@ -62,6 +66,7 @@ export const Showcase = forwardRef(function Showcase(
         preset='studio'
         background={false}
         environmentIntensity={[1, 0.5, 1, 1, 1][current - 1]}
+        scene={mainScene}
       />
       {current === 2 && <fog attach='fog' args={['#050505', 0, 12]} />}
       <CubeScene

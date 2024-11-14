@@ -10,7 +10,7 @@ import { damp, damp3 } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
 export const PlayPause = forwardRef(function PlayPause(
-  { pause, colorTheme, renderPriority, ...props },
+  { pause, colorTheme, renderPriority, opacity = 0.7, ...props },
   forwardedRef,
 ) {
   const geometry = useMemo(() => {
@@ -73,7 +73,7 @@ export const PlayPause = forwardRef(function PlayPause(
       damp(mesh.current.position, 'x', 0, 0.18, delta)
       damp3(mesh.current.scale, [1.15, 1.15, 1.15], 0.18, delta)
     } else {
-      damp(material.current, 'opacity', 0.2, 0.18, delta)
+      damp(material.current, 'opacity', opacity, 0.18, delta)
       damp3(mesh.current.scale, [0.375 * 0.8, 0.8, 0.8], 0.18, delta)
       damp3(mesh2.current.scale, [0.375 * 0.8, 0.8, 0.8], 0.18, delta)
       damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
@@ -94,7 +94,7 @@ export const PlayPause = forwardRef(function PlayPause(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.2}
+          opacity={opacity}
           transparent
         />
       </mesh>
@@ -111,7 +111,7 @@ export const PlayPause = forwardRef(function PlayPause(
           roughness={0.2}
           metalness={0.4}
           color={colorTheme.white}
-          opacity={0.2}
+          opacity={opacity}
           transparent
         />
       </mesh>
