@@ -9,10 +9,17 @@ Title: 3D Icon gear
 */
 
 import Model from 'public/models/gear.glb'
-import { useGLTF } from '@react-three/drei'
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { OrbitControls, useGLTF } from '@react-three/drei'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { useFrame } from '@react-three/fiber'
-import { damp } from 'maath/easing'
+import { damp, dampC } from 'maath/easing'
+import { Color } from 'three'
 
 export const Gear = forwardRef(function Gear(
   { menu, colorTheme, renderPriority, opacity = 0.9, ...props },
@@ -21,6 +28,7 @@ export const Gear = forwardRef(function Gear(
   const { nodes } = useGLTF(Model)
 
   const group = useRef()
+  const material = useRef()
   useImperativeHandle(ref, () => group.current)
 
   useEffect(() => {
@@ -29,14 +37,21 @@ export const Gear = forwardRef(function Gear(
 
     const factor = 0.9 / (Math.abs(max.x) + Math.abs(min.x))
 
-    nodes.Object_2.geometry.scale(factor, factor / 3, factor)
+    nodes.Object_2.geometry.scale(factor, factor, factor)
     nodes.Object_2.geometry.center()
     return () => {
       nodes.Object_2.geometry?.dispose()
     }
   }, [nodes.Object_2.geometry])
 
+  const materialColor = useMemo(() => {
+    return new Color(colorTheme)
+  }, [colorTheme])
+  /* eslint-disable-next-line */
+
   useFrame((state, delta) => {
+    dampC(material.current.color, materialColor, 0.2, delta)
+
     damp(
       group.current.rotation,
       'z',
@@ -47,11 +62,12 @@ export const Gear = forwardRef(function Gear(
   }, renderPriority)
   return (
     <group ref={group} {...props} rotation-z={-Math.PI / 4}>
+      <OrbitControls />
       <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>
         <meshStandardMaterial
-          roughness={0.2}
-          metalness={0.7}
-          color={colorTheme.white}
+          ref={material}
+          roughness={0.9}
+          metalness={0.1}
           opacity={opacity}
           transparent
         />

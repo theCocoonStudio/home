@@ -88,6 +88,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings2,
+    top: pause ? 0.45 : 0.5,
     computeScale: scaleFactored,
     damping: { smoothTime: 0.0 },
     renderPriority,
@@ -134,30 +135,40 @@ export const FooterHUD = forwardRef(function FooterHud(
         scene={hudScene}
       />
       <PerspectiveCamera makeDefault position-z={1} />
-      <Icon ref={s1} colorTheme={progressColor}>
+      <Icon ref={s1} colorTheme={progressColor} renderPriority={renderPriority}>
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s2} colorTheme={progressColor}>
+      <Icon ref={s2} colorTheme={progressColor} renderPriority={renderPriority}>
         <Github colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s3} colorTheme={progressColor}>
+      <Icon ref={s3} colorTheme={progressColor} renderPriority={renderPriority}>
         <Instagram colorTheme={colorTheme} />
       </Icon>
       <Next
-        colorTheme={colorTheme}
+        colorTheme={progressColor}
         ref={se1}
         prev
         onPointerDown={prev}
         renderPriority={renderPriority}
       />
       <PlayPause
-        colorTheme={colorTheme}
+        colorTheme={progressColor}
         pause={pause}
         ref={se2}
         renderPriority={renderPriority}
       />
-      <Next ref={se3} colorTheme={colorTheme} onPointerDown={next} />
-      <Gear ref={se4} colorTheme={colorTheme} menu={menu} />
+      <Next
+        ref={se3}
+        colorTheme={progressColor}
+        onPointerDown={next}
+        renderPriority={renderPriority}
+      />
+      <Gear
+        ref={se4}
+        colorTheme={progressColor}
+        menu={menu}
+        renderPriority={renderPriority}
+      />
     </>
   )
 })

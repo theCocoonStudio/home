@@ -5,8 +5,8 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { ExtrudeGeometry, Shape } from 'three'
-import { damp, damp3 } from 'maath/easing'
+import { Color, ExtrudeGeometry, Shape } from 'three'
+import { damp, damp3, dampC } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
 export const PlayPause = forwardRef(function PlayPause(
@@ -21,12 +21,12 @@ export const PlayPause = forwardRef(function PlayPause(
       .lineTo(0.2, 0)
       .lineTo(-0.2, -0.2)
     const triangleGeometry = new ExtrudeGeometry(triangleShape, {
-      depth: 0.03,
+      depth: 0.3,
       bevelEnabled: true,
       bevelSegments: 6,
-      steps: 2,
-      bevelSize: 0.15,
-      bevelThickness: 0.03,
+      steps: 5,
+      bevelSize: 0.25,
+      bevelThickness: 0.1,
     })
     triangleGeometry.center()
     // pause geometry
@@ -39,12 +39,12 @@ export const PlayPause = forwardRef(function PlayPause(
       .lineTo(-factor, -factor)
 
     const geometry = new ExtrudeGeometry(shape, {
-      depth: 0.1,
+      depth: 0.2,
       bevelEnabled: true,
       bevelSegments: 6,
-      steps: 2,
-      bevelSize: 0.08,
-      bevelThickness: 0.03,
+      steps: 5,
+      bevelSize: 0.18,
+      bevelThickness: 0.1,
     })
     geometry.center()
     // morph targets
@@ -56,6 +56,7 @@ export const PlayPause = forwardRef(function PlayPause(
   const mesh = useRef()
   const mesh2 = useRef()
   const material = useRef()
+  const material2 = useRef()
   const ref = useRef()
   useImperativeHandle(forwardedRef, () => ref.current)
 
@@ -65,19 +66,26 @@ export const PlayPause = forwardRef(function PlayPause(
     },
     [geometry],
   )
+
+  const materialColor = useMemo(() => {
+    return new Color(colorTheme)
+  }, [colorTheme])
+
   useFrame((state, delta) => {
+    dampC(material.current.color, materialColor, 0.2, delta)
+    dampC(material2.current.color, materialColor, 0.2, delta)
     if (pause) {
       material.current.opacity = 0
       mesh2.current.scale.y = 0
       damp(mesh.current.morphTargetInfluences, '0', 1, 0.18, delta)
       damp(mesh.current.position, 'x', 0, 0.18, delta)
-      damp3(mesh.current.scale, [1.15, 1.15, 1.15], 0.18, delta)
+      damp3(mesh.current.scale, [0.9, 0.9, 0.9], 0.18, delta)
     } else {
       damp(material.current, 'opacity', opacity, 0.18, delta)
-      damp3(mesh.current.scale, [0.375 * 0.8, 0.8, 0.8], 0.18, delta)
-      damp3(mesh2.current.scale, [0.375 * 0.8, 0.8, 0.8], 0.18, delta)
+      damp3(mesh.current.scale, [0.375 * 0.6, 0.6, 0.6], 0.18, delta)
+      damp3(mesh2.current.scale, [0.375 * 0.6, 0.6, 0.6], 0.18, delta)
       damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
-      damp(mesh.current.position, 'x', 0.8 * 0.35, 0.18, delta)
+      damp(mesh.current.position, 'x', 0.6 * 0.35, 0.18, delta)
     }
   }, renderPriority)
   return (
@@ -86,14 +94,14 @@ export const PlayPause = forwardRef(function PlayPause(
         ref={mesh}
         geometry={geometry}
         rotation-x={Math.PI}
-        scale={pause ? 1.15 : [0.375 * 0.8, 0.8, 0.8]}
+        scale={pause ? 0.9 : [0.375 * 0.6, 0.6, 0.6]}
         morphTargetInfluences={[0]}
-        position-x={0.8 * 0.35}
+        position-x={0.6 * 0.35}
       >
         <meshStandardMaterial
-          roughness={0.2}
-          metalness={0.4}
-          color={colorTheme.white}
+          ref={material2}
+          roughness={0.9}
+          metalness={0.1}
           opacity={opacity}
           transparent
         />
@@ -101,16 +109,15 @@ export const PlayPause = forwardRef(function PlayPause(
       <mesh
         ref={mesh2}
         geometry={geometry}
-        scale={[0.375 * 0.8, 0.8, 0.8]}
-        position-x={-0.8 * 0.35}
+        scale={[0.375 * 0.6, 0.6, 0.6]}
+        position-x={-0.6 * 0.35}
         rotation-x={Math.PI}
         morphTargetInfluences={[0]}
       >
         <meshStandardMaterial
           ref={material}
-          roughness={0.2}
-          metalness={0.4}
-          color={colorTheme.white}
+          roughness={0.9}
+          metalness={0.1}
           opacity={opacity}
           transparent
         />

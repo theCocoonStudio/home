@@ -7,46 +7,53 @@ import {
   useMemo,
   useRef,
 } from 'react'
+import { dampC } from 'maath/easing'
+import { Color } from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
 
 export const Icon = forwardRef(function Icon(
-  { colorTheme, children, ...props },
+  { colorTheme, renderPriority, children, ...props },
   ref,
 ) {
   const { nodes, materials } = useGLTF(Model)
-  const geometry = useMemo(
+  const [geometry0, geometry1] = useMemo(
     () => [nodes.Cube053.geometry.clone(), nodes.Cube054.geometry.clone()],
     [nodes.Cube053.geometry, nodes.Cube054.geometry],
   )
-  const material = useMemo(
-    () => [
-      materials['Material.084'].clone(),
-      materials['Material.019'].clone(),
-    ],
+  const [material0, material1] = useMemo(
+    () => [materials['Material.084'], materials['Material.019']],
     [materials],
   )
   const mesh = useRef()
+
   useImperativeHandle(ref, () => mesh.current)
   useEffect(() => {
-    material[0].color.set(colorTheme)
-    material[1].color.set(colorTheme)
-
-    geometry[0].center()
-    const { min, max } = geometry[0].boundingBox
+    geometry0.center()
+    const { min, max } = geometry0.boundingBox
     const factor = 1 / (Math.abs(max.x) + Math.abs(min.x))
-    geometry[0].scale(factor, factor, factor)
+    geometry0.scale(factor, factor, factor)
 
-    geometry[1].scale(factor, factor, factor)
+    geometry1.scale(factor, factor, factor)
     return () => {
-      geometry[0]?.dispose()
-      geometry[1]?.dispose()
-      material[0]?.dispose()
-      material[1]?.dispose()
+      geometry0?.dispose()
+      geometry1?.dispose()
+      material0?.dispose()
+      material1?.dispose()
     }
-  }, [colorTheme, geometry, material])
+  }, [geometry0, geometry1, material0, material1])
+
+  const materialColor = useMemo(() => {
+    return new Color(colorTheme)
+  }, [colorTheme])
+  /* eslint-disable-next-line */
+  useFrame(({ state, delta }) => {
+    dampC(material0.color, materialColor, 0.2, delta)
+    dampC(material1.color, materialColor, 0.2, delta)
+  }, renderPriority)
 
   return (
-    <mesh geometry={geometry[0]} material={material[0]} ref={mesh} {...props}>
-      <mesh name='Cube054' geometry={geometry[1]} material={material[1]} />
+    <mesh geometry={geometry0} material={material0} ref={mesh} {...props}>
+      <mesh name='Cube054' geometry={geometry1} material={material1} />
       {children}
     </mesh>
   )
