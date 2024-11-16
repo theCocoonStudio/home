@@ -70,8 +70,8 @@ export const Next = forwardRef(function Next(
 
   /* eslint-disable-next-line */
   useFrame(({ state, delta }) => {
-    dampC(material.current.color, materialColor, 0.2, delta)
-    dampC(material2.current.color, materialColor, 0.2, delta)
+    dampC(material.current.color, materialColor, 0.1, delta)
+    dampC(material2.current.color, materialColor, 0.1, delta)
   }, renderPriority)
 
   return (
