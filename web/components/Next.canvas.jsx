@@ -7,7 +7,7 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { Color, ExtrudeGeometry, Shape } from 'three'
+import { AdditiveBlending, Color, ExtrudeGeometry, Shape } from 'three'
 
 export const Next = forwardRef(function Next(
   { prev, colorTheme, renderPriority, opacity = 0.7, ...props },
@@ -70,8 +70,8 @@ export const Next = forwardRef(function Next(
 
   /* eslint-disable-next-line */
   useFrame(({ state, delta }) => {
-    dampC(material.current.color, materialColor, 0.1, delta)
-    dampC(material2.current.color, materialColor, 0.1, delta)
+    dampC(material.current.color, materialColor, 0.2, delta)
+    dampC(material2.current.color, materialColor, 0.2, delta)
   }, renderPriority)
 
   return (
@@ -90,6 +90,7 @@ export const Next = forwardRef(function Next(
           metalness={0.1}
           opacity={opacity}
           transparent
+          blending={AdditiveBlending}
         />
       </mesh>
       <mesh
@@ -106,6 +107,7 @@ export const Next = forwardRef(function Next(
           metalness={0.1}
           opacity={opacity}
           transparent
+          blending={AdditiveBlending}
         />
       </mesh>
     </group>

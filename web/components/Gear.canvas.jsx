@@ -19,10 +19,10 @@ import {
 } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { damp, dampC } from 'maath/easing'
-import { Color } from 'three'
+import { AdditiveBlending, Color } from 'three'
 
 export const Gear = forwardRef(function Gear(
-  { menu, colorTheme, renderPriority, opacity = 0.9, ...props },
+  { menu, colorTheme, renderPriority, opacity = 0.7, ...props },
   ref,
 ) {
   const { nodes } = useGLTF(Model)
@@ -66,6 +66,7 @@ export const Gear = forwardRef(function Gear(
       <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>
         <meshStandardMaterial
           ref={material}
+          blending={AdditiveBlending}
           roughness={0.9}
           metalness={0.1}
           opacity={opacity}

@@ -5,7 +5,7 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { Color, ExtrudeGeometry, Shape } from 'three'
+import { AdditiveBlending, Color, ExtrudeGeometry, Shape } from 'three'
 import { damp, damp3, dampC } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
@@ -104,6 +104,7 @@ export const PlayPause = forwardRef(function PlayPause(
           metalness={0.1}
           opacity={opacity}
           transparent
+          blending={AdditiveBlending}
         />
       </mesh>
       <mesh
@@ -120,6 +121,7 @@ export const PlayPause = forwardRef(function PlayPause(
           metalness={0.1}
           opacity={opacity}
           transparent
+          blending={AdditiveBlending}
         />
       </mesh>
     </group>
