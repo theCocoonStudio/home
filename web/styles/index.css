@@ -42,7 +42,7 @@
 @property --progress {
   syntax: '<color>';
   inherits: false;
-  initial-value: #134643; /* slate */
+  initial-value: var(--slate);
 }
 
 @property --p0 {
