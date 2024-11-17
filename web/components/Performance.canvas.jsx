@@ -24,7 +24,7 @@ export const Performance = ({ colorTheme }) => {
       // averages,
     }) => {
       const el = document.getElementById('fps')
-      el.style.setProperty('--fpsFactor', `${100 * Math.max(factor, 0.2)}%`)
+      el.style.setProperty('--fpsFactor', `${100 * Math.max(factor, 0.1)}%`)
       el.style.setProperty('--fpsColor', factor < 0.2 ? red : green)
     },
     [green, red],
