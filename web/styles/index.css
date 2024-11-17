@@ -246,6 +246,7 @@ body {
   left: 0;
   right: calc(-200% - 2 * (20px));
   height: 100%;
+  opacity: 0.75;
 }
 
 @keyframes fpsGradient {
@@ -288,7 +289,7 @@ body {
     --fpsBar 3s,
     --fpsColor 3s ease-in;
 
-  animation: fpsGradient 3s ease-out infinite;
+  animation: fpsGradient 3s linear infinite;
 }
 
 #fpsBorder {
