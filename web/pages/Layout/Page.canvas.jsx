@@ -3,7 +3,8 @@ import { usePage } from 'web/hooks/usePage'
 import { use2DBounds } from 'src/hooks'
 import { UNITS } from 'src/constants'
 import { Menu } from 'web/components/Menu.canvas'
-import { Hud, PerformanceMonitor } from '@react-three/drei'
+import { Hud } from '@react-three/drei'
+import { Performance } from 'web/components/Performance.canvas'
 import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Showcase } from 'web/pages/Showcase/Showcase.canvas'
@@ -89,7 +90,7 @@ export const Page = function Page({
         sun={sun}
         renderPriority={renderOrder.global}
       />
-      <PerformanceMonitor /* onChange={({ fps }) => console.log(fps)} */ />
+      <Performance colorTheme={colorTheme} />
       <Menu
         ref={menuRef}
         position-z={-1}

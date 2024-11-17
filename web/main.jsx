@@ -10,9 +10,10 @@ const theme = {
   purple: '#2B253A',
   gunmetal: '#122629', // dark green
   midnight: '#103334', // intermediate green
-  slate: '#134643', // green
+  slate: '#134643', // green (success)
   white: '#ffffff',
   black: '#101010',
+  red: '#330000', // errors
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
