@@ -146,28 +146,32 @@ export const FooterHUD = forwardRef(function FooterHud(
       <PerspectiveCamera makeDefault position-z={1} />
       <Icon
         ref={s1}
-        colorTheme={colorTheme.charcoal}
+        targetColor={colorTheme.charcoal}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
       <Icon
         ref={s2}
-        colorTheme={colorTheme.gunmetal}
+        targetColor={colorTheme.gunmetal}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
         <Github colorTheme={colorTheme} />
       </Icon>
       <Icon
         ref={s3}
-        colorTheme={colorTheme.purple}
+        targetColor={colorTheme.purple}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
         <Instagram colorTheme={colorTheme} />
       </Icon>
       <Icon
         ref={se1}
-        colorTheme={progressColor}
+        targetColor={progressColor}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
         onPointerDown={prev}
       >
@@ -175,7 +179,8 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={se2}
-        colorTheme={progressColor}
+        targetColor={progressColor}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
         <PlayPause
@@ -186,7 +191,8 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={se3}
-        colorTheme={progressColor}
+        targetColor={progressColor}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
         onPointerDown={next}
       >
@@ -194,7 +200,8 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={se4}
-        colorTheme={progressColor}
+        targetColor={progressColor}
+        colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
         <Gear

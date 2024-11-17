@@ -2,17 +2,19 @@ import Model from 'public/models/github.glb'
 import { useGLTF } from '@react-three/drei'
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react'
-import { dampC } from 'maath/easing'
+import { damp, dampC } from 'maath/easing'
 import { Color } from 'three'
 import { useFrame } from '@react-three/fiber'
 
 export const Icon = forwardRef(function Icon(
-  { colorTheme, renderPriority, children, ...props },
+  { targetColor, renderPriority, children, ...props },
   ref,
 ) {
   const { nodes, materials } = useGLTF(Model)
@@ -30,7 +32,6 @@ export const Icon = forwardRef(function Icon(
 
   useImperativeHandle(ref, () => mesh.current)
   useEffect(() => {
-    console.log(material0.clone)
     geometry0.center()
     const { min, max } = geometry0.boundingBox
     const factor = 1 / (Math.abs(max.x) + Math.abs(min.x))
@@ -47,31 +48,57 @@ export const Icon = forwardRef(function Icon(
     }
   }, [geometry0, geometry1, mat0, mat1, material0, material1])
 
+  const [hovered, setHovered] = useState(false)
+
   const materialColor = useMemo(() => {
-    return new Color(colorTheme)
-  }, [colorTheme])
+    return new Color(targetColor)
+  }, [targetColor])
+
   /* eslint-disable-next-line */
   useFrame(({ state, delta }) => {
-    dampC(material0.color, materialColor, 0.2, delta)
-    dampC(material1.color, materialColor, 0.2, delta)
+    dampC(material0.color, materialColor, 0.1, delta)
+    dampC(material1.color, materialColor, 0.1, delta)
+    if (hovered) {
+      damp(mesh.current.rotation, 'x', -Math.PI / 6, 0.02, delta)
+    } else {
+      damp(mesh.current.rotation, 'x', 0, 0.02, delta)
+    }
   }, renderPriority)
 
+  const hoverIn = useCallback((e) => {
+    if (e.eventObject.name === 'IconCapture') {
+      setHovered(true)
+    }
+  }, [])
+
+  const hoverOut = useCallback((e) => {
+    if (e.eventObject.name === 'IconCapture') {
+      setHovered(false)
+    }
+  }, [])
+
   return (
-    <mesh
-      receiveShadow
-      geometry={geometry0}
-      material={material0}
-      ref={mesh}
-      {...props}
+    <group
+      name='IconCapture'
+      onPointerLeave={hoverOut}
+      onPointerEnter={hoverIn}
     >
       <mesh
         receiveShadow
-        name='Cube054'
-        geometry={geometry1}
-        material={material1}
-      />
-      {children}
-    </mesh>
+        geometry={geometry0}
+        material={material0}
+        ref={mesh}
+        {...props}
+      >
+        <mesh
+          receiveShadow
+          name='Cube054'
+          geometry={geometry1}
+          material={material1}
+        />
+        {children}
+      </mesh>
+    </group>
   )
 })
 
