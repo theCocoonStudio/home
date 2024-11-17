@@ -1,5 +1,3 @@
-import { useFrame } from '@react-three/fiber'
-import { dampC } from 'maath/easing'
 import {
   useRef,
   forwardRef,
@@ -7,10 +5,10 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { AdditiveBlending, Color, ExtrudeGeometry, Shape } from 'three'
+import { ExtrudeGeometry, Shape } from 'three'
 
 export const Next = forwardRef(function Next(
-  { prev, colorTheme, renderPriority, opacity = 0.7, ...props },
+  { prev, colorTheme, ...props },
   forwardedRef,
 ) {
   const { triangleGeometry, geometry } = useMemo(() => {
@@ -21,7 +19,7 @@ export const Next = forwardRef(function Next(
       .lineTo(0.2, 0)
       .lineTo(-0.2, -0.2)
     const triangleGeometry = new ExtrudeGeometry(triangleShape, {
-      depth: 0.1,
+      depth: 0.05,
       bevelEnabled: true,
       bevelSegments: 6,
       steps: 6,
@@ -39,7 +37,7 @@ export const Next = forwardRef(function Next(
       .lineTo(-factor, -factor)
 
     const geometry = new ExtrudeGeometry(shape, {
-      depth: 0.25,
+      depth: 0.1,
       bevelEnabled: true,
       bevelSegments: 6,
       steps: 6,
@@ -53,8 +51,7 @@ export const Next = forwardRef(function Next(
   const mesh = useRef()
   const mesh2 = useRef()
   const ref = useRef()
-  const material = useRef()
-  const material2 = useRef()
+
   useImperativeHandle(forwardedRef, () => ref.current)
 
   useEffect(
@@ -64,50 +61,48 @@ export const Next = forwardRef(function Next(
     },
     [geometry, triangleGeometry],
   )
-  const materialColor = useMemo(() => {
-    return new Color(colorTheme)
-  }, [colorTheme])
-
-  /* eslint-disable-next-line */
-  useFrame(({ state, delta }) => {
-    dampC(material.current.color, materialColor, 0.1, delta)
-    dampC(material2.current.color, materialColor, 0.1, delta)
-  }, renderPriority)
 
   return (
-    <group ref={ref} {...props} rotation-y={prev ? Math.PI : 0}>
+    <group
+      ref={ref}
+      {...props}
+      rotation-y={prev ? Math.PI : 0}
+      position-z={0.1}
+    >
       <mesh
         ref={mesh}
         geometry={triangleGeometry}
         rotation-x={Math.PI}
-        scale={[0.7, 0.9, 0.6]}
+        scale={[0.35, 0.55, 0.3]}
         morphTargetInfluences={[0]}
-        position-x={0.15}
+        position-x={prev ? 0.15 : 0.13}
+        castShadow
+        receiveShadow
       >
         <meshStandardMaterial
-          ref={material}
-          roughness={0.9}
-          metalness={0.1}
-          opacity={opacity}
+          roughness={0.2}
+          metalness={0.4}
+          color={colorTheme.white}
+          opacity={0.8}
           transparent
-          blending={AdditiveBlending}
         />
       </mesh>
       <mesh
         ref={mesh2}
-        scale={[0.3 * 0.6, 0.6, 0.6]}
-        position-x={-0.5 + (0.2 * 0.6) / 2}
+        scale={[0.3 * 0.35, 0.35, 0.3]}
+        position-x={prev ? -0.15 : -0.15}
         rotation-x={Math.PI}
         morphTargetInfluences={[0]}
         geometry={geometry}
+        castShadow
+        receiveShadow
       >
         <meshStandardMaterial
-          ref={material2}
-          roughness={0.9}
-          metalness={0.1}
-          opacity={opacity}
+          roughness={0.2}
+          metalness={0.4}
+          color={colorTheme.white}
+          opacity={0.8}
           transparent
-          blending={AdditiveBlending}
         />
       </mesh>
     </group>

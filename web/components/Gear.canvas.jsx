@@ -10,32 +10,25 @@ Title: 3D Icon gear
 
 import Model from 'public/models/gear.glb'
 import { OrbitControls, useGLTF } from '@react-three/drei'
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { damp, dampC } from 'maath/easing'
-import { AdditiveBlending, Color } from 'three'
+import { damp } from 'maath/easing'
 
 export const Gear = forwardRef(function Gear(
-  { menu, colorTheme, renderPriority, opacity = 0.7, ...props },
+  { menu, colorTheme, renderPriority, ...props },
   ref,
 ) {
   const { nodes } = useGLTF(Model)
 
   const group = useRef()
-  const material = useRef()
+
   useImperativeHandle(ref, () => group.current)
 
   useEffect(() => {
     nodes.Object_2.geometry.center()
     const { min, max } = nodes.Object_2.geometry.boundingBox
 
-    const factor = 0.9 / (Math.abs(max.x) + Math.abs(min.x))
+    const factor = 0.5 / (Math.abs(max.x) + Math.abs(min.x))
 
     nodes.Object_2.geometry.scale(factor, factor, factor)
     nodes.Object_2.geometry.center()
@@ -44,14 +37,7 @@ export const Gear = forwardRef(function Gear(
     }
   }, [nodes.Object_2.geometry])
 
-  const materialColor = useMemo(() => {
-    return new Color(colorTheme)
-  }, [colorTheme])
-  /* eslint-disable-next-line */
-
   useFrame((state, delta) => {
-    dampC(material.current.color, materialColor, 0.2, delta)
-
     damp(
       group.current.rotation,
       'z',
@@ -61,15 +47,19 @@ export const Gear = forwardRef(function Gear(
     )
   }, renderPriority)
   return (
-    <group ref={group} {...props} rotation-z={-Math.PI / 4}>
+    <group ref={group} {...props} rotation-z={-Math.PI / 4} position-z={0.04}>
       <OrbitControls />
-      <mesh geometry={nodes.Object_2.geometry} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh
+        geometry={nodes.Object_2.geometry}
+        rotation={[-Math.PI / 2, 0, 0]}
+        castShadow
+        receiveShadow
+      >
         <meshStandardMaterial
-          ref={material}
-          blending={AdditiveBlending}
-          roughness={0.9}
-          metalness={0.1}
-          opacity={opacity}
+          roughness={0.2}
+          metalness={0.4}
+          color={colorTheme.white}
+          opacity={0.8}
           transparent
         />
       </mesh>

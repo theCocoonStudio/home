@@ -5,15 +5,15 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { AdditiveBlending, Color, ExtrudeGeometry, Shape } from 'three'
-import { damp, damp3, dampC } from 'maath/easing'
+import { ExtrudeGeometry, Shape } from 'three'
+import { damp, damp3 } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
 
 export const PlayPause = forwardRef(function PlayPause(
-  { pause, colorTheme, renderPriority, opacity = 0.7, ...props },
+  { pause, colorTheme, renderPriority, ...props },
   forwardedRef,
 ) {
-  const geometry = useMemo(() => {
+  const { geometry, triangleGeometry } = useMemo(() => {
     // play geometry
     const triangleShape = new Shape()
       .moveTo(-0.2, -0.2)
@@ -47,83 +47,81 @@ export const PlayPause = forwardRef(function PlayPause(
       bevelThickness: 0.1,
     })
     geometry.center()
-    // morph targets
-    geometry.morphAttributes.position = [triangleGeometry.attributes.position]
-    triangleGeometry.dispose()
-    return geometry
+
+    return { triangleGeometry, geometry }
   }, [])
 
   const mesh = useRef()
   const mesh2 = useRef()
-  const material = useRef()
-  const material2 = useRef()
+  const triangleMesh = useRef()
+
   const ref = useRef()
   useImperativeHandle(forwardedRef, () => ref.current)
 
   useEffect(
     () => () => {
       geometry.dispose()
+      triangleGeometry.dispose()
     },
-    [geometry],
+    [geometry, triangleGeometry],
   )
 
-  const materialColor = useMemo(() => {
-    return new Color(colorTheme)
-  }, [colorTheme])
-
-  useFrame((state, delta) => {
-    dampC(material.current.color, materialColor, 0.2, delta)
-    dampC(material2.current.color, materialColor, 0.2, delta)
-    if (pause) {
-      material.current.opacity = 0
-      mesh2.current.scale.y = 0
-      damp(mesh.current.morphTargetInfluences, '0', 1, 0.18, delta)
-      damp(mesh.current.position, 'x', 0, 0.18, delta)
-      damp3(mesh.current.scale, [0.9, 0.9, 0.9], 0.18, delta)
-    } else {
-      damp(material.current, 'opacity', opacity, 0.18, delta)
-      damp3(mesh.current.scale, [0.375 * 0.6, 0.6, 0.6], 0.18, delta)
-      damp3(mesh2.current.scale, [0.375 * 0.6, 0.6, 0.6], 0.18, delta)
-      damp(mesh.current.morphTargetInfluences, '0', 0, 0.18, delta)
-      damp(mesh.current.position, 'x', 0.6 * 0.35, 0.18, delta)
-    }
-  }, renderPriority)
   return (
-    <group ref={ref} {...props}>
-      <mesh
-        ref={mesh}
-        geometry={geometry}
-        rotation-x={Math.PI}
-        scale={pause ? 0.9 : [0.375 * 0.6, 0.6, 0.6]}
-        morphTargetInfluences={[0]}
-        position-x={0.6 * 0.35}
-      >
-        <meshStandardMaterial
-          ref={material2}
-          roughness={0.9}
-          metalness={0.1}
-          opacity={opacity}
-          transparent
-          blending={AdditiveBlending}
-        />
-      </mesh>
-      <mesh
-        ref={mesh2}
-        geometry={geometry}
-        scale={[0.375 * 0.6, 0.6, 0.6]}
-        position-x={-0.6 * 0.35}
-        rotation-x={Math.PI}
-        morphTargetInfluences={[0]}
-      >
-        <meshStandardMaterial
-          ref={material}
-          roughness={0.9}
-          metalness={0.1}
-          opacity={opacity}
-          transparent
-          blending={AdditiveBlending}
-        />
-      </mesh>
+    <group ref={ref} {...props} scale={0.5} position-z={0.05}>
+      {pause ? (
+        <mesh
+          ref={triangleMesh}
+          geometry={triangleGeometry}
+          scale={0.8}
+          castShadow
+          receiveShadow
+        >
+          <meshStandardMaterial
+            roughness={0.2}
+            metalness={0.4}
+            color={colorTheme.white}
+            opacity={0.8}
+            transparent
+          />
+        </mesh>
+      ) : (
+        <>
+          <mesh
+            ref={mesh}
+            geometry={geometry}
+            rotation-x={Math.PI}
+            scale={[0.375 * 0.65, 0.65, 0.65]}
+            position-x={0.65 * 0.35}
+            castShadow
+            receiveShadow
+          >
+            <meshStandardMaterial
+              roughness={0.2}
+              metalness={0.4}
+              color={colorTheme.white}
+              opacity={0.8}
+              transparent
+            />
+          </mesh>
+          <mesh
+            ref={mesh2}
+            geometry={geometry}
+            scale={[0.375 * 0.65, 0.65, 0.65]}
+            position-x={-0.65 * 0.35}
+            rotation-x={Math.PI}
+            castShadow
+            receiveShadow
+          >
+            <meshStandardMaterial
+              roughness={0.2}
+              metalness={0.4}
+              color={colorTheme.white}
+              opacity={0.8}
+              transparent
+            />
+          </mesh>
+        </>
+      )}
     </group>
   )
 })

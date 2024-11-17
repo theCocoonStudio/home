@@ -12,9 +12,9 @@ import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 
-const scaleFactored = (obj, results) => {
+/* const scaleFactored = (obj, results) => {
   return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
-}
+} */
 
 export const FooterHUD = forwardRef(function FooterHud(
   { progressColor, count, time, bufferTime, setElapsed, renderPriority },
@@ -79,7 +79,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings1,
-    computeScale: scaleFactored,
+    computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
     renderPriority,
   })
@@ -88,8 +88,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings2,
-    top: pause ? 0.45 : 0.5,
-    computeScale: scaleFactored,
+    computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
     renderPriority,
   })
@@ -98,7 +97,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings3,
-    computeScale: scaleFactored,
+    computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
     renderPriority,
   })
@@ -107,7 +106,7 @@ export const FooterHUD = forwardRef(function FooterHud(
     scaleToFitWidth: false,
     trackingElement: true,
     trackingElementRef: settings4,
-    computeScale: scaleFactored,
+    computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
     renderPriority,
   })
@@ -128,47 +127,82 @@ export const FooterHUD = forwardRef(function FooterHud(
 
   return (
     <>
+      <directionalLight
+        position-z={0.1}
+        intensity={15}
+        color={colorTheme.white}
+        target={se2.current}
+        castShadow
+        shadow-camera-near={0}
+        shadow-camera-far={3}
+      />
+
       <Environment
         preset='studio'
         background={false}
-        environmentIntensity={1}
+        environmentIntensity={0.5}
         scene={hudScene}
       />
       <PerspectiveCamera makeDefault position-z={1} />
-      <Icon ref={s1} colorTheme={progressColor} renderPriority={renderPriority}>
+      <Icon
+        ref={s1}
+        colorTheme={colorTheme.charcoal}
+        renderPriority={renderPriority}
+      >
         <LinkedIn colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s2} colorTheme={progressColor} renderPriority={renderPriority}>
+      <Icon
+        ref={s2}
+        colorTheme={colorTheme.gunmetal}
+        renderPriority={renderPriority}
+      >
         <Github colorTheme={colorTheme} />
       </Icon>
-      <Icon ref={s3} colorTheme={progressColor} renderPriority={renderPriority}>
+      <Icon
+        ref={s3}
+        colorTheme={colorTheme.purple}
+        renderPriority={renderPriority}
+      >
         <Instagram colorTheme={colorTheme} />
       </Icon>
-      <Next
-        colorTheme={progressColor}
+      <Icon
         ref={se1}
-        prev
-        onPointerDown={prev}
-        renderPriority={renderPriority}
-      />
-      <PlayPause
         colorTheme={progressColor}
-        pause={pause}
-        ref={se2}
         renderPriority={renderPriority}
-      />
-      <Next
+        onPointerDown={prev}
+      >
+        <Next colorTheme={colorTheme} prev />
+      </Icon>
+      <Icon
+        ref={se2}
+        colorTheme={progressColor}
+        renderPriority={renderPriority}
+      >
+        <PlayPause
+          colorTheme={colorTheme}
+          pause={pause}
+          renderPriority={renderPriority}
+        />
+      </Icon>
+      <Icon
         ref={se3}
         colorTheme={progressColor}
-        onPointerDown={next}
         renderPriority={renderPriority}
-      />
-      <Gear
+        onPointerDown={next}
+      >
+        <Next colorTheme={colorTheme} />
+      </Icon>
+      <Icon
         ref={se4}
         colorTheme={progressColor}
-        menu={menu}
         renderPriority={renderPriority}
-      />
+      >
+        <Gear
+          colorTheme={colorTheme}
+          menu={menu}
+          renderPriority={renderPriority}
+        />
+      </Icon>
     </>
   )
 })
