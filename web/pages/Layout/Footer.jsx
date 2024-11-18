@@ -41,7 +41,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div onClick={togglePause} />
         <div />
         <div onClick={toggleMenu} />
-        <div />
+        <div style={{ border: '1px solid white' }} />
         <div id='settingsLabel' className='space-mono-regular'>
           APP CONTROLS
         </div>

@@ -3,6 +3,7 @@ import { LinkedIn } from 'web/components/Socials/LinkedIn.canvas'
 import { Github } from 'web/components/Socials/Github.canvas'
 import { Instagram } from 'web/components/Socials/Instagram.canvas'
 import { Icon } from 'web/components/Socials/Icon.canvas'
+import { Youtube } from 'web/components/Socials/Youtube.canvas'
 import { Gear } from 'web/components/Gear.canvas'
 import { PlayPause } from 'web/components/PlayPause.canvas'
 import { Next } from 'web/components/Next.canvas'
@@ -23,6 +24,7 @@ export const FooterHUD = forwardRef(function FooterHud(
   const s1 = useRef()
   const s2 = useRef()
   const s3 = useRef()
+  const s4 = useRef()
   const se1 = useRef()
   const se2 = useRef()
   const se3 = useRef()
@@ -38,11 +40,12 @@ export const FooterHUD = forwardRef(function FooterHud(
         socials1,
         socials2,
         socials3,
+        socials4,
         settings1,
         settings2,
         settings3,
         settings4,
-
+        settings5,
         description,
       },
     },
@@ -69,6 +72,15 @@ export const FooterHUD = forwardRef(function FooterHud(
   use2DBounds(s3, {
     trackingElement: true,
     trackingElementRef: socials3,
+    scaleToFitWidth: false,
+    computeScale: setScaleXYZOfX,
+    damping: { smoothTime: 0.0 },
+    renderPriority,
+  })
+
+  use2DBounds(s4, {
+    trackingElement: true,
+    trackingElementRef: socials4,
     scaleToFitWidth: false,
     computeScale: setScaleXYZOfX,
     damping: { smoothTime: 0.0 },
@@ -146,7 +158,7 @@ export const FooterHUD = forwardRef(function FooterHud(
       <PerspectiveCamera makeDefault position-z={1} />
       <Icon
         ref={s1}
-        targetColor={colorTheme.charcoal}
+        targetColor={colorTheme.slate}
         colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
@@ -154,7 +166,7 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={s2}
-        targetColor={colorTheme.gunmetal}
+        targetColor={colorTheme.black}
         colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
@@ -167,6 +179,14 @@ export const FooterHUD = forwardRef(function FooterHud(
         renderPriority={renderPriority}
       >
         <Instagram colorTheme={colorTheme} />
+      </Icon>
+      <Icon
+        ref={s4}
+        targetColor={colorTheme.charcoal}
+        colorTheme={colorTheme}
+        renderPriority={renderPriority}
+      >
+        <Youtube colorTheme={colorTheme} />
       </Icon>
       <Icon
         ref={se1}

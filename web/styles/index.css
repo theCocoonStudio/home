@@ -236,6 +236,7 @@ body {
 
 #socials > *,
 #settings > * {
+  border-radius: 3px;
   flex-shrink: 1;
   flex-grow: 1;
   aspect-ratio: 1/1;
