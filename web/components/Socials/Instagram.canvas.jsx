@@ -32,7 +32,7 @@ export const Instagram = forwardRef(function Instagram(
 
   useEffect(() => {
     const { min, max } = geometry.boundingBox
-    const factor = 0.7 / (Math.abs(max.x) + Math.abs(min.x))
+    const factor = 0.57 / (Math.abs(max.x) + Math.abs(min.x))
     geometry.center()
     geometry.scale(factor, factor, factor)
 
