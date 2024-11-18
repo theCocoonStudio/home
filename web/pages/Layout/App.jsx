@@ -1,12 +1,13 @@
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import styles from 'web/styles/Layout.module.css'
-import { useEffect, useRef, useState, useTransition } from 'react'
-import { CubeScene } from 'web/pages/Home/menus/CubeScene'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { CubeScene } from 'web/pages/Showcase/menus/CubeScene'
 import { usePage } from '../../hooks/usePage'
-import { descriptionArr, trackingArr } from '../Home/markups'
+import { descriptionArr, trackingArr } from '../Showcase/markups'
+import { Leva } from 'leva'
 
-export const App = function App() {
+export const App = function App({ titleBar = { filter: false } }) {
   const menuMarkup = useRef(CubeScene)
   const footer = useRef()
   const tracking = useRef()
@@ -19,10 +20,12 @@ export const App = function App() {
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
+  const socials4 = useRef()
   const settings1 = useRef()
   const settings2 = useRef()
   const settings3 = useRef()
   const settings4 = useRef()
+  const settings5 = useRef()
   const footerInfo = useRef()
   const menu1 = useRef()
   const menu2 = useRef()
@@ -32,24 +35,31 @@ export const App = function App() {
     socials1.current = footer.current.children[0].children[0]
     socials2.current = footer.current.children[0].children[1]
     socials3.current = footer.current.children[0].children[2]
+    socials4.current = footer.current.children[0].children[3]
     settings1.current = footer.current.children[1].children[0]
     settings2.current = footer.current.children[1].children[1]
     settings3.current = footer.current.children[1].children[2]
     settings4.current = footer.current.children[1].children[3]
+    settings5.current = footer.current.children[1].children[4]
     footerInfo.current = footer.current.children[2]
     menu1.current = menuRef.current.children[0]
     menu2.current = menuRef.current.children[1]
     menu3.current = menuRef.current.children[2]
   }, [])
 
-  const refs = {
+  const {
+    state: { menu, current },
+    theme: colorTheme,
+  } = usePage('markup', {
     socials1,
     socials2,
     socials3,
+    socials4,
     settings1,
     settings2,
     settings3,
     settings4,
+    settings5,
     footerInfo,
     menu1,
     menu2,
@@ -60,10 +70,52 @@ export const App = function App() {
     code,
     menu: menuRef,
     progress,
-  }
-  const {
-    state: { menu, current },
-  } = usePage('markup', refs)
+  })
+
+  const controlTheme = useMemo(
+    () => ({
+      colors: {
+        elevation1: colorTheme.midnight,
+        elevation2: colorTheme.gunmetal,
+        elevation3: colorTheme.midnight,
+        highlight2: colorTheme.white,
+        highlight1: colorTheme.white,
+        highlight3: colorTheme.white,
+        accent2: colorTheme.slate,
+        accent1: colorTheme.white,
+      },
+      radii: {
+        xs: '3px',
+        sm: '3px',
+        lg: '3px',
+      },
+      space: {
+        xs: '3px',
+        sm: '6px',
+        md: '10px',
+        rowGap: '10px',
+      },
+      fonts: {
+        mono: `'Space Mono', ui-monospace, monospace;`,
+        sans: `'Righteous', sans-serif`,
+      },
+      fontSizes: {
+        root: '12px',
+      },
+      sizes: {
+        controlWidth: '80px',
+      },
+      shadows: {
+        level1: `0 0 5px 1px ${colorTheme.white}`,
+      },
+    }),
+    [
+      colorTheme.midnight,
+      colorTheme.gunmetal,
+      colorTheme.white,
+      colorTheme.slate,
+    ],
+  )
 
   const [isPending, startTransition] = useTransition()
   const [Description, setDescription] = useState(descriptionArr[0])
@@ -111,7 +163,10 @@ export const App = function App() {
           ref={menuRef}
           className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''} `}
         >
-          <menuMarkup.current />
+          {/* <menuMarkup.current /> */}
+          <div className='controls'></div>
+          <div />
+          <div />
         </div>
         <div
           id='progress'
@@ -125,6 +180,17 @@ export const App = function App() {
           <div />
         </div>
       </div>
+      <Leva
+        titleBar={titleBar}
+        theme={controlTheme}
+        /*   theme={myTheme} // you can pass a custom theme (see the styling section)
+            fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+            flat // default = false,  true removes border radius and shadow
+            oneLineLabels // default = false, alternative layout for labels, with labels and fields on separate rows
+            hideTitleBar // default = false, hides the GUI header
+            collapsed // default = false, when true the GUI is collpased
+            hidden // default = false, when true the GUI is hidden */
+      />
       <Footer ref={footer} />
     </>
   )
