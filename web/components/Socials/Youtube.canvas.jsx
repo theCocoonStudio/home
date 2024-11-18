@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.5.0 /Users/dialectic/Downloads/source/linkdin.glb --trans
 Files: /Users/dialectic/Downloads/source/linkdin.glb [703.37KB] > /Users/dialectic/repositories/thecocoonstudio/izzy/linkdin-transformed.glb [55.49KB] (92%)
 */
 import Model from 'public/models/youtube.glb'
-import { OrbitControls, useGLTF } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 
 export const Youtube = forwardRef(function Youtube(
@@ -22,7 +22,6 @@ export const Youtube = forwardRef(function Youtube(
       {...props}
       ref={group}
     >
-      <OrbitControls />
       <mesh
         geometry={nodes.Object_4.geometry}
         /* material={materials.Material} */
