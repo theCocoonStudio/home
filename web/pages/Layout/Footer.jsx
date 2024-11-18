@@ -32,21 +32,34 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div />
         <div />
         <div />
+        <div id='socialsLabel' className='space-mono-regular'>
+          SOCIALS
+        </div>
       </div>
       <div id='settings'>
         <div />
         <div onClick={togglePause} />
         <div />
         <div onClick={toggleMenu} />
+        <div />
+        <div id='settingsLabel' className='space-mono-regular'>
+          APP CONTROLS
+        </div>
       </div>
       <div id='pageInfo'>
-        <div id='performanceContainer'>
+        <div />
+        <div id='performanceContainer' className='space-mono-regular'>
           <div id='performance'>
             <div id='fps' />
             <div id='fpsBorder' />
+            <div id='fpsBoost'>boost</div>
+            <div id='fpsThrottle'>throttle</div>
+            <div id='fpsLabel' className='space-mono-regular'>
+              PERFORMANCE
+            </div>
           </div>
         </div>
-        <div />
+
         <div />
         <div />
       </div>

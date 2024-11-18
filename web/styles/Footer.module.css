@@ -7,8 +7,6 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: stretch;
-  > * {
-    height: var(--navFooterHeight);
-  }
+  align-items: center;
+  height: var(--navFooterHeight);
 }
