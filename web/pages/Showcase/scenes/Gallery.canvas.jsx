@@ -53,7 +53,7 @@ export const Gallery = forwardRef(function Gallery(
     theme: colorTheme,
     state: { current, pause, menu },
   } = usePage()
-  console.log(tracking)
+
   const smoothTime = useRef(bufferTime)
   const child1 = useRef()
   const child2 = useRef()
