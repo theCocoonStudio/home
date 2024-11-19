@@ -7,7 +7,10 @@ import { usePage } from '../../hooks/usePage'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { Leva } from 'leva'
 
-export const App = function App({ titleBar = { filter: false } }) {
+export const App = function App({
+  optsCount = 9,
+  titleBar = { filter: false },
+}) {
   const menuMarkup = useRef(CubeScene)
   const footer = useRef()
   const tracking = useRef()
@@ -89,12 +92,7 @@ export const App = function App({ titleBar = { filter: false } }) {
         sm: '3px',
         lg: '3px',
       },
-      space: {
-        xs: '3px',
-        sm: '6px',
-        md: '10px',
-        rowGap: '10px',
-      },
+
       fonts: {
         mono: `'Space Mono', ui-monospace, monospace;`,
         sans: `'Righteous', sans-serif`,
@@ -102,11 +100,12 @@ export const App = function App({ titleBar = { filter: false } }) {
       fontSizes: {
         root: '12px',
       },
+
       sizes: {
         controlWidth: '80px',
       },
       shadows: {
-        level1: `0 0 5px 1px ${colorTheme.white}`,
+        /* level1: `0 0 5px 1px ${colorTheme.white}`, */
       },
     }),
     [
@@ -164,7 +163,20 @@ export const App = function App({ titleBar = { filter: false } }) {
           className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''} `}
         >
           {/* <menuMarkup.current /> */}
-          <div className='controls'></div>
+          <div className={`${styles.controls}`}>
+            <Leva
+              fill
+              titleBar={titleBar}
+              theme={controlTheme}
+              /*   theme={myTheme} // you can pass a custom theme (see the styling section)
+            fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+            flat // default = false,  true removes border radius and shadow
+            oneLineLabels // default = false, alternative layout for labels, with labels and fields on separate rows
+            hideTitleBar // default = false, hides the GUI header
+            collapsed // default = false, when true the GUI is collpased
+            hidden // default = false, when true the GUI is hidden */
+            />
+          </div>
           <div />
           <div />
         </div>
@@ -180,17 +192,7 @@ export const App = function App({ titleBar = { filter: false } }) {
           <div />
         </div>
       </div>
-      <Leva
-        titleBar={titleBar}
-        theme={controlTheme}
-        /*   theme={myTheme} // you can pass a custom theme (see the styling section)
-            fill // default = false,  true makes the pane fill the parent dom node it's rendered in
-            flat // default = false,  true removes border radius and shadow
-            oneLineLabels // default = false, alternative layout for labels, with labels and fields on separate rows
-            hideTitleBar // default = false, hides the GUI header
-            collapsed // default = false, when true the GUI is collpased
-            hidden // default = false, when true the GUI is hidden */
-      />
+
       <Footer ref={footer} />
     </>
   )

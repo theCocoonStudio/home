@@ -1,3 +1,6 @@
+.controls {
+  width: 30%;
+}
 .tracking-home {
   width: 40%;
   top: 0;
@@ -100,7 +103,6 @@
   display: auto;
   opacity: 0.9;
   height: calc(var(--menuHeight));
-  padding: calc(1 * var(--mainElementPadding));
 }
 
 .menu-colors {
