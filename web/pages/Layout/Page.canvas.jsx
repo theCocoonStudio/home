@@ -16,12 +16,7 @@ const renderOrder = Object.freeze({
   global: 1,
 })
 
-export const Page = function Page({
-  count = 5,
-  time = 10,
-  bufferTime = 0.2,
-  opts,
-}) {
+export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   // three refs
   const menuRef = useRef()
   const home = useRef()
@@ -106,7 +101,6 @@ export const Page = function Page({
       {/* Showcase slides */}
       <Showcase
         renderPriority={renderOrder.showcase}
-        opts={opts}
         ref={home}
         time={time}
         bufferTime={bufferTime}

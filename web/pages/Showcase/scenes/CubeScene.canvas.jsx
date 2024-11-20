@@ -8,25 +8,22 @@ import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
 import { damp, damp3 } from 'maath/easing'
 import { usePage } from '../../../hooks/usePage'
+import { useControls } from 'leva'
+
+const _opts = {
+  poissonIterations: 32,
+  viscousIterations: 32,
+  forceValue: 20,
+  resolution: 0.5,
+  forceSize: 50,
+  viscosity: 40,
+  dt: 0.014,
+  isViscous: true,
+  BFECC: true,
+}
 
 export const CubeScene = forwardRef(function CubeScene(
-  {
-    bufferTime,
-    active,
-    renderPriority,
-    opts: {
-      iterations_poisson,
-      iterations_viscous,
-      mouse_force,
-      resolution,
-      cursor_size,
-      viscous,
-      isBounce,
-      dt,
-      isViscous,
-      BFECC,
-    },
-  },
+  { bufferTime, active, renderPriority },
   forwardedRef,
 ) {
   const meshRef = useRef()
@@ -61,6 +58,17 @@ export const CubeScene = forwardRef(function CubeScene(
   const pauseRef = useRef(false)
   const center = useRef(new Vector2(0.5, 0))
 
+  const {
+    poissonIterations: iterations_poisson,
+    viscousIterations: iterations_viscous,
+    forceValue: mouse_force,
+    resolution,
+    forceSize: cursor_size,
+    viscosity: viscous,
+    dt,
+    isViscous,
+    BFECC,
+  } = useControls(_opts)
   const options = useMemo(
     () => ({
       iterations_poisson,
@@ -69,10 +77,10 @@ export const CubeScene = forwardRef(function CubeScene(
       resolution,
       cursor_size,
       viscous,
-      isBounce,
       dt,
       isViscous,
       BFECC,
+      isBounce: true,
       forceCallback: (delta, elapsedTime) => {
         const force = new Vector2(
           Math.cos(elapsedTime),
@@ -85,7 +93,6 @@ export const CubeScene = forwardRef(function CubeScene(
       BFECC,
       cursor_size,
       dt,
-      isBounce,
       isViscous,
       iterations_poisson,
       iterations_viscous,
