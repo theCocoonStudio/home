@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { usePageControls } from '../../hooks/usePageControls'
 import { usePage } from '../../hooks/usePage'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
-import { Leva } from 'leva'
+import { Leva, LevaPanel } from 'leva'
 
 export const App = function App() {
   const footer = useRef()
@@ -182,9 +182,7 @@ export const App = function App() {
         ref={menuRef}
         className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
       >
-        <div
-          className={`${styles.controls} ${menu ? styles['controls-open'] : ''}`}
-        >
+        <div>
           <Leva
             store={store1}
             {...levaProps}

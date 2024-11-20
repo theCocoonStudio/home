@@ -78,11 +78,11 @@ export const PageProvider = ({ children, theme }) => {
 
   return (
     <>
-      <PageContext.Provider value={context}>
-        <ControlsContext.Provider value={storeContext}>
+      <ControlsContext.Provider value={storeContext}>
+        <PageContext.Provider value={context}>
           <Suspense fallback={null}>{children}</Suspense>
-        </ControlsContext.Provider>
-      </PageContext.Provider>
+        </PageContext.Provider>
+      </ControlsContext.Provider>
       <Loader onReady={onReady} />
     </>
   )
