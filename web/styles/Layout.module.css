@@ -1,5 +1,8 @@
 .controls {
-  width: 30%;
+  padding: 0;
+}
+.controls-open {
+  padding: 0;
 }
 .tracking-home {
   width: 40%;
@@ -27,10 +30,10 @@
 }
 
 .tracking-home-open {
-  bottom: calc(50% + var(--mainElementPadding));
+  bottom: 0;
 }
 .tracking-gallery-open {
-  bottom: calc(50% + 10px + (2 * var(--mainElementPadding)));
+  bottom: calc(10px + (2 * var(--mainElementPadding)));
 }
 
 .description-home {
@@ -49,11 +52,10 @@
   transform: translateY(-100%);
 }
 .description-home-open {
-  bottom: calc(75% + var(--mainElementPadding));
+  bottom: calc(50%);
 }
 .description-gallery-open {
-  top: 0;
-  transform: translateY(0);
+  top: 50%;
 }
 
 .code-home {
@@ -64,7 +66,6 @@
 
 .code-gallery {
   bottom: calc(20% + 10px + (2 * var(--mainElementPadding)));
-
   aspect-ratio: 1/1;
   left: 50%;
   right: 0;
@@ -73,7 +74,7 @@
 .code-gallery-open {
   top: 0;
   aspect-ratio: auto;
-  bottom: calc(50% + 10px + (2 * var(--mainElementPadding)));
+  bottom: calc(10px + (2 * var(--mainElementPadding)));
 }
 
 .options-home {
@@ -83,26 +84,32 @@
 }
 
 .menu {
-  bottom: var(--mainElementPadding);
-  left: 0;
-  right: 0;
+  padding: 0 var(--mainElementPadding);
+  width: 100%;
   border-radius: 3px;
-  height: 0px;
+  max-height: 0px;
+  flex-grow: 0;
+  flex-shrink: 0;
   transition:
-    height 0.5s,
+    max-height 0.5s,
     opacity 0.5s,
-    padding 0.5s;
+    margin-bottom 0.5s;
   opacity: 0;
   overflow-y: scroll;
   pre {
     line-height: 1.5em;
   }
+  > * {
+    flex-grow: 1;
+    flex-shrink: 1;
+    max-width: 33.33%;
+  }
 }
 
 .menu-open {
-  display: auto;
   opacity: 0.9;
-  height: calc(var(--menuHeight));
+  max-height: 50%;
+  margin-bottom: calc(var(--mainElementPadding));
 }
 
 .menu-colors {
@@ -126,7 +133,6 @@
   right: 0;
   height: 10px;
   bottom: var(--mainElementPadding);
-  transition: bottom 0.5s;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -197,10 +203,4 @@
       transition: background-color 1.5s;
     }
   }
-}
-
-.progress-menu {
-  bottom: calc(
-    var(--mainElementPadding) + var(--mainElementPadding) + var(--menuHeight)
-  );
 }

@@ -7,10 +7,7 @@ import { usePage } from '../../hooks/usePage'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { Leva } from 'leva'
 
-export const App = function App({
-  optsCount = 9,
-  titleBar = { filter: false },
-}) {
+export const App = function App({}) {
   const menuMarkup = useRef(CubeScene)
   const footer = useRef()
   const tracking = useRef()
@@ -116,17 +113,28 @@ export const App = function App({
     ],
   )
 
-  const [isPending, startTransition] = useTransition()
+  const levaProps = useMemo(
+    () => ({
+      titleBar: {
+        filter: false,
+        title: <div>Fluid Texture Controls</div>,
+        drag: false,
+      },
+      fill: true,
+      theme: controlTheme,
+      collapsed: { collapsed: false },
+    }),
+    [controlTheme],
+  )
+
   const [Description, setDescription] = useState(descriptionArr[0])
   const [Tracking, setTracking] = useState(trackingArr[0])
   const [styleKey, setStyleKey] = useState('home')
 
   useEffect(() => {
-    startTransition(() => {
-      setStyleKey(['home', 'gallery'][current - 1])
-      setDescription(descriptionArr[current - 1])
-      setTracking(trackingArr[current - 1])
-    })
+    setStyleKey(['home', 'gallery'][current - 1])
+    setDescription(descriptionArr[current - 1])
+    setTracking(trackingArr[current - 1])
   }, [current])
 
   return (
@@ -158,29 +166,6 @@ export const App = function App({
           className={`${styles[`options-${styleKey}`]} `}
         />
         <div
-          id='menu'
-          ref={menuRef}
-          className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''} `}
-        >
-          {/* <menuMarkup.current /> */}
-          <div className={`${styles.controls}`}>
-            <Leva
-              fill
-              titleBar={titleBar}
-              theme={controlTheme}
-              /*   theme={myTheme} // you can pass a custom theme (see the styling section)
-            fill // default = false,  true makes the pane fill the parent dom node it's rendered in
-            flat // default = false,  true removes border radius and shadow
-            oneLineLabels // default = false, alternative layout for labels, with labels and fields on separate rows
-            hideTitleBar // default = false, hides the GUI header
-            collapsed // default = false, when true the GUI is collpased
-            hidden // default = false, when true the GUI is hidden */
-            />
-          </div>
-          <div />
-          <div />
-        </div>
-        <div
           id='progress'
           className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}
           ref={progress}
@@ -192,7 +177,29 @@ export const App = function App({
           <div />
         </div>
       </div>
-
+      <div
+        id='menu'
+        ref={menuRef}
+        className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+      >
+        {/* <menuMarkup.current /> */}
+        <div
+          className={`${styles.controls} ${menu ? styles['controls-open'] : ''}`}
+        >
+          <Leva
+            {...levaProps}
+            /*   theme={myTheme} // you can pass a custom theme (see the styling section)
+            fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+            flat // default = false,  true removes border radius and shadow
+            oneLineLabels // default = false, alternative layout for labels, with labels and fields on separate rows
+            hideTitleBar // default = false, hides the GUI header
+            collapsed // default = false, when true the GUI is collpased
+            hidden // default = false, when true the GUI is hidden */
+          />
+        </div>
+        <div />
+        <div />
+      </div>
       <Footer ref={footer} />
     </>
   )
