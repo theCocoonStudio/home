@@ -7,7 +7,9 @@ import {
   useRef,
 } from 'react'
 import { PageContext } from './PageContext'
+import { ControlsContext } from './ControlsContext'
 import { Loader } from 'web/components/Loader'
+import { useCreateStore } from 'leva'
 
 export const PageProvider = ({ children, theme }) => {
   const [isPending, startTransition] = useTransition()
@@ -61,10 +63,25 @@ export const PageProvider = ({ children, theme }) => {
 
   const onReady = useCallback(() => setPause(false), [])
 
+  const store1 = useCreateStore()
+  const store2 = useCreateStore()
+  const store3 = useCreateStore()
+
+  const storeContext = useMemo(
+    () => ({
+      store1,
+      store2,
+      store3,
+    }),
+    [store1, store2, store3],
+  )
+
   return (
     <>
       <PageContext.Provider value={context}>
-        <Suspense fallback={null}>{children}</Suspense>
+        <ControlsContext.Provider value={storeContext}>
+          <Suspense fallback={null}>{children}</Suspense>
+        </ControlsContext.Provider>
       </PageContext.Provider>
       <Loader onReady={onReady} />
     </>

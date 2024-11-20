@@ -1,14 +1,13 @@
 import { Nav } from './Nav'
 import { Footer } from './Footer'
 import styles from 'web/styles/Layout.module.css'
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
-import { CubeScene } from 'web/pages/Showcase/menus/CubeScene'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { usePageControls } from '../../hooks/usePageControls'
 import { usePage } from '../../hooks/usePage'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { Leva } from 'leva'
 
-export const App = function App({}) {
-  const menuMarkup = useRef(CubeScene)
+export const App = function App() {
   const footer = useRef()
   const tracking = useRef()
   const description = useRef()
@@ -127,6 +126,7 @@ export const App = function App({}) {
     [controlTheme],
   )
 
+  const { store1, store2, store3 } = usePageControls()
   const [Description, setDescription] = useState(descriptionArr[0])
   const [Tracking, setTracking] = useState(trackingArr[0])
   const [styleKey, setStyleKey] = useState('home')
@@ -182,11 +182,11 @@ export const App = function App({}) {
         ref={menuRef}
         className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
       >
-        {/* <menuMarkup.current /> */}
         <div
           className={`${styles.controls} ${menu ? styles['controls-open'] : ''}`}
         >
           <Leva
+            store={store1}
             {...levaProps}
             /*   theme={myTheme} // you can pass a custom theme (see the styling section)
             fill // default = false,  true makes the pane fill the parent dom node it's rendered in

@@ -9,6 +9,7 @@ import { GradientTexture } from '@react-three/drei'
 import { damp, damp3 } from 'maath/easing'
 import { usePage } from '../../../hooks/usePage'
 import { useControls } from 'leva'
+import { usePageControls } from '../../../hooks/usePageControls'
 
 const _opts = {
   poissonIterations: 32,
@@ -58,6 +59,7 @@ export const CubeScene = forwardRef(function CubeScene(
   const pauseRef = useRef(false)
   const center = useRef(new Vector2(0.5, 0))
 
+  const { store1 } = usePageControls()
   const {
     poissonIterations: iterations_poisson,
     viscousIterations: iterations_viscous,
@@ -68,7 +70,7 @@ export const CubeScene = forwardRef(function CubeScene(
     dt,
     isViscous,
     BFECC,
-  } = useControls(_opts)
+  } = useControls(_opts, { store: store1 })
   const options = useMemo(
     () => ({
       iterations_poisson,
