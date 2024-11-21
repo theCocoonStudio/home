@@ -1,11 +1,4 @@
-import {
-  BufferAttribute,
-  Color,
-  InstancedBufferAttribute,
-  Matrix4,
-  Quaternion,
-  Vector3,
-} from 'three'
+import { Color, Matrix4, Quaternion, Vector3 } from 'three'
 import { dampM } from 'maath/easing'
 
 export class RubiksCube3 {
@@ -95,6 +88,7 @@ export class RubiksCube3 {
   }
 
   setColors(colors) {
+    this.#attributes.color = []
     this.#baseColors.forEach((color, i) => color.copy(colors[i]))
     for (const vertex of vertices) {
       let color = new Color(0, 0, 0)
@@ -147,19 +141,7 @@ export class RubiksCube3 {
   }
 
   get attributes() {
-    return {
-      position: new BufferAttribute(
-        new Float32Array(this.#attributes.position),
-        3,
-      ),
-      normal: new BufferAttribute(new Float32Array(this.#attributes.normal), 3),
-      uv: new BufferAttribute(new Float32Array(this.#attributes.uv), 2),
-      color: new BufferAttribute(new Float32Array(this.#attributes.color), 3),
-      meshPosition: new InstancedBufferAttribute(
-        new Float32Array(this.#attributes.meshPosition),
-        3,
-      ),
-    }
+    return this.#attributes
   }
 
   positionFromIndex(i) {
