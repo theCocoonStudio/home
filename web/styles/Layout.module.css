@@ -78,7 +78,7 @@
 }
 
 .menu {
-  padding: 0 var(--mainElementPadding);
+  padding-bottom: var(--mainElementPadding);
   width: 100%;
   border-radius: 3px;
   max-height: 0px;

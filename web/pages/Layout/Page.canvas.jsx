@@ -1,8 +1,6 @@
 import { useCallback, useRef, useState, useTransition } from 'react'
 import { usePage } from 'web/hooks/usePage'
-import { use2DBounds } from 'src/hooks'
-import { UNITS } from 'src/constants'
-import { Menu } from 'web/components/Menu.canvas'
+
 import { Hud } from '@react-three/drei'
 import { Performance } from 'web/components/Performance.canvas'
 import { useProgress } from 'src/hooks'
@@ -18,26 +16,15 @@ const renderOrder = Object.freeze({
 
 export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   // three refs
-  const menuRef = useRef()
+
   const home = useRef()
 
   const {
     theme: colorTheme,
-    refs: {
-      markup: { menu1, menu2, menu3, menu: menuHTML },
-    },
-    state: { pause, menu, current },
+
+    state: { pause, current },
     setState: { current: setCurrent },
   } = usePage()
-
-  use2DBounds(menuRef, {
-    marginUnits: UNITS.PX,
-    scaleToFitWidth: true,
-    trackingElement: true,
-    trackingElementRef: menuHTML,
-    damping: { smoothTime: 0.0 },
-    renderPriority: renderOrder.global,
-  })
 
   // state
   const [progressColor, setProgressColor] = useState(colorTheme.slate)
@@ -86,17 +73,6 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
         renderPriority={renderOrder.global}
       />
       <Performance colorTheme={colorTheme} />
-      <Menu
-        ref={menuRef}
-        position-z={-1}
-        visible={true}
-        colorTheme={colorTheme}
-        menu={menu}
-        sub1={menu1}
-        sub2={menu2}
-        sub3={menu3}
-        current={current}
-      />
 
       {/* Showcase slides */}
       <Showcase

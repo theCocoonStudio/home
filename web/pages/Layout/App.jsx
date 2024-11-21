@@ -121,7 +121,7 @@ export const App = function App() {
       },
       fill: true,
       theme: controlTheme,
-      collapsed: { collapsed: false },
+      collapsed: { collapsed: false, onChange: () => {} },
     }),
     [controlTheme],
   )
@@ -180,7 +180,7 @@ export const App = function App() {
       <div
         id='menu'
         ref={menuRef}
-        className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+        className={`content disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
       >
         <div>
           <Leva
@@ -196,7 +196,15 @@ export const App = function App() {
           />
         </div>
         <div>
-          <LevaPanel store={store2} {...levaProps} />
+          <LevaPanel
+            store={store2}
+            {...levaProps}
+            titleBar={{
+              filter: false,
+              title: <div>Cube Color Controls</div>,
+              drag: false,
+            }}
+          />
         </div>
         <div />
       </div>
