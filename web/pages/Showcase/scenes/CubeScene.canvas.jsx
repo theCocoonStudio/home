@@ -59,7 +59,7 @@ export const CubeScene = forwardRef(function CubeScene(
   const pauseRef = useRef(false)
   const center = useRef(new Vector2(0.5, 0))
 
-  const { store1 } = usePageControls()
+  const { store1, store2 } = usePageControls()
   const {
     poissonIterations: iterations_poisson,
     viscousIterations: iterations_viscous,
@@ -173,6 +173,7 @@ export const CubeScene = forwardRef(function CubeScene(
         rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
         pause={pauseRef}
         visible={active}
+        store={store2}
       />
 
       <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>

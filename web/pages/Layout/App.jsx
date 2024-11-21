@@ -195,7 +195,9 @@ export const App = function App() {
             hidden // default = false, when true the GUI is hidden */
           />
         </div>
-        <div />
+        <div>
+          <LevaPanel store={store2} {...levaProps} />
+        </div>
         <div />
       </div>
       <Footer ref={footer} />
