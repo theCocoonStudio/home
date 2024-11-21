@@ -41,10 +41,10 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
           label: 'weight',
         },
       }),
-      Cube: folder({
+      Simulation: folder({
         forceSource: {
           value: 'cube',
-          label: 'force source',
+          label: 'force',
           options: ['mouse'],
         },
       }),
