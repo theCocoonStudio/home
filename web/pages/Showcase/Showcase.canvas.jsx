@@ -7,7 +7,15 @@ import { useFrame, useThree } from '@react-three/fiber'
 
 /* simulation mesh */
 export const Showcase = forwardRef(function Showcase(
-  { time, bufferTime, progressRef, setSun, renderPriority },
+  {
+    time,
+    bufferTime,
+    progressRef,
+    setSun,
+    renderPriority,
+    cubeSceneProps,
+    galleryProps,
+  },
   forwardedRef,
 ) {
   const cubeScene = useRef()
@@ -74,6 +82,7 @@ export const Showcase = forwardRef(function Showcase(
         ref={cubeScene}
         active={current === 1}
         bufferTime={bufferTime}
+        {...cubeSceneProps}
       />
 
       <Gallery
@@ -83,6 +92,7 @@ export const Showcase = forwardRef(function Showcase(
         bufferTime={bufferTime}
         setSun={setSun}
         time={time}
+        {...galleryProps}
       />
     </>
   )

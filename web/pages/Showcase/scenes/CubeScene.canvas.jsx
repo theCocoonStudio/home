@@ -24,7 +24,7 @@ const _opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { bufferTime, active, renderPriority },
+  { bufferTime, active, renderPriority, forceSource },
   forwardedRef,
 ) {
   const meshRef = useRef()

@@ -1,4 +1,4 @@
-import { useFrame, useThree } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import {
   Bloom,
   BrightnessContrast,
@@ -13,22 +13,14 @@ import {
 } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 // import { LayerMaterial, Color, Depth } from 'lamina'
-import { useEffect, useState } from 'react'
 
-export const Effects = ({ current, sun, renderPriority }) => {
-  // godrays props
-  const [godRaysProps, setGodRaysProps] = useState({
-    exposure: 0.5,
-    weight: 0.8,
-  })
-  useEffect(() => {
-    const props = [
-      { exposure: 0.5, weight: 0.8 },
-      { exposure: 0.02, weight: 3.6 },
-    ][current - 1]
-    setGodRaysProps(props)
-  }, [current])
-
+export const Effects = ({
+  current,
+  sun,
+  godRaysExposure,
+  godRaysWeight,
+  renderPriority,
+}) => {
   const { camera: mainCamera, scene: mainScene } = useThree(
     ({ scene, camera }) => ({ scene, camera }),
   )
@@ -40,7 +32,14 @@ export const Effects = ({ current, sun, renderPriority }) => {
       camera={mainCamera}
       renderPriority={renderPriority}
     >
-      {sun && <GodRays sun={sun} {...godRaysProps} blur />}
+      {sun && (
+        <GodRays
+          sun={sun}
+          exposure={godRaysExposure}
+          weight={godRaysWeight}
+          blur
+        />
+      )}
       {/*   <Bloom
         luminanceThreshold={0.0}
         mipmapBlur

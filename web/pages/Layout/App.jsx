@@ -206,7 +206,17 @@ export const App = function App() {
             }}
           />
         </div>
-        <div />
+        <div>
+          <LevaPanel
+            store={store3}
+            {...levaProps}
+            titleBar={{
+              filter: false,
+              title: <div>Cube Scene Controls</div>,
+              drag: false,
+            }}
+          />
+        </div>
       </div>
       <Footer ref={footer} />
     </>

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useTransition } from 'react'
+import { useCallback, useMemo, useRef, useState, useTransition } from 'react'
 import { usePage } from 'web/hooks/usePage'
 
 import { Hud } from '@react-three/drei'
@@ -7,6 +7,8 @@ import { useProgress } from 'src/hooks'
 import { Effects } from 'web/components/Effects.canvas.jsx'
 import { Showcase } from 'web/pages/Showcase/Showcase.canvas'
 import { FooterHUD } from './Footer.canvas'
+import { usePageControls } from 'web/hooks/usePageControls'
+import { folder, useControls } from 'leva'
 
 const renderOrder = Object.freeze({
   footerHud: 2,
@@ -16,21 +18,56 @@ const renderOrder = Object.freeze({
 
 export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   // three refs
-
   const home = useRef()
 
+  // global state
   const {
     theme: colorTheme,
-
     state: { pause, current },
     setState: { current: setCurrent },
   } = usePage()
+  const { store3 } = usePageControls()
 
-  // state
+  // local state
   const [progressColor, setProgressColor] = useState(colorTheme.slate)
   const [isPending, startTransition] = useTransition()
   const [sun, setSun] = useState()
+  const [{ godRaysExposure, godRaysWeight, forceSource }, set] = useControls(
+    () => ({
+      GodRays: folder({
+        godRaysExposure: { value: [0.5, 0.02][current - 1], label: 'exposure' },
+        godRaysWeight: {
+          value: [0.8, 3.6][current - 1],
+          label: 'weight',
+        },
+      }),
+      Cube: folder({
+        forceSource: {
+          value: 'cube',
+          label: 'force source',
+          options: ['mouse'],
+        },
+      }),
+    }),
+    { store: store3 },
+  )
+  const effectProps = useMemo(
+    () => ({
+      sun,
+      godRaysExposure,
+      godRaysWeight,
+    }),
+    [godRaysExposure, godRaysWeight, sun],
+  )
+  const { cubeSceneProps, galleryProps } = useMemo(
+    () => ({
+      cubeSceneProps: { forceSource },
+      galleryProps: {},
+    }),
+    [forceSource],
+  )
 
+  // imperative -> declarative progress transitions
   const progressCallback = useCallback(
     (progress, curr) => {
       const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
@@ -39,9 +76,13 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
       startTransition(() => {
         setSun(home.current[curr - 1])
         setProgressColor(newColor)
+        set({
+          godRaysExposure: [0.5, 0.02][curr - 1],
+          godRaysWeight: [0.8, 3.6][curr - 1],
+        })
       })
     },
-    [colorTheme.black, colorTheme.slate, setCurrent],
+    [colorTheme.black, colorTheme.slate, set, setCurrent],
   )
   const { progressRef, setElapsed } = useProgress(
     count,
@@ -69,8 +110,8 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
       {/* r3f globals (will be Showcase globals) */}
       <Effects
         current={current}
-        sun={sun}
         renderPriority={renderOrder.global}
+        {...effectProps}
       />
       <Performance colorTheme={colorTheme} />
 
@@ -84,6 +125,8 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
         current={current}
         isPending={isPending}
         setSun={setSun}
+        cubeSceneProps={cubeSceneProps}
+        galleryProps={galleryProps}
       />
     </>
   )
