@@ -22,11 +22,12 @@ const defaultOpts = {
   dt: 0.014,
   isViscous: false,
   BFECC: true,
-  forceCallback: (delta, clock, pointer, pointerDiff) => ({
-    force: pointerDiff,
-    center: pointer,
-  }),
 }
+
+const defaultForceCallback = (delta, clock, pointer, pointerDiff) => ({
+  force: pointerDiff,
+  center: pointer,
+})
 export const useFluidTexture = (
   options = {},
   priority = -1,
@@ -282,8 +283,11 @@ export const useFluidTexture = (
       // external force pass
       pointerDiff.current.subVectors(pointer, oldPointer.current)
       oldPointer.current.copy(pointer)
-
-      const { force, center } = forceCallback(
+      const fc =
+        typeof forceCallback === 'function'
+          ? forceCallback
+          : defaultForceCallback
+      const { force, center } = fc(
         delta,
         clock.getElapsedTime(),
         pointer.clone(),

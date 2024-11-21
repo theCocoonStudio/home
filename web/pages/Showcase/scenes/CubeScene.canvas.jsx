@@ -71,6 +71,19 @@ export const CubeScene = forwardRef(function CubeScene(
     isViscous,
     BFECC,
   } = useControls(_opts, { store: store1 })
+  const forceCallback = useMemo(() => {
+    if (forceSource === 'cube') {
+      return (delta, elapsedTime) => {
+        const force = new Vector2(
+          Math.cos(elapsedTime),
+          Math.sin(elapsedTime),
+        ).multiplyScalar(0.5)
+        return { force, center: center.current }
+      }
+    }
+    return undefined
+  }, [forceSource])
+
   const options = useMemo(
     () => ({
       iterations_poisson,
@@ -83,18 +96,13 @@ export const CubeScene = forwardRef(function CubeScene(
       isViscous,
       BFECC,
       isBounce: true,
-      forceCallback: (delta, elapsedTime) => {
-        const force = new Vector2(
-          Math.cos(elapsedTime),
-          Math.sin(elapsedTime),
-        ).multiplyScalar(0.5)
-        return { force, center: center.current }
-      },
+      forceCallback,
     }),
     [
       BFECC,
       cursor_size,
       dt,
+      forceCallback,
       isViscous,
       iterations_poisson,
       iterations_viscous,
