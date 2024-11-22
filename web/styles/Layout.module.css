@@ -94,9 +94,9 @@
     line-height: 1.5em;
   }
   > * {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     flex-shrink: 1;
-    max-width: 33.33%;
+    width: 33.33%;
   }
 }
 
