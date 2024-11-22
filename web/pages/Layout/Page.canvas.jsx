@@ -32,25 +32,46 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   const [progressColor, setProgressColor] = useState(colorTheme.slate)
   const [isPending, startTransition] = useTransition()
   const [sun, setSun] = useState()
-  const [{ godRaysExposure, godRaysWeight, forceSource }, set] = useControls(
-    () => ({
-      GodRays: folder({
-        godRaysExposure: { value: [0.5, 0.02][current - 1], label: 'exposure' },
-        godRaysWeight: {
-          value: [0.8, 3.6][current - 1],
-          label: 'weight',
-        },
+  const [{ godRaysExposure, godRaysWeight, forceSource, preset }, set] =
+    useControls(
+      () => ({
+        GodRays: folder({
+          godRaysExposure: {
+            value: [0.5, 0.02][current - 1],
+            label: 'exposure',
+          },
+          godRaysWeight: {
+            value: [0.8, 3.6][current - 1],
+            label: 'weight',
+          },
+        }),
+        Simulation: folder({
+          forceSource: {
+            value: 'cube',
+            label: 'force',
+            options: ['mouse'],
+          },
+        }),
+        Lighting: folder({
+          preset: {
+            value: 'studio',
+            label: 'environment',
+            options: [
+              'apartment',
+              'city',
+              'dawn',
+              'forest',
+              'lobby',
+              'night',
+              'park',
+              'sunset',
+              'warehouse',
+            ],
+          },
+        }),
       }),
-      Simulation: folder({
-        forceSource: {
-          value: 'cube',
-          label: 'force',
-          options: ['mouse'],
-        },
-      }),
-    }),
-    { store: store3 },
-  )
+      { store: store3 },
+    )
   const effectProps = useMemo(
     () => ({
       sun,
@@ -59,12 +80,13 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
     }),
     [godRaysExposure, godRaysWeight, sun],
   )
-  const { cubeSceneProps, galleryProps } = useMemo(
+  const { cubeSceneProps, galleryProps, showCaseProps } = useMemo(
     () => ({
       cubeSceneProps: { forceSource },
       galleryProps: {},
+      showCaseProps: { preset },
     }),
-    [forceSource],
+    [forceSource, preset],
   )
 
   // imperative -> declarative progress transitions
@@ -127,6 +149,7 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
         setSun={setSun}
         cubeSceneProps={cubeSceneProps}
         galleryProps={galleryProps}
+        {...showCaseProps}
       />
     </>
   )

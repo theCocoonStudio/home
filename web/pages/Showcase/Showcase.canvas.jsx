@@ -1,9 +1,10 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
-import { Environment, PerspectiveCamera, Preload } from '@react-three/drei'
+import { PerspectiveCamera, Preload } from '@react-three/drei'
 import { usePage } from '../../hooks/usePage'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
+import { SuspendedEnvironment } from 'web/components/SuspendedEnvironment.canvas'
 
 /* simulation mesh */
 export const Showcase = forwardRef(function Showcase(
@@ -15,6 +16,7 @@ export const Showcase = forwardRef(function Showcase(
     renderPriority,
     cubeSceneProps,
     galleryProps,
+    preset,
   },
   forwardedRef,
 ) {
@@ -70,8 +72,8 @@ export const Showcase = forwardRef(function Showcase(
       <Preload all />
       <color attach='background' args={[colorTheme.black]} />
       <PerspectiveCamera makeDefault position-z={1} />
-      <Environment
-        preset='studio'
+      <SuspendedEnvironment
+        preset={preset}
         background={false}
         environmentIntensity={[1, 0.5, 1, 1, 1][current - 1]}
         scene={mainScene}
