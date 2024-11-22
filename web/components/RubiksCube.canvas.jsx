@@ -17,6 +17,7 @@ export const RubiksCube = forwardRef(function RubiksCube(
     colorTheme,
     renderPriority,
     store,
+    setGradientColors,
     ...props
   },
   forwardedRef,
@@ -46,12 +47,23 @@ export const RubiksCube = forwardRef(function RubiksCube(
     ],
   )
 
-  const { face1, face2, face3, face4, face5, face6 } = useControls(
-    {
-      Cube: folder(_faceColors),
-    },
-    { store },
+  const _gradColors = useMemo(
+    () => ({
+      top: colorTheme.charcoal,
+      middle: colorTheme.gunmetal,
+      bottom: colorTheme.slate,
+    }),
+    [colorTheme.charcoal, colorTheme.gunmetal, colorTheme.slate],
   )
+
+  const { face1, face2, face3, face4, face5, face6, top, middle, bottom } =
+    useControls(
+      {
+        Cube: folder(_faceColors, { collapsed: true }),
+        Background: folder(_gradColors, { collapsed: true }),
+      },
+      { store },
+    )
 
   const rubiks = useRef(
     new RubiksCube3([
@@ -89,6 +101,10 @@ export const RubiksCube = forwardRef(function RubiksCube(
     attr.set(new Float32Array(rubiks.current.attributes.color))
     attr.needsUpdate = true
   }, [face1, face2, face3, face4, face5, face6])
+
+  useEffect(() => {
+    setGradientColors([top, middle, bottom])
+  }, [bottom, middle, setGradientColors, top])
 
   const secsElapsed = useRef(0)
   const rotation = useRef(0.0)

@@ -1,5 +1,11 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { DoubleSide, Vector2, Vector4 } from 'three'
 import { UNITS } from 'src/constants'
 import { use2DBounds } from 'src/hooks/useBounds/useBounds'
@@ -40,6 +46,12 @@ export const CubeScene = forwardRef(function CubeScene(
     theme: colorTheme,
     state: { pause, menu },
   } = usePage()
+
+  const [gradientColors, setGradientColors] = useState([
+    colorTheme.charcoal,
+    colorTheme.gunmetal,
+    colorTheme.slate,
+  ])
 
   const { off, on } = use2DBounds(meshRef, {
     margin: new Vector4(100, 0, 100, 0),
@@ -182,6 +194,7 @@ export const CubeScene = forwardRef(function CubeScene(
         pause={pauseRef}
         visible={active}
         store={store2}
+        setGradientColors={setGradientColors}
       />
 
       <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>
@@ -196,11 +209,7 @@ export const CubeScene = forwardRef(function CubeScene(
 
           <GradientTexture
             stops={[0, 0.5, 1]} // As many stops as you want
-            colors={[
-              colorTheme.charcoal,
-              colorTheme.gunmetal,
-              colorTheme.slate,
-            ]} // Colors need to match the number of stops
+            colors={gradientColors} // Colors need to match the number of stops
             size={1024} // Size is optional, default = 1024
           />
         </meshBasicMaterial>

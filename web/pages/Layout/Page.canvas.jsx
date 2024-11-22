@@ -35,40 +35,49 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   const [{ godRaysExposure, godRaysWeight, forceSource, preset }, set] =
     useControls(
       () => ({
-        GodRays: folder({
-          godRaysExposure: {
-            value: [0.5, 0.02][current - 1],
-            label: 'exposure',
+        GodRays: folder(
+          {
+            godRaysExposure: {
+              value: [0.5, 0.02][current - 1],
+              label: 'exposure',
+            },
+            godRaysWeight: {
+              value: [0.8, 3.6][current - 1],
+              label: 'weight',
+            },
           },
-          godRaysWeight: {
-            value: [0.8, 3.6][current - 1],
-            label: 'weight',
+          { collapsed: true },
+        ),
+        Simulation: folder(
+          {
+            forceSource: {
+              value: 'cube',
+              label: 'force',
+              options: ['mouse'],
+            },
           },
-        }),
-        Simulation: folder({
-          forceSource: {
-            value: 'cube',
-            label: 'force',
-            options: ['mouse'],
+          { collapsed: true },
+        ),
+        Environment: folder(
+          {
+            preset: {
+              value: 'studio',
+              label: 'lights',
+              options: [
+                'apartment',
+                'city',
+                'dawn',
+                'forest',
+                'lobby',
+                'night',
+                'park',
+                'sunset',
+                'warehouse',
+              ],
+            },
           },
-        }),
-        Environment: folder({
-          preset: {
-            value: 'studio',
-            label: 'lights',
-            options: [
-              'apartment',
-              'city',
-              'dawn',
-              'forest',
-              'lobby',
-              'night',
-              'park',
-              'sunset',
-              'warehouse',
-            ],
-          },
-        }),
+          { collapsed: true },
+        ),
       }),
       { store: store3 },
     )
