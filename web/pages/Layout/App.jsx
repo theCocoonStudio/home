@@ -116,7 +116,7 @@ export const App = function App() {
     () => ({
       titleBar: {
         filter: false,
-        title: <div>Fluid Texture Controls</div>,
+        title: <div>Fluid Simulation Controls</div>,
         drag: false,
       },
       fill: true,
@@ -201,7 +201,7 @@ export const App = function App() {
             {...levaProps}
             titleBar={{
               filter: false,
-              title: <div>Cube Color Controls</div>,
+              title: <div>Color Controls</div>,
               drag: false,
             }}
           />
@@ -212,7 +212,7 @@ export const App = function App() {
             {...levaProps}
             titleBar={{
               filter: false,
-              title: <div>Cube Scene Controls</div>,
+              title: <div>Scene Controls</div>,
               drag: false,
             }}
           />

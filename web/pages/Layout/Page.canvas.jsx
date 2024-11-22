@@ -52,10 +52,10 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
             options: ['mouse'],
           },
         }),
-        Lighting: folder({
+        Environment: folder({
           preset: {
             value: 'studio',
-            label: 'environment',
+            label: 'lights',
             options: [
               'apartment',
               'city',

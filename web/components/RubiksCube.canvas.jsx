@@ -8,7 +8,7 @@ import {
 import { useFrame } from '@react-three/fiber'
 import { RubiksCube3 } from 'web/helpers/rubiksCubeUtils'
 import { Color, Vector3 } from 'three'
-import { useControls } from 'leva'
+import { useControls, folder } from 'leva'
 
 export const RubiksCube = forwardRef(function RubiksCube(
   {
@@ -29,12 +29,12 @@ export const RubiksCube = forwardRef(function RubiksCube(
 
   const _faceColors = useMemo(
     () => ({
-      cubeFace1: colorTheme.midnight,
-      cubeFace2: colorTheme.slate,
-      cubeFace3: colorTheme.purple,
-      cubeFace4: colorTheme.white,
-      cubeFace5: colorTheme.gunmetal,
-      cubeFace6: colorTheme.charcoal,
+      face1: colorTheme.midnight,
+      face2: colorTheme.slate,
+      face3: colorTheme.purple,
+      face4: colorTheme.white,
+      face5: colorTheme.gunmetal,
+      face6: colorTheme.charcoal,
     }),
     [
       colorTheme.charcoal,
@@ -46,17 +46,21 @@ export const RubiksCube = forwardRef(function RubiksCube(
     ],
   )
 
-  const { cubeFace1, cubeFace2, cubeFace3, cubeFace4, cubeFace5, cubeFace6 } =
-    useControls(_faceColors, { store })
+  const { face1, face2, face3, face4, face5, face6 } = useControls(
+    {
+      Cube: folder(_faceColors),
+    },
+    { store },
+  )
 
   const rubiks = useRef(
     new RubiksCube3([
-      new Color(cubeFace1),
-      new Color(cubeFace2),
-      new Color(cubeFace3),
-      new Color(cubeFace4),
-      new Color(cubeFace5),
-      new Color(cubeFace6),
+      new Color(face1),
+      new Color(face2),
+      new Color(face3),
+      new Color(face4),
+      new Color(face5),
+      new Color(face6),
     ]),
   )
 
@@ -74,17 +78,17 @@ export const RubiksCube = forwardRef(function RubiksCube(
 
   useEffect(() => {
     rubiks.current.setColors([
-      new Color(cubeFace1),
-      new Color(cubeFace2),
-      new Color(cubeFace3),
-      new Color(cubeFace4),
-      new Color(cubeFace5),
-      new Color(cubeFace6),
+      new Color(face1),
+      new Color(face2),
+      new Color(face3),
+      new Color(face4),
+      new Color(face5),
+      new Color(face6),
     ])
     const attr = geometry.current.getAttribute('color')
     attr.set(new Float32Array(rubiks.current.attributes.color))
     attr.needsUpdate = true
-  }, [cubeFace1, cubeFace2, cubeFace3, cubeFace4, cubeFace5, cubeFace6])
+  }, [face1, face2, face3, face4, face5, face6])
 
   const secsElapsed = useRef(0)
   const rotation = useRef(0.0)
