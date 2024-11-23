@@ -1,4 +1,4 @@
-import { IconDeviceTvOld } from '@tabler/icons-react'
+import IconDeviceTvOld from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import styles from 'web/styles/AppIcon.module.css'
 
