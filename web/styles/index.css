@@ -21,6 +21,17 @@
   --menuHeight: calc(50vh - var(--navFooterHeight) - var(--mainElementPadding));
 }
 
+@property --iconAngle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --iconBorder {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: rgba(255, 255, 255, 0.2);
+}
+
 @property --fpsFactor {
   syntax: '<length-percentage>';
   inherits: false;
@@ -242,15 +253,16 @@ body {
 
 #socials > *,
 #settings > * {
-  border-radius: 3px;
   flex-shrink: 1;
   flex-grow: 1;
+  flex-basis: 100%;
   aspect-ratio: 1/1;
   transition: transform 0.2s;
   &:hover {
     cursor: pointer;
   }
 }
+
 #performanceContainer {
   position: relative;
 }

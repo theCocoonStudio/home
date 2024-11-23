@@ -1,0 +1,79 @@
+.container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > * {
+    flex-basis: 100%;
+  }
+  > .background {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+
+    z-index: -2;
+    border-radius: 20%;
+    opacity: 0.2;
+    transition: background 0.15s;
+    background: rgba(255, 255, 255, 0);
+  }
+  > .border {
+    position: absolute;
+    z-index: -1;
+    border-radius: 20%;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+
+    border: 1px solid transparent;
+    background: linear-gradient(
+        var(--iconAngle),
+        var(--iconBorder) 5%,
+        var(--white)
+      )
+      border-box;
+    mask:
+      linear-gradient(#000 0 0) padding-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: angleChange 6s linear infinite;
+    transition:
+      --iconBorder 0.15s,
+      --iconAngle 0.15s;
+  }
+  * {
+    stroke-width: 1px;
+    transition: stroke-width 0.15s;
+  }
+  &:hover * {
+    stroke-width: 2px;
+  }
+  &:hover .border {
+    --iconBorder: var(--white);
+  }
+  &:hover .background {
+    background: rgba(255, 255, 255, 1);
+  }
+}
+@keyframes angleChange {
+  0% {
+    --iconAngle: 0deg;
+  }
+  25% {
+    --iconAngle: 90deg;
+  }
+  50% {
+    --iconAngle: 180deg;
+  }
+  75% {
+    --iconAngle: 270deg;
+  }
+  100% {
+    --iconAngle: 360deg;
+  }
+}
