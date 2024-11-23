@@ -52,6 +52,7 @@
     "@react-three/postprocessing": "^2.16.2",
     "@react-three/rapier": "^1.4.0",
     "@shopify/react-web-worker": "^5.0.17",
+    "@tabler/icons-react": "^3.22.0",
     "lamina": "^1.1.23",
     "leva": "^0.9.35",
     "maath": "^0.10.8",
