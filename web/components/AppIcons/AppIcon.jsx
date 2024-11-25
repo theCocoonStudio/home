@@ -13,7 +13,7 @@ export const AppIcon = forwardRef(function AppIcon(
     <div ref={ref} className={styles.container} {...props}>
       <div className={styles.background} />
       <div className={styles.border} />
-      {children ?? <IconDeviceTvOld stroke={1} size={'70%'} />}
+      {children ?? <IconDeviceTvOld stroke={1} size={'60%'} />}
     </div>
   )
 })
