@@ -1,5 +1,5 @@
 import { forwardRef, useCallback } from 'react'
-import { AppIcon } from 'web/components/AppIcons/AppIcon'
+
 import styles from 'web/styles/Footer.module.css'
 import { usePage } from '../../hooks/usePage'
 
@@ -41,9 +41,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div onClick={togglePause} />
         <div />
         <div onClick={toggleMenu} />
-        <div id='appIconSettings'>
-          <AppIcon />
-        </div>
+
         <div id='settingsLabel' className='space-mono-regular'>
           SHOWCASE CONTROLS
         </div>

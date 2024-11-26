@@ -234,13 +234,6 @@ body {
   position: relative;
 }
 
-#settings {
-  width: calc(
-    var(--socialsSettingsWidth) + ((var(--socialsSettingsWidth) - 60px) / 4) +
-      20px
-  );
-}
-
 #socials,
 #settings,
 #pageInfo {
