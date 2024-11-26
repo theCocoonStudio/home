@@ -41,11 +41,11 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div onClick={togglePause} />
         <div />
         <div onClick={toggleMenu} />
-        <div id='app-icon-settings'>
+        <div id='appIconSettings'>
           <AppIcon />
         </div>
         <div id='settingsLabel' className='space-mono-regular'>
-          APP CONTROLS
+          SHOWCASE CONTROLS
         </div>
       </div>
       <div id='pageInfo'>

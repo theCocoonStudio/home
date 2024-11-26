@@ -1,6 +1,6 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { damp3, dampE } from 'maath/easing'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Euler, Object3D, Vector2, Vector3, Vector4 } from 'three'
 import { setScaleXY } from './helpers'
 import { UNITS } from 'src/constants'
@@ -34,9 +34,9 @@ export const use2DBounds = (
       height,
     }),
   )
-
+  const [run, setRun] = useState(true)
   // dependent state
-  const prevTrackingDimensions = useRef(new Vector2())
+  const prevTrackingDimensions = useRef(new Vector4())
   const iterations = useRef(0)
   const distance = useRef(null)
   const ppwu = useRef(new Vector2())
@@ -65,11 +65,18 @@ export const use2DBounds = (
   })
 
   // update callbacks
+  const off = useCallback(() => {
+    setRun(false)
+  }, [])
+
+  const on = useCallback(() => {
+    setRun(true)
+  }, [])
   const setDistance = useCallback((obj3D, camera) => {
     const wPos = new Vector3()
     obj3D.getWorldPosition(wPos)
     camera.worldToLocal(wPos)
-    distance.current = Math.abs(wPos.getComponent(2))
+    distance.current = Math.abs(wPos.z)
   }, [])
 
   const setPPWU = useCallback(
@@ -82,18 +89,10 @@ export const use2DBounds = (
       )
       // set PPWU
       ppwu.current.setX(
-        Math.abs(
-          width /
-            (maxViewBounds.current.getComponent(0) -
-              minViewBounds.current.getComponent(0)),
-        ),
+        Math.abs(width / (maxViewBounds.current.x - minViewBounds.current.x)),
       )
       ppwu.current.setY(
-        Math.abs(
-          height /
-            (maxViewBounds.current.getComponent(1) -
-              minViewBounds.current.getComponent(1)),
-        ),
+        Math.abs(height / (maxViewBounds.current.y - minViewBounds.current.y)),
       )
 
       // set bounds
@@ -104,20 +103,21 @@ export const use2DBounds = (
           width: elementWidth,
           height: elementHeight,
         } = element.getBoundingClientRect()
-        prevTrackingDimensions.current.set(elementWidth, elementHeight)
-        const leftOffset =
-          minViewBounds.current.getComponent(0) +
-          left / ppwu.current.getComponent(0)
-        const topOffset =
-          maxViewBounds.current.getComponent(1) -
-          top / ppwu.current.getComponent(1)
+        prevTrackingDimensions.current.set(
+          elementWidth,
+          elementHeight,
+          left,
+          top,
+        )
+        const leftOffset = minViewBounds.current.x + left / ppwu.current.x
+        const topOffset = maxViewBounds.current.y - top / ppwu.current.y
 
         minBounds.current.set(
           leftOffset,
-          topOffset - elementHeight / ppwu.current.getComponent(1),
+          topOffset - elementHeight / ppwu.current.y,
         )
         maxBounds.current.set(
-          leftOffset + elementWidth / ppwu.current.getComponent(0),
+          leftOffset + elementWidth / ppwu.current.x,
           topOffset,
         )
       } else {
@@ -129,21 +129,19 @@ export const use2DBounds = (
       if (margin) {
         marginWU.current.copy(margin)
         if (marginUnits === UNITS.PX) {
-          marginWU.current.divideScalar(ppwu.current.getComponent(0))
+          marginWU.current.divideScalar(ppwu.current.x)
         } else {
           const boundsWidth = Math.abs(
-            maxBounds.current.getComponent(0) -
-              minBounds.current.getComponent(0),
+            maxBounds.current.x - minBounds.current.x,
           )
           const boundsHeight = Math.abs(
-            maxBounds.current.getComponent(1) -
-              minBounds.current.getComponent(1),
+            maxBounds.current.y - minBounds.current.y,
           )
 
           marginWU.current.set(
-            margin.getComponent(0) * boundsHeight,
-            margin.getComponent(1) * boundsWidth,
-            margin.getComponent(2) * boundsHeight,
+            margin.x * boundsHeight,
+            margin.y * boundsWidth,
+            margin.z * boundsHeight,
             margin.getComponent(3) * boundsWidth,
           )
         }
@@ -159,16 +157,9 @@ export const use2DBounds = (
     const _maxBounds = trackingElement
       ? maxBounds.current
       : maxViewBounds.current
-    const xOffset = Math.abs(
-      (_maxBounds.getComponent(0) - _minBounds.getComponent(0)) * left,
-    )
-    const yOffset = Math.abs(
-      (_maxBounds.getComponent(1) - _minBounds.getComponent(1)) * top,
-    )
-    targetWPos.current.set(
-      _minBounds.getComponent(0) + xOffset,
-      _maxBounds.getComponent(1) - yOffset,
-    )
+    const xOffset = Math.abs((_maxBounds.x - _minBounds.x) * left)
+    const yOffset = Math.abs((_maxBounds.y - _minBounds.y) * top)
+    targetWPos.current.set(_minBounds.x + xOffset, _maxBounds.y - yOffset)
   }, [])
 
   const computeTargets = useCallback(
@@ -190,11 +181,19 @@ export const use2DBounds = (
         resultRef.current.targets.position.copy(pos)
       }
       if (typeof computeScale === 'function' || scaleToFitWidth) {
-        const compute =
-          typeof computeScale === 'function' ? computeScale : setScaleXY
-        const scale = compute(obj3d, resultRef.current, camera, geometrySize)
+        const scale = setScaleXY(obj3d, resultRef.current, camera, geometrySize)
         targetScale.current.copy(scale)
         resultRef.current.targets.scale.copy(scale)
+        if (typeof computeScale === 'function') {
+          const scale = computeScale(
+            obj3d,
+            resultRef.current,
+            camera,
+            geometrySize,
+          )
+          targetScale.current.copy(scale)
+          resultRef.current.targets.scale.copy(scale)
+        }
       }
       if (typeof computeRotation === 'function') {
         const rot = computeRotation(obj3d, resultRef.current, camera)
@@ -235,69 +234,62 @@ export const use2DBounds = (
 
   // three engine: imperative updates
   useFrame(({ size: { width, height }, camera: fiberCamera }, delta) => {
-    const camera = customCameraRef?.current || fiberCamera
-    if (trackingElement && trackingElementRef.current) {
-      const { width: elementWidth, height: elementHeight } =
-        trackingElementRef.current.getBoundingClientRect()
-      if (
-        prevTrackingDimensions.current.x !== elementWidth ||
-        prevTrackingDimensions.current.y !== elementHeight
-      ) {
-        iterations.current = 0
+    if (run) {
+      const camera = customCameraRef?.current || fiberCamera
+      if (trackingElement && trackingElementRef.current) {
+        const {
+          width: elementWidth,
+          height: elementHeight,
+          left: elementLeft,
+          top: elementTop,
+        } = trackingElementRef.current.getBoundingClientRect()
+        if (
+          prevTrackingDimensions.current.x !== elementWidth ||
+          prevTrackingDimensions.current.y !== elementHeight ||
+          prevTrackingDimensions.current.z !== elementLeft ||
+          prevTrackingDimensions.current.w !== elementTop
+        ) {
+          iterations.current = 0
+        }
       }
-    }
-    if (iterations.current < 1 || !pause) {
-      if (
-        obj3DRef.current instanceof Object3D &&
-        (!trackingElement || trackingElementRef.current)
-      ) {
-        setDistance(obj3DRef.current, camera)
-        setPPWU(
-          camera,
-          width,
-          height,
-          trackingElement && trackingElementRef.current,
-          margin,
-          marginUnits,
-        )
-        setTargetWPos(camera, left, top, trackingElement)
-        computeTargets(
-          obj3DRef.current,
-          computePosition,
-          computeScale,
-          computeRotation,
-          camera,
-          scaleToFitWidth,
-          geometrySize,
-        )
-        iterations.current++
+      if (iterations.current < 1 || !pause) {
+        if (
+          obj3DRef.current instanceof Object3D &&
+          (!trackingElement || trackingElementRef.current)
+        ) {
+          setDistance(obj3DRef.current, camera)
+          setPPWU(
+            camera,
+            width,
+            height,
+            trackingElement && trackingElementRef.current,
+            margin,
+            marginUnits,
+          )
+          setTargetWPos(camera, left, top, trackingElement)
+          computeTargets(
+            obj3DRef.current,
+            computePosition,
+            computeScale,
+            computeRotation,
+            camera,
+            scaleToFitWidth,
+            geometrySize,
+          )
+          iterations.current++
+        }
       }
-    }
-    if (
-      damp &&
-      iterations.current > 0 &&
-      obj3DRef.current instanceof Object3D
-    ) {
-      damp3(
-        obj3DRef.current.position,
-        [
-          targetWPos.current.getComponent(0),
-          targetWPos.current.getComponent(1),
-          obj3DRef.current.position.getComponent(2),
-        ],
-        smoothTime,
-        customDelta || delta,
-        maxSpeed,
-        easing,
-        eps,
-      )
-      if (scaleToFitWidth || typeof computeScale === 'function') {
+      if (
+        damp &&
+        iterations.current > 0 &&
+        obj3DRef.current instanceof Object3D
+      ) {
         damp3(
-          obj3DRef.current.scale,
+          obj3DRef.current.position,
           [
-            targetScale.current.getComponent(0),
-            targetScale.current.getComponent(1),
-            targetScale.current.getComponent(2),
+            targetWPos.current.x,
+            targetWPos.current.y,
+            obj3DRef.current.position.z,
           ],
           smoothTime,
           customDelta || delta,
@@ -305,20 +297,35 @@ export const use2DBounds = (
           easing,
           eps,
         )
-      }
-      if (typeof computeRotation === 'function') {
-        dampE(
-          obj3DRef.current.rotation,
-          targetRotation.current.clone(),
-          smoothTime,
-          customDelta || delta,
-          maxSpeed,
-          easing,
-          eps,
-        )
+        if (scaleToFitWidth || typeof computeScale === 'function') {
+          damp3(
+            obj3DRef.current.scale,
+            [
+              targetScale.current.x,
+              targetScale.current.y,
+              targetScale.current.z,
+            ],
+            smoothTime,
+            customDelta || delta,
+            maxSpeed,
+            easing,
+            eps,
+          )
+        }
+        if (typeof computeRotation === 'function') {
+          dampE(
+            obj3DRef.current.rotation,
+            targetRotation.current.clone(),
+            smoothTime,
+            customDelta || delta,
+            maxSpeed,
+            easing,
+            eps,
+          )
+        }
       }
     }
   }, renderPriority)
 
-  return resultRef.current
+  return { results: resultRef.current, off, on }
 }
