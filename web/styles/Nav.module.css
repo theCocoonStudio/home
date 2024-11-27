@@ -1,0 +1,93 @@
+.navContent {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.navLogo {
+  &:hover {
+    cursor: pointer;
+  }
+}
+.starred {
+  width: var(--socialsSettingsWidth);
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 20px;
+  > * {
+    flex-shrink: 1;
+    flex-grow: 1;
+    flex-basis: 100%;
+    aspect-ratio: 1/1;
+    transition: transform 0.25s;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.navItems {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 40px;
+  > * {
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+}
+
+.apps {
+  width: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  height: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  position: relative;
+  .svg {
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    * {
+      stroke-width: 2px;
+      transition: stroke-width 0.25s;
+    }
+  }
+  .svgFilled {
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    transition: opacity 0.25s;
+  }
+  .label {
+    opacity: 0;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    letter-spacing: 2px;
+    transform: translateX(-50%);
+    font-size: 12px;
+    text-align: center;
+  }
+  &:hover:not(:has(.label:hover)) {
+    cursor: pointer;
+  }
+  &:hover:not(:has(.label:hover)) .label {
+    opacity: 1;
+  }
+  &:hover:not(:has(.label:hover)) .svgFilled {
+    opacity: 0;
+  }
+  &:hover:not(:has(.label:hover)) .svg * {
+    stroke-width: 1px;
+  }
+}

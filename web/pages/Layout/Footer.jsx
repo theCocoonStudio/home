@@ -1,5 +1,4 @@
 import { forwardRef, useCallback } from 'react'
-
 import styles from 'web/styles/Footer.module.css'
 import { usePage } from '../../hooks/usePage'
 
@@ -33,7 +32,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div />
         <div />
         <div id='socialsLabel' className='space-mono-regular'>
-          SOCIALS
+          socials
         </div>
       </div>
       <div id='settings'>
@@ -43,7 +42,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div onClick={toggleMenu} />
 
         <div id='settingsLabel' className='space-mono-regular'>
-          SHOWCASE CONTROLS
+          showcase controls
         </div>
       </div>
       <div id='pageInfo'>
@@ -55,7 +54,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
             <div id='fpsBoost'>boost</div>
             <div id='fpsThrottle'>throttle</div>
             <div id='fpsLabel' className='space-mono-regular'>
-              PERFORMANCE
+              performance
             </div>
           </div>
         </div>

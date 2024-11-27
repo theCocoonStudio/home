@@ -203,30 +203,6 @@ body {
   vertical-align: middle;
 }
 
-#navContent {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 2rem;
-}
-
-#navItems > * {
-  display: inline-block;
-  margin-left: 2rem;
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-#logo {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
 #socials,
 #settings,
 #pageInfo {
@@ -353,7 +329,7 @@ body {
 #settingsLabel,
 #socialsLabel {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 6px);
   left: 50%;
   letter-spacing: 2px;
   transform: translateX(-50%);

@@ -1,9 +1,9 @@
-import IconDeviceTvOld from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
+import IconDeviceTvOld from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOldFilled.mjs'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import styles from 'web/styles/AppIcon.module.css'
 
 export const AppIcon = forwardRef(function AppIcon(
-  { children, ...props },
+  { children, name = 'showcase', ...props },
   forwardedRef,
 ) {
   const ref = useRef()
@@ -13,7 +13,10 @@ export const AppIcon = forwardRef(function AppIcon(
     <div ref={ref} className={styles.container} {...props}>
       <div className={styles.background} />
       <div className={styles.border} />
-      {children ?? <IconDeviceTvOld stroke={1} size={'60%'} />}
+      {children ?? (
+        <IconDeviceTvOld stroke={1} size={'60%'} className={`${styles.icon}`} />
+      )}
+      {name && <div className={styles.label}>{name}</div>}
     </div>
   )
 })
