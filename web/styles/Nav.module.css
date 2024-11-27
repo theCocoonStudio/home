@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100%;
   font-size: 2rem;
 }
 
@@ -26,10 +27,37 @@
     flex-grow: 1;
     flex-basis: 100%;
     aspect-ratio: 1/1;
-    transition: transform 0.25s;
+    transition: transform 0.15s;
     &:hover {
       cursor: pointer;
     }
+  }
+}
+.borderLeft,
+.borderRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 16px;
+  opacity: 0.2;
+  width: 1px;
+  background-color: white;
+  right: calc(100% + 20px);
+  &:hover {
+    cursor: default;
+  }
+}
+
+.borderRight {
+  left: calc(100% + 20px);
+  right: auto;
+}
+
+.active {
+  width: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  height: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -57,7 +85,7 @@
     transform: translateX(-50%) translateY(-50%);
     * {
       stroke-width: 2px;
-      transition: stroke-width 0.25s;
+      transition: stroke-width 0.15s;
     }
   }
   .svgFilled {
@@ -66,7 +94,7 @@
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    transition: opacity 0.25s;
+    transition: opacity 0.15s;
   }
   .label {
     opacity: 0;

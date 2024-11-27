@@ -8,5 +8,6 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  height: var(--navFooterHeight);
+  height: calc(var(--navFooterHeight) - 16px);
+  margin-bottom: 16px !important;
 }

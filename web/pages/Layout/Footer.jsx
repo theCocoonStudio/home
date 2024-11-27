@@ -42,7 +42,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div onClick={toggleMenu} />
 
         <div id='settingsLabel' className='space-mono-regular'>
-          showcase controls
+          app controls
         </div>
       </div>
       <div id='pageInfo'>
