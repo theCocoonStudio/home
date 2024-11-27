@@ -30,7 +30,7 @@
     left: -1px;
     right: -1px;
 
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     background: linear-gradient(
         var(--iconAngle),
         var(--iconBorder) 5%,
@@ -43,6 +43,7 @@
     mask-composite: exclude;
     animation: angleChange 6s linear infinite;
     transition:
+      border-width 0.15s,
       --iconBorder 0.15s,
       --iconAngle 0.15s;
   }
@@ -57,12 +58,13 @@
     font-size: 12px;
     text-align: center;
   }
-  .icon {
+  svg {
     transform: rotateZ(0);
     transition: transform 0.15s;
   }
   &:hover:not(:has(.label:hover)) .border {
     --iconBorder: var(--white);
+    border-width: 2px;
   }
   &:hover:not(:has(.label:hover)) .background {
     background: rgba(255, 255, 255, 1);
@@ -71,7 +73,7 @@
     opacity: 1;
   }
 
-  &:hover:not(:has(.label:hover)) .icon {
+  &:hover:not(:has(.label:hover)) svg {
     transform: rotateZ(10deg);
   }
 }
