@@ -37,7 +37,7 @@ export const FooterHUD = forwardRef(function FooterHud(
 
   const {
     refs: {
-      markup: {
+      global: {
         socials1,
         socials2,
         socials3,
@@ -46,8 +46,8 @@ export const FooterHUD = forwardRef(function FooterHud(
         settings2,
         settings3,
         settings4,
-        description,
       },
+      showcase: { description },
     },
   } = useMarkup()
 

@@ -50,7 +50,7 @@ export const Gallery = forwardRef(function Gallery(
 
   const {
     refs: {
-      markup: { tracking, code },
+      showcase: { tracking, code },
     },
   } = useMarkup()
   const {

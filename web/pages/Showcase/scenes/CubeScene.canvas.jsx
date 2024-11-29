@@ -43,7 +43,7 @@ export const CubeScene = forwardRef(function CubeScene(
 
   const {
     refs: {
-      markup: { tracking },
+      showcase: { tracking },
     },
   } = useMarkup()
 

@@ -31,7 +31,7 @@ export const Showcase = forwardRef(function Showcase(
 
   const {
     refs: {
-      markup: { description },
+      showcase: { description },
     },
   } = useMarkup()
 
