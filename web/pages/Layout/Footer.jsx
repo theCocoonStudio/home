@@ -1,11 +1,11 @@
 import { forwardRef, useCallback } from 'react'
 import styles from 'web/styles/Footer.module.css'
-import { useGlobalState } from '../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 
 export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   const {
     setState: { menu: setMenu, pause: setPause },
-  } = useGlobalState()
+  } = useShowcase()
 
   // TODO: transition API
   const toggleMenu = useCallback(

@@ -9,7 +9,7 @@ import { PlayPause } from 'web/components/PlayPause.canvas'
 import { Next } from 'web/components/Next.canvas'
 import { useMarkup } from '../../hooks/useMarkup'
 import { useTheme } from '../../hooks/useTheme'
-import { useGlobalState } from '../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { use2DBounds } from 'src/hooks'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
@@ -54,7 +54,7 @@ export const FooterHUD = forwardRef(function FooterHud(
   const {
     state: { pause, menu, current },
     setState: { pause: setPause },
-  } = useGlobalState()
+  } = useShowcase()
 
   const colorTheme = useTheme()
 

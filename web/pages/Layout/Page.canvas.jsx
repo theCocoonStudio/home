@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState, useTransition } from 'react'
-import { useGlobalState } from 'web/hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from 'web/hooks/useTheme'
 import { Hud } from '@react-three/drei'
 import { Performance } from 'web/components/Performance.canvas'
@@ -24,7 +24,7 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
   const {
     state: { pause, current },
     setState: { current: setCurrent },
-  } = useGlobalState()
+  } = useShowcase()
   const colorTheme = useTheme()
   const { store3 } = usePageControls()
 

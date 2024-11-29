@@ -14,7 +14,7 @@ import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
 import { damp, damp3 } from 'maath/easing'
 import { useMarkup } from '../../../hooks/useMarkup'
-import { useGlobalState } from '../../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../../hooks/useTheme'
 import { useControls } from 'leva'
 import { usePageControls } from '../../../hooks/usePageControls'
@@ -49,7 +49,7 @@ export const CubeScene = forwardRef(function CubeScene(
 
   const {
     state: { pause, menu },
-  } = useGlobalState()
+  } = useShowcase()
   const colorTheme = useTheme()
 
   const [gradientColors, setGradientColors] = useState([

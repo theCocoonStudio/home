@@ -20,7 +20,7 @@ import dragonflyUrl from 'public/dragonfly.jpeg'
 import kitesUrl from 'public/kites.jpg'
 import spiderUrl from 'public/dragonfly2.jpeg'
 import { useTheme } from '../../../hooks/useTheme'
-import { useGlobalState } from '../../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useMarkup } from '../../../hooks/useMarkup'
 import { setScaleXYZOfY } from 'web/helpers/use2DBoundsScaleUtils'
 import { MeshBasicMaterial } from 'three'
@@ -55,7 +55,7 @@ export const Gallery = forwardRef(function Gallery(
   } = useMarkup()
   const {
     state: { current, pause, menu },
-  } = useGlobalState()
+  } = useShowcase()
 
   const colorTheme = useTheme()
 

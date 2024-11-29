@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { PerspectiveCamera, Preload } from '@react-three/drei'
 import { useMarkup } from '../../hooks/useMarkup'
-import { useGlobalState } from '../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../hooks/useTheme'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
@@ -37,7 +37,7 @@ export const Showcase = forwardRef(function Showcase(
 
   const {
     state: { current },
-  } = useGlobalState()
+  } = useShowcase()
 
   const colorTheme = useTheme()
 

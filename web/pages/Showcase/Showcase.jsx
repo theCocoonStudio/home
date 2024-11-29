@@ -3,7 +3,7 @@ import styles from 'web/styles/Showcase.module.css'
 import { Leva, LevaPanel } from 'leva'
 import { useMarkup } from '../../hooks/useMarkup'
 import { useTheme } from '../../hooks/useTheme'
-import { useGlobalState } from '../../hooks/useGlobalState'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { usePageControls } from '../../hooks/usePageControls'
 
@@ -37,7 +37,7 @@ export const Showcase = function Showcase() {
   const colorTheme = useTheme()
   const {
     state: { menu, current },
-  } = useGlobalState()
+  } = useShowcase()
 
   const controlTheme = useMemo(
     () => ({

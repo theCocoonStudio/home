@@ -1,25 +1,16 @@
-import {
-  Suspense,
-  useCallback,
-  useState,
-  useTransition,
-  useMemo,
-  useRef,
-} from 'react'
+import { Suspense, useCallback, useState, useMemo, useRef } from 'react'
 import { MarkupContext } from './MarkupContext'
 import { ControlsContext } from './ControlsContext'
 import { GlobalStateContext } from './GlobalStateContext'
+import { ShowcaseProvider } from 'web/pages/Showcase/context/ShowcaseProvider'
 import { ThemeContext } from './ThemeContext'
-import { Loader } from 'web/components/Loader'
 import { useCreateStore } from 'leva'
+import { Loader } from 'web/components/Loader'
 
 export const ContextProvider = ({ children, theme }) => {
   // global state
-  const [isPending, startTransition] = useTransition()
-  const [loaded, setLoaded] = useState(false)
-  const [menu, setMenu] = useState(false)
-  const [pause, setPause] = useState(true)
-  const [current, setCurrent] = useState(1)
+  const [app, setApp] = useState('showcase')
+  const [ready, setReady] = useState(false)
 
   // markup
   const refs = useRef({})
@@ -34,21 +25,16 @@ export const ContextProvider = ({ children, theme }) => {
   // global state
   const state = useMemo(
     () => ({
-      isPending,
-      menu,
-      pause,
-      current,
-      loaded,
+      app,
+      ready,
     }),
-    [current, isPending, loaded, menu, pause],
+    [app, ready],
   )
   // global setState
   const setState = useMemo(
     () => ({
-      menu: (newState) => startTransition(() => setMenu(newState)),
-      pause: (newState) => startTransition(() => setPause(newState)),
-      current: (newState) => startTransition(() => setCurrent(newState)),
-      loaded: setLoaded,
+      app: setApp,
+      ready: setReady,
     }),
     [],
   )
@@ -90,14 +76,18 @@ export const ContextProvider = ({ children, theme }) => {
     [store1, store2, store3],
   )
 
-  const onReady = useCallback(() => setPause(false), [])
+  // global ready state
+  const onReady = useCallback(() => setReady(true), [])
+
   return (
     <>
       <ControlsContext.Provider value={storeContextValue}>
         <ThemeContext.Provider value={themeContextValue}>
           <MarkupContext.Provider value={refsValue}>
             <GlobalStateContext.Provider value={globalStateValue}>
-              <Suspense fallback={null}>{children}</Suspense>
+              <ShowcaseProvider>
+                <Suspense fallback={null}>{children}</Suspense>
+              </ShowcaseProvider>
             </GlobalStateContext.Provider>
           </MarkupContext.Provider>
         </ThemeContext.Provider>
