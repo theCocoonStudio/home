@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState, useTransition } from 'react'
-import { usePage } from 'web/hooks/usePage'
-
+import { useGlobalState } from 'web/hooks/useGlobalState'
+import { useTheme } from 'web/hooks/useTheme'
 import { Hud } from '@react-three/drei'
 import { Performance } from 'web/components/Performance.canvas'
 import { useProgress } from 'src/hooks'
@@ -22,10 +22,10 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
 
   // global state
   const {
-    theme: colorTheme,
     state: { pause, current },
     setState: { current: setCurrent },
-  } = usePage()
+  } = useGlobalState()
+  const colorTheme = useTheme()
   const { store3 } = usePageControls()
 
   // local state

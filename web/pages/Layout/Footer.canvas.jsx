@@ -7,7 +7,9 @@ import { Youtube } from 'web/components/Socials/Youtube.canvas'
 import { Gear } from 'web/components/Gear.canvas'
 import { PlayPause } from 'web/components/PlayPause.canvas'
 import { Next } from 'web/components/Next.canvas'
-import { usePage } from '../../hooks/usePage'
+import { useMarkup } from '../../hooks/useMarkup'
+import { useTheme } from '../../hooks/useTheme'
+import { useGlobalState } from '../../hooks/useGlobalState'
 import { use2DBounds } from 'src/hooks'
 import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
@@ -34,7 +36,6 @@ export const FooterHUD = forwardRef(function FooterHud(
   useImperativeHandle(forwardedRef, () => scene.current, [])
 
   const {
-    theme: colorTheme,
     refs: {
       markup: {
         socials1,
@@ -45,13 +46,17 @@ export const FooterHUD = forwardRef(function FooterHud(
         settings2,
         settings3,
         settings4,
-        settings5,
         description,
       },
     },
+  } = useMarkup()
+
+  const {
     state: { pause, menu, current },
     setState: { pause: setPause },
-  } = usePage()
+  } = useGlobalState()
+
+  const colorTheme = useTheme()
 
   use2DBounds(s1, {
     trackingElement: true,

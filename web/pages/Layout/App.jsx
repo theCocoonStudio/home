@@ -3,7 +3,9 @@ import { Footer } from './Footer'
 import styles from 'web/styles/Layout.module.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { usePageControls } from '../../hooks/usePageControls'
-import { usePage } from '../../hooks/usePage'
+import { useMarkup } from '../../hooks/useMarkup'
+import { useTheme } from '../../hooks/useTheme'
+import { useGlobalState } from '../../hooks/useGlobalState'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { Leva, LevaPanel } from 'leva'
 
@@ -46,10 +48,7 @@ export const App = function App() {
     menu3.current = menuRef.current.children[2]
   }, [])
 
-  const {
-    state: { menu, current },
-    theme: colorTheme,
-  } = usePage('markup', {
+  useMarkup('markup', {
     socials1,
     socials2,
     socials3,
@@ -70,6 +69,10 @@ export const App = function App() {
     menu: menuRef,
     progress,
   })
+  const colorTheme = useTheme()
+  const {
+    state: { menu, current },
+  } = useGlobalState()
 
   const controlTheme = useMemo(
     () => ({

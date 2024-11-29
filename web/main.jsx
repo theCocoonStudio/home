@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Layout from 'web/pages/Layout'
-import { PageProvider } from './context/PageProvider'
+import { ContextProvider } from './context/ContextProvider'
 
 import './styles/index.css'
 
@@ -18,8 +18,8 @@ const theme = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <PageProvider theme={theme}>
+    <ContextProvider theme={theme}>
       <Layout />
-    </PageProvider>
+    </ContextProvider>
   </React.StrictMode>,
 )

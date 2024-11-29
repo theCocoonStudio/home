@@ -1,7 +1,8 @@
 import { Canvas } from '@react-three/fiber'
 import { forwardRef } from 'react'
+import { Page } from './Page.canvas'
 
-const ThreeApp = forwardRef(function ThreeApp({ children, ...props }, ref) {
+const ThreeApp = forwardRef(function ThreeApp({ ...props }, ref) {
   return (
     <Canvas
       shadows
@@ -10,7 +11,7 @@ const ThreeApp = forwardRef(function ThreeApp({ children, ...props }, ref) {
       ref={ref}
       {...props}
     >
-      {children}
+      <Page />
     </Canvas>
   )
 })

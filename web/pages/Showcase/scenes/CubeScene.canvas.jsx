@@ -13,7 +13,9 @@ import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
 import { damp, damp3 } from 'maath/easing'
-import { usePage } from '../../../hooks/usePage'
+import { useMarkup } from '../../../hooks/useMarkup'
+import { useGlobalState } from '../../../hooks/useGlobalState'
+import { useTheme } from '../../../hooks/useTheme'
 import { useControls } from 'leva'
 import { usePageControls } from '../../../hooks/usePageControls'
 
@@ -43,9 +45,12 @@ export const CubeScene = forwardRef(function CubeScene(
     refs: {
       markup: { tracking },
     },
-    theme: colorTheme,
+  } = useMarkup()
+
+  const {
     state: { pause, menu },
-  } = usePage()
+  } = useGlobalState()
+  const colorTheme = useTheme()
 
   const [gradientColors, setGradientColors] = useState([
     colorTheme.charcoal,

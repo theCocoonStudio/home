@@ -1,6 +1,8 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 import { PerspectiveCamera, Preload } from '@react-three/drei'
-import { usePage } from '../../hooks/usePage'
+import { useMarkup } from '../../hooks/useMarkup'
+import { useGlobalState } from '../../hooks/useGlobalState'
+import { useTheme } from '../../hooks/useTheme'
 import { Gallery } from './scenes/Gallery.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -28,12 +30,16 @@ export const Showcase = forwardRef(function Showcase(
   ])
 
   const {
-    theme: colorTheme,
-    state: { current },
     refs: {
       markup: { description },
     },
-  } = usePage()
+  } = useMarkup()
+
+  const {
+    state: { current },
+  } = useGlobalState()
+
+  const colorTheme = useTheme()
 
   useFrame((state, delta) => {
     // cube scene

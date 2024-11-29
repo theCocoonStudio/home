@@ -1,9 +1,8 @@
 import { useContext, useEffect, useMemo } from 'react'
-import { PageContext } from 'web/context/PageContext'
+import { MarkupContext } from 'web/context/MarkupContext'
 
-export const usePage = (key, pageData) => {
-  const { theme, refs, addRef, disposeRef, state, setState } =
-    useContext(PageContext)
+export const useMarkup = (key, pageData) => {
+  const { refs, addRef, disposeRef } = useContext(MarkupContext)
 
   useEffect(() => {
     if (key && typeof pageData === 'object') {
@@ -18,12 +17,9 @@ export const usePage = (key, pageData) => {
 
   const memoized = useMemo(
     () => ({
-      theme,
       refs,
-      state,
-      setState,
     }),
-    [refs, setState, state, theme],
+    [refs],
   )
   return memoized
 }

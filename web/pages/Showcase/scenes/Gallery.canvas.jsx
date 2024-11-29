@@ -19,7 +19,9 @@ import cloudsUrl from 'public/clouds.jpg'
 import dragonflyUrl from 'public/dragonfly.jpeg'
 import kitesUrl from 'public/kites.jpg'
 import spiderUrl from 'public/dragonfly2.jpeg'
-import { usePage } from '../../../hooks/usePage'
+import { useTheme } from '../../../hooks/useTheme'
+import { useGlobalState } from '../../../hooks/useGlobalState'
+import { useMarkup } from '../../../hooks/useMarkup'
 import { setScaleXYZOfY } from 'web/helpers/use2DBoundsScaleUtils'
 import { MeshBasicMaterial } from 'three'
 
@@ -50,9 +52,12 @@ export const Gallery = forwardRef(function Gallery(
     refs: {
       markup: { tracking, code },
     },
-    theme: colorTheme,
+  } = useMarkup()
+  const {
     state: { current, pause, menu },
-  } = usePage()
+  } = useGlobalState()
+
+  const colorTheme = useTheme()
 
   const smoothTime = useRef(bufferTime)
   const child1 = useRef()
