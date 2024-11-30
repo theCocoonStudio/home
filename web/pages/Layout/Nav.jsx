@@ -10,8 +10,8 @@ import styles from 'web/styles/Nav.module.css'
 
 export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
   return (
-    <div {...props}>
-      <div id='' className={`${styles.navContent} content`} ref={forwardRef}>
+    <div {...props} className={`${styles.nav}`}>
+      <div className={`${styles.navContent} content`} ref={forwardRef}>
         <div className={`${styles.navLogo}`}>izzyerlich.com</div>
         <div className={`${styles.navItems}`}>
           <div className={`${styles.active}`}>

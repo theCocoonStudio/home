@@ -47,7 +47,7 @@ export const App = function App() {
 
   return (
     <>
-      <Nav id='nav' className='space-mono-regular' />
+      <Nav className='space-mono-regular' />
       <Footer ref={footer} />
       <Showcase />
     </>
