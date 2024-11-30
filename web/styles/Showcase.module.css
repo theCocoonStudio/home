@@ -1,3 +1,20 @@
+.main {
+  width: 100%;
+  flex-grow: 1;
+  position: relative;
+  max-width: var(--maxContent);
+  margin: auto;
+}
+
+.tracking,
+.description,
+.code,
+.options {
+  position: absolute;
+  border-radius: 3px;
+  transition: all 0.5s;
+}
+
 .tracking-home {
   width: 40%;
   top: 0;
@@ -28,6 +45,17 @@
 }
 .tracking-gallery-open {
   bottom: calc(10px + (2 * var(--mainElementPadding)));
+}
+
+.description {
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    top 0.5s,
+    bottom 0.5s,
+    left 0.5s,
+    right 0.5s,
+    transform 0.5s;
 }
 
 .description-home {
@@ -78,7 +106,13 @@
 }
 
 .menu {
-  padding-bottom: var(--mainElementPadding);
+  color: var(--white);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  /* align-items: center; */
+  column-gap: calc(var(--mainElementPadding));
+  /* font-size: 1.5rem; */
   width: 100%;
   border-radius: 3px;
   max-height: 0px;
@@ -104,6 +138,7 @@
   opacity: 0.9;
   max-height: 50%;
   margin-bottom: calc(var(--mainElementPadding));
+  padding-bottom: var(--mainElementPadding);
 }
 
 .menu-colors {

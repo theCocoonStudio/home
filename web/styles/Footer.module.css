@@ -8,6 +8,6 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  height: calc(var(--navFooterHeight) - 16px);
-  margin-bottom: 16px !important;
+  height: calc(var(--navFooterHeight) - var(--navFooterPadding));
+  margin-bottom: var(--navFooterPadding) !important;
 }

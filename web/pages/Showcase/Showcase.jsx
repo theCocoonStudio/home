@@ -106,33 +106,29 @@ export const Showcase = function Showcase() {
   }, [current])
   return (
     <>
-      <div id='main' className='content'>
+      <div className={`${styles.main}`}>
         <div
-          id='tracking'
           ref={tracking}
-          className={`${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
+          className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
         >
           {Tracking}
         </div>
         <div
-          id='description'
           ref={description}
-          className={`disable-scrollbars ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
+          className={`disable-scrollbars ${styles.description} ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
         >
           {Description}
         </div>
         <div
-          id='code'
           ref={code}
-          className={`${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
+          className={`${styles.code} ${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
         />
         <div
-          id='options'
           ref={options}
-          className={`${styles[`options-${styleKey}`]} `}
+          className={`${styles.options} ${styles[`options-${styleKey}`]} `}
         />
         <div
-          id='progress'
+          id='showcaseProgress'
           className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}
           ref={progress}
         >

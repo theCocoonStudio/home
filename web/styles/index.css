@@ -15,6 +15,7 @@
   --red: #330000;
   /* lengths */
   --navFooterHeight: 100px;
+  --navFooterPadding: 16px;
   --maxContent: 1200px;
   --socialsSettingsWidth: 185px;
   --mainElementPadding: 2rem;
@@ -152,6 +153,7 @@ body {
   left: 0;
   margin: 0;
   padding-bottom: calc(var(--navFooterHeight));
+  padding-top: calc(var(--navFooterHeight) - var(--navFooterPadding));
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -180,13 +182,6 @@ body {
 #canvas {
   z-index: -1;
   pointer-events: none;
-}
-
-#main {
-  margin-top: var(--navFooterHeight);
-  width: 100%;
-  flex-grow: 1;
-  position: relative;
 }
 
 .content {
@@ -350,44 +345,6 @@ body {
   cursor: pointer;
   background-color: var(--white);
   color: var(--black);
-}
-
-#tracking,
-#description,
-#code,
-#options {
-  position: absolute;
-  border-radius: 3px;
-  transition: all 0.5s;
-}
-
-#description {
-  opacity: 0;
-  transition:
-    opacity 0.2s ease,
-    top 0.5s,
-    bottom 0.5s,
-    left 0.5s,
-    right 0.5s,
-    transform 0.5s;
-}
-
-#menu {
-  color: var(--white);
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  /* align-items: center; */
-  column-gap: calc(var(--mainElementPadding));
-  /* font-size: 1.5rem; */
-}
-
-.menu-checkbox {
-  height: 1em;
-  width: 1em;
-  margin: 0;
-  font-size: 1em;
-  vertical-align: middle;
 }
 
 .anonymous-pro-regular,
