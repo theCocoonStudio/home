@@ -25,7 +25,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   )
 
   return (
-    <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
+    <div ref={forwardRef} {...props} className={`${styles.footer}`}>
       <div id='socials'>
         <div />
         <div />

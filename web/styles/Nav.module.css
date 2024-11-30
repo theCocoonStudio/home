@@ -1,10 +1,9 @@
 .nav {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: calc(var(--navFooterHeight) - 16px);
-  /* margin-top: 16px !important; */
+  margin: 0 auto;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 .navContent {

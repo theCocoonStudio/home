@@ -105,42 +105,43 @@ export const Showcase = function Showcase() {
     setTracking(trackingArr[current - 1])
   }, [current])
   return (
-    <>
+    <div className={`${styles.container}`}>
       <div className={`${styles.main}`}>
-        <div
-          ref={tracking}
-          className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
-        >
-          {Tracking}
-        </div>
-        <div
-          ref={description}
-          className={`disable-scrollbars ${styles.description} ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
-        >
-          {Description}
-        </div>
-        <div
-          ref={code}
-          className={`${styles.code} ${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
-        />
-        <div
-          ref={options}
-          className={`${styles.options} ${styles[`options-${styleKey}`]} `}
-        />
-        <div
-          id='showcaseProgress'
-          className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}
-          ref={progress}
-        >
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
+        <div className={`${styles.refContainer}`}>
+          <div
+            ref={tracking}
+            className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
+          >
+            {Tracking}
+          </div>
+          <div
+            ref={description}
+            className={`disable-scrollbars ${styles.description} ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
+          >
+            {Description}
+          </div>
+          <div
+            ref={code}
+            className={`${styles.code} ${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
+          />
+          <div
+            ref={options}
+            className={`${styles.options} ${styles[`options-${styleKey}`]} `}
+          />
+          <div
+            id='showcaseProgress'
+            className={`${styles.progress} ${menu ? styles['progress-menu'] : ''}`}
+            ref={progress}
+          >
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </div>
         </div>
       </div>
       <div
-        id='menu'
         ref={menuRef}
         className={`content disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
       >
@@ -180,6 +181,6 @@ export const Showcase = function Showcase() {
           />
         </div>
       </div>
-    </>
+    </div>
   )
 }

@@ -152,13 +152,21 @@ body {
   top: 0;
   left: 0;
   margin: 0;
-  padding-bottom: calc(var(--navFooterHeight));
-  padding-top: calc(var(--navFooterHeight) - var(--navFooterPadding));
   overflow: hidden;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: stretch;
+  column-gap: 0;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  max-width: var(--maxContent);
+  flex-grow: 1;
+  margin: auto;
 }
 
 .disable-scrollbars::-webkit-scrollbar {

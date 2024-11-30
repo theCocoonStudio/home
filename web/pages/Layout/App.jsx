@@ -48,8 +48,10 @@ export const App = function App() {
   return (
     <>
       <Nav className='space-mono-regular' />
+      <div id='app'>
+        <Showcase />
+      </div>
       <Footer ref={footer} />
-      <Showcase />
     </>
   )
 }
