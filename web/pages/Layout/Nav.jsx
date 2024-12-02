@@ -16,18 +16,17 @@ export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
         <div className={`${styles.navLogo}`}>izzyerlich.com</div>
         <div className={`${styles.navItems}`}>
           <ButtonGroup
-            bottomLabels={false}
+            /* bottomLabels={false} */
             name='favourites'
             labels={['vision', 'services', 'contact', 'blog']}
           >
-            {/* <div className={`${styles.borderLeft}`} />
-            <div className={`${styles.borderRight}`} /> */}
             <Vision stroke={2} size={'100%'} />
             <Services stroke={2} size={'100%'} />
             <Info stroke={2} size={'100%'} />
             <Blog stroke={2} size={'100%'} />
           </ButtonGroup>
-          <ButtonGroup name='apps' bottomLabels={false}>
+          <div className={`${styles.border}`} />
+          <ButtonGroup name='apps' /* bottomLabels={false} */>
             <div className={`${styles.apps}`}>
               <Category size='100%' className={`${styles.svg}`} />
               <CategoryFilled size='100%' className={`${styles.svgFilled}`} />

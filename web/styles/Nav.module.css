@@ -2,7 +2,7 @@
   width: 100%;
   flex-grow: 0;
   flex-shrink: 0;
-  margin: 30px auto;
+  margin: 0 auto 10px auto;
 }
 
 .navContent {
@@ -22,24 +22,13 @@
   }
 }
 
-.borderLeft,
-.borderRight {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 16px;
+.border {
+  height: 20px;
+  margin-top: 10px;
+  margin-bottom: calc(12px + 20px);
   opacity: 0.2;
   width: 1px;
-  background-color: white;
-  right: calc(100% + 20px);
-  &:hover {
-    cursor: default;
-  }
-}
-
-.borderRight {
-  left: calc(100% + 20px);
-  right: auto;
+  background-color: var(--white);
 }
 
 .navItems {
@@ -47,7 +36,7 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  column-gap: 40px;
+  column-gap: 20px;
   > * {
     flex-shrink: 1;
     flex-grow: 1;
