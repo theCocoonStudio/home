@@ -151,12 +151,13 @@
     flex-shrink: 1;
     width: 33.33%;
   }
+  transition: all 0.5s;
 }
 
 .menu-open {
   opacity: 0.9;
   max-height: 50%;
-  margin-bottom: calc(var(--mainElementPadding));
+  padding-top: var(--mainElementPadding);
   padding-bottom: var(--mainElementPadding);
 }
 
@@ -180,7 +181,7 @@
   left: 0;
   right: 0;
   height: 10px;
-  bottom: var(--mainElementPadding);
+  bottom: 0;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
