@@ -59,7 +59,7 @@ export const CubeScene = forwardRef(function CubeScene(
   ])
 
   const { off, on } = use2DBounds(meshRef, {
-    margin: new Vector4(91, 0, 91, 0),
+    margin: new Vector4(83, 0, 83, 0),
     marginUnits: UNITS.PX,
     damping: { smoothTime: smoothTime.current },
     renderPriority,
