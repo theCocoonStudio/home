@@ -13,7 +13,7 @@ export const Performance = ({ colorTheme }) => {
   const onChange = useCallback(
     ({
       /** Current fps */
-      // fps,
+      fps,
       /** Current performance factor, between 0 and 1 */
       factor,
       /** Current highest fps, you can use this to determine device refresh rate */
@@ -26,6 +26,8 @@ export const Performance = ({ colorTheme }) => {
       const el = document.getElementById('fps')
       el.style.setProperty('--fpsFactor', `${100 * Math.max(factor, 0.1)}%`)
       el.style.setProperty('--fpsColor', factor < 0.2 ? red : green)
+      const val = document.getElementById('fpsValue')
+      val.innerHTML = `${fps}`
     },
     [green, red],
   )
