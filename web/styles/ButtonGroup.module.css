@@ -27,7 +27,20 @@
   .label {
     opacity: 0;
   }
+}
+.double,
+.triple {
+  aspect-ratio: auto;
+}
 
+.double {
+  width: calc((20px + 2 * var(--socialsSettingsWidth) - 60px) * 1 / 4);
+}
+.triple {
+  width: calc((40px + 3 * var(--socialsSettingsWidth) - 60px) * 1 / 4);
+}
+
+.labelled {
   &:hover:not(:has(.label:hover)) {
     cursor: pointer;
     .label {
