@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  margin-bottom: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+
   flex-wrap: nowrap;
   justify-content: center;
   align-items: stretch;
@@ -9,6 +9,13 @@
   .mainLabel {
     transition: opacity 1s;
   }
+}
+
+.bottomLabel {
+  margin-bottom: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+}
+.topLabel {
+  margin-top: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
 }
 .fit > * {
   position: relative;
@@ -27,6 +34,9 @@
   .label {
     opacity: 0;
   }
+  &:hover:not(:has(.label:hover)) {
+    cursor: pointer;
+  }
 }
 .double,
 .triple {
@@ -42,7 +52,6 @@
 
 .labelled {
   &:hover:not(:has(.label:hover)) {
-    cursor: pointer;
     .label {
       opacity: 1;
     }
@@ -58,7 +67,7 @@
   cursor: default;
   position: absolute;
   height: 30px;
-  top: 100%;
+
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -72,4 +81,12 @@
     flex-grow: 0;
     flex-shrink: 0;
   }
+}
+
+.labelTop {
+  bottom: 100%;
+}
+
+.labelBottom {
+  top: 100%;
 }
