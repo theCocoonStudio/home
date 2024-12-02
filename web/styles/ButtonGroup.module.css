@@ -1,21 +1,21 @@
 .container {
   display: flex;
-
   flex-wrap: nowrap;
   justify-content: center;
   align-items: stretch;
   column-gap: 20px;
   position: relative;
+  margin: 10px 0;
   .mainLabel {
     transition: opacity 1s;
   }
 }
 
 .bottomLabel {
-  margin-bottom: 0;
+  margin-bottom: calc(12px + 20px);
 }
 .topLabel {
-  margin-top: 0;
+  margin-top: calc(12px + 20px);
 }
 .fit > * {
   position: relative;
@@ -66,8 +66,8 @@
 .mainLabel {
   cursor: default;
   position: absolute;
-  height: 30px;
-
+  line-height: 1em;
+  height: 12px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -84,9 +84,9 @@
 }
 
 .labelTop {
-  bottom: 100%;
+  bottom: calc(100% + 10px);
 }
 
 .labelBottom {
-  top: 100%;
+  top: calc(100% + 10px);
 }
