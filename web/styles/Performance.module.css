@@ -1,0 +1,94 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.performance {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  opacity: 0.75;
+}
+
+@keyframes fpsGradient {
+  0% {
+    --fpsBar: 0;
+  }
+  100% {
+    --fpsBar: var(--fpsFactor);
+  }
+}
+
+.fps,
+.fpsBorder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  border-radius: 3px;
+}
+.fps {
+  filter: brightness(1.8);
+  background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) var(--fpsBar),
+      transparent var(--fpsFactor),
+      var(--white) var(--fpsFactor),
+      var(--white) calc(var(--fpsFactor) + 2px),
+      transparent calc(var(--fpsFactor) + 2px)
+    ),
+    linear-gradient(
+      to right,
+      var(--fpsColor) 0%,
+      var(--fpsColor) var(--fpsFactor),
+      transparent var(--fpsFactor)
+    );
+  width: 100%;
+  transition:
+    --fpsFactor 3s,
+    --fpsBar 3s,
+    --fpsColor 3s ease-in;
+
+  animation: fpsGradient 3s linear infinite;
+}
+
+.fpsBorder {
+  width: 100%;
+  border: 1px solid var(--white);
+}
+
+.fpsBoost {
+  position: absolute;
+  bottom: 0;
+  line-height: 1em;
+  right: 0;
+  font-size: 10px;
+  text-align: center;
+  padding: 3px;
+  width: calc(50% - 3px);
+  border-radius: 3px;
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+.fpsThrottle {
+  position: absolute;
+  bottom: 0;
+  line-height: 1em;
+  left: 0;
+  font-size: 10px;
+  text-align: center;
+  padding: 3px;
+  width: calc(50% - 3px);
+  border-radius: 3px;
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+
+/* .fpsBoost:hover,
+.fpsThrottle:hover {
+  background-color: var(--white);
+  color: var(--black);
+} */

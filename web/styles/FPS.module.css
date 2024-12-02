@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  border: 1px solid var(--white);
+  opacity: 0.75;
+}
+
+.fpsValue {
+  font-size: 14px;
+}
