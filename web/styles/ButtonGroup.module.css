@@ -12,10 +12,10 @@
 }
 
 .bottomLabel {
-  margin-bottom: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  margin-bottom: 0;
 }
 .topLabel {
-  margin-top: calc((var(--socialsSettingsWidth) - 60px) * 1 / 4);
+  margin-top: 0;
 }
 .fit > * {
   position: relative;
