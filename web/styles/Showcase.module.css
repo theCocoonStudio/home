@@ -157,7 +157,6 @@
 .menu-open {
   opacity: 0.9;
   max-height: 50%;
-  padding-top: var(--mainElementPadding);
   padding-bottom: var(--mainElementPadding);
 }
 
@@ -181,7 +180,7 @@
   left: 0;
   right: 0;
   height: 10px;
-  bottom: 0;
+  bottom: 20px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
