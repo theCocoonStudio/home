@@ -4,7 +4,6 @@ import { ButtonGroup } from 'web/components/ButtonGroup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { Performance } from '../../components/Performance'
 import Showcase from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
-import { FPS } from '../../components/fps'
 
 export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   const {
@@ -56,12 +55,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
           <div onClick={toggleMenu} />
         </ButtonGroup>
       </div>
-      <ButtonGroup
-        name='performance monitor'
-        labels={['fps', 'status', '', '']}
-        widths={[1, 3]}
-      >
-        <FPS id='fpsValue' />
+      <ButtonGroup name='performance' widths={[4]}>
         <Performance />
       </ButtonGroup>
     </div>
