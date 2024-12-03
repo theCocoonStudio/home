@@ -16,9 +16,28 @@
   font-size: 2rem;
 }
 
-.navLogo {
+.title,
+.sub {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 0.8em;
+}
+.title > * {
+  transition: opacity 0.15s;
+}
+.title:hover:has(.sub:hover) {
+  .sub,
+  > span {
+    opacity: 0.5;
+  }
+}
+.sub {
+  column-gap: 0.5em;
   &:hover {
     cursor: pointer;
+    opacity: 1 !important;
   }
 }
 
@@ -81,4 +100,14 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   transition: opacity 0.15s;
+}
+
+.icon {
+  height: 1em;
+
+  aspect-ratio: 1/1;
+  > * {
+    height: 100% !important;
+    width: 100% !important;
+  }
 }
