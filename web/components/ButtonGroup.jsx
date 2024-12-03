@@ -56,18 +56,21 @@ export const ButtonGroup = forwardRef(function ButtonGroup(
   )
   const container = useRef()
   useImperativeHandle(ref, () => container.current, [])
+  const containerClass = bottomLabels ? styles.bottomLabel : styles.topLabel
   return (
     <div
       ref={container}
-      className={`${className} ${styles.container} ${bottomLabels ? styles.bottomLabel : styles.topLabel}`}
+      className={`${className} ${styles.container} ${name || labels[0] ? containerClass : ''}`}
       {...props}
     >
       {buttons}
-      <ButtonLabel
-        className={`${styles.mainLabel} ${bottomLabels ? styles.labelBottom : styles.labelTop}`}
-      >
-        {name}
-      </ButtonLabel>
+      {name && (
+        <ButtonLabel
+          className={`${styles.mainLabel} ${bottomLabels ? styles.labelBottom : styles.labelTop}`}
+        >
+          {name}
+        </ButtonLabel>
+      )}
     </div>
   )
 })
