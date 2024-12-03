@@ -24,7 +24,7 @@ export const ButtonGroup = forwardRef(function ButtonGroup(
     () =>
       Children.count(children) < 2 ? (
         <div
-          className={`${styles.child} ${fit ? styles.fit : ''} ${labels[0] ? styles.labelled : ''} ${widths[0] ? ['', styles.double, styles.triple][widths[0] - 1] : ''}`}
+          className={`${styles.child} ${fit ? styles.fit : ''} ${labels[0] ? styles.labelled : ''} ${widths[0] ? ['', styles.double, styles.triple, styles.quad][widths[0] - 1] : ''}`}
         >
           {children}
           {labels[0] && (

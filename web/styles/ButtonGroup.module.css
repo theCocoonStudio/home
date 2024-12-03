@@ -39,7 +39,8 @@
   }
 }
 .double,
-.triple {
+.triple,
+.quad {
   aspect-ratio: auto;
 }
 
@@ -48,6 +49,9 @@
 }
 .triple {
   width: calc((40px + 3 * var(--socialsSettingsWidth) - 60px) * 1 / 4);
+}
+.quad {
+  width: calc((60px + 4 * var(--socialsSettingsWidth) - 60px) * 1 / 4);
 }
 
 .labelled {
