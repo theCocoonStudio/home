@@ -15,6 +15,7 @@ export const ButtonGroup = forwardRef(function ButtonGroup(
     widths = [],
     fit = true,
     bottomLabels = true,
+    className = '',
     ...props
   },
   ref,
@@ -58,7 +59,7 @@ export const ButtonGroup = forwardRef(function ButtonGroup(
   return (
     <div
       ref={container}
-      className={`${styles.container} ${bottomLabels ? styles.bottomLabel : styles.topLabel}`}
+      className={`${className} ${styles.container} ${bottomLabels ? styles.bottomLabel : styles.topLabel}`}
       {...props}
     >
       {buttons}
