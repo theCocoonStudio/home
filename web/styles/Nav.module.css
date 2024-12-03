@@ -36,7 +36,7 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  column-gap: 20px;
+  column-gap: 30px;
   > * {
     flex-shrink: 1;
     flex-grow: 1;

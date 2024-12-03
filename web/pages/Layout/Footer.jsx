@@ -3,6 +3,7 @@ import styles from 'web/styles/Footer.module.css'
 import { ButtonGroup } from 'web/components/ButtonGroup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { Performance } from '../../components/Performance'
+import Showcase from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
 import { FPS } from '../../components/fps'
 
 export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
@@ -40,15 +41,21 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
         <div />
       </ButtonGroup>
 
-      <ButtonGroup
-        name='app controls'
-        labels={['previous', pause ? 'play' : 'pause', 'next', 'settings']}
-      >
-        <div />
-        <div onClick={togglePause} />
-        <div />
-        <div onClick={toggleMenu} />
-      </ButtonGroup>
+      <div className={`${styles.settings}`}>
+        <ButtonGroup name='showcase' className={`${styles.activeApp}`}>
+          <Showcase size='100%' stroke={1} />
+        </ButtonGroup>
+        <div className={`${styles.border}`} />
+        <ButtonGroup
+          name='controls'
+          labels={['prev', pause ? 'play' : 'pause', 'next', 'settings']}
+        >
+          <div />
+          <div onClick={togglePause} />
+          <div />
+          <div onClick={toggleMenu} />
+        </ButtonGroup>
+      </div>
       <ButtonGroup
         name='performance monitor'
         labels={['fps', 'status', '', '']}

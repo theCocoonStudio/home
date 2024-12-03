@@ -9,3 +9,29 @@
   align-items: center;
   margin: 10px auto 0 auto;
 }
+
+.settings {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 30px;
+  > * {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+}
+
+.border {
+  height: 20px;
+  margin-top: 10px;
+  margin-bottom: calc(12px + 20px);
+  opacity: 0.2;
+  width: 1px;
+  background-color: var(--white);
+}
+
+.activeApp:hover,
+.activeApp:hover * {
+  cursor: default !important;
+}

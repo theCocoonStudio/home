@@ -23,11 +23,11 @@ export const App = function App() {
     socials2.current = footer.current.children[0].children[1]
     socials3.current = footer.current.children[0].children[2]
     socials4.current = footer.current.children[0].children[3]
-    settings1.current = footer.current.children[1].children[0]
-    settings2.current = footer.current.children[1].children[1]
-    settings3.current = footer.current.children[1].children[2]
-    settings4.current = footer.current.children[1].children[3]
-    settings5.current = footer.current.children[1].children[4]
+    settings1.current = footer.current.children[1].children[2].children[0]
+    settings2.current = footer.current.children[1].children[2].children[1]
+    settings3.current = footer.current.children[1].children[2].children[2]
+    settings4.current = footer.current.children[1].children[2].children[3]
+    settings5.current = footer.current.children[1].children[2].children[4]
     footerInfo.current = footer.current.children[2]
   }, [])
 

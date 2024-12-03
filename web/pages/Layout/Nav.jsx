@@ -13,7 +13,7 @@ export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
   return (
     <div {...props} className={`${styles.nav}`}>
       <div className={`${styles.navContent} content`} ref={forwardRef}>
-        <div className={`${styles.navLogo}`}>izzyerlich.com</div>
+        <div className={`${styles.navLogo}`}>izzyerlich.com / showcase</div>
         <div className={`${styles.navItems}`}>
           <ButtonGroup
             /* bottomLabels={false} */
