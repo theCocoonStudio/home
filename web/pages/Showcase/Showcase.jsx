@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from 'web/styles/Showcase.module.css'
 import { Leva, LevaPanel } from 'leva'
 import { useMarkup } from '../../hooks/useMarkup'
@@ -6,6 +6,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { descriptionArr, trackingArr } from '../Showcase/markups'
 import { usePageControls } from '../../hooks/usePageControls'
+import Exit from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
 
 export const Showcase = function Showcase() {
   const tracking = useRef()
@@ -37,6 +38,7 @@ export const Showcase = function Showcase() {
   const colorTheme = useTheme()
   const {
     state: { menu, current },
+    setState: { menu: setMenu },
   } = useShowcase()
 
   const controlTheme = useMemo(
@@ -104,13 +106,23 @@ export const Showcase = function Showcase() {
     setDescription(descriptionArr[current - 1])
     setTracking(trackingArr[current - 1])
   }, [current])
+
+  const toggleMenu = useCallback(
+    (e) => {
+      e.preventDefault()
+      setMenu((prev) => !prev)
+    },
+    [setMenu],
+  )
   return (
-    <div className={`${styles.container}`}>
+    <div
+      className={`${styles.container} ${menu ? styles[`container-open`] : ''}`}
+    >
       <div className={`${styles.main}`}>
         <div className={`${styles.refContainer}`}>
           <div
             ref={tracking}
-            className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''} `}
+            className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''}`}
           >
             {Tracking}
           </div>
@@ -179,6 +191,11 @@ export const Showcase = function Showcase() {
               drag: false,
             }}
           />
+        </div>
+        <div className={`${styles.exitContainer}`} onClick={toggleMenu}>
+          <div className={`${styles.exit}`}>
+            <Exit size={'100%'} />
+          </div>
         </div>
       </div>
     </div>

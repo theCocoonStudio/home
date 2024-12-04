@@ -7,13 +7,17 @@
   flex-wrap: nowrap;
   align-items: stretch;
   column-gap: 0;
+  transition: padding-bottom 0.5s;
+}
+
+.container-open {
+  padding-bottom: var(--mainElementPadding);
 }
 
 .main {
   width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
-
   max-width: var(--maxContent);
   margin: auto;
   height: 100%;
@@ -125,6 +129,7 @@
 }
 
 .menu {
+  position: relative;
   color: var(--white);
   display: flex;
   flex-wrap: nowrap;
@@ -152,12 +157,23 @@
     width: 33.33%;
   }
   transition: all 0.5s;
+  .exitContainer {
+    opacity: 0;
+  }
 }
 
 .menu-open {
   opacity: 0.9;
   max-height: 50%;
-  padding-bottom: var(--mainElementPadding);
+  /* padding: calc(1 * var(--mainElementPadding)); */
+  padding-bottom: calc(2 * var(--mainElementPadding));
+
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+
+  .exitContainer {
+    opacity: 1;
+  }
 }
 
 .menu-colors {
@@ -249,6 +265,41 @@
 
       background-color: var(--progress);
       transition: background-color 1.5s;
+    }
+  }
+}
+
+.exitContainer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  height: calc(1 * var(--mainElementPadding));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.05);
+  transition: opacity 0.5s;
+
+  .exit {
+    flex-grow: 0;
+    flex-shrink: 0;
+    display: flex;
+    font-size: 20px;
+    height: calc(1 * var(--mainElementPadding));
+    width: calc(1 * var(--mainElementPadding));
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    .exit {
+      height: calc(1.1 * var(--mainElementPadding));
+      width: calc(1.1 * var(--mainElementPadding));
     }
   }
 }
