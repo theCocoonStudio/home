@@ -8,7 +8,7 @@ import Vision from '@tabler/icons-react/dist/esm/icons/IconEye'
 import styles from 'web/styles/Nav.module.css'
 import { ButtonGroup } from 'web/components/ButtonGroup'
 import Showcase from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
-import Home from '@tabler/icons-react/dist/esm/icons/IconHome'
+import Home from '@tabler/icons-react/dist/esm/icons/IconCube'
 
 export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
   return (
