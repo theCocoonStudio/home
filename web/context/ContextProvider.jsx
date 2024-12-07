@@ -6,6 +6,7 @@ import { ShowcaseProvider } from 'web/pages/Showcase/context/ShowcaseProvider'
 import { ThemeContext } from './ThemeContext'
 import { useCreateStore } from 'leva'
 import { Loader } from 'web/components/Loader'
+import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 
 export const ContextProvider = ({ children, theme }) => {
   // global state
@@ -86,7 +87,9 @@ export const ContextProvider = ({ children, theme }) => {
           <MarkupContext.Provider value={refsValue}>
             <GlobalStateContext.Provider value={globalStateValue}>
               <ShowcaseProvider>
-                <Suspense fallback={null}>{children}</Suspense>
+                <ResizeEventProvider>
+                  <Suspense fallback={null}>{children}</Suspense>
+                </ResizeEventProvider>
               </ShowcaseProvider>
             </GlobalStateContext.Provider>
           </MarkupContext.Provider>
