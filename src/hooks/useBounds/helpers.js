@@ -1,22 +1,33 @@
-/* export const deepClone = (obj) => {
-  const result = {}
-  for (const property in obj) {
-    // base condition 1
-    if (typeof obj[property] !== 'object') {
-      result[property] = obj[property]
-    } else {
-      // base condition 2
-      if (typeof obj[property]?.clone === 'function') {
-        result[property] = obj[property].clone()
-      } else {
-        // recursive case
-        result[property] = deepClone(obj[property])
-      }
-    }
-  }
-  return result
+import { Vector2, Vector3 } from 'three'
+
+export const getCameraDistance = (obj3D, camera) => {
+  const wPos = new Vector3()
+  obj3D.getWorldPosition(wPos)
+  camera.worldToLocal(wPos)
+  return Math.abs(wPos.z)
 }
- */
+export const getViewBoundsPPWU = (camera, distance, viewportVec2) => {
+  const min = new Vector2()
+  const max = new Vector2()
+  camera.getViewBounds(distance, min, max)
+  const ppwu = new Vector2(
+    Math.abs(viewportVec2.x / (max.x - min.x)),
+    Math.abs(viewportVec2.y / (max.y - min.y)),
+  )
+  return { min, max, ppwu }
+}
+
+export const getElementBounds = (
+  { left, top, width, height },
+  { min, max, ppwu },
+) => {
+  const leftOffset = min.x + left / ppwu.x
+  const topOffset = max.y - top / ppwu.y
+  const elementMin = new Vector2(leftOffset, topOffset - height / ppwu.y)
+  const elementMax = new Vector2(leftOffset + width / ppwu.x, topOffset)
+  return { min: elementMin, max: elementMax, ppwu }
+}
+
 export const setScaleXY = (obj, results, camera, dimensions) => {
   const scale = obj.scale.clone()
   const width =
