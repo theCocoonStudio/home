@@ -105,7 +105,6 @@ export const Page = function Page({ count = 5, time = 10, bufferTime = 0.2 }) {
       document.documentElement.style.setProperty('--progress', newColor)
       setCurrent(curr)
       startTransition(() => {
-        setSun(home.current[curr - 1])
         setProgressColor(newColor)
         set({
           godRaysExposure: [0.5, 0.02][curr - 1],

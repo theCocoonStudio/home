@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { PerspectiveCamera, Preload } from '@react-three/drei'
 import { useMarkup } from '../../hooks/useMarkup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
@@ -25,8 +25,8 @@ export const Showcase = forwardRef(function Showcase(
   const cubeScene = useRef()
   const gallery = useRef()
   useImperativeHandle(forwardedRef, () => [
-    cubeScene.current.sun,
-    gallery.current.sun,
+    cubeScene.current?.sun,
+    gallery.current?.sun,
   ])
 
   const {
@@ -46,16 +46,16 @@ export const Showcase = forwardRef(function Showcase(
     let opacity = '0'
     if (progressRef.current[0] < 1 - bufferTime / time && current === 1) {
       opacity = '1'
-      cubeScene.current.active(delta)
+      cubeScene.current?.active(delta)
     } else {
-      cubeScene.current.inactive(delta)
+      cubeScene.current?.inactive(delta)
     }
     // gallery scene
     if (progressRef.current[1] < 1 - bufferTime / time && current === 2) {
-      gallery.current.active(delta)
+      gallery.current?.active(delta)
       opacity = '1'
     } else {
-      gallery.current.inactive(delta)
+      gallery.current?.inactive(delta)
     }
 
     // opacity
@@ -73,9 +73,13 @@ export const Showcase = forwardRef(function Showcase(
     scene,
   }))
 
+  useEffect(() => {
+    setSun([cubeScene, gallery][current - 1].current.sun)
+  }, [current, setSun])
+
   return (
     <>
-      <Preload all />
+      <Preload />
       <color attach='background' args={[colorTheme.black]} />
       <PerspectiveCamera makeDefault position-z={1} />
       <SuspendedEnvironment
@@ -85,23 +89,27 @@ export const Showcase = forwardRef(function Showcase(
         scene={mainScene}
       />
       {current === 2 && <fog attach='fog' args={['#050505', 0, 12]} />}
-      <CubeScene
-        renderPriority={renderPriority}
-        ref={cubeScene}
-        active={current === 1}
-        bufferTime={bufferTime}
-        {...cubeSceneProps}
-      />
+      {current === 1 && (
+        <CubeScene
+          renderPriority={renderPriority}
+          ref={cubeScene}
+          active={current === 1}
+          bufferTime={bufferTime}
+          {...cubeSceneProps}
+        />
+      )}
 
-      <Gallery
-        renderPriority={renderPriority}
-        ref={gallery}
-        active={current === 2}
-        bufferTime={bufferTime}
-        setSun={setSun}
-        time={time}
-        {...galleryProps}
-      />
+      {current === 2 && (
+        <Gallery
+          renderPriority={renderPriority}
+          ref={gallery}
+          active={current === 2}
+          bufferTime={bufferTime}
+          setSun={setSun}
+          time={time}
+          {...galleryProps}
+        />
+      )}
     </>
   )
 })

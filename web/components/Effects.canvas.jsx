@@ -24,6 +24,7 @@ export const Effects = ({
   const { camera: mainCamera, scene: mainScene } = useThree(
     ({ scene, camera }) => ({ scene, camera }),
   )
+
   return (
     <EffectComposer
       disableNormalPass
@@ -32,7 +33,7 @@ export const Effects = ({
       camera={mainCamera}
       renderPriority={renderPriority}
     >
-      {sun && (
+      {[1, 2].includes(current) && sun && (
         <GodRays
           sun={sun}
           exposure={godRaysExposure}
