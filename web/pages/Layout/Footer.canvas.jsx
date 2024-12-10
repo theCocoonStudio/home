@@ -10,14 +10,10 @@ import { Next } from 'web/components/Next.canvas'
 import { useMarkup } from '../../hooks/useMarkup'
 import { useTheme } from '../../hooks/useTheme'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
-import { use2DBounds } from 'src/hooks'
-import { setScaleXYZOfX } from 'web/helpers/use2DBoundsScaleUtils'
+import { useMarkupBounds } from 'src/hooks'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-
-/* const scaleFactored = (obj, results) => {
-  return setScaleXYZOfX(obj, results).multiplyScalar(0.8)
-} */
+import { Vector3 } from 'three'
 
 export const FooterHUD = forwardRef(function FooterHud(
   { progressColor, count, time, bufferTime, setElapsed, renderPriority },
@@ -56,76 +52,58 @@ export const FooterHUD = forwardRef(function FooterHud(
     setState: { pause: setPause },
   } = useShowcase()
 
+  const callback = useCallback(
+    ({ target, element, min, max, ppwu, contentRect }) => {
+      const scale = new Vector3(max.x - min.x, max.y - min.y, max.x - min.x)
+      const position = new Vector3(
+        min.x + target.scale.x / 2,
+        min.y + target.scale.y / 2,
+        target.position.z,
+      )
+      target.position.copy(position)
+      target.scale.copy(scale)
+    },
+    [],
+  )
   const colorTheme = useTheme()
 
-  use2DBounds(s1, {
-    trackingElement: true,
-    trackingElementRef: socials1,
-    scaleToFitWidth: false,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({ target: s1, element: socials1, callback })
+  useMarkupBounds({
+    target: s2,
+    element: socials2,
+    callback,
   })
-  use2DBounds(s2, {
-    trackingElement: true,
-    trackingElementRef: socials2,
-    scaleToFitWidth: false,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: s3,
+    element: socials3,
+    callback,
   })
-  use2DBounds(s3, {
-    trackingElement: true,
-    trackingElementRef: socials3,
-    scaleToFitWidth: false,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: s4,
+    element: socials4,
+    callback,
   })
 
-  use2DBounds(s4, {
-    trackingElement: true,
-    trackingElementRef: socials4,
-    scaleToFitWidth: false,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: se1,
+    element: settings1,
+    callback,
   })
 
-  use2DBounds(se1, {
-    scaleToFitWidth: false,
-    trackingElement: true,
-    trackingElementRef: settings1,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: se2,
+    element: settings2,
+    callback,
   })
-
-  use2DBounds(se2, {
-    scaleToFitWidth: false,
-    trackingElement: true,
-    trackingElementRef: settings2,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: se3,
+    element: settings3,
+    callback,
   })
-
-  use2DBounds(se3, {
-    scaleToFitWidth: false,
-    trackingElement: true,
-    trackingElementRef: settings3,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
-  })
-
-  use2DBounds(se4, {
-    scaleToFitWidth: false,
-    trackingElement: true,
-    trackingElementRef: settings4,
-    computeScale: setScaleXYZOfX,
-    damping: { smoothTime: 0.0 },
-    renderPriority,
+  useMarkupBounds({
+    target: se4,
+    element: settings4,
+    callback,
   })
 
   const prev = useCallback(() => {
