@@ -6,19 +6,27 @@ import {
   useRef,
   useState,
 } from 'react'
-import { DoubleSide, Vector2, Vector4 } from 'three'
-import { UNITS } from 'src/constants'
-import { use2DBounds } from 'src/hooks/useBounds/useBounds'
+import { DoubleSide, Vector2 } from 'three'
+
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
-import { damp, damp3 } from 'maath/easing'
+import { damp } from 'maath/easing'
 import { useMarkup } from '../../../hooks/useMarkup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../../hooks/useTheme'
 import { useControls } from 'leva'
 import { usePageControls } from '../../../hooks/usePageControls'
+import { useMarkupBounds } from 'src/hooks'
 
+const meshCallback = ({ target, min, max, ppwu }) => {
+  target.scale.setComponent(0, max.x - min.x)
+  target.scale.setComponent(1, max.y - min.y - 2 * (83 / ppwu.x))
+}
+const cubeCallback = ({ target, min, max }) => {
+  target.position.setComponent(0, min.x + (max.x - min.x) / 2)
+  target.position.setComponent(1, min.y + (max.y - min.y) / 2)
+}
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
@@ -36,6 +44,7 @@ export const CubeScene = forwardRef(function CubeScene(
   forwardedRef,
 ) {
   const meshRef = useRef()
+  const group = useRef()
   const cube = useRef()
   const smoothTime = useRef(bufferTime)
 
@@ -58,18 +67,12 @@ export const CubeScene = forwardRef(function CubeScene(
     colorTheme.slate,
   ])
 
-  const { off, on } = use2DBounds(meshRef, {
-    margin: new Vector4(83, 0, 83, 0),
-    marginUnits: UNITS.PX,
-    damping: { smoothTime: smoothTime.current },
-    renderPriority,
-  })
-  const { off: off2, on: on2 } = use2DBounds(cube, {
-    damping: { smoothTime: smoothTime.current },
-    trackingElement: true,
-    trackingElementRef: tracking,
-    scaleToFitWidth: false,
-    renderPriority,
+  useMarkupBounds({ target: meshRef, callback: meshCallback, pause: !active })
+  useMarkupBounds({
+    target: cube,
+    element: tracking,
+    callback: cubeCallback,
+    pause: !active,
   })
 
   const elapsed = useRef(0)
@@ -141,20 +144,14 @@ export const CubeScene = forwardRef(function CubeScene(
     () => ({
       sun: meshRef.current,
       inactive: (delta) => {
-        off()
-        off2()
         smoothTime.current = bufferTime
-
-        damp3(meshRef.current.scale, [0, 0, 0], bufferTime, delta)
-        damp3(cube.current.scale, [0, 0, 0], bufferTime, delta)
+        damp(group.current.position, 'x', -20, bufferTime, delta)
       },
       active: (delta) => {
-        damp3(cube.current.scale, [0.18, 0.18, 0.18], bufferTime, delta)
-        on()
-        on2()
+        damp(group.current.position, 'x', 0, bufferTime, delta)
       },
     }),
-    [bufferTime, off, off2, on, on2],
+    [bufferTime],
   )
 
   useFrame((state, delta) => {
@@ -186,12 +183,12 @@ export const CubeScene = forwardRef(function CubeScene(
     }
   }, renderPriority)
   return (
-    <>
+    <group ref={group}>
       <RubiksCube
         renderPriority={renderPriority}
         colorTheme={colorTheme}
         ref={cube}
-        scale={0}
+        scale={0.18}
         physics={false}
         itemScale={0.6}
         position={[0, 0, -2]}
@@ -203,15 +200,13 @@ export const CubeScene = forwardRef(function CubeScene(
       />
 
       <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>
-        <planeGeometry args={[1, (1 * (height - 200)) / width]} />
+        <planeGeometry args={[1, 1]} />
         <meshBasicMaterial
           side={DoubleSide}
           transparent
           alphaMap={texture}
           map={texture}
         >
-          {/* <VideoTexture video={Video} /> */}
-
           <GradientTexture
             stops={[0, 0.5, 1]} // As many stops as you want
             colors={gradientColors} // Colors need to match the number of stops
@@ -219,6 +214,6 @@ export const CubeScene = forwardRef(function CubeScene(
           />
         </meshBasicMaterial>
       </mesh>
-    </>
+    </group>
   )
 })
