@@ -15,6 +15,16 @@ import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { Vector3 } from 'three'
 
+const callback = ({ target, element, min, max, ppwu, contentRect }) => {
+  const scale = new Vector3(max.x - min.x, max.y - min.y, max.x - min.x)
+  const position = new Vector3(
+    min.x + target.scale.x / 2,
+    min.y + target.scale.y / 2,
+    target.position.z,
+  )
+  target.position.copy(position)
+  target.scale.copy(scale)
+}
 export const FooterHUD = forwardRef(function FooterHud(
   { progressColor, count, time, bufferTime, setElapsed, renderPriority },
   forwardedRef,
@@ -52,19 +62,6 @@ export const FooterHUD = forwardRef(function FooterHud(
     setState: { pause: setPause },
   } = useShowcase()
 
-  const callback = useCallback(
-    ({ target, element, min, max, ppwu, contentRect }) => {
-      const scale = new Vector3(max.x - min.x, max.y - min.y, max.x - min.x)
-      const position = new Vector3(
-        min.x + target.scale.x / 2,
-        min.y + target.scale.y / 2,
-        target.position.z,
-      )
-      target.position.copy(position)
-      target.scale.copy(scale)
-    },
-    [],
-  )
   const colorTheme = useTheme()
 
   useMarkupBounds({ target: s1, element: socials1, callback })
