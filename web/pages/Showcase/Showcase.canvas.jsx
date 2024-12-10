@@ -74,7 +74,9 @@ export const Showcase = forwardRef(function Showcase(
   }))
 
   useEffect(() => {
-    setSun([cubeScene, gallery][current - 1].current.sun)
+    if ([cubeScene, gallery][current - 1].current.sun) {
+      setSun([cubeScene, gallery][current - 1].current.sun)
+    }
   }, [current, setSun])
 
   return (
