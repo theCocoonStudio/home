@@ -15,6 +15,7 @@ export const useMarkupBounds = (
     element: elementRef,
     callback: compute,
     camera: customCamera,
+    pause = false,
   } = {},
   [...dependencies] = [],
 ) => {
@@ -41,7 +42,9 @@ export const useMarkupBounds = (
         targetRef.current,
         customCamera || defaultCamera,
       )
+
       const viewportVec2 = new Vector2(canvasWidth, canvasHeight)
+
       const viewBoundsPPWU = getViewBoundsPPWU(
         customCamera || defaultCamera,
         distance,
@@ -82,6 +85,6 @@ export const useMarkupBounds = (
    * 2. change in passed-in dependencies
    */
   useEffect(() => {
-    resizeCallback()
-  }, [resizeCallback, ...dependencies]) // eslint-disable-line
+    !pause && resizeCallback()
+  }, [pause, resizeCallback, ...dependencies]) // eslint-disable-line
 }
