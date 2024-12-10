@@ -1,31 +1,33 @@
-import { useContext, useEffect, useLayoutEffect, useRef } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { ResizeEventContext } from '../context/ResizeEventContext'
 
-export const useResizeEvent = (element, callback, options) => {
+export const useResizeEvent = (
+  element,
+  callback,
+  { resizeObserverOptions: options } = {},
+) => {
   const { entries, subscribe, unsubscribe } = useContext(ResizeEventContext)
 
-  const ref = useRef()
-
-  useLayoutEffect(() => {
-    ref.current =
-      typeof element === 'string'
-        ? document.getElementById(element)
-        : element.current
-  }, [element])
+  const elementRef = useMemo(
+    () =>
+      typeof element === 'string' ? document.getElementById(element) : element,
+    [element],
+  )
 
   useEffect(() => {
-    subscribe(ref, options)
-    return () => {
-      unsubscribe(ref)
+    if (elementRef) {
+      subscribe(elementRef, options)
     }
-  }, [element, options, subscribe, unsubscribe])
-
-  useEffect(() => {
-    for (const entry of entries) {
-      if (entry.target === ref.current) {
-        callback(entry)
+    return () => {
+      if (elementRef) {
+        unsubscribe(elementRef)
       }
     }
-  }, [callback, entries])
-  return ref
+  }, [elementRef, options, subscribe, unsubscribe])
+
+  useEffect(() => {
+    if (entries.includes(elementRef)) {
+      callback(elementRef)
+    }
+  }, [entries]) // eslint-disable-line
 }

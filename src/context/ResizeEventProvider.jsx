@@ -5,7 +5,11 @@ export const ResizeEventProvider = ({ children }) => {
   const [entries, setEntries] = useState([])
   const refs = useRef([]) // make sure unsubscribing doesn't remove listener for other consumers (i.e. keep consumer count for each ref and check before subscribing/unsubscribing)
   const callback = useCallback((rawEntries) => {
-    setEntries(rawEntries)
+    const targets = []
+    for (const entry of rawEntries) {
+      targets.push(entry.target)
+    }
+    setEntries(targets)
   }, [])
   const observer = useMemo(() => new ResizeObserver(callback), [callback])
 
@@ -13,11 +17,9 @@ export const ResizeEventProvider = ({ children }) => {
     (element, options) => {
       // direct reference to element
       const ref =
-        typeof element === 'string'
-          ? document.getElementById(element)
-          : element.current
+        typeof element === 'string' ? document.getElementById(element) : element
       // whether element is subcribed by a previous consumer
-      const toObserve = !refs.current.contains(ref)
+      const toObserve = !refs.current.includes(ref)
       // add subscription unconditionally to keep track of multiple consumers when unsibscribing
       refs.current.push(ref)
       // conditionally observe element if not previously subscribed
@@ -32,20 +34,20 @@ export const ResizeEventProvider = ({ children }) => {
     (element) => {
       // direct reference to element
       const ref =
-        typeof element === 'string'
-          ? document.getElementById(element)
-          : element.current
+        typeof element === 'string' ? document.getElementById(element) : element
       // unconditionally remove subscription reference
       const index = refs.current.indexOf(ref)
       if (index < 0) {
         throw new Error(
-          'useResizeEvent: unsubscribe(element) invocation error - no active subscriptions recorded.',
+          'ResizeEventProvider: unsubscribe(element) invocation error - no active subscriptions recorded.',
         )
       } else {
-        refs.current.splice(index, 1)
+        if (refs.current.length > 0) {
+          refs.current.splice(index, 1)
+        }
       }
       // conditionally unobserve element if no active subscriptions remain
-      const toUnobserve = !refs.current.contains(ref)
+      const toUnobserve = !refs.current.includes(ref)
       if (toUnobserve) {
         observer.unobserve(ref)
       }
