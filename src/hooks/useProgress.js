@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { MathUtils } from 'three'
 
 export const useProgress = (

@@ -29,5 +29,5 @@ export const useResizeEvent = (
     if (entries.includes(elementRef)) {
       callback(elementRef)
     }
-  }, [entries]) // eslint-disable-line
+  }, [callback, elementRef, entries])
 }

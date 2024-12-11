@@ -85,6 +85,11 @@ export const useMarkupBounds = (
    * 2. change in passed-in dependencies
    */
   useEffect(() => {
-    !pause && resizeCallback()
+    !pause && [...dependencies].length > 0 && resizeCallback()
   }, [pause, resizeCallback, ...dependencies]) // eslint-disable-line
+
+  /* if no dependencies, runs on each render */
+  useEffect(() => {
+    !pause && [...dependencies].length < 1 && resizeCallback()
+  })
 }
