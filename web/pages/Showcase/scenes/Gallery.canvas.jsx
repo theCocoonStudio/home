@@ -26,7 +26,7 @@ import { setScaleXYZOfY } from 'web/helpers/use2DBoundsScaleUtils'
 import { MeshBasicMaterial } from 'three'
 
 export const Gallery = forwardRef(function Gallery(
-  { bufferTime, setSun, time, renderPriority },
+  { bufferTime, time, renderPriority },
   forwardedRef,
 ) {
   const group = useRef()
@@ -124,7 +124,6 @@ export const Gallery = forwardRef(function Gallery(
   useImperativeHandle(
     forwardedRef,
     () => ({
-      sun: dragonflyPic.current,
       inactive: (delta) => {
         damp(group.current.position, 'x', 10, bufferTime, delta)
         reflector.current.position.y = -10
@@ -159,19 +158,6 @@ export const Gallery = forwardRef(function Gallery(
     }
     return () => clearInterval(id)
   }, [current, pause, time])
-
-  useEffect(() => {
-    if (current === 2) {
-      setSun(
-        [
-          spidePic.current,
-          kitesPic.current,
-          dragonflyPic.current,
-          cloudPic.current,
-        ][index - 1],
-      )
-    }
-  }, [current, index, setSun])
 
   return (
     <group ref={group} visible={visible}>
