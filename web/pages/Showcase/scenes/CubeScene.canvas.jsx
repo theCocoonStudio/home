@@ -1,13 +1,15 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { DoubleSide, Vector2 } from 'three'
-
+import { usePageControls } from 'web/hooks/usePageControls'
+import { folder, useControls } from 'leva'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
 import { GradientTexture } from '@react-three/drei'
@@ -15,9 +17,8 @@ import { damp } from 'maath/easing'
 import { useMarkup } from '../../../hooks/useMarkup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../../hooks/useTheme'
-import { useControls } from 'leva'
-import { usePageControls } from '../../../hooks/usePageControls'
 import { useMarkupBounds } from 'src/hooks'
+import { SuspendedEnvironment } from 'web/components/SuspendedEnvironment.canvas'
 
 const meshCallback = ({ target, min, max, ppwu }) => {
   target.scale.setComponent(0, max.x - min.x)
@@ -40,7 +41,7 @@ const _opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { bufferTime, active, renderPriority, forceSource },
+  { bufferTime, active, renderPriority, setEffectsProps },
   forwardedRef,
 ) {
   const meshRef = useRef()
@@ -57,7 +58,7 @@ export const CubeScene = forwardRef(function CubeScene(
   } = useMarkup()
 
   const {
-    state: { pause, menu },
+    state: { pause, menu, current },
   } = useShowcase()
   const colorTheme = useTheme()
 
@@ -79,7 +80,74 @@ export const CubeScene = forwardRef(function CubeScene(
   const pauseRef = useRef(false)
   const center = useRef(new Vector2(0.5, 0))
 
-  const { store1, store2 } = usePageControls()
+  const { store1, store2, store3 } = usePageControls()
+
+  const [{ godRaysExposure, godRaysWeight, forceSource, preset }, set] =
+    useControls(
+      () => ({
+        GodRays: folder(
+          {
+            godRaysExposure: {
+              value: 0.5,
+              label: 'exposure',
+            },
+            godRaysWeight: {
+              value: 0.8,
+              label: 'weight',
+            },
+          },
+          { collapsed: true },
+        ),
+        Simulation: folder(
+          {
+            forceSource: {
+              value: 'cube',
+              label: 'force',
+              options: ['mouse'],
+            },
+          },
+          { collapsed: true },
+        ),
+        Environment: folder(
+          {
+            preset: {
+              value: 'studio',
+              label: 'lights',
+              options: [
+                'apartment',
+                'city',
+                'dawn',
+                'forest',
+                'lobby',
+                'night',
+                'park',
+                'sunset',
+                'warehouse',
+              ],
+            },
+          },
+          { collapsed: true },
+        ),
+      }),
+      { store: store3 },
+    )
+  useEffect(() => {
+    if (current === 1) {
+      set({
+        preset: 'studio',
+        godRaysExposure: 0.5,
+        godRaysWeight: 0.8,
+        forceSource: 'cube',
+      })
+    }
+  }, [current, set])
+  useEffect(() => {
+    setEffectsProps({
+      sun: meshRef.current,
+      godRaysExposure,
+      godRaysWeight,
+    })
+  }, [godRaysExposure, godRaysWeight, setEffectsProps])
   const {
     poissonIterations: iterations_poisson,
     viscousIterations: iterations_viscous,
@@ -142,7 +210,6 @@ export const CubeScene = forwardRef(function CubeScene(
   useImperativeHandle(
     forwardedRef,
     () => ({
-      sun: meshRef.current,
       inactive: (delta) => {
         smoothTime.current = bufferTime
         damp(group.current.position, 'x', -20, bufferTime, delta)
@@ -182,38 +249,50 @@ export const CubeScene = forwardRef(function CubeScene(
       center.current.y = menu ? 0.5 : 0
     }
   }, renderPriority)
+  const { scene: mainScene } = useThree(({ scene }) => ({
+    scene,
+  }))
   return (
-    <group ref={group}>
-      <RubiksCube
-        renderPriority={renderPriority}
-        colorTheme={colorTheme}
-        ref={cube}
-        scale={0.18}
-        physics={false}
-        itemScale={0.6}
-        position={[0, 0, -2]}
-        rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
-        pause={pauseRef}
-        visible={active}
-        store={store2}
-        setGradientColors={setGradientColors}
+    <>
+      <SuspendedEnvironment
+        preset={preset}
+        background={false}
+        environmentIntensity={[1, 0.5, 1, 1, 1][current - 1]}
+        environmentRotation={[0, -Math.PI, 0]}
+        scene={mainScene}
       />
+      <group ref={group}>
+        <RubiksCube
+          renderPriority={renderPriority}
+          colorTheme={colorTheme}
+          ref={cube}
+          scale={0.18}
+          physics={false}
+          itemScale={0.6}
+          position={[0, 0, -2]}
+          rotation={[-Math.PI / 6, -Math.PI / 4, 0]}
+          pause={pauseRef}
+          visible={active}
+          store={store2}
+          setGradientColors={setGradientColors}
+        />
 
-      <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial
-          side={DoubleSide}
-          transparent
-          alphaMap={texture}
-          map={texture}
-        >
-          <GradientTexture
-            stops={[0, 0.5, 1]} // As many stops as you want
-            colors={gradientColors} // Colors need to match the number of stops
-            size={1024} // Size is optional, default = 1024
-          />
-        </meshBasicMaterial>
-      </mesh>
-    </group>
+        <mesh ref={meshRef} position-z={-15} visible={active} scale={0}>
+          <planeGeometry args={[1, 1]} />
+          <meshBasicMaterial
+            side={DoubleSide}
+            transparent
+            alphaMap={texture}
+            map={texture}
+          >
+            <GradientTexture
+              stops={[0, 0.5, 1]} // As many stops as you want
+              colors={gradientColors} // Colors need to match the number of stops
+              size={1024} // Size is optional, default = 1024
+            />
+          </meshBasicMaterial>
+        </mesh>
+      </group>
+    </>
   )
 })
