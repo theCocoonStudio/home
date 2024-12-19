@@ -26,7 +26,7 @@ const callback = ({ target, element, min, max, ppwu, contentRect }) => {
   target.scale.copy(scale)
 }
 export const FooterHUD = forwardRef(function FooterHud(
-  { progressColor, count, time, bufferTime, setElapsed, renderPriority },
+  { renderPriority },
   forwardedRef,
 ) {
   const s1 = useRef()
@@ -58,7 +58,16 @@ export const FooterHUD = forwardRef(function FooterHud(
   } = useMarkup()
 
   const {
-    state: { pause, menu, current },
+    state: {
+      pause,
+      menu,
+      current,
+      progressColor,
+      count,
+      time,
+      bufferTime,
+      setElapsedFunc: setElapsed,
+    },
     setState: { pause: setPause },
   } = useShowcase()
 

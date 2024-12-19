@@ -6,7 +6,7 @@ import { Showcase } from '../Showcase/Showcase'
 
 export const App = function App() {
   const footer = useRef()
-
+  const nav = useRef()
   const socials1 = useRef()
   const socials2 = useRef()
   const socials3 = useRef()
@@ -43,11 +43,12 @@ export const App = function App() {
     settings5,
     footerInfo,
     footer,
+    nav,
   })
 
   return (
     <>
-      <Nav className='space-mono-regular' />
+      <Nav ref={nav} className='space-mono-regular' />
       <div id='app'>
         <Showcase />
       </div>

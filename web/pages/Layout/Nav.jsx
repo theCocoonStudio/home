@@ -12,8 +12,8 @@ import Home from '@tabler/icons-react/dist/esm/icons/IconCube'
 
 export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
   return (
-    <div {...props} className={`${styles.nav}`}>
-      <div className={`${styles.navContent} content`} ref={forwardRef}>
+    <div ref={forwardRef} {...props} className={`${styles.nav}`}>
+      <div className={`${styles.navContent} content`}>
         <div className={`${styles.title}`}>
           <div className={`${styles.sub}`}>
             <ButtonGroup className={`${styles.icon}`}>

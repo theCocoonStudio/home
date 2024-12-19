@@ -19,6 +19,7 @@ import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../../hooks/useTheme'
 import { useMarkupBounds } from 'src/hooks'
 import { SuspendedEnvironment } from 'web/components/SuspendedEnvironment.canvas'
+import { GodRays } from '@react-three/postprocessing'
 
 const meshCallback = ({ target, min, max, ppwu }) => {
   target.scale.setComponent(0, max.x - min.x)
@@ -41,7 +42,7 @@ const _opts = {
 }
 
 export const CubeScene = forwardRef(function CubeScene(
-  { bufferTime, active, renderPriority, setEffectsProps },
+  { bufferTime, active, renderPriority, setEffects },
   forwardedRef,
 ) {
   const meshRef = useRef()
@@ -142,12 +143,15 @@ export const CubeScene = forwardRef(function CubeScene(
     }
   }, [current, set])
   useEffect(() => {
-    setEffectsProps({
-      sun: meshRef.current,
-      godRaysExposure,
-      godRaysWeight,
-    })
-  }, [godRaysExposure, godRaysWeight, setEffectsProps])
+    setEffects(
+      <GodRays
+        sun={meshRef.current}
+        exposure={godRaysExposure}
+        weight={godRaysWeight}
+        blur
+      />,
+    )
+  }, [godRaysExposure, godRaysWeight, setEffects])
   const {
     poissonIterations: iterations_poisson,
     viscousIterations: iterations_viscous,
@@ -257,7 +261,7 @@ export const CubeScene = forwardRef(function CubeScene(
       <SuspendedEnvironment
         preset={preset}
         background={false}
-        environmentIntensity={[1, 0.5, 1, 1, 1][current - 1]}
+        environmentIntensity={1}
         environmentRotation={[0, -Math.PI, 0]}
         scene={mainScene}
       />

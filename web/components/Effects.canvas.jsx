@@ -14,13 +14,7 @@ import {
 import { BlendFunction } from 'postprocessing'
 // import { LayerMaterial, Color, Depth } from 'lamina'
 
-export const Effects = ({
-  current,
-  sun,
-  godRaysExposure,
-  godRaysWeight,
-  renderPriority,
-}) => {
+export const Effects = ({ renderPriority, children, ...props }) => {
   const { camera: mainCamera, scene: mainScene } = useThree(
     ({ scene, camera }) => ({ scene, camera }),
   )
@@ -32,15 +26,17 @@ export const Effects = ({
       scene={mainScene}
       camera={mainCamera}
       renderPriority={renderPriority}
+      {...props}
     >
-      {[1, 2].includes(current) && sun && (
+      {children}
+      {/*   {[1, 2].includes(current) && sun && (
         <GodRays
           sun={sun}
           exposure={godRaysExposure}
           weight={godRaysWeight}
           blur
         />
-      )}
+      )} */}
       {/*   <Bloom
         luminanceThreshold={0.0}
         mipmapBlur
@@ -52,7 +48,7 @@ export const Effects = ({
         brightness={0} // brightness. min: -1, max: 1
         contrast={-0.2} // contrast: min -1, max: 1
       /> */}
-      {/* <Vignette opacity={0.7} /> */}
+      {/* <Vignette darkness={0.5} offset={0.8} /> */}
       {/*  <ColorAverage blendFunction={BlendFunction.DST} /> */}
       {/*  <DepthOfField
         focusDistance={1} // where to focus

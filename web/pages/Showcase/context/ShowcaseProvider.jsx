@@ -1,13 +1,25 @@
 import { ShowcaseContext } from './ShowcaseContext'
-import { useEffect, useMemo, useState, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import { useGlobalState } from 'web/hooks/useGlobalState'
+import { useTheme } from '../../../hooks/useTheme'
 
+const showcaseOptions = { count: 5, time: 10, bufferTime: 0.2 }
 export const ShowcaseProvider = ({ children }) => {
+  const { count, time, bufferTime } = showcaseOptions
+  const colorTheme = useTheme()
+  // global state
+  const {
+    state: { ready },
+  } = useGlobalState()
+  // showcase state
   const [isPending, startTransition] = useTransition()
   const [loaded, setLoaded] = useState(false)
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(true)
   const [current, setCurrent] = useState(1)
+  const [progressColor, setProgressColor] = useState(colorTheme.slate)
+  const progressRef = useRef()
+  const [setElapsedFunc, setSetElapsedFunc] = useState()
 
   const state = useMemo(
     () => ({
@@ -16,15 +28,40 @@ export const ShowcaseProvider = ({ children }) => {
       pause,
       current,
       loaded,
+      progressColor,
+      progressRef,
+      count,
+      time,
+      bufferTime,
+      setElapsedFunc,
     }),
-    [current, isPending, loaded, menu, pause],
+    [
+      bufferTime,
+      count,
+      current,
+      isPending,
+      loaded,
+      menu,
+      pause,
+      progressColor,
+      setElapsedFunc,
+      time,
+    ],
   )
   const setState = useMemo(
     () => ({
       menu: (newState) => startTransition(() => setMenu(newState)),
       pause: (newState) => startTransition(() => setPause(newState)),
       current: (newState) => startTransition(() => setCurrent(newState)),
+      progressColor: (newState) =>
+        startTransition(() => setProgressColor(newState)),
       loaded: setLoaded,
+      elapsedFunc: (func) => {
+        setSetElapsedFunc(() => func)
+      },
+      progressRef: (ref) => {
+        progressRef.current = ref.current
+      },
     }),
     [],
   )
@@ -38,10 +75,6 @@ export const ShowcaseProvider = ({ children }) => {
   )
 
   // global ready state behaviour
-  const {
-    state: { ready },
-  } = useGlobalState()
-
   useEffect(() => {
     setPause(!ready)
   }, [ready])

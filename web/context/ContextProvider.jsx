@@ -8,6 +8,11 @@ import { useCreateStore } from 'leva'
 import { Loader } from 'web/components/Loader'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 
+const renderOrder = Object.freeze({
+  footerHud: 2,
+  showcase: 1,
+  global: 1,
+})
 export const ContextProvider = ({ children, theme }) => {
   // global state
   const [app, setApp] = useState('showcase')
@@ -28,6 +33,7 @@ export const ContextProvider = ({ children, theme }) => {
     () => ({
       app,
       ready,
+      renderOrder,
     }),
     [app, ready],
   )
@@ -86,11 +92,11 @@ export const ContextProvider = ({ children, theme }) => {
         <ThemeContext.Provider value={themeContextValue}>
           <MarkupContext.Provider value={refsValue}>
             <GlobalStateContext.Provider value={globalStateValue}>
-              <ShowcaseProvider>
-                <ResizeEventProvider>
+              <ResizeEventProvider>
+                <ShowcaseProvider>
                   <Suspense fallback={null}>{children}</Suspense>
-                </ResizeEventProvider>
-              </ShowcaseProvider>
+                </ShowcaseProvider>
+              </ResizeEventProvider>
             </GlobalStateContext.Provider>
           </MarkupContext.Provider>
         </ThemeContext.Provider>
