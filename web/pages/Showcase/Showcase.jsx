@@ -44,13 +44,13 @@ export const Showcase = function Showcase() {
   const controlTheme = useMemo(
     () => ({
       colors: {
-        elevation1: colorTheme.midnight,
-        elevation2: colorTheme.gunmetal,
-        elevation3: colorTheme.midnight,
+        elevation1: [colorTheme.midnight, colorTheme.grey][current - 1],
+        elevation2: [colorTheme.gunmetal, colorTheme.black][current - 1],
+        elevation3: [colorTheme.midnight, colorTheme.grey][current - 1],
         highlight2: colorTheme.white,
         highlight1: colorTheme.white,
         highlight3: colorTheme.white,
-        accent2: colorTheme.slate,
+        accent2: [colorTheme.gunmetal, colorTheme.black][current - 1],
         accent1: colorTheme.white,
       },
       radii: {
@@ -77,8 +77,10 @@ export const Showcase = function Showcase() {
     [
       colorTheme.midnight,
       colorTheme.gunmetal,
+      colorTheme.black,
       colorTheme.white,
       colorTheme.slate,
+      current,
     ],
   )
 

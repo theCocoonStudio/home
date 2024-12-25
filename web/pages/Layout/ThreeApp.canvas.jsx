@@ -7,7 +7,11 @@ const ThreeApp = forwardRef(function ThreeApp({ ...props }, ref) {
     <Canvas
       shadows
       camera={{ position: [0, 12, 7], fov: 35 }}
-      gl={{ clearColor: 0x000000, autoClear: false }}
+      gl={{
+        clearColor: 0x000000,
+        autoClear: false,
+        shadowMap: { enabled: true },
+      }}
       ref={ref}
       {...props}
     >

@@ -24,11 +24,11 @@ export const Page = function Page() {
         <FooterHUD renderPriority={renderOrder.footerHud} />
       </Hud>
       {/* r3f globals (will be Showcase globals) */}
-      {effects && (
-        <Effects renderPriority={renderOrder.global} {...effectComposerProps}>
-          {effects}
-        </Effects>
-      )}
+
+      <Effects renderPriority={renderOrder.global} {...effectComposerProps}>
+        {effects}
+      </Effects>
+
       <Performance colorTheme={colorTheme} />
 
       {/* Showcase slides */}

@@ -13,6 +13,7 @@ const theme = {
   slate: '#134643', // green (success)
   white: '#ffffff',
   black: '#101010',
+  grey: '#202020',
   red: '#330000', // errors
 }
 

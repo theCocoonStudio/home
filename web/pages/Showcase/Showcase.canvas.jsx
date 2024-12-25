@@ -98,7 +98,7 @@ export const Showcase = function Showcase({ setEffects, renderPriority }) {
 
       {current === 2 && (
         <>
-          <fog attach='fog' args={[colorTheme.black, 0, 2.3]} />
+          <fog attach='fog' args={[colorTheme.black, 0, 4.5]} />
           <color attach='background' args={[colorTheme.black]} />
         </>
       )}
@@ -122,6 +122,7 @@ export const Showcase = function Showcase({ setEffects, renderPriority }) {
           active={current === 2}
           bufferTime={bufferTime}
           time={time}
+          setEffects={setEffects}
         />
       )}
     </>
