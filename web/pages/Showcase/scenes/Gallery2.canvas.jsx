@@ -2,7 +2,6 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { Wall } from 'web/components/Wall.canvas'
 import { Display } from 'web/components/Display.canvas'
 import { OrbitControls, useHelper, Text } from '@react-three/drei'
-
 import { useTheme } from '../../../hooks/useTheme'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { SuspendedEnvironment } from 'web/components/SuspendedEnvironment.canvas'
@@ -15,10 +14,8 @@ export const Gallery = forwardRef(function Gallery(
   forwardedRef,
 ) {
   const group = useRef()
-  const photo = useRef()
   const light = useRef()
   const text = useRef()
-  const wallRef = useRef()
 
   const {
     state: { current, pause, menu },
@@ -40,7 +37,7 @@ export const Gallery = forwardRef(function Gallery(
   const { scene: mainScene } = useThree(({ scene }) => ({
     scene,
   }))
-  const { store3 } = usePageControls()
+  const { store3, store2, store1 } = usePageControls()
 
   const [{ preset }, set] = useControls(
     () => ({
@@ -67,12 +64,55 @@ export const Gallery = forwardRef(function Gallery(
     }),
     { store: store3 },
   )
+  /*   const [{ material }, set2] = useControls(
+    () => ({
+      Print: folder(
+        {
+          material: {
+            value: 'canvas',
+            label: 'material',
+            options: ['metal', 'backlit'],
+          },
+        },
+        { collapsed: true },
+      ),
+    }),
+    { store: store2 },
+  ) */
+  const [{ type, sample, material }, set3] = useControls(
+    () => ({
+      Media: folder(
+        {
+          type: {
+            value: 'photo',
+            label: 'type',
+            options: ['video', 'graphic'],
+          },
+          sample: {
+            value: 'dragonfly',
+            label: 'sample',
+            options: ['clouds', 'spider', 'kites'],
+          },
+        },
+        { collapsed: true },
+      ),
+      Print: folder({
+        material: {
+          value: 'canvas',
+          label: 'material',
+          options: ['metal', 'backlit'],
+        },
+      }),
+    }),
+    { store: store1 },
+  )
 
   useEffect(() => {
     if (current === 2) {
       set({ preset: 'sunset' })
+      set3({ material: 'canvas', type: 'photo' })
     }
-  }, [current, set])
+  }, [current, set, set3])
 
   const scene = useThree(({ scene }) => scene)
   useEffect(() => {
@@ -107,7 +147,7 @@ export const Gallery = forwardRef(function Gallery(
       />
       <group ref={group} position={[0, 0, -0.3]}>
         <Wall />
-        <Display setEffects={setEffects} type={'canvas'} />
+        <Display setEffects={setEffects} type={material} image={sample} />
       </group>
       <OrbitControls />
     </>

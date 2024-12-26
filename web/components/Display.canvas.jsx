@@ -17,18 +17,33 @@ import { FrontSide } from 'three'
 import { Bloom, GodRays } from '@react-three/postprocessing'
 
 export const Display = forwardRef(function Display(
-  { setEffects, screenFactor = 1.007, type = 'canvas', image = 0, ...props },
+  {
+    setEffects,
+    screenFactor = 1.007,
+    type = 'canvas',
+    image = 'dragonfly',
+    ...props
+  },
   ref,
 ) {
   const mesh = useRef()
   useImperativeHandle(ref, () => mesh.current, [])
   // TODO useTexture.preload at correct time
   const textures = useTexture([cloudsUrl, dragonflyUrl, kitesUrl, spiderUrl])
+  const texture = useMemo(() => {
+    const keys = {
+      clouds: 0,
+      dragonfly: 1,
+      kites: 2,
+      spider: 3,
+    }
+    const key = keys[image]
+    return textures[key]
+  }, [image, textures])
   const aspect = useMemo(
-    () =>
-      textures[image].source.data.width / textures[image].source.data.height,
+    () => texture.source.data.width / texture.source.data.height,
 
-    [image, textures],
+    [texture.source.data.height, texture.source.data.width],
   )
 
   useEffect(() => {
@@ -59,27 +74,23 @@ export const Display = forwardRef(function Display(
         {/* <meshStandardMaterial map={spider} shadowSide={FrontSide} /> */}
         {type === 'backlit' && (
           <BacklitMaterial
-            map={textures[image]}
+            map={texture}
             shadowSide={FrontSide}
             aspect={aspect}
-            emissiveMap={textures[image]}
+            emissiveMap={texture}
             emissive='#fff'
             emissiveIntensity={1}
           />
         )}
         {type === 'canvas' && (
           <CanvasMaterial
-            map={textures[image]}
+            map={texture}
             shadowSide={FrontSide}
             aspect={aspect}
           />
         )}
         {type === 'metal' && (
-          <MetalMaterial
-            map={textures[image]}
-            shadowSide={FrontSide}
-            aspect={aspect}
-          />
+          <MetalMaterial map={texture} shadowSide={FrontSide} aspect={aspect} />
         )}
       </mesh>
       {type === 'backlit' && (

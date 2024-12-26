@@ -85,17 +85,45 @@ export const Showcase = function Showcase() {
   )
 
   const levaProps = useMemo(
-    () => ({
-      titleBar: {
-        filter: false,
-        title: <div>Fluid Simulation Controls</div>,
-        drag: false,
+    () => [
+      {
+        titleBar: {
+          filter: false,
+          title: (
+            <div>
+              {['Fluid Simulation Controls', 'Product Controls'][current - 1]}
+            </div>
+          ),
+          drag: false,
+        },
+        fill: true,
+        theme: controlTheme,
+        collapsed: { collapsed: false, onChange: () => {} },
       },
-      fill: true,
-      theme: controlTheme,
-      collapsed: { collapsed: false, onChange: () => {} },
-    }),
-    [controlTheme],
+      {
+        titleBar: {
+          filter: false,
+          title: (
+            <div>{['Color Controls', 'Lighting Controls'][current - 1]}</div>
+          ),
+          drag: false,
+        },
+        fill: true,
+        theme: controlTheme,
+        collapsed: { collapsed: false, onChange: () => {} },
+      },
+      {
+        titleBar: {
+          filter: false,
+          title: <div>Scene Controls</div>,
+          drag: false,
+        },
+        fill: true,
+        theme: controlTheme,
+        collapsed: { collapsed: false, onChange: () => {} },
+      },
+    ],
+    [controlTheme, current],
   )
 
   const { store1, store2, store3 } = usePageControls()
@@ -162,7 +190,7 @@ export const Showcase = function Showcase() {
         <div>
           <Leva
             store={store1}
-            {...levaProps}
+            {...levaProps[0]}
             /*   theme={myTheme} // you can pass a custom theme (see the styling section)
       fill // default = false,  true makes the pane fill the parent dom node it's rendered in
       flat // default = false,  true removes border radius and shadow
@@ -173,26 +201,10 @@ export const Showcase = function Showcase() {
           />
         </div>
         <div>
-          <LevaPanel
-            store={store2}
-            {...levaProps}
-            titleBar={{
-              filter: false,
-              title: <div>Color Controls</div>,
-              drag: false,
-            }}
-          />
+          <LevaPanel store={store2} {...levaProps[1]} />
         </div>
         <div>
-          <LevaPanel
-            store={store3}
-            {...levaProps}
-            titleBar={{
-              filter: false,
-              title: <div>Scene Controls</div>,
-              drag: false,
-            }}
-          />
+          <LevaPanel store={store3} {...levaProps[2]} />
         </div>
         <div className={`${styles.exitContainer}`} onClick={toggleMenu}>
           <div className={`${styles.exit}`}>
