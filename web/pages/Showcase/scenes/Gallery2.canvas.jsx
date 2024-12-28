@@ -39,7 +39,7 @@ export const Gallery = forwardRef(function Gallery(
   }))
   const { store3, store2, store1 } = usePageControls()
 
-  const [{ preset }, set] = useControls(
+  const [{ preset, facade }, set] = useControls(
     () => ({
       Environment: folder(
         {
@@ -61,24 +61,33 @@ export const Gallery = forwardRef(function Gallery(
         },
         { collapsed: true },
       ),
+      Facade: folder(
+        {
+          facade: {
+            value: 'carbon',
+            label: 'material',
+            options: ['brick'],
+          },
+        },
+        { collapsed: true },
+      ),
     }),
     { store: store3 },
   )
-  /*   const [{ material }, set2] = useControls(
+  const [{ intensity }, set2] = useControls(
     () => ({
-      Print: folder(
+      'Directional Light': folder(
         {
-          material: {
-            value: 'canvas',
-            label: 'material',
-            options: ['metal', 'backlit'],
+          intensity: {
+            value: 8,
+            label: 'intensity',
           },
         },
         { collapsed: true },
       ),
     }),
     { store: store2 },
-  ) */
+  )
   const [{ type, sample, material }, set3] = useControls(
     () => ({
       Media: folder(
@@ -109,10 +118,11 @@ export const Gallery = forwardRef(function Gallery(
 
   useEffect(() => {
     if (current === 2) {
-      set({ preset: 'sunset' })
+      set({ preset: 'sunset', facade: 'carbon' })
+      set2({ intensity: 8 })
       set3({ material: 'canvas', type: 'photo' })
     }
-  }, [current, set, set3])
+  }, [current, set, set2, set3])
 
   const scene = useThree(({ scene }) => scene)
   useEffect(() => {
@@ -135,7 +145,7 @@ export const Gallery = forwardRef(function Gallery(
         position={[-1.5, 1, 0.5]}
         castShadow
         ref={light}
-        args={[colorTheme.white, 8]}
+        args={[colorTheme.white, intensity]}
       />
 
       <SuspendedEnvironment
@@ -146,7 +156,7 @@ export const Gallery = forwardRef(function Gallery(
         scene={mainScene}
       />
       <group ref={group} position={[0, 0, -0.3]}>
-        <Wall />
+        <Wall facade={facade} />
         <Display setEffects={setEffects} type={material} image={sample} />
       </group>
       <OrbitControls />

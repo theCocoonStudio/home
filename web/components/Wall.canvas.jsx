@@ -1,8 +1,6 @@
 import { forwardRef } from 'react'
 import { BrickMaterial } from 'web/components/BrickMaterial.canvas'
-import { CanvasMaterial } from 'web/components/CanvasMaterial.canvas'
-import { BacklitMaterial } from 'web/components/BacklitMaterial.canvas'
-import { MetalMaterial } from 'web/components/MetalMaterial.canvas'
+import { CarbonMaterial } from 'web/components/CarbonMaterial.canvas'
 
 export const Wall = forwardRef(function Wall(
   { facade = 'brick', ...props },
@@ -17,7 +15,8 @@ export const Wall = forwardRef(function Wall(
       {...props}
     >
       <planeGeometry args={[1, 1]} />
-      <BrickMaterial color='#441e1b' />
+      {facade === 'brick' && <BrickMaterial color='#441e1b' />}
+      {facade === 'carbon' && <CarbonMaterial />}
     </mesh>
   )
 })
