@@ -76,10 +76,10 @@ export const Showcase = function Showcase() {
     }),
     [
       colorTheme.midnight,
+      colorTheme.grey,
       colorTheme.gunmetal,
       colorTheme.black,
       colorTheme.white,
-      colorTheme.slate,
       current,
     ],
   )

@@ -66,7 +66,7 @@ export const Gallery = forwardRef(function Gallery(
           facade: {
             value: 'carbon',
             label: 'material',
-            options: ['brick'],
+            options: ['brick', 'plaster'],
           },
         },
         { collapsed: true },
@@ -105,13 +105,16 @@ export const Gallery = forwardRef(function Gallery(
         },
         { collapsed: true },
       ),
-      Print: folder({
-        material: {
-          value: 'canvas',
-          label: 'material',
-          options: ['metal', 'backlit'],
+      Print: folder(
+        {
+          material: {
+            value: 'canvas',
+            label: 'material',
+            options: ['metal', 'backlit'],
+          },
         },
-      }),
+        { collapsed: true },
+      ),
     }),
     { store: store1 },
   )
@@ -152,7 +155,7 @@ export const Gallery = forwardRef(function Gallery(
         preset={preset}
         background={false}
         environmentIntensity={1}
-        environmentRotation={[-Math.PI / 8, -Math.PI, 0]}
+        /* environmentRotation={[-Math.PI / 8, -Math.PI, 0]} */
         scene={mainScene}
       />
       <group ref={group} position={[0, 0, -0.3]}>
