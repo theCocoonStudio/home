@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { PerspectiveCamera, Preload } from '@react-three/drei'
+import { Preload } from '@react-three/drei'
 import { useMarkup } from '../../hooks/useMarkup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { useTheme } from '../../hooks/useTheme'
 /* import { Gallery } from './scenes/Gallery.canvas' */
 import { Gallery } from './scenes/Gallery2.canvas'
 import { CubeScene } from './scenes/CubeScene.canvas'
+import { Repository } from './scenes/Repository.canvas'
 import { useFrame } from '@react-three/fiber'
 import { useProgress } from 'src/hooks'
 import { useGlobalState } from 'web/hooks/useGlobalState'
@@ -39,12 +40,22 @@ export const Showcase = function Showcase({ setEffects, renderPriority }) {
   // imperative -> declarative progress transitions
   const progressCallback = useCallback(
     (progress, curr) => {
-      const newColor = [colorTheme.slate, colorTheme.black][curr - 1]
+      const newColor = [
+        colorTheme.slate,
+        colorTheme.black,
+        colorTheme.charcoal,
+      ][curr - 1]
       document.documentElement.style.setProperty('--progress', newColor)
       setCurrent(curr)
       setProgressColor(newColor)
     },
-    [colorTheme.black, colorTheme.slate, setCurrent, setProgressColor],
+    [
+      colorTheme.black,
+      colorTheme.charcoal,
+      colorTheme.slate,
+      setCurrent,
+      setProgressColor,
+    ],
   )
   // progress state
   const { progressRef, setElapsed } = useProgress(
@@ -93,38 +104,35 @@ export const Showcase = function Showcase({ setEffects, renderPriority }) {
   return (
     <>
       <Preload all />
-
-      <PerspectiveCamera makeDefault position-z={1} />
-
-      {current === 2 && (
-        <>
-          <fog attach='fog' args={[colorTheme.black, 0, 4.5]} />
-          <color attach='background' args={[colorTheme.black]} />
-        </>
-      )}
-      {current === 1 && (
-        <>
-          <color attach='background' args={[colorTheme.black]} />
+      {
+        [
           <CubeScene
+            key='cubeScene'
             renderPriority={renderPriority}
             ref={cubeScene}
             active={current === 1}
             bufferTime={bufferTime}
             setEffects={setEffects}
-          />
-        </>
-      )}
-
-      {current === 2 && (
-        <Gallery
-          renderPriority={renderPriority}
-          ref={gallery}
-          active={current === 2}
-          bufferTime={bufferTime}
-          time={time}
-          setEffects={setEffects}
-        />
-      )}
+          />,
+          <Gallery
+            key='gallery'
+            renderPriority={renderPriority}
+            ref={gallery}
+            active={current === 2}
+            bufferTime={bufferTime}
+            time={time}
+            setEffects={setEffects}
+          />,
+          <Repository
+            key='repository'
+            renderPriority={renderPriority}
+            active={current === 2}
+            bufferTime={bufferTime}
+            time={time}
+            setEffects={setEffects}
+          />,
+        ][current - 1]
+      }
     </>
   )
 }

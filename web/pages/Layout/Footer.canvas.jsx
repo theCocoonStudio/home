@@ -163,7 +163,7 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={s3}
-        targetColor={colorTheme.purple}
+        targetColor={colorTheme.charcoal}
         colorTheme={colorTheme}
         renderPriority={renderPriority}
       >
@@ -171,7 +171,7 @@ export const FooterHUD = forwardRef(function FooterHud(
       </Icon>
       <Icon
         ref={s4}
-        targetColor={colorTheme.charcoal}
+        targetColor={colorTheme.purple}
         colorTheme={colorTheme}
         renderPriority={renderPriority}
       >

@@ -15,6 +15,7 @@ const theme = {
   black: '#101010',
   grey: '#202020',
   red: '#330000', // errors
+  charcoalTint: '#3D4F60',
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(

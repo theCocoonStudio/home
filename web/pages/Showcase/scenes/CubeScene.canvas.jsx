@@ -12,7 +12,7 @@ import { usePageControls } from 'web/hooks/usePageControls'
 import { folder, useControls } from 'leva'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { RubiksCube } from 'web/components/RubiksCube.canvas'
-import { GradientTexture } from '@react-three/drei'
+import { GradientTexture, PerspectiveCamera } from '@react-three/drei'
 import { damp } from 'maath/easing'
 import { useMarkup } from '../../../hooks/useMarkup'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
@@ -256,8 +256,10 @@ export const CubeScene = forwardRef(function CubeScene(
   const { scene: mainScene } = useThree(({ scene }) => ({
     scene,
   }))
+
   return (
     <>
+      <PerspectiveCamera makeDefault position-z={1} />
       <SuspendedEnvironment
         preset={preset}
         background={false}
@@ -265,6 +267,7 @@ export const CubeScene = forwardRef(function CubeScene(
         environmentRotation={[0, -Math.PI, 0]}
         scene={mainScene}
       />
+      <color attach='background' args={[colorTheme.black]} />
       <group ref={group}>
         <RubiksCube
           renderPriority={renderPriority}

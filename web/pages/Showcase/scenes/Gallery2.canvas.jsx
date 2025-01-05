@@ -1,16 +1,17 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { Wall } from 'web/components/Wall.canvas'
 import { Display } from 'web/components/Display.canvas'
-import { OrbitControls, useHelper, Text } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { useTheme } from '../../../hooks/useTheme'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { SuspendedEnvironment } from 'web/components/SuspendedEnvironment.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
 import { usePageControls } from 'web/hooks/usePageControls'
 import { folder, useControls } from 'leva'
+import { damp, damp3 } from 'maath/easing'
 
 export const Gallery = forwardRef(function Gallery(
-  { bufferTime, time, renderPriority, camera, setEffects },
+  { bufferTime, time, renderPriority, setEffects },
   forwardedRef,
 ) {
   const group = useRef()
@@ -127,7 +128,6 @@ export const Gallery = forwardRef(function Gallery(
     }
   }, [current, set, set2, set3])
 
-  const scene = useThree(({ scene }) => scene)
   useEffect(() => {
     light.current.shadow.camera.near = 0.1
     light.current.shadow.camera.far = 5
@@ -137,9 +137,18 @@ export const Gallery = forwardRef(function Gallery(
     light.current.shadow.camera.bottom = -1
     /* scene.add(new CameraHelper(light.current.shadow.camera)) */
   }, [])
-
-  useFrame((state, delta) => {
-    /* light.current.position.x += delta / 2 */
+  const cam = useRef()
+  const elapsed = useRef(0)
+  useFrame(({ clock }, delta) => {
+    /*    if (!pause) {
+      elapsed.current += delta
+      damp(
+        cam.current.position,
+        'x',
+        1.5 * Math.sin(elapsed.current / 2),
+        delta,
+      )
+    } */
   })
 
   return (
@@ -158,11 +167,14 @@ export const Gallery = forwardRef(function Gallery(
         /* environmentRotation={[-Math.PI / 8, -Math.PI, 0]} */
         scene={mainScene}
       />
-      <group ref={group} position={[0, 0, -0.3]}>
+      <group ref={group} position={[0, 0, -0.8]}>
         <Wall facade={facade} />
         <Display setEffects={setEffects} type={material} image={sample} />
       </group>
+      <fog attach='fog' args={[colorTheme.black, 0, 14]} />
+      <color attach='background' args={[colorTheme.black]} />
       <OrbitControls />
+      <PerspectiveCamera ref={cam} fov={45} makeDefault position-z={1} />
     </>
   )
 })
