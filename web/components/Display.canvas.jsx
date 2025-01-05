@@ -8,13 +8,14 @@ import {
 import { CanvasMaterial } from 'web/components/CanvasMaterial.canvas'
 import { BacklitMaterial } from 'web/components/BacklitMaterial.canvas'
 import { MetalMaterial } from 'web/components/MetalMaterial.canvas'
-import { MeshTransmissionMaterial, useTexture } from '@react-three/drei'
+import { MeshTransmissionMaterial, Text, useTexture } from '@react-three/drei'
 import cloudsUrl from 'public/clouds.jpg'
 import dragonflyUrl from 'public/dragonfly.jpeg'
 import kitesUrl from 'public/kites.jpg'
 import spiderUrl from 'public/dragonfly2.jpeg'
 import { FrontSide } from 'three'
 import { Bloom, GodRays } from '@react-three/postprocessing'
+import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Regular.ttf'
 
 export const Display = forwardRef(function Display(
   {
@@ -40,11 +41,11 @@ export const Display = forwardRef(function Display(
     const key = keys[image]
     return textures[key]
   }, [image, textures])
-  const aspect = useMemo(
-    () => texture.source.data.width / texture.source.data.height,
-
-    [texture.source.data.height, texture.source.data.width],
-  )
+  const { aspect, factor } = useMemo(() => {
+    const aspect = texture.source.data.width / texture.source.data.height
+    const factor = 0.7
+    return { aspect, factor }
+  }, [texture.source.data.height, texture.source.data.width])
 
   useEffect(() => {
     if (type === 'backlit') {
@@ -68,8 +69,24 @@ export const Display = forwardRef(function Display(
     }
   }, [ref, setEffects, type])
   return (
-    <>
-      <mesh ref={mesh} scale={[aspect * 0.7, 0.7, 0.05]} castShadow {...props}>
+    <group>
+      <Text
+        font={Font}
+        fontSize={0.03}
+        anchorX={'right'}
+        anchorY={'top'}
+        position-x={0.45}
+        position-y={0.32}
+        position-z={0.05}
+      >
+        {`dragonfly\ncanvas #001\n${Math.floor(40 * factor * aspect)}" x ${Math.floor(40 * factor)}"`}
+      </Text>
+      <mesh
+        ref={mesh}
+        scale={[aspect * factor, factor, 0.05]}
+        castShadow
+        {...props}
+      >
         <boxGeometry args={[1, 1, 1]} />
         {/* <meshStandardMaterial map={spider} shadowSide={FrontSide} /> */}
         {type === 'backlit' && (
@@ -109,6 +126,6 @@ export const Display = forwardRef(function Display(
           />
         </mesh>
       )}
-    </>
+    </group>
   )
 })
