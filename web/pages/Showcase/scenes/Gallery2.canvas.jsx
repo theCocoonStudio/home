@@ -16,7 +16,6 @@ export const Gallery = forwardRef(function Gallery(
 ) {
   const group = useRef()
   const light = useRef()
-  const text = useRef()
 
   const {
     state: { current, pause, menu },

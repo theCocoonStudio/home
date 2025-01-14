@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styles from 'web/styles/Showcase.module.css'
 import { Leva, LevaPanel } from 'leva'
 import { useMarkup } from '../../hooks/useMarkup'
@@ -131,8 +138,9 @@ export const Showcase = function Showcase() {
   const [Tracking, setTracking] = useState(trackingArr[0])
   const [styleKey, setStyleKey] = useState('home')
 
-  useEffect(() => {
-    setStyleKey(['home', 'gallery'][current - 1])
+  useLayoutEffect(() => {
+    setStyleKey(['home', 'gallery', 'repo'][current - 1])
+    console.log('setting stylekey ', ['home', 'gallery', 'repo'][current - 1])
     setDescription(descriptionArr[current - 1])
     setTracking(trackingArr[current - 1])
   }, [current])
@@ -152,23 +160,23 @@ export const Showcase = function Showcase() {
         <div className={`${styles.refContainer}`}>
           <div
             ref={tracking}
-            className={`${styles.tracking} ${styles[`tracking-${styleKey}`]} ${menu ? styles[`tracking-${styleKey}-open`] : ''}`}
+            className={`${styles.tracking} ${styles[`tracking-${styleKey}`] || ''} ${menu ? styles[`tracking-${styleKey}-open`] : ''}`}
           >
             {Tracking}
           </div>
           <div
             ref={description}
-            className={`disable-scrollbars ${styles.description} ${styles[`description-${styleKey}`]} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
+            className={`disable-scrollbars ${styles.description} ${styles[`description-${styleKey}`] || ''} ${menu ? styles[`description-${styleKey}-open`] : ''} `}
           >
             {Description}
           </div>
           <div
             ref={code}
-            className={`${styles.code} ${styles[`code-${styleKey}`]} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
+            className={`${styles.code} ${styles[`code-${styleKey}`] || ''} ${menu ? styles[`code-${styleKey}-open`] : ''}`}
           />
           <div
             ref={options}
-            className={`${styles.options} ${styles[`options-${styleKey}`]} `}
+            className={`${styles.options} ${styles[`options-${styleKey}`] || ''} `}
           />
           <div
             id='showcaseProgress'

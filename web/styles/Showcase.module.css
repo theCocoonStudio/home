@@ -44,23 +44,15 @@
   left: 60%;
   bottom: 0;
 }
-.tracking-gallery {
-  left: 0%;
-  right: 60%;
-  bottom: calc(20% + 10px + (2 * var(--mainElementPadding)));
 
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: end;
-  margin: 0 2em;
-  column-gap: 1em;
-  > * {
-    flex-shrink: 1;
-    flex-grow: 1;
-    margin-top: 2em;
-    aspect-ratio: 1/1;
-  }
+.tracking-repo,
+.tracking-gallery {
+  left: 75%;
+  transform: translate(-50%, -50%);
+  top: 50%;
+
+  width: 40%;
+  height: 75%;
 }
 
 .tracking-home-open {

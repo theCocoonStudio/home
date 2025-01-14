@@ -126,7 +126,7 @@ export const Showcase = function Showcase({ setEffects, renderPriority }) {
           <Repository
             key='repository'
             renderPriority={renderPriority}
-            active={current === 2}
+            active={current === 3}
             bufferTime={bufferTime}
             time={time}
             setEffects={setEffects}

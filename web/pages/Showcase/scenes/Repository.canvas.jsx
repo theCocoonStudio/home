@@ -1,25 +1,22 @@
 import {
   AccumulativeShadows,
-  Backdrop,
-  Environment,
-  Float,
-  Lightformer,
   OrbitControls,
   PerspectiveCamera,
   RandomizedLight,
 } from '@react-three/drei'
 import { useTheme } from '../../../hooks/useTheme'
-import { useEffect, useRef } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { CameraHelper } from 'three'
+import { useEffect, useRef, useState } from 'react'
+import { useThree } from '@react-three/fiber'
+import { Vector2 } from 'three'
+import { useMarkup } from '../../../hooks/useMarkup'
+import { Browser } from 'web/components/Browser.canvas'
 
 export const Repository = function Repository() {
   const colorTheme = useTheme()
-  const mesh = useRef()
+  const [floorY, setFloorY] = useState()
   const scene = useThree(({ scene }) => scene)
   const light = useRef()
   useEffect(() => {
-    console.log(scene)
     light.current.shadow.camera.near = 0.1
     light.current.shadow.camera.far = 5
     light.current.shadow.camera.right = 1
@@ -27,40 +24,45 @@ export const Repository = function Repository() {
     light.current.shadow.camera.top = 1
     light.current.shadow.camera.bottom = -1
     /* scene.add(new CameraHelper(light.current.shadow.camera)) */
-    scene.fog = null
+    /* scene.fog = null */
   }, [scene])
+
+  const {
+    refs: {
+      showcase: { tracking },
+    },
+  } = useMarkup()
+
+  const browser = useRef()
   return (
     <>
-      <mesh ref={mesh} castShadow scale={0.4} position-y={0.5} position-z={0}>
-        <boxGeometry />
-        <meshStandardMaterial color={colorTheme.charcoalTint} />
-      </mesh>
+      <Browser
+        ref={browser}
+        colorTheme={colorTheme}
+        tracking={tracking}
+        setFloorY={setFloorY}
+      />
+      <fog attach='fog' args={[colorTheme.charcoalTint, 0, 10]} />
+      <PerspectiveCamera makeDefault position-z={2} />
+      <directionalLight
+        ref={light}
+        position={[-2, 3, 1]}
+        target={browser.current}
+        args={[colorTheme.white, 4.5]}
+      />
 
-      <PerspectiveCamera makeDefault position-z={2} position-y={1} />
-      <directionalLight
-        ref={light}
-        position={[2, 4, 1]}
-        target={mesh.current}
-        args={[colorTheme.white, 4.5]}
-      />
-      <directionalLight
-        ref={light}
-        position={[-2, 4, -1]}
-        target={mesh.current}
-        args={[colorTheme.white, 4.5]}
-      />
       {/* <ambientLight intensity={1} /> */}
       <AccumulativeShadows
-        position={[0, 0, 0]}
-        frames={100}
-        alphaTest={0.9}
+        position={[0, floorY - 0.1, 0]}
+        /* frames={100} */
+        alphaTest={0.8}
         scale={15}
       >
         <RandomizedLight
-          amount={7}
-          radius={14}
+          amount={10}
+          radius={12}
           ambient={0.1}
-          position={[1, 4.5, 1]}
+          position={[0, 4, 0]}
         />
       </AccumulativeShadows>
 
