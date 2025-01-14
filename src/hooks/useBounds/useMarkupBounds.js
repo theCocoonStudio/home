@@ -60,6 +60,7 @@ export const useMarkupBounds = (
           min,
           max,
           ppwu,
+          camera: customCamera || defaultCamera,
         })
       } else {
         throw new Error('useBounds: please include an options.compute argument')
