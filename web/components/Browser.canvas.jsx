@@ -1,7 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
-import { Vector3 } from 'three'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
-import { Html, Svg, Text } from '@react-three/drei'
+import { Svg, Text } from '@react-three/drei'
 import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Bold.ttf'
 import Component from 'web/public/icons/components.svg'
 import { setTargetProps, setLabelProps } from '../helpers/useMarkupBoundsUtils'
@@ -74,12 +73,12 @@ export const Browser = forwardRef(function Browser(
       )
 
       icon.current.position.set(
-        labelMin.x,
+        labelMin.x - titleHeight / 4,
         labelPosition.y + titleHeight / 4,
         labelMax.z + 0.01,
       )
       title.current.position.set(
-        labelMin.x + titleHeight / 2 + padding / 4,
+        labelMin.x + titleHeight / 4 + padding / 4,
         labelPosition.y,
         labelMax.z + 0.01,
       )
