@@ -140,7 +140,6 @@ export const Showcase = function Showcase() {
 
   useLayoutEffect(() => {
     setStyleKey(['home', 'gallery', 'repo'][current - 1])
-    console.log('setting stylekey ', ['home', 'gallery', 'repo'][current - 1])
     setDescription(descriptionArr[current - 1])
     setTracking(trackingArr[current - 1])
   }, [current])

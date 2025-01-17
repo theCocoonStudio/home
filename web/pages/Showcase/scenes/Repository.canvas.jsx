@@ -7,9 +7,8 @@ import {
 import { useTheme } from '../../../hooks/useTheme'
 import { useEffect, useRef, useState } from 'react'
 import { useThree } from '@react-three/fiber'
-import { Vector2 } from 'three'
 import { useMarkup } from '../../../hooks/useMarkup'
-import { Browser } from 'web/components/Browser.canvas'
+import { Browser } from 'web/components/BrowserComponent.canvas'
 
 export const Repository = function Repository() {
   const colorTheme = useTheme()
@@ -54,7 +53,7 @@ export const Repository = function Repository() {
       {/* <ambientLight intensity={1} /> */}
       <AccumulativeShadows
         position={[0, floorY - 0.1, 0]}
-        /* frames={100} */
+        frames={1}
         alphaTest={0.8}
         scale={15}
       >
