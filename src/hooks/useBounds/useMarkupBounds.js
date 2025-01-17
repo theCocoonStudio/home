@@ -17,8 +17,9 @@ export const useMarkupBounds = (
     camera: customCamera,
     pause = false,
   } = {},
-  [...dependencies] = [],
+  depArray,
 ) => {
+  const [...dependencies] = depArray || []
   // independent state
   const { camera: defaultCamera } = useThree(({ camera }) => ({
     camera,
@@ -81,16 +82,17 @@ export const useMarkupBounds = (
   useResizeEvent(elementRef ? elementRef.current : canvas, resizeCallback)
 
   /*
-   * run callback on:
+   * if dependency array passed in, run callback on:
    * 1. resizeCallback changes: canvas resize, compute function change, target/element ref changes not ref.current), camera change
-   * 2. change in passed-in dependencies
+   * 2. pause changes
+   * 3. change in passed-in dependencies, if any
    */
   useEffect(() => {
-    !pause && [...dependencies].length > 0 && resizeCallback()
-  }, [pause, resizeCallback, ...dependencies]) // eslint-disable-line
+    !pause && depArray && resizeCallback()
+  }, [pause, resizeCallback, ...dependencies])
 
   /* if no dependencies, runs on each render */
   useEffect(() => {
-    !pause && [...dependencies].length < 1 && resizeCallback()
+    !pause && !depArray && resizeCallback()
   })
 }
