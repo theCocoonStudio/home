@@ -9,9 +9,10 @@ import {
   setLabelProps,
   setTargetProps,
 } from '../../helpers/useMarkupBoundsUtils'
-import { Svg, Text } from '@react-three/drei'
+import { Text } from '@react-three/drei'
 import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Bold.ttf'
 import ComponentIcon from 'web/public/icons/components.svg'
+import { Svg } from '../Svg.canvas'
 
 export const Component = forwardRef(function Component(
   {
@@ -20,8 +21,12 @@ export const Component = forwardRef(function Component(
     colorTheme,
     label = 'component',
     padding = 0.075,
-    labelHeight = 0.1,
+    labelHeight,
+    layerDepth,
+    layerDepthFactor,
+    margin,
     onResize,
+    transparent = false,
     labelProps,
     bodyProps,
     ...props
@@ -44,36 +49,45 @@ export const Component = forwardRef(function Component(
         max,
         labelHeight: labelHeight,
         boundsPadding: [padding, padding, padding, padding],
+        layerDepth,
+        layerDepthFactor,
+        margin,
       })
 
-      const labelData = setLabelProps({
-        target: browser.current,
-        min,
-        max,
-        labelHeight: labelHeight,
-        boundsPadding: [padding, 0, padding, 0],
-      })
+      const labelData =
+        labelHeight &&
+        setLabelProps({
+          target: browser.current,
+          min,
+          max,
+          labelHeight: labelHeight,
+          boundsPadding: [padding, 0, padding, 0],
+          layerDepth,
+          layerDepthFactor,
+        })
 
-      const {
-        bounds: { max: labelMax, min: labelMin },
-        position: labelPosition,
-      } = labelData
+      if (labelHeight) {
+        const {
+          bounds: { max: labelMax, min: labelMin },
+          position: labelPosition,
+        } = labelData
 
-      icon.current.position.set(
-        labelMin.x - labelHeight / 4,
-        labelPosition.y + labelHeight / 4,
-        labelMax.z + 0.01,
-      )
-      title.current.position.set(
-        labelMin.x + labelHeight / 4 + padding / 4,
-        labelPosition.y,
-        labelMax.z + 0.01,
-      )
+        icon.current.position.set(
+          labelMin.x - labelHeight / 4,
+          labelPosition.y + labelHeight / 4,
+          labelMax.z + 0.01,
+        )
+        title.current.position.set(
+          labelMin.x + labelHeight / 4 + padding / 4,
+          labelPosition.y,
+          labelMax.z + 0.01,
+        )
+      }
       if (typeof onResize === 'function') {
         onResize({ bodyData, labelData })
       }
     },
-    [labelHeight, padding, onResize],
+    [labelHeight, padding, layerDepth, layerDepthFactor, margin, onResize],
   )
 
   useEffect(() => {
@@ -84,33 +98,48 @@ export const Component = forwardRef(function Component(
 
   return (
     <group {...props} ref={group}>
-      <Text
-        font={Font}
-        fontSize={labelHeight / 2}
-        color={colorTheme.white}
-        anchorX='left'
-        anchorY='middle'
-        ref={title}
-      >
-        {label}
-      </Text>
-      <Svg
-        src={ComponentIcon}
-        ref={icon}
-        scale={((1 / 24) * labelHeight) / 2}
-        position={[0, 0.5, 0.1]}
-      />
-      <mesh ref={browser} castShadow {...labelProps}>
-        <boxGeometry />
-        <meshPhongMaterial
-          color={colorTheme.charcoal}
-          /* transparent
-              opacity={0.1} */
-        />
-      </mesh>
+      {labelHeight && (
+        <>
+          <Text
+            font={Font}
+            fontSize={labelHeight / 2}
+            color={colorTheme.white}
+            anchorX='left'
+            anchorY='middle'
+            ref={title}
+          >
+            {label}
+            <meshPhongMaterial
+              attach='material'
+              transparent={transparent}
+              opacity={transparent ? 0.1 : 1}
+            />
+          </Text>
+          <Svg
+            src={ComponentIcon}
+            ref={icon}
+            scale={((1 / 24) * labelHeight) / 2}
+            position={[0, 0.5, 0.1]}
+            strokeMaterial={{ opacity: transparent ? 0.1 : 1 }}
+          />
+
+          <mesh ref={browser} castShadow {...labelProps}>
+            <boxGeometry />
+            <meshPhongMaterial
+              color={colorTheme.charcoal}
+              transparent={transparent}
+              opacity={transparent ? 0.1 : 1}
+            />
+          </mesh>
+        </>
+      )}
       <mesh ref={mesh} castShadow {...bodyProps}>
         <boxGeometry />
-        <meshPhongMaterial color={colorTheme.white} transparent opacity={0.1} />
+        <meshPhongMaterial
+          color={colorTheme.white}
+          transparent={transparent}
+          opacity={transparent ? 0.1 : 1}
+        />
       </mesh>
       {children}
     </group>

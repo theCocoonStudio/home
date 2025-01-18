@@ -7,7 +7,6 @@ import {
 } from 'react'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { Component } from './PlantUML/Component.canvas'
-import { setTargetProps } from '../helpers/useMarkupBoundsUtils'
 
 export const Browser = forwardRef(function Browser(
   {
@@ -17,6 +16,7 @@ export const Browser = forwardRef(function Browser(
     padding = 0.075,
     labelHeight = 0.1,
     layerDepthFactor = 0.9,
+    transparent = false,
   },
   forwardedRef,
 ) {
@@ -30,7 +30,7 @@ export const Browser = forwardRef(function Browser(
   const api = useRef()
 
   useImperativeHandle(forwardedRef, () => component.current, [])
-
+  const [bodyBounds, setBodyBounds] = useState()
   const onResize = useCallback(
     ({
       labelData: {
@@ -41,6 +41,7 @@ export const Browser = forwardRef(function Browser(
         bounds: { max: browserMax, min: browserMin, length: browserLength },
       },
     }) => {
+      // label content
       exit.current.position.set(
         labelMax.x - exit.current.scale.x / 2,
         labelPos.y,
@@ -56,16 +57,13 @@ export const Browser = forwardRef(function Browser(
         maximize.current.position.y,
         maximize.current.position.z,
       )
-
-      setTargetProps({
-        target: heap.current,
+      // sub components
+      setBodyBounds({
+        max: browserMax.clone().setY(browserMax.y - browserLength.y / 2),
         min: browserMin,
-        max: browserMax,
-        margin: [0, browserLength.y / 2, 0, 0],
-        layerDepthFactor,
+        length: browserLength,
       })
-
-      setTargetProps({
+      /* setTargetProps({
         target: stack.current,
         min: browserMin,
         max: browserMax,
@@ -95,7 +93,7 @@ export const Browser = forwardRef(function Browser(
         max: browserMax,
         margin: [browserLength.x / 2, 0, 0, browserLength.y / 2 + padding],
         layerDepthFactor,
-      })
+      }) */
     },
     [labelHeight, padding, layerDepthFactor],
   )
@@ -126,24 +124,44 @@ export const Browser = forwardRef(function Browser(
       ref={component}
       colorTheme={colorTheme}
       label='browser'
+      labelHeight={0.1}
+      transparent={transparent}
     >
       <mesh ref={minimize} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial color={'green'} />
+        <meshPhongMaterial
+          color={'green'}
+          transparent={transparent}
+          opacity={transparent ? 0.1 : 1}
+        />
       </mesh>
       <mesh ref={maximize} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial color={'orange'} />
+        <meshPhongMaterial
+          color={'orange'}
+          transparent={transparent}
+          opacity={transparent ? 0.1 : 1}
+        />
       </mesh>
       <mesh ref={exit} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial color={'red'} />
+        <meshPhongMaterial
+          color={'red'}
+          transparent={transparent}
+          opacity={transparent ? 0.1 : 1}
+        />
       </mesh>
-      <mesh ref={heap} castShadow>
-        <boxGeometry />
-        <meshPhongMaterial color={colorTheme.charcoal} />
-      </mesh>
-      <mesh ref={stack} castShadow>
+      {bodyBounds && (
+        <Component
+          ref={heap}
+          bounds={bodyBounds}
+          colorTheme={colorTheme}
+          label='heap'
+          labelHeight={0.06}
+          layerDepthFactor={0.9}
+        />
+      )}
+      {/*     <mesh ref={stack} castShadow>
         <boxGeometry />
         <meshPhongMaterial color={colorTheme.charcoal} />
       </mesh>
@@ -154,7 +172,7 @@ export const Browser = forwardRef(function Browser(
       <mesh ref={api} castShadow>
         <boxGeometry />
         <meshPhongMaterial color={colorTheme.charcoal} />
-      </mesh>
+      </mesh> */}
     </Component>
   )
 })

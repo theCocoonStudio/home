@@ -40,6 +40,7 @@ export const Repository = function Repository() {
         colorTheme={colorTheme}
         tracking={tracking}
         setFloorY={setFloorY}
+        transparent
       />
       <fog attach='fog' args={[colorTheme.charcoalTint, 0, 10]} />
       <PerspectiveCamera makeDefault position-z={2} />
