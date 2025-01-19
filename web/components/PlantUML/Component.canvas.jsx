@@ -110,9 +110,9 @@ export const Component = forwardRef(function Component(
         mesh.current.material.transparent = true
         mesh.current.material.depthWrite = false
         mesh.current.material.needsUpdate = true
-        damp(mesh.current.material, 'opacity', 0.1, 0.5, delta)
+        damp(mesh.current.material, 'opacity', 0.1, 0.25, delta)
       } else {
-        damp(mesh.current.material, 'opacity', 1, 0.5, delta)
+        damp(mesh.current.material, 'opacity', 1, 0.25, delta)
         if (mesh.current.material.opacity > 0.99) {
           mesh.current.material.transparent = false
           mesh.current.material.depthWrite = true
