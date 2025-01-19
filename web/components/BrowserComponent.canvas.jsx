@@ -9,15 +9,7 @@ import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { Component } from './PlantUML/Component.canvas'
 
 export const Browser = forwardRef(function Browser(
-  {
-    setFloorY,
-    colorTheme,
-    tracking,
-    padding = 0.075,
-    labelHeight = 0.1,
-    layerDepthFactor = 0.9,
-    transparent = false,
-  },
+  { setFloorY, colorTheme, tracking, padding = 0.075, labelHeight = 0.1 },
   forwardedRef,
 ) {
   const component = useRef()
@@ -30,7 +22,11 @@ export const Browser = forwardRef(function Browser(
   const api = useRef()
 
   useImperativeHandle(forwardedRef, () => component.current, [])
-  const [bodyBounds, setBodyBounds] = useState()
+  const [heapBounds, setHeapBounds] = useState()
+  const [stackBounds, setStackBounds] = useState()
+  const [queueBounds, setQueueBounds] = useState()
+  const [apiBounds, setApiBounds] = useState()
+
   const onResize = useCallback(
     ({
       labelData: {
@@ -58,44 +54,42 @@ export const Browser = forwardRef(function Browser(
         maximize.current.position.z,
       )
       // sub components
-      setBodyBounds({
-        max: browserMax.clone().setY(browserMax.y - browserLength.y / 2),
+      setHeapBounds({
+        max: browserMax
+          .clone()
+          .setY(browserMax.y - browserLength.y / 2 - padding / 4)
+          .setX(browserMax.x - browserLength.x / 2 - padding / 4),
         min: browserMin,
         length: browserLength,
       })
-      /* setTargetProps({
-        target: stack.current,
-        min: browserMin,
-        max: browserMax,
-        margin: [
-          0,
-          0,
-          (browserLength.x * 3) / 4 + padding,
-          browserLength.y / 2 + padding,
-        ],
-        layerDepthFactor,
+      setStackBounds({
+        max: browserMax
+          .clone()
+          .setY(browserMax.y - browserLength.y / 2 - padding / 4)
+          .setX(browserMax.x - browserLength.x / 4 - padding / 4),
+        min: browserMin
+          .clone()
+          .setX(browserMax.x - browserLength.x / 2 + padding / 4),
+        length: browserLength,
       })
-      setTargetProps({
-        target: queue.current,
-        min: browserMin,
-        max: browserMax,
-        margin: [
-          browserLength.x / 4,
-          0,
-          browserLength.x / 2 + padding,
-          browserLength.y / 2 + padding,
-        ],
-        layerDepthFactor,
+      setQueueBounds({
+        max: browserMax
+          .clone()
+          .setY(browserMax.y - browserLength.y / 2 - padding / 4),
+        min: browserMin
+          .clone()
+          .setX(browserMax.x - browserLength.x / 4 + padding / 4),
+        length: browserLength,
       })
-      setTargetProps({
-        target: api.current,
-        min: browserMin,
-        max: browserMax,
-        margin: [browserLength.x / 2, 0, 0, browserLength.y / 2 + padding],
-        layerDepthFactor,
-      }) */
+      setApiBounds({
+        max: browserMax.clone(),
+        min: browserMin
+          .clone()
+          .setY(browserMax.y - browserLength.y / 2 + padding / 4),
+        length: browserLength,
+      })
     },
-    [labelHeight, padding, layerDepthFactor],
+    [labelHeight, padding],
   )
   const [bounds, setBounds] = useState({ min: undefined, max: undefined })
 
@@ -125,54 +119,63 @@ export const Browser = forwardRef(function Browser(
       colorTheme={colorTheme}
       label='browser'
       labelHeight={0.1}
-      transparent={transparent}
     >
       <mesh ref={minimize} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial
-          color={'green'}
-          transparent={transparent}
-          opacity={transparent ? 0.1 : 1}
-        />
+        <meshPhongMaterial color={'green'} />
       </mesh>
       <mesh ref={maximize} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial
-          color={'orange'}
-          transparent={transparent}
-          opacity={transparent ? 0.1 : 1}
-        />
+        <meshPhongMaterial color={'orange'} />
       </mesh>
       <mesh ref={exit} scale={labelHeight / 6}>
         <sphereGeometry />
-        <meshPhongMaterial
-          color={'red'}
-          transparent={transparent}
-          opacity={transparent ? 0.1 : 1}
-        />
+        <meshPhongMaterial color={'red'} />
       </mesh>
-      {bodyBounds && (
+      {heapBounds && (
         <Component
           ref={heap}
-          bounds={bodyBounds}
+          bounds={heapBounds}
           colorTheme={colorTheme}
           label='heap'
           labelHeight={0.06}
-          layerDepthFactor={0.9}
+          layerDepthFactor={0.85}
+          padding={padding / 2}
         />
       )}
-      {/*     <mesh ref={stack} castShadow>
-        <boxGeometry />
-        <meshPhongMaterial color={colorTheme.charcoal} />
-      </mesh>
-      <mesh ref={queue} castShadow>
-        <boxGeometry />
-        <meshPhongMaterial color={colorTheme.charcoal} />
-      </mesh>
-      <mesh ref={api} castShadow>
-        <boxGeometry />
-        <meshPhongMaterial color={colorTheme.charcoal} />
-      </mesh> */}
+      {stackBounds && (
+        <Component
+          ref={stack}
+          bounds={stackBounds}
+          colorTheme={colorTheme}
+          label='stack'
+          labelHeight={0.06}
+          layerDepthFactor={0.85}
+          padding={padding / 2}
+        />
+      )}
+      {queueBounds && (
+        <Component
+          ref={queue}
+          bounds={queueBounds}
+          colorTheme={colorTheme}
+          label='queue'
+          labelHeight={0.06}
+          layerDepthFactor={0.85}
+          padding={padding / 2}
+        />
+      )}
+      {apiBounds && (
+        <Component
+          ref={api}
+          bounds={apiBounds}
+          colorTheme={colorTheme}
+          label='API'
+          labelHeight={0.06}
+          layerDepthFactor={0.85}
+          padding={padding / 2}
+        />
+      )}
     </Component>
   )
 })

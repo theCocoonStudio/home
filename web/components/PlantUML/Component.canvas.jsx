@@ -4,6 +4,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react'
 import {
   setLabelProps,
@@ -13,6 +14,9 @@ import { Text } from '@react-three/drei'
 import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Bold.ttf'
 import ComponentIcon from 'web/public/icons/components.svg'
 import { Svg } from '../Svg.canvas'
+import { DoubleSide } from 'three'
+import { damp } from 'maath/easing'
+import { useFrame } from '@react-three/fiber'
 
 export const Component = forwardRef(function Component(
   {
@@ -26,7 +30,9 @@ export const Component = forwardRef(function Component(
     layerDepthFactor,
     margin,
     onResize,
-    transparent = false,
+
+    bodyColor,
+    labelColor,
     labelProps,
     bodyProps,
     ...props
@@ -96,6 +102,26 @@ export const Component = forwardRef(function Component(
     }
   }, [max, min, resize])
 
+  const [transparent, setTransparent] = useState(false)
+
+  useFrame((state, delta) => {
+    if (mesh.current) {
+      if (transparent) {
+        mesh.current.material.transparent = true
+        mesh.current.material.depthWrite = false
+        mesh.current.material.needsUpdate = true
+        damp(mesh.current.material, 'opacity', 0.1, 0.5, delta)
+      } else {
+        damp(mesh.current.material, 'opacity', 1, 0.5, delta)
+        if (mesh.current.material.opacity > 0.99) {
+          mesh.current.material.transparent = false
+          mesh.current.material.depthWrite = true
+          mesh.current.material.needsUpdate = true
+        }
+      }
+    }
+  })
+
   return (
     <group {...props} ref={group}>
       {labelHeight && (
@@ -109,36 +135,64 @@ export const Component = forwardRef(function Component(
             ref={title}
           >
             {label}
-            <meshPhongMaterial
-              attach='material'
-              transparent={transparent}
-              opacity={transparent ? 0.1 : 1}
-            />
+            <meshStandardMaterial attach='material' />
           </Text>
           <Svg
             src={ComponentIcon}
             ref={icon}
             scale={((1 / 24) * labelHeight) / 2}
             position={[0, 0.5, 0.1]}
-            strokeMaterial={{ opacity: transparent ? 0.1 : 1 }}
           />
 
           <mesh ref={browser} castShadow {...labelProps}>
             <boxGeometry />
-            <meshPhongMaterial
-              color={colorTheme.charcoal}
-              transparent={transparent}
-              opacity={transparent ? 0.1 : 1}
-            />
+            <meshStandardMaterial color={labelColor || colorTheme.charcoal} />
           </mesh>
         </>
       )}
-      <mesh ref={mesh} castShadow {...bodyProps}>
+      <mesh
+        ref={mesh}
+        {...bodyProps}
+        onPointerDown={(e) => {
+          setTransparent((prev) => {
+            // if clicked when transparent
+            if (prev) {
+              // if this is the farthest mesh
+              if (
+                e.intersections[e.intersections.length - 1].object ===
+                mesh.current
+              ) {
+                // make opaque
+                return !prev
+              } else {
+                // otherwise, don't change
+                return prev
+              }
+              // if clicked when opaque
+            } else {
+              // iterate intersections from closest to farthest
+              for (let i = 0; i < e.intersections.length; i++) {
+                // if a closer mesh exists
+                if (e.intersections[i].object !== mesh.current) {
+                  // if it's opaque, don't change
+                  if (
+                    e.intersections[i].object.material.transparent === false
+                  ) {
+                    return prev
+                  }
+                } else {
+                  // otherwise, make opaque
+                  return !prev
+                }
+              }
+            }
+          })
+        }}
+      >
         <boxGeometry />
-        <meshPhongMaterial
-          color={colorTheme.white}
-          transparent={transparent}
-          opacity={transparent ? 0.1 : 1}
+        <meshStandardMaterial
+          color={bodyColor || colorTheme.white}
+          side={DoubleSide}
         />
       </mesh>
       {children}
