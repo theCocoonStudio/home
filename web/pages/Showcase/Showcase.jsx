@@ -44,7 +44,7 @@ export const Showcase = function Showcase() {
   })
   const colorTheme = useTheme()
   const {
-    state: { menu, current },
+    state: { menu, current, pointer },
     setState: { menu: setMenu },
   } = useShowcase()
 
@@ -153,7 +153,7 @@ export const Showcase = function Showcase() {
   )
   return (
     <div
-      className={`${styles.container} ${menu ? styles[`container-open`] : ''}`}
+      className={`${styles.container} ${menu ? styles[`container-open`] : ''} ${pointer ? styles[`pointer`] : ''}`}
     >
       <div className={`${styles.main}`}>
         <div className={`${styles.refContainer}`}>

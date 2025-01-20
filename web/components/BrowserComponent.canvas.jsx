@@ -2,11 +2,13 @@ import {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { Component } from './PlantUML/Component.canvas'
+import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 
 export const Browser = forwardRef(function Browser(
   { setFloorY, colorTheme, tracking, padding = 0.075, labelHeight = 0.1 },
@@ -110,6 +112,23 @@ export const Browser = forwardRef(function Browser(
     [],
   )
 
+  const {
+    setState: { pointer: setPointer },
+  } = useShowcase()
+
+  const bodyProps = useMemo(
+    () => ({
+      onPointerOver: (e) => {
+        e.stopPropagation()
+        setPointer(true)
+      },
+      onPointerOut: (e) => {
+        e.stopPropagation()
+        setPointer(false)
+      },
+    }),
+    [setPointer],
+  )
   return (
     <Component
       position-z={-1}
@@ -119,6 +138,7 @@ export const Browser = forwardRef(function Browser(
       colorTheme={colorTheme}
       label='browser'
       labelHeight={0.1}
+      bodyProps={bodyProps}
     >
       <mesh ref={minimize} scale={labelHeight / 6}>
         <sphereGeometry />

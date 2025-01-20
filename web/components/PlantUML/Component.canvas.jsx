@@ -30,11 +30,11 @@ export const Component = forwardRef(function Component(
     layerDepthFactor,
     margin,
     onResize,
-
     bodyColor,
     labelColor,
     labelProps,
     bodyProps,
+    clickReveal = false,
     ...props
   },
   forwardedRef,
@@ -122,6 +122,39 @@ export const Component = forwardRef(function Component(
     }
   })
 
+  const onPointerDown = useCallback((e) => {
+    setTransparent((prev) => {
+      // if clicked when transparent
+      if (prev) {
+        // if this is the farthest mesh
+        if (
+          e.intersections[e.intersections.length - 1].object === mesh.current
+        ) {
+          // make opaque
+          return !prev
+        } else {
+          // otherwise, don't change
+          return prev
+        }
+        // if clicked when opaque
+      } else {
+        // iterate intersections from closest to farthest
+        for (let i = 0; i < e.intersections.length; i++) {
+          // if a closer mesh exists
+          if (e.intersections[i].object !== mesh.current) {
+            // if it's opaque, don't change
+            if (e.intersections[i].object.material.transparent === false) {
+              return prev
+            }
+          } else {
+            // otherwise, make opaque
+            return !prev
+          }
+        }
+      }
+    })
+  }, [])
+
   return (
     <group {...props} ref={group}>
       {labelHeight && (
@@ -153,41 +186,7 @@ export const Component = forwardRef(function Component(
       <mesh
         ref={mesh}
         {...bodyProps}
-        onPointerDown={(e) => {
-          setTransparent((prev) => {
-            // if clicked when transparent
-            if (prev) {
-              // if this is the farthest mesh
-              if (
-                e.intersections[e.intersections.length - 1].object ===
-                mesh.current
-              ) {
-                // make opaque
-                return !prev
-              } else {
-                // otherwise, don't change
-                return prev
-              }
-              // if clicked when opaque
-            } else {
-              // iterate intersections from closest to farthest
-              for (let i = 0; i < e.intersections.length; i++) {
-                // if a closer mesh exists
-                if (e.intersections[i].object !== mesh.current) {
-                  // if it's opaque, don't change
-                  if (
-                    e.intersections[i].object.material.transparent === false
-                  ) {
-                    return prev
-                  }
-                } else {
-                  // otherwise, make opaque
-                  return !prev
-                }
-              }
-            }
-          })
-        }}
+        onPointerDown={clickReveal ? onPointerDown : undefined}
       >
         <boxGeometry />
         <meshStandardMaterial

@@ -16,6 +16,7 @@ export const ShowcaseProvider = ({ children }) => {
   const [loaded, setLoaded] = useState(false)
   const [menu, setMenu] = useState(false)
   const [pause, setPause] = useState(true)
+  const [pointer, setPointer] = useState(false)
   const [current, setCurrent] = useState(1)
   const [progressColor, setProgressColor] = useState(colorTheme.slate)
   const progressRef = useRef()
@@ -26,6 +27,7 @@ export const ShowcaseProvider = ({ children }) => {
       isPending,
       menu,
       pause,
+      pointer,
       current,
       loaded,
       progressColor,
@@ -43,6 +45,7 @@ export const ShowcaseProvider = ({ children }) => {
       loaded,
       menu,
       pause,
+      pointer,
       progressColor,
       setElapsedFunc,
       time,
@@ -52,6 +55,7 @@ export const ShowcaseProvider = ({ children }) => {
     () => ({
       menu: (newState) => startTransition(() => setMenu(newState)),
       pause: (newState) => startTransition(() => setPause(newState)),
+      pointer: (newState) => startTransition(() => setPointer(newState)),
       current: (newState) => startTransition(() => setCurrent(newState)),
       progressColor: (newState) =>
         startTransition(() => setProgressColor(newState)),
