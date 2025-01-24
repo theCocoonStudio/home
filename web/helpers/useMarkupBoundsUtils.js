@@ -82,11 +82,15 @@ export const getLabelPropsXY = ({
   max,
   labelHeight = 0,
   boundsPadding: padding = [0, 0, 0, 0] /* left, top , right, bottom */,
+  margin = [0, 0, 0, 0] /* left, top , right, bottom */,
 }) => {
-  const scale = new Vector2(max.x - min.x, labelHeight)
+  const scale = new Vector2(
+    max.x - margin[2] - (min.x + margin[0]),
+    labelHeight,
+  )
   const position = new Vector2(
-    min.x + (max.x - min.x) / 2,
-    max.y - labelHeight / 2,
+    min.x + margin[0] + scale.x / 2,
+    max.y - labelHeight / 2 - margin[1],
   )
   const bounds = getBoundsXY({ scale, position, padding })
   return { position, scale, bounds }
@@ -96,6 +100,7 @@ export const setLabelPropsXY = ({
   target,
   min,
   max,
+  margin = [0, 0, 0, 0] /* left, top , right, bottom */,
   labelHeight = 0,
   boundsPadding = [0, 0, 0, 0] /* left, top , right, bottom */,
 }) => {
@@ -104,6 +109,7 @@ export const setLabelPropsXY = ({
     max,
     labelHeight,
     boundsPadding,
+    margin,
   })
   target.position.setX(position.x)
   target.position.setY(position.y)
@@ -117,12 +123,13 @@ export const setLabelProps = ({
   min,
   max,
   labelHeight = 0,
+  margin = [0, 0, 0, 0] /* left, top , right, bottom */,
   layerDepth = CONSTANTS.layerDepth,
   layerDepthFactor = CONSTANTS.layerDepthFactor,
   boundsPadding: padding = [0, 0, 0, 0] /* left, top , right, bottom */,
 }) => {
   target.scale.setZ(layerDepth * layerDepthFactor)
-  setLabelPropsXY({ target, min, max, labelHeight })
+  setLabelPropsXY({ target, min, max, labelHeight, margin })
   const scale = target.scale.clone()
   const position = target.position.clone()
   const bounds = getBounds({
@@ -176,5 +183,23 @@ export const getBounds = ({
       max.y - min.y,
       layerDepthFactor * scale.z,
     ),
+  }
+}
+
+export const addPadding = ({
+  min,
+  max,
+  padding /* left, top , right, bottom */,
+}) => {
+  const newMin = min.clone()
+  const newMax = max.clone()
+  min.x += padding[0]
+  min.y += padding[3]
+  max.x -= padding[1]
+  max.y -= padding[2]
+  return {
+    min: newMin,
+    max: newMax,
+    length: new Vector2(max.x - min.x, max.y - min.y),
   }
 }

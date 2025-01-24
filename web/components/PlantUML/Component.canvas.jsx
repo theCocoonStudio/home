@@ -34,7 +34,7 @@ export const Component = forwardRef(function Component(
     labelColor,
     labelProps,
     bodyProps,
-    clickReveal = false,
+    clickReveal = true,
     ...props
   },
   forwardedRef,
@@ -70,6 +70,7 @@ export const Component = forwardRef(function Component(
           boundsPadding: [padding, 0, padding, 0],
           layerDepth,
           layerDepthFactor,
+          margin,
         })
 
       if (labelHeight) {

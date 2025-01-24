@@ -22,12 +22,14 @@ export const Browser = forwardRef(function Browser(
   const stack = useRef()
   const queue = useRef()
   const api = useRef()
+  const runtime = useRef()
 
   useImperativeHandle(forwardedRef, () => component.current, [])
-  const [heapBounds, setHeapBounds] = useState()
-  const [stackBounds, setStackBounds] = useState()
-  const [queueBounds, setQueueBounds] = useState()
-  const [apiBounds, setApiBounds] = useState()
+  const [heapProps, setHeapProps] = useState()
+  const [stackProps, setStackProps] = useState()
+  const [queueProps, setQueueProps] = useState()
+  const [apiProps, setApiProps] = useState()
+  const [runtimeProps, setRuntimeProps] = useState()
 
   const onResize = useCallback(
     ({
@@ -56,43 +58,52 @@ export const Browser = forwardRef(function Browser(
         maximize.current.position.z,
       )
       // sub components
-      setHeapBounds({
-        max: browserMax
-          .clone()
-          .setY(browserMax.y - browserLength.y / 2 - padding / 4)
-          .setX(browserMax.x - browserLength.x / 2 - padding / 4),
-        min: browserMin,
-        length: browserLength,
+      setApiProps({
+        bounds: {
+          min: browserMin.clone().setY(browserMin.y + browserLength.y / 2),
+          max: browserMax,
+        },
+        margin: [0, 0, 0, padding / 4],
       })
-      setStackBounds({
-        max: browserMax
-          .clone()
-          .setY(browserMax.y - browserLength.y / 2 - padding / 4)
-          .setX(browserMax.x - browserLength.x / 4 - padding / 4),
-        min: browserMin
-          .clone()
-          .setX(browserMax.x - browserLength.x / 2 + padding / 4),
-        length: browserLength,
-      })
-      setQueueBounds({
-        max: browserMax
-          .clone()
-          .setY(browserMax.y - browserLength.y / 2 - padding / 4),
-        min: browserMin
-          .clone()
-          .setX(browserMax.x - browserLength.x / 4 + padding / 4),
-        length: browserLength,
-      })
-      setApiBounds({
-        max: browserMax.clone(),
-        min: browserMin
-          .clone()
-          .setY(browserMax.y - browserLength.y / 2 + padding / 4),
-        length: browserLength,
+      setRuntimeProps({
+        bounds: {
+          min: browserMin,
+          max: browserMax.clone().setY(browserMax.y - browserLength.y / 2),
+        },
+        margin: [0, padding / 4, 0, 0],
       })
     },
     [labelHeight, padding],
   )
+
+  const onRuntimeResize = useCallback(
+    ({
+      bodyData: {
+        bounds: { max, min, length },
+      },
+    }) => {
+      setHeapProps({
+        bounds: { min, max: max.clone().setX(max.x - length.x / 2) },
+        margin: [0, 0, padding / 4, 0],
+      })
+      setStackProps({
+        bounds: {
+          min: min.clone().setX(min.x + length.x / 2),
+          max: max.clone().setX(max.x - length.x / 4),
+        },
+        margin: [padding / 4, 0, padding / 4, 0],
+      })
+      setQueueProps({
+        bounds: {
+          min: min.clone().setX(min.x + (length.x * 3) / 4),
+          max: max.clone().setX(max.x),
+        },
+        margin: [padding / 4, 0, 0, 0],
+      })
+    },
+    [padding],
+  )
+
   const [bounds, setBounds] = useState({ min: undefined, max: undefined })
 
   const resizeCallback = useCallback(
@@ -134,6 +145,7 @@ export const Browser = forwardRef(function Browser(
       position-z={-1}
       bounds={bounds}
       onResize={onResize}
+      padding={padding}
       ref={component}
       colorTheme={colorTheme}
       label='browser'
@@ -152,48 +164,60 @@ export const Browser = forwardRef(function Browser(
         <sphereGeometry />
         <meshPhongMaterial color={'red'} />
       </mesh>
-      {heapBounds && (
+      {heapProps && (
         <Component
           ref={heap}
-          bounds={heapBounds}
           colorTheme={colorTheme}
           label='heap'
           labelHeight={0.06}
-          layerDepthFactor={0.85}
-          padding={padding / 2}
+          layerDepthFactor={0.85 ** 2}
+          padding={padding / 4}
+          {...heapProps}
         />
       )}
-      {stackBounds && (
+      {stackProps && (
         <Component
           ref={stack}
-          bounds={stackBounds}
           colorTheme={colorTheme}
           label='stack'
           labelHeight={0.06}
-          layerDepthFactor={0.85}
-          padding={padding / 2}
+          layerDepthFactor={0.85 ** 2}
+          padding={padding / 4}
+          {...stackProps}
         />
       )}
-      {queueBounds && (
+      {queueProps && (
         <Component
           ref={queue}
-          bounds={queueBounds}
           colorTheme={colorTheme}
           label='queue'
           labelHeight={0.06}
-          layerDepthFactor={0.85}
-          padding={padding / 2}
+          layerDepthFactor={0.85 ** 2}
+          padding={padding / 4}
+          {...queueProps}
         />
       )}
-      {apiBounds && (
+      {apiProps && (
         <Component
           ref={api}
-          bounds={apiBounds}
           colorTheme={colorTheme}
           label='API'
           labelHeight={0.06}
           layerDepthFactor={0.85}
           padding={padding / 2}
+          {...apiProps}
+        />
+      )}
+      {runtimeProps && (
+        <Component
+          ref={runtime}
+          colorTheme={colorTheme}
+          label='runtime'
+          onResize={onRuntimeResize}
+          labelHeight={0.06}
+          layerDepthFactor={0.85}
+          padding={padding / 2}
+          {...runtimeProps}
         />
       )}
     </Component>
