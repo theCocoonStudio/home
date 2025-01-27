@@ -9,6 +9,7 @@ import {
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { Component } from './PlantUML/Component.canvas'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
+import { Interface } from './PlantUML/Interface.canvas'
 
 export const Browser = forwardRef(function Browser(
   { setFloorY, colorTheme, tracking, padding = 0.075, labelHeight = 0.1 },
@@ -23,6 +24,12 @@ export const Browser = forwardRef(function Browser(
   const queue = useRef()
   const api = useRef()
   const runtime = useRef()
+  const setTimeoutRef = useRef()
+  const setIntervalRef = useRef()
+  const setAnimationRef = useRef()
+  const queueMicroTaskRef = useRef()
+  const eventCallbackRef = useRef()
+  const promiseResolveRef = useRef()
 
   useImperativeHandle(forwardedRef, () => component.current, [])
   const [heapProps, setHeapProps] = useState()
@@ -30,6 +37,7 @@ export const Browser = forwardRef(function Browser(
   const [queueProps, setQueueProps] = useState()
   const [apiProps, setApiProps] = useState()
   const [runtimeProps, setRuntimeProps] = useState()
+  const [interfaceProps, setInterfaceProps] = useState([])
 
   const onResize = useCallback(
     ({
@@ -106,6 +114,64 @@ export const Browser = forwardRef(function Browser(
 
   const [bounds, setBounds] = useState({ min: undefined, max: undefined })
 
+  const onApiResize = useCallback(
+    ({
+      bodyData: {
+        bounds: { max, min, length },
+      },
+    }) => {
+      setInterfaceProps([
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [
+            min.x + length.x / (2 * 3.3),
+            max.y - length.x / (2 * 3.3),
+            0,
+          ],
+        },
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [min.x + length.x / 2, max.y - length.x / (2 * 3.3), 0],
+        },
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [
+            max.x - length.x / (2 * 3.3),
+            max.y - length.x / (2 * 3.3),
+            0,
+          ],
+        },
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [
+            min.x + length.x / (2 * 3.3),
+            min.y + length.x / (2 * 3.3),
+            0,
+          ],
+        },
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [min.x + length.x / 2, min.y + length.x / (2 * 3.3), 0],
+        },
+        {
+          radius: length.x / (2 * 3.3),
+          labelRadius: 0.01,
+          position: [
+            max.x - length.x / (2 * 3.3),
+            min.y + length.x / (2 * 3.3),
+            0,
+          ],
+        },
+      ])
+    },
+    [],
+  )
+
   const resizeCallback = useCallback(
     ({ min, max }) => {
       setBounds({ min, max })
@@ -140,6 +206,7 @@ export const Browser = forwardRef(function Browser(
     }),
     [setPointer],
   )
+
   return (
     <Component
       position-z={-1}
@@ -198,15 +265,87 @@ export const Browser = forwardRef(function Browser(
         />
       )}
       {apiProps && (
-        <Component
-          ref={api}
-          colorTheme={colorTheme}
-          label='API'
-          labelHeight={0.06}
-          layerDepthFactor={0.85}
-          padding={padding / 2}
-          {...apiProps}
-        />
+        <>
+          <Component
+            ref={api}
+            colorTheme={colorTheme}
+            label='Executable Code API'
+            labelHeight={0.06}
+            layerDepthFactor={0.85}
+            padding={padding / 2}
+            type='folder'
+            onPointerDown={(transparentState) => {
+              setTimeoutRef.current.visible = transparentState
+              setIntervalRef.current.visible = transparentState
+              setAnimationRef.current.visible = transparentState
+              queueMicroTaskRef.current.visible = transparentState
+              eventCallbackRef.current.visible = transparentState
+              promiseResolveRef.current.visible = transparentState
+            }}
+            onResize={onApiResize}
+            {...apiProps}
+          />
+          {interfaceProps[0] && (
+            <Interface
+              ref={setTimeoutRef}
+              colorTheme={colorTheme}
+              label={'setTimeout'}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[0]}
+            />
+          )}
+          {interfaceProps[1] && (
+            <Interface
+              ref={setIntervalRef}
+              colorTheme={colorTheme}
+              label={'setInterval'}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[1]}
+            />
+          )}
+          {interfaceProps[2] && (
+            <Interface
+              ref={setAnimationRef}
+              colorTheme={colorTheme}
+              label={`reqAnimationFrame`}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[2]}
+            />
+          )}
+          {interfaceProps[3] && (
+            <Interface
+              ref={eventCallbackRef}
+              colorTheme={colorTheme}
+              label={`event callback`}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[3]}
+            />
+          )}
+          {interfaceProps[4] && (
+            <Interface
+              ref={queueMicroTaskRef}
+              colorTheme={colorTheme}
+              label={`queueMicrotask`}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[4]}
+            />
+          )}
+          {interfaceProps[5] && (
+            <Interface
+              ref={promiseResolveRef}
+              colorTheme={colorTheme}
+              label={`promise return`}
+              layerDepthFactor={0.85 ** 2}
+              fontSize={labelHeight / 3.5}
+              {...interfaceProps[5]}
+            />
+          )}
+        </>
       )}
       {runtimeProps && (
         <Component

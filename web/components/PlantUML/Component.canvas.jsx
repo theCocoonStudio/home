@@ -13,6 +13,7 @@ import {
 import { Text } from '@react-three/drei'
 import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Bold.ttf'
 import ComponentIcon from 'web/public/icons/components.svg'
+import FolderIcon from 'web/public/icons/folder.svg'
 import { Svg } from '../Svg.canvas'
 import { DoubleSide } from 'three'
 import { damp } from 'maath/easing'
@@ -23,18 +24,20 @@ export const Component = forwardRef(function Component(
     bounds: { min, max },
     children,
     colorTheme,
-    label = 'component',
+    label,
     padding = 0.075,
     labelHeight,
     layerDepth,
     layerDepthFactor,
     margin,
     onResize,
+    onPointerDown,
     bodyColor,
     labelColor,
     labelProps,
     bodyProps,
     clickReveal = true,
+    type = 'component',
     ...props
   },
   forwardedRef,
@@ -123,38 +126,44 @@ export const Component = forwardRef(function Component(
     }
   })
 
-  const onPointerDown = useCallback((e) => {
-    setTransparent((prev) => {
-      // if clicked when transparent
-      if (prev) {
-        // if this is the farthest mesh
-        if (
-          e.intersections[e.intersections.length - 1].object === mesh.current
-        ) {
-          // make opaque
-          return !prev
-        } else {
-          // otherwise, don't change
-          return prev
-        }
-        // if clicked when opaque
-      } else {
-        // iterate intersections from closest to farthest
-        for (let i = 0; i < e.intersections.length; i++) {
-          // if a closer mesh exists
-          if (e.intersections[i].object !== mesh.current) {
-            // if it's opaque, don't change
-            if (e.intersections[i].object.material.transparent === false) {
-              return prev
-            }
-          } else {
-            // otherwise, make opaque
+  const onPointerDownInternal = useCallback(
+    (e) => {
+      setTransparent((prev) => {
+        // if clicked when transparent
+        if (prev) {
+          // if this is the farthest mesh
+          if (
+            e.intersections[e.intersections.length - 1].object === mesh.current
+          ) {
+            // make opaque
+            onPointerDown && onPointerDown(!prev)
             return !prev
+          } else {
+            // otherwise, don't change
+            onPointerDown && onPointerDown(prev)
+            return prev
+          }
+          // if clicked when opaque
+        } else {
+          // iterate intersections from closest to farthest
+          for (let i = 0; i < e.intersections.length; i++) {
+            // if a closer mesh exists
+            if (e.intersections[i].object !== mesh.current) {
+              // if it's opaque, don't change
+              if (e.intersections[i].object.material.transparent === false) {
+                return prev
+              }
+            } else {
+              // otherwise, make opaque
+              onPointerDown && onPointerDown(!prev)
+              return !prev
+            }
           }
         }
-      }
-    })
-  }, [])
+      })
+    },
+    [onPointerDown],
+  )
 
   return (
     <group {...props} ref={group}>
@@ -168,11 +177,11 @@ export const Component = forwardRef(function Component(
             anchorY='middle'
             ref={title}
           >
-            {label}
+            {label || type}
             <meshStandardMaterial attach='material' />
           </Text>
           <Svg
-            src={ComponentIcon}
+            src={type === 'folder' ? FolderIcon : ComponentIcon}
             ref={icon}
             scale={((1 / 24) * labelHeight) / 2}
             position={[0, 0.5, 0.1]}
@@ -187,7 +196,7 @@ export const Component = forwardRef(function Component(
       <mesh
         ref={mesh}
         {...bodyProps}
-        onPointerDown={clickReveal ? onPointerDown : undefined}
+        onPointerDown={clickReveal ? onPointerDownInternal : onPointerDown}
       >
         <boxGeometry />
         <meshStandardMaterial
