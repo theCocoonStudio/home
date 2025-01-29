@@ -10,6 +10,7 @@ import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { Component } from './PlantUML/Component.canvas'
 import { useShowcase } from 'web/pages/Showcase/hooks/useShowcase'
 import { Interface } from './PlantUML/Interface.canvas'
+import { Grid } from './PlantUML/Grid.canvas'
 
 export const Browser = forwardRef(function Browser(
   { setFloorY, colorTheme, tracking, padding = 0.075, labelHeight = 0.1 },
@@ -38,6 +39,8 @@ export const Browser = forwardRef(function Browser(
   const [apiProps, setApiProps] = useState()
   const [runtimeProps, setRuntimeProps] = useState()
   const [interfaceProps, setInterfaceProps] = useState([])
+
+  const [heapStateProps, setHeapStateProps] = useState()
 
   const onResize = useCallback(
     ({
@@ -91,7 +94,10 @@ export const Browser = forwardRef(function Browser(
       },
     }) => {
       setHeapProps({
-        bounds: { min, max: max.clone().setX(max.x - length.x / 2) },
+        bounds: {
+          min: min.clone(),
+          max: max.clone().setX(max.x - length.x / 2),
+        },
         margin: [0, 0, padding / 4, 0],
       })
       setStackProps({
@@ -171,6 +177,16 @@ export const Browser = forwardRef(function Browser(
     },
     [],
   )
+  const onHeapResize = useCallback(
+    ({
+      bodyData: {
+        bounds: { max, min, length },
+      },
+    }) => {
+      setHeapStateProps({ max, min, length })
+    },
+    [],
+  )
 
   const resizeCallback = useCallback(
     ({ min, max }) => {
@@ -232,15 +248,34 @@ export const Browser = forwardRef(function Browser(
         <meshPhongMaterial color={'red'} />
       </mesh>
       {heapProps && (
-        <Component
-          ref={heap}
-          colorTheme={colorTheme}
-          label='heap'
-          labelHeight={0.06}
-          layerDepthFactor={0.85 ** 2}
-          padding={padding / 4}
-          {...heapProps}
-        />
+        <>
+          <Component
+            ref={heap}
+            colorTheme={colorTheme}
+            label='heap'
+            labelHeight={0.06}
+            layerDepthFactor={0.85 ** 2}
+            padding={padding / 4}
+            type='state'
+            onResize={onHeapResize}
+            {...heapProps}
+          />
+          {heapStateProps && (
+            <Grid
+              {...heapStateProps}
+              colorTheme={colorTheme}
+              rows={10}
+              columns={8}
+              labels={['one', 'two']}
+              heapPositions={[
+                [0, 1],
+                [2, 3],
+              ]}
+              colors={[colorTheme.red, colorTheme.slate]}
+              visible={[true, true]}
+            />
+          )}
+        </>
       )}
       {stackProps && (
         <Component
@@ -250,6 +285,7 @@ export const Browser = forwardRef(function Browser(
           labelHeight={0.06}
           layerDepthFactor={0.85 ** 2}
           padding={padding / 4}
+          type='state'
           {...stackProps}
         />
       )}
@@ -261,6 +297,7 @@ export const Browser = forwardRef(function Browser(
           labelHeight={0.06}
           layerDepthFactor={0.85 ** 2}
           padding={padding / 4}
+          type='state'
           {...queueProps}
         />
       )}
@@ -351,11 +388,12 @@ export const Browser = forwardRef(function Browser(
         <Component
           ref={runtime}
           colorTheme={colorTheme}
-          label='runtime'
+          label='Event Loop'
           onResize={onRuntimeResize}
           labelHeight={0.06}
           layerDepthFactor={0.85}
           padding={padding / 2}
+          type='folder'
           {...runtimeProps}
         />
       )}

@@ -14,10 +14,13 @@ import { Text } from '@react-three/drei'
 import Font from 'web/public/fonts/Anonymous_Pro/AnonymousPro-Bold.ttf'
 import ComponentIcon from 'web/public/icons/components.svg'
 import FolderIcon from 'web/public/icons/folder.svg'
+import StateIcon from 'web/public/icons/state.svg'
 import { Svg } from '../Svg.canvas'
 import { DoubleSide } from 'three'
 import { damp } from 'maath/easing'
 import { useFrame } from '@react-three/fiber'
+
+const icons = { folder: FolderIcon, component: ComponentIcon, state: StateIcon }
 
 export const Component = forwardRef(function Component(
   {
@@ -181,7 +184,7 @@ export const Component = forwardRef(function Component(
             <meshStandardMaterial attach='material' />
           </Text>
           <Svg
-            src={type === 'folder' ? FolderIcon : ComponentIcon}
+            src={icons[type]}
             ref={icon}
             scale={((1 / 24) * labelHeight) / 2}
             position={[0, 0.5, 0.1]}
