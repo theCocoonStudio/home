@@ -41,6 +41,8 @@ export const Browser = forwardRef(function Browser(
   const [interfaceProps, setInterfaceProps] = useState([])
 
   const [heapStateProps, setHeapStateProps] = useState()
+  const [stackStateProps, setStackStateProps] = useState()
+  const [queueStateProps, setQueueStateProps] = useState()
 
   const onResize = useCallback(
     ({
@@ -187,6 +189,26 @@ export const Browser = forwardRef(function Browser(
     },
     [],
   )
+  const onStackResize = useCallback(
+    ({
+      bodyData: {
+        bounds: { max, min, length },
+      },
+    }) => {
+      setStackStateProps({ max, min, length })
+    },
+    [],
+  )
+  const onQueueResize = useCallback(
+    ({
+      bodyData: {
+        bounds: { max, min, length },
+      },
+    }) => {
+      setQueueStateProps({ max, min, length })
+    },
+    [],
+  )
 
   const resizeCallback = useCallback(
     ({ min, max }) => {
@@ -265,6 +287,7 @@ export const Browser = forwardRef(function Browser(
               {...heapStateProps}
               colorTheme={colorTheme}
               rows={10}
+              fontSize={labelHeight / 3.5}
               columns={8}
               labels={['one', 'two']}
               heapPositions={[
@@ -278,28 +301,60 @@ export const Browser = forwardRef(function Browser(
         </>
       )}
       {stackProps && (
-        <Component
-          ref={stack}
-          colorTheme={colorTheme}
-          label='stack'
-          labelHeight={0.06}
-          layerDepthFactor={0.85 ** 2}
-          padding={padding / 4}
-          type='state'
-          {...stackProps}
-        />
+        <>
+          <Component
+            ref={stack}
+            colorTheme={colorTheme}
+            label='stack'
+            labelHeight={0.06}
+            layerDepthFactor={0.85 ** 2}
+            padding={padding / 4}
+            onResize={onStackResize}
+            type='state'
+            {...stackProps}
+          />
+          {stackStateProps && (
+            <Grid
+              {...stackStateProps}
+              colorTheme={colorTheme}
+              rows={10}
+              fontSize={labelHeight / 3.5}
+              labels={['one', 'two', 'three', 'four']}
+              colors={[colorTheme.red, colorTheme.slate]}
+              visible={[true, true, true, true]}
+              rowGap={padding / 4}
+              type='stack'
+            />
+          )}
+        </>
       )}
       {queueProps && (
-        <Component
-          ref={queue}
-          colorTheme={colorTheme}
-          label='queue'
-          labelHeight={0.06}
-          layerDepthFactor={0.85 ** 2}
-          padding={padding / 4}
-          type='state'
-          {...queueProps}
-        />
+        <>
+          <Component
+            ref={queue}
+            colorTheme={colorTheme}
+            label='queue'
+            labelHeight={0.06}
+            layerDepthFactor={0.85 ** 2}
+            padding={padding / 4}
+            onResize={onQueueResize}
+            type='state'
+            {...queueProps}
+          />
+          {queueStateProps && (
+            <Grid
+              {...queueStateProps}
+              colorTheme={colorTheme}
+              rows={10}
+              fontSize={labelHeight / 3.5}
+              labels={['one', 'two', 'three', 'four']}
+              colors={[colorTheme.red, colorTheme.slate]}
+              visible={[true, true, true, true]}
+              rowGap={padding / 4}
+              type='queue'
+            />
+          )}
+        </>
       )}
       {apiProps && (
         <>

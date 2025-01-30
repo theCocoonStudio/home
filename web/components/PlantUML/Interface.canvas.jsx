@@ -107,8 +107,6 @@ export const Interface = forwardRef(function Interface(
             anchorY='top'
             ref={title}
             position-z={(scale * layerDepth * layerDepthFactor) / 2 + 0.001}
-            radius={1}
-            curveRadius={1}
           >
             {label}
             <meshStandardMaterial attach='material' />
