@@ -16,6 +16,7 @@ export const useMarkupBounds = (
     callback: compute,
     camera: customCamera,
     pause = false,
+    resizeDeps = [],
   } = {},
   depArray,
 ) => {
@@ -79,7 +80,11 @@ export const useMarkupBounds = (
   ])
 
   // run callback on element resize
-  useResizeEvent(elementRef ? elementRef.current : canvas, resizeCallback)
+  useResizeEvent(elementRef ? elementRef.current : canvas, resizeCallback, {
+    resizeDeps: resizeDeps.map((elRef) =>
+      typeof elRef === 'string' ? elRef : elRef?.current,
+    ),
+  })
 
   /*
    * if dependency array passed in, run callback on:
