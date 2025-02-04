@@ -73,7 +73,12 @@ export const FooterHUD = forwardRef(function FooterHud(
 
   const colorTheme = useTheme()
 
-  useMarkupBounds({ target: s1, element: socials1, callback })
+  useMarkupBounds({
+    target: s1,
+    element: socials1,
+    callback,
+    resizeDeps: ['appContainer'], // since callback is shared, only need to add in one hook
+  })
   useMarkupBounds({
     target: s2,
     element: socials2,
