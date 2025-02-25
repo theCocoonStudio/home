@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { ThemeContext } from 'website/context/ThemeContext'
 
 export const useTheme = () => {
-  const { colors } = useContext(ThemeContext)
+  const { colors, lengths } = useContext(ThemeContext)
 
-  return colors
+  return { colors, lengths }
 }

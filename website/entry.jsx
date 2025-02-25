@@ -18,6 +18,9 @@ const theme = {
     red: '#330000', // errors
     charcoalTint: '#3D4F60',
   },
+  lengths: {
+    navHeight: '100px',
+  },
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
