@@ -14,7 +14,13 @@ module.exports = {
   settings: {
     react: { version: '18.2' },
     'import/resolver': {
-      alias: { src: './src', web: './web', public: './web/public' },
+      alias: {
+        src: './src',
+        website: './website',
+        assets: '.website/assets',
+        web: './web',
+        public: './web/public',
+      },
     },
   },
   plugins: ['react-refresh', 'css-modules'],

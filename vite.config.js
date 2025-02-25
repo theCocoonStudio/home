@@ -1,5 +1,3 @@
-/* global __dirname  */
-
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import preload from 'vite-plugin-preload'
@@ -13,7 +11,9 @@ export default defineConfig({
     alias: {
       src: resolve('./src'),
       web: resolve('./web'),
+      website: resolve('./website'),
       public: resolve('./web/public'),
+      assets: resolve('./website/assets'),
     },
   },
   build: {
