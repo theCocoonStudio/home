@@ -166,14 +166,14 @@ export const Gallery = forwardRef(function Gallery(
         /* environmentRotation={[-Math.PI / 8, -Math.PI, 0]} */
         scene={mainScene}
       />
-      <group ref={group} position={[0, 0, -0.8]}>
+      <group ref={group} position={[0, 0, 0]}>
         <Wall facade={facade} />
         <Display setEffects={setEffects} type={material} image={sample} />
       </group>
-      <fog attach='fog' args={[colorTheme.black, 0, 14]} />
+      <fog attach='fog' args={[colorTheme.black, 0, 4]} />
       <color attach='background' args={[colorTheme.black]} />
       <OrbitControls />
-      <PerspectiveCamera ref={cam} fov={45} makeDefault position-z={1} />
+      <PerspectiveCamera ref={cam} fov={55} makeDefault position-z={1} />
     </>
   )
 })

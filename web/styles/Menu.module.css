@@ -1,0 +1,14 @@
+.menu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(16, 16, 16, 0.9);
+
+  transition: left 0.5s;
+}
+
+.menuOpen {
+  left: calc(100% - 400px);
+}

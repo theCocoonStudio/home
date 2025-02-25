@@ -28,7 +28,7 @@ export const Footer = forwardRef(function Footer({ ...props }, forwardRef) {
   )
 
   return (
-    <div ref={forwardRef} {...props} className={`${styles.footer}`}>
+    <div ref={forwardRef} {...props} className={`${styles.footer} content`}>
       <ButtonGroup
         name='socials'
         labels={['linkedin', 'github', 'instagram', 'youtube']}

@@ -10,10 +10,13 @@ import { ButtonGroup } from 'web/components/ButtonGroup'
 import Showcase from '@tabler/icons-react/dist/esm/icons/IconDeviceTvOld'
 import Home from '@tabler/icons-react/dist/esm/icons/IconCube'
 
-export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
+export const Nav = forwardRef(function Nav(
+  { setMenuOpen, ...props },
+  forwardRef,
+) {
   return (
-    <div ref={forwardRef} {...props} className={`${styles.nav}`}>
-      <div className={`${styles.navContent} content`}>
+    <div ref={forwardRef} {...props} className={`${styles.nav} content`}>
+      <div className={`${styles.navContent}`}>
         <div className={`${styles.title}`}>
           <div className={`${styles.sub}`}>
             <ButtonGroup className={`${styles.icon}`}>
@@ -41,7 +44,13 @@ export const Nav = forwardRef(function Nav({ ...props }, forwardRef) {
             <Blog stroke={2} size={'100%'} />
           </ButtonGroup>
           <div className={`${styles.border}`} />
-          <ButtonGroup name='apps' /* bottomLabels={false} */>
+          <ButtonGroup
+            name='menu'
+            onClick={() => {
+              setMenuOpen((prev) => !prev)
+            }}
+            /* bottomLabels={false} */
+          >
             <div className={`${styles.apps}`}>
               <Category size='100%' className={`${styles.svg}`} />
               <CategoryFilled size='100%' className={`${styles.svgFilled}`} />

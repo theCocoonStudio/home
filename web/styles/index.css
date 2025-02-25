@@ -152,21 +152,35 @@ body {
   top: 0;
   left: 0;
   margin: 0;
+}
+
+#appContainer {
+  position: absolute;
+  right: 0;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  margin: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: stretch;
   column-gap: 0;
+  transition: right 0.5s;
+  z-index: 100;
+}
+
+#appContainer.menuOpen {
+  right: 400px;
 }
 
 #app {
   height: 100%;
   width: 100%;
   position: relative;
-  max-width: var(--maxContent);
   flex-grow: 1;
-  margin: auto;
+  z-index: 100;
 }
 
 .disable-scrollbars::-webkit-scrollbar {
@@ -194,7 +208,8 @@ body {
 
 .content {
   max-width: var(--maxContent);
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .anonymous-pro-regular,
@@ -262,8 +277,7 @@ h1 {
   right: 0;
   left: 0;
   bottom: 0;
-
-  z-index: 200;
+  z-index: 1000;
 }
 @keyframes op1 {
   50% {

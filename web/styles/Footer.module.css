@@ -1,6 +1,5 @@
 .footer {
   width: 100%;
-  max-width: var(--maxContent);
   flex-grow: 0;
   flex-shrink: 0;
   display: flex;

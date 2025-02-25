@@ -1,8 +1,9 @@
 import { Nav } from './Nav'
 import { Footer } from './Footer'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMarkup } from '../../hooks/useMarkup'
 import { Showcase } from '../Showcase/Showcase'
+import { Menu } from './Menu'
 
 export const App = function App() {
   const footer = useRef()
@@ -46,13 +47,18 @@ export const App = function App() {
     nav,
   })
 
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <>
-      <Nav ref={nav} className='space-mono-regular' />
-      <div id='app'>
-        <Showcase />
+      <div id='appContainer' className={menuOpen ? 'menuOpen' : ''}>
+        <Nav ref={nav} setMenuOpen={setMenuOpen} />
+        <div id='app' className='content'>
+          <Showcase />
+        </div>
+        <Footer ref={footer} />
       </div>
-      <Footer ref={footer} />
+      <Menu open={menuOpen} />
     </>
   )
 }

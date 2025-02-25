@@ -153,7 +153,7 @@ export const Showcase = function Showcase() {
   )
   return (
     <div
-      className={`${styles.container} ${menu ? styles[`container-open`] : ''} ${pointer ? styles[`pointer`] : ''}`}
+      className={`content ${styles.container} ${menu ? styles[`container-open`] : ''} ${pointer ? styles[`pointer`] : ''}`}
     >
       <div className={`${styles.main}`}>
         <div className={`${styles.refContainer}`}>
@@ -192,7 +192,7 @@ export const Showcase = function Showcase() {
       </div>
       <div
         ref={menuRef}
-        className={`content disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
+        className={`disable-scrollbars space-mono-regular ${styles.menu} ${menu ? styles['menu-open'] : ''}`}
       >
         <div>
           <Leva
