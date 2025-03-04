@@ -8,6 +8,6 @@ export const Menu = () => {
     }),
     [],
   )
-  console.log(dynamicStyles)
+
   return <div className={`${styles.menu}`} style={dynamicStyles}></div>
 }
