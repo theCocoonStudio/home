@@ -9,7 +9,7 @@ export const ThreeApp = forwardRef(function ThreeApp(
   return (
     <Canvas
       shadows
-      camera={{ position: [0, 12, 7], fov: 35 }}
+      camera={{ fov: 35 }}
       gl={{
         clearColor: 0x000000,
         autoClear: false,

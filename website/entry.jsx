@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ThemeProvider } from './context/ThemeProvider'
 import { Layout } from './components/Layout'
+import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 
 import './styles/entry.css'
 
@@ -26,7 +27,9 @@ const theme = {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Layout />
+      <ResizeEventProvider>
+        <Layout />
+      </ResizeEventProvider>
     </ThemeProvider>
   </React.StrictMode>,
 )
