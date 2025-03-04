@@ -1,5 +1,5 @@
 import { useThree } from '@react-three/fiber'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import {
   getCameraDistance,
@@ -16,11 +16,10 @@ export const useMarkupBounds = (
     callback: compute,
     camera: customCamera,
     pause = false,
-    resizeDeps = [],
-  } = {},
+    useResizeEventOptions,
+  },
   depArray,
 ) => {
-  const [...dependencies] = depArray || []
   // independent state
   const { camera: defaultCamera } = useThree(({ camera }) => ({
     camera,
@@ -80,11 +79,15 @@ export const useMarkupBounds = (
   ])
 
   // run callback on element resize
-  useResizeEvent(elementRef ? elementRef.current : canvas, resizeCallback, {
-    resizeDeps: resizeDeps.map((elRef) =>
-      typeof elRef === 'string' ? elRef : elRef?.current,
-    ),
-  })
+  useResizeEvent(
+    elementRef ? elementRef.current : canvas,
+    resizeCallback,
+    useResizeEventOptions,
+  )
+
+  const dependencies = useMemo(() => {
+    return depArray || []
+  }, [depArray])
 
   /*
    * if dependency array passed in, run callback on:
