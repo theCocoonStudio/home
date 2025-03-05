@@ -1,19 +1,16 @@
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { PerspectiveCamera, Scroll } from '@react-three/drei'
 import { Panels } from '../components/Panels.canvas'
-/* import { PanelTitle } from '../components/PanelTitle.canvas' */
+import { Environment } from '@react-three/drei'
+import { ScrollControls } from '@react-three/drei'
 
 export const Home = () => {
   return (
-    <>
-      <Panels />
-      <PerspectiveCamera makeDefault position-z={1} />
-      <OrbitControls />
-
-      {/* <PanelTitle
-        text='test'
-        scale={0.4}
-        position-z={0.03 * 0.4 + (0.02 / 2) * 0.4}
-      /> */}
-    </>
+    <ScrollControls pages={3} enabled={true}>
+      <Scroll>
+        <Panels />
+      </Scroll>
+      <PerspectiveCamera makeDefault position-z={1} fov={50} />
+      <Environment preset='warehouse' />
+    </ScrollControls>
   )
 }
