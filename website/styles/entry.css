@@ -10,7 +10,9 @@ body,
   margin: 0;
   padding: 0;
 }
-
+/* body {
+  overscroll-behavior: none;
+} */
 div,
 pre {
   margin: 0;
