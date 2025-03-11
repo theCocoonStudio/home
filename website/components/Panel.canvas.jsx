@@ -1,23 +1,31 @@
-import { Environment } from '@react-three/drei'
-import { useEffect, useMemo } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { ExtrudeGeometry, Shape } from 'three'
-import { CarbonMaterial } from 'web/components/CarbonMaterial.canvas'
 
-export const Panel = ({
-  extrudeSettings,
-  width: totalWidth = 1.6,
-  height: totalHeight = 0.9,
-  borderRadius = 0.005,
-  depth = 0.01,
-  ...props
-}) => {
+export const Panel = forwardRef(function Panel(
+  {
+    children,
+    extrudeSettings,
+    width: totalWidth = 1.6,
+    height: totalHeight = 0.9,
+    borderRadius = 0.005,
+    depth = 0.03,
+    ...props
+  },
+  forwardedRef,
+) {
   const settings = useMemo(
     () => ({
       steps: 2,
-      depth: depth,
+      depth: depth / 3,
       bevelEnabled: true,
-      bevelThickness: depth,
-      bevelSize: depth,
+      bevelThickness: depth / 3,
+      bevelSize: depth / 3,
       bevelOffset: 0,
       bevelSegments: 6,
       curveSegments: 12,
@@ -26,8 +34,8 @@ export const Panel = ({
     [depth, extrudeSettings],
   )
   const geometry = useMemo(() => {
-    const width = totalWidth - 2 * depth
-    const height = totalHeight - 2 * depth
+    const width = totalWidth - (2 * depth) / 3
+    const height = totalHeight - (2 * depth) / 3
     const shape = new Shape()
       .moveTo(-width / 2, -height / 2 + borderRadius)
       .lineTo(-width / 2, height / 2 - borderRadius)
@@ -50,10 +58,19 @@ export const Panel = ({
     },
     [geometry],
   )
+
+  const mesh = useRef()
+  useImperativeHandle(forwardedRef, () => mesh.current, [])
   return (
-    <mesh geometry={geometry} {...props}>
-      <CarbonMaterial repeat={[16, 9]} />
-      <Environment preset='warehouse' />
+    <mesh ref={mesh} geometry={geometry} {...props}>
+      {children}
+      <meshPhysicalMaterial
+        color='black'
+        clearcoat={1.0}
+        clearcoatRoughness={0.3}
+        /* metalness={0.9} */
+        roughness={0.5}
+      />
     </mesh>
   )
-}
+})
