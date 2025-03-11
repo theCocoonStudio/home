@@ -25,6 +25,7 @@ export const CarbonMaterial = forwardRef(function CarbonMaterial(
       clearcoatRoughness={0.1}
       /* metalness={0.9} */
       roughness={0.5}
+      normalScale={[10, 10]}
       {...props}
     />
   )
