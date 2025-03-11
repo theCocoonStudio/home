@@ -22,7 +22,8 @@ const theme = {
     charcoalTint: '#3D4F60',
   },
   lengths: {
-    navHeight: '100px',
+    navHeight: '120px',
+    atomicPadding: '8px',
   },
 }
 
