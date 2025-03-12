@@ -22,9 +22,14 @@ export const PanelTitle = ({
   const descriptionFont = useFont(Karla_Regular)
   const dateFont = useFont(Karla_light)
 
-  const shapes = font.generateShapes(text, 1.0)
-  const descriptionShapes = descriptionFont.generateShapes(descriptionText, 1.0)
-  const dateShapes = dateFont.generateShapes(dateText, 1.0)
+  const { shapes, descriptionShapes, dateShapes } = useMemo(
+    () => ({
+      shapes: font.generateShapes(text, 1.0),
+      descriptionShapes: descriptionFont.generateShapes(descriptionText, 1.0),
+      dateShapes: dateFont.generateShapes(dateText, 1.0),
+    }),
+    [dateFont, dateText, descriptionFont, descriptionText, font, text],
+  )
 
   const settings = useMemo(
     () => ({
