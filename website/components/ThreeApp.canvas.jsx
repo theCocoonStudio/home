@@ -13,6 +13,7 @@ export const ThreeApp = forwardRef(function ThreeApp(
         clearColor: 0x000000,
         autoClear: false,
         shadowMap: { enabled: true },
+        stencil: true,
       }}
       ref={ref}
       {...props}
