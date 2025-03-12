@@ -17,6 +17,7 @@ export const useMarkupBounds = (
     camera: customCamera,
     pause = false,
     useResizeEventOptions,
+    distance: camZ,
   },
   depArray,
 ) => {
@@ -37,12 +38,11 @@ export const useMarkupBounds = (
   // callback: get latest bounds, optionally compute and set object3D matrix
   const resizeCallback = useCallback(() => {
     const element = elementRef ? elementRef.current : canvas
-    if (element && targetRef.current) {
+    if (element && (targetRef?.current || camZ)) {
       const contentRect = element.getBoundingClientRect()
-      const distance = getCameraDistance(
-        targetRef.current,
-        customCamera || defaultCamera,
-      )
+      const distance = targetRef?.current
+        ? getCameraDistance(targetRef.current, customCamera || defaultCamera)
+        : camZ
 
       const viewportVec2 = new Vector2(canvasWidth, canvasHeight)
 
@@ -55,19 +55,21 @@ export const useMarkupBounds = (
 
       if (typeof compute === 'function') {
         compute({
-          target: targetRef.current,
+          target: targetRef?.current,
           element,
           contentRect,
           min,
           max,
           ppwu,
           camera: customCamera || defaultCamera,
+          distance,
         })
       } else {
         throw new Error('useBounds: please include an options.compute argument')
       }
     }
   }, [
+    camZ,
     canvas,
     canvasHeight,
     canvasWidth,
