@@ -1,12 +1,11 @@
 import styles from 'website/styles/Layout.module.css'
 import { ThreeApp } from './ThreeApp.canvas'
-import { App } from './App'
-import { Home } from '../pages/Home.canvas'
 import { Nav } from './Nav'
 import { Menu } from './Menu'
-import { useRef } from 'react'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
+import { Html, ScrollControls, View } from '@react-three/drei'
+import { Home } from '../pages/Home.view'
 
 const theme = {
   colors: {
@@ -22,24 +21,29 @@ const theme = {
     charcoalTint: '#3D4F60',
   },
   lengths: {
-    navHeight: '120px',
-    atomicPadding: '8px',
+    navHeight: 120,
+    atomicPadding: 8,
   },
 }
 
 export function Layout() {
-  const ref = useRef()
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
-        <div className={`${styles.layout}`} ref={ref}>
+        <div className={`${styles.layout}`}>
           <ThreeApp eventPrefix={'client'}>
-            <Home />
+            <ScrollControls pages={3} enabled={true} damping={0}>
+              <View.Port />
+              <Html wrapperClass={styles.html} prepend transform={false}>
+                <View className={styles.view} frames={1}>
+                  <Home />
+                </View>
+              </Html>
+            </ScrollControls>
           </ThreeApp>
-
-          <Menu />
-          <Nav />
         </div>
+        <Menu />
+        <Nav />
       </ResizeEventProvider>
     </ThemeProvider>
   )
