@@ -12,7 +12,7 @@ import { GradientTexture } from '@react-three/drei'
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 40,
+  forceValue: 60,
   resolution: 0.5,
   forceSize: 90,
   viscosity: 80,

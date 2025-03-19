@@ -14,6 +14,7 @@ export const ThreeApp = forwardRef(function ThreeApp(
         autoClear: false,
         shadowMap: { enabled: true },
         stencil: true,
+        antialias: true,
       }}
       ref={ref}
       {...props}

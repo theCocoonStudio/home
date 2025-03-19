@@ -1,5 +1,5 @@
 import { Mask, useFont, useMask } from '@react-three/drei'
-import Karla from 'assets/Karla_ExtraBold.json'
+import Roboto from 'assets/Roboto_SemiBold.json'
 import {
   forwardRef,
   useCallback,
@@ -14,15 +14,13 @@ export const TitleText = forwardRef(function TitleText(
   forwardedRef,
 ) {
   const mesh = useRef()
-  const font = useFont(Karla)
+  const font = useFont(Roboto)
   const shape = useMemo(
     () => font.generateShapes(text, 1.0 * fontSize),
     [font, fontSize, text],
   )
 
-  const boundsCallback = useCallback(({ min, max }) => {
-    console.log(mesh)
-  }, [])
+  const boundsCallback = useCallback(({ min, max }) => {}, [])
 
   const stencil = useMask(id)
 

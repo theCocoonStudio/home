@@ -29,7 +29,6 @@ export const Panels = function Panels({
       const width = /* 600 / ppwu.x */ (max.x - min.x) / 2
       setScale(new Vector2(width, (width * 9) / 16))
       setFontSize(titleFontSize / ppwu.x)
-      console.log('resize')
     },
     [titleFontSize],
   )
@@ -101,7 +100,7 @@ export const Panels = function Panels({
       ref={ref}
       {...props}
       onPointerDown={() => {
-        console.log('clicked')
+        console.log('clicked panels')
       }}
     >
       {scale && fontSize && panelsArray}
