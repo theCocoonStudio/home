@@ -47,6 +47,7 @@ export const useFluidTexture = (
     BFECC,
     forceCallback,
   } = { ...defaultOpts, ...options }
+
   const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
   const { width, height } = useMemo(
@@ -283,11 +284,17 @@ export const useFluidTexture = (
       // external force pass
       pointerDiff.current.subVectors(pointer, oldPointer.current)
       oldPointer.current.copy(pointer)
+
       const fc =
         typeof forceCallback === 'function'
           ? forceCallback
           : defaultForceCallback
-      const { force, center } = fc(
+
+      const {
+        force,
+        center,
+        radius = cursor_size,
+      } = fc(
         delta,
         clock.getElapsedTime(),
         pointer.clone(),
@@ -296,7 +303,7 @@ export const useFluidTexture = (
 
       uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
       uniforms.current.center.set(center.x, center.y)
-      uniforms.current.scale.set(cursor_size, cursor_size)
+      uniforms.current.scale.set(radius, radius)
 
       forcePass.current.render(gl)
 
