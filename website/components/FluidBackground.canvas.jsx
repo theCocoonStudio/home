@@ -6,16 +6,15 @@ import {
   useRef,
 } from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
-import { Vector2 } from 'three'
 import { GradientTexture } from '@react-three/drei'
 
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 60,
+  forceValue: 50,
   resolution: 0.5,
-  forceSize: 90,
-  viscosity: 80,
+  forceSize: 50,
+  viscosity: 30,
   dt: 0.014,
   isViscous: true,
   BFECC: true,
@@ -23,22 +22,10 @@ const _opts = {
 }
 
 export const FluidBackground = forwardRef(function FluidBackground(
-  { stencil = {}, ...props },
+  { stencil = {}, forceCallback, colors, ...props },
   forwardedRef,
 ) {
   const mesh = useRef()
-
-  const center = useRef(new Vector2(0, 0))
-
-  const forceCallback = useMemo(() => {
-    return (delta, elapsedTime) => {
-      const force = new Vector2(
-        Math.cos(elapsedTime),
-        Math.sin(elapsedTime),
-      ).multiplyScalar(0.5)
-      return { force, center: center.current }
-    }
-  }, [])
 
   const options = useMemo(() => {
     const {
@@ -64,11 +51,12 @@ export const FluidBackground = forwardRef(function FluidBackground(
       isViscous,
       BFECC,
       isBounce,
-      /* forceCallback, */
     }
   }, [])
 
-  const texture = useFluidTexture(options)
+  const texture = useFluidTexture(
+    forceCallback ? { options, forceCallback } : options,
+  )
 
   const boundsCallback = useCallback(({ min, max }) => {
     const width = max.x - min.x
@@ -77,9 +65,15 @@ export const FluidBackground = forwardRef(function FluidBackground(
     mesh.current.scale.setComponent(1, height)
   }, [])
 
-  useImperativeHandle(forwardedRef, () => ({ boundsCallback }), [
-    boundsCallback,
-  ])
+  const scrollCallback = useCallback((data) => {
+    console.log(data)
+  }, [])
+
+  useImperativeHandle(
+    forwardedRef,
+    () => ({ boundsCallback, scrollCallback }),
+    [boundsCallback, scrollCallback],
+  )
 
   return (
     <mesh ref={mesh} {...props}>
@@ -92,8 +86,8 @@ export const FluidBackground = forwardRef(function FluidBackground(
       >
         <GradientTexture
           attach='map'
-          stops={[0, 0.5, 1]} // As many stops as you want
-          colors={['red', 'green', 'blue']} // Colors need to match the number of stops
+          stops={[0.1, 0.5, 0.9]} // As many stops as you want
+          colors={[colors.slate, colors.mint, colors.slate]} // Colors need to match the number of stops
           size={1024} // Size is optional, default = 1024
         />
       </meshBasicMaterial>
