@@ -1,5 +1,5 @@
 import { useThree } from '@react-three/fiber'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useLayoutEffect, useMemo } from 'react'
 
 import {
   getCameraDistance,
@@ -97,12 +97,12 @@ export const useMarkupBounds = (
    * 2. pause changes
    * 3. change in passed-in dependencies, if any
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     !pause && depArray && resizeCallback()
   }, [pause, resizeCallback, ...dependencies])
 
   /* if no dependencies, runs on each render */
-  useEffect(() => {
+  useLayoutEffect(() => {
     !pause && !depArray && resizeCallback()
   })
 }
