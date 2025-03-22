@@ -1,4 +1,4 @@
-import { Mask, useFont, useMask } from '@react-three/drei'
+import { DragControls, Mask, useFont, useMask } from '@react-three/drei'
 import Roboto from 'assets/Roboto_SemiBold.json'
 import {
   forwardRef,
@@ -7,20 +7,29 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 
 export const TitleText = forwardRef(function TitleText(
-  { text = 'hello', fontSize = 1.0, id = 1, mask = true, ...props },
+  { text = 'hello', fontSize: fontPx = 20, id = 1, mask = true, ...props },
   forwardedRef,
 ) {
   const mesh = useRef()
   const font = useFont(Roboto)
+
+  const [fontSize, setFontSize] = useState()
+
   const shape = useMemo(
-    () => font.generateShapes(text, 1.0 * fontSize),
+    () => fontSize && font.generateShapes(text, 1.0 * fontSize),
     [font, fontSize, text],
   )
 
-  const boundsCallback = useCallback(({ min, max }) => {}, [])
+  const boundsCallback = useCallback(
+    ({ ppwu }) => {
+      setFontSize(fontPx / ppwu.y)
+    },
+    [fontPx],
+  )
 
   const stencil = useMask(id)
 
@@ -30,14 +39,31 @@ export const TitleText = forwardRef(function TitleText(
     [boundsCallback, mask, stencil],
   )
 
-  useEffect(() => {
-    mesh.current.geometry.center()
+  const centerG = useCallback((renderer, scene, camera, geometry) => {
+    geometry.center()
   }, [])
+  useEffect(() => {}, [])
   return (
-    <>
-      <Mask colorWrite={!mask} id={id} {...props} ref={mesh} depthWrite>
-        <shapeGeometry args={[shape]} />
-      </Mask>
-    </>
+    shape && (
+      <DragControls>
+        {mask ? (
+          <Mask
+            colorWrite={!mask}
+            id={id}
+            {...props}
+            ref={mesh}
+            depthWrite
+            onBeforeRender={centerG}
+          >
+            {/* <meshStandardMaterial color='green' /> */}
+            <shapeGeometry args={[shape]} />
+          </Mask>
+        ) : (
+          <mesh onBeforeRender={centerG}>
+            <shapeGeometry args={[shape]} />
+          </mesh>
+        )}
+      </DragControls>
+    )
   )
 })
