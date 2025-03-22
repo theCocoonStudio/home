@@ -113,7 +113,7 @@ export const Logo = function Logo({ size }) {
 
   useMarkupBounds(
     {
-      distance: 1,
+      distance: 0.5,
       callback,
     },
     [],
@@ -121,7 +121,7 @@ export const Logo = function Logo({ size }) {
 
   const scroll = useScroll()
 
-  useFrame(({ pointer }, delta) => {
+  useFrame(() => {
     if (ref?.current && groupProps && scroll) {
       ref.current.rotation.x =
         0.35 + Math.PI * 2 * Math.sin((scroll.offset * Math.PI) / 2)
@@ -148,6 +148,7 @@ export const Logo = function Logo({ size }) {
           rotation-x={0.35} // straight up view (x,y = 0)
           rotation-y={0.48}
           ref={ref}
+          position-z={0.5}
           {...groupProps}
         >
           <primitive object={iLogo} ref={iMesh} />
