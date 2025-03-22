@@ -26,3 +26,24 @@ body {
 html {
   font-size: 62.5%; /* default 16px --> 10px for clear rem values */
 }
+
+/* <weight>: 400-900 */
+.orbitron {
+  font-family: 'Orbitron', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  /* font-weight: <weight> */
+}
+
+/* <weight>: 200-1000 */
+/* <width>: 75-125 = 100 */
+/* <lowercase height>: 440-540 = 500 */
+.nunito-sans {
+  font-family: 'Nunito Sans', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  /* font-weight: <weight> */
+  /* font-variation-settings:
+    'wdth' <width>,
+    'YTLC' <lowercase height>; */
+}
