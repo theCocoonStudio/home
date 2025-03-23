@@ -15,7 +15,7 @@ export const nunito = (
       fontWeight: `${weight}`,
       fontVariationSettings: `'wdth' ${width}, 'YTLC' ${height};`,
     },
-    classNames: composeClassNames('nunito-sans', ...classNames),
+    className: composeClassNames('nunito-sans', ...classNames),
   }
 }
 
@@ -25,6 +25,6 @@ export const orbitron = (weight, styles = {}, ...classNames) => {
       ...styles,
       fontWeight: `${weight}`,
     },
-    classNames: composeClassNames('orbitron', ...classNames),
+    className: composeClassNames('orbitron', ...classNames),
   }
 }
