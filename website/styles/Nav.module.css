@@ -26,3 +26,37 @@
     height: 100%;
   }
 }
+
+.icon {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.links {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  font-size: 25px;
+  column-gap: 1em;
+  line-height: 1em;
+  text-transform: uppercase;
+  > div {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    column-gap: 0.5em;
+    > div:nth-child(1) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
