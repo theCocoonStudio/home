@@ -6,19 +6,18 @@ import { FluidBackground } from '../components/FluidBackground.canvas'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { TitleText } from '../components/TitleText.canvas'
 import { useCallback, useEffect, useRef } from 'react'
-import { Orb } from '../components/Orb.canvas'
+import { ScrollBar } from '../components/ScrollBar.canvas'
 
 export const Home = () => {
   const { colors } = useTheme()
 
   const bg = useRef()
   const title = useRef()
-  const orb = useRef()
+  const scroll = useRef()
 
   const callback = useCallback((...args) => {
     bg.current?.boundsCallback && bg.current.boundsCallback(...args)
     title.current?.boundsCallback && title.current.boundsCallback(...args)
-    orb.current?.boundsCallback && orb.current.boundsCallback(...args)
   }, [])
 
   const data = useScroll()
@@ -37,11 +36,12 @@ export const Home = () => {
 
   return (
     <>
+      {/* <OrbitControls /> */}
       {/* <Panels /> */}
       <FluidBackground
         ref={bg}
         stencil={title.current?.stencil}
-        forceCallback={orb.current?.forceCallback}
+        forceCallback={scroll.current?.forceCallback}
         colors={colors}
       />
       <TitleText
@@ -50,12 +50,7 @@ export const Home = () => {
         mask={true}
         text={`Technically creative`}
       />
-      <Orb
-        ref={orb}
-        radius={80} //px
-        forceSize={2}
-        colors={colors}
-      />
+      <ScrollBar ref={scroll} />
       {/* <EffectComposer disableNormalPass multisampling={8}>
         <Vignette
           offset={0.5} // vignette offset
