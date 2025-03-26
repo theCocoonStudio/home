@@ -30,6 +30,11 @@ const theme = {
     navHeight: 120,
     atomicPadding: 8,
   },
+  markupIds: {
+    scroll: {
+      container: 'scroll-container',
+    },
+  },
 }
 
 export function Layout() {
