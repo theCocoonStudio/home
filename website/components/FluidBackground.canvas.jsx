@@ -66,7 +66,7 @@ export const FluidBackground = forwardRef(function FluidBackground(
   }, [])
 
   const scrollCallback = useCallback((data) => {
-    console.log(data)
+    /* console.log(data) */
   }, [])
 
   useImperativeHandle(

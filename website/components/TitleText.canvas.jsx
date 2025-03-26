@@ -44,26 +44,23 @@ export const TitleText = forwardRef(function TitleText(
   }, [])
   useEffect(() => {}, [])
   return (
-    shape && (
-      <DragControls>
-        {mask ? (
-          <Mask
-            colorWrite={!mask}
-            id={id}
-            {...props}
-            ref={mesh}
-            depthWrite
-            onBeforeRender={centerG}
-          >
-            {/* <meshStandardMaterial color='green' /> */}
-            <shapeGeometry args={[shape]} />
-          </Mask>
-        ) : (
-          <mesh onBeforeRender={centerG}>
-            <shapeGeometry args={[shape]} />
-          </mesh>
-        )}
-      </DragControls>
-    )
+    shape &&
+    (mask ? (
+      <Mask
+        colorWrite={!mask}
+        id={id}
+        {...props}
+        ref={mesh}
+        depthWrite
+        onBeforeRender={centerG}
+      >
+        {/* <meshStandardMaterial color='green' /> */}
+        <shapeGeometry args={[shape]} />
+      </Mask>
+    ) : (
+      <mesh onBeforeRender={centerG}>
+        <shapeGeometry args={[shape]} />
+      </mesh>
+    ))
   )
 })
