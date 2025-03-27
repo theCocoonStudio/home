@@ -49,9 +49,9 @@ uniform vec3 color;
 export const Orb = forwardRef(function Orb(
   {
     padding,
-    dotRadius = 15,
+    dotRadius = 10,
     index,
-    orbSize = 25,
+    orbSize = 18,
     children,
     color,
     count,
@@ -182,7 +182,7 @@ export const Orb = forwardRef(function Orb(
             {...props}
           >
             {children}
-            <meshStandardMaterial color={color} transparent opacity={0.8} />
+            <meshBasicMaterial color={color} />
           </mesh>
         </group>
       </DragControls>

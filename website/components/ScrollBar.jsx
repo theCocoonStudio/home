@@ -10,7 +10,7 @@ export const ScrollBar = () => {
   const style = useMemo(
     () => ({
       height: `calc(100vh - 2 * ${navHeight}px)`,
-      margin: `calc(6 * ${atomicPadding}px) 0`,
+      margin: `calc(8 * ${atomicPadding}px) 0`,
     }),
     [atomicPadding, navHeight],
   )

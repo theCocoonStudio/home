@@ -1,5 +1,5 @@
 import { DragControls, Mask, useFont, useMask } from '@react-three/drei'
-import Roboto from 'assets/Roboto_SemiBold.json'
+import Orbitron from 'assets/Orbitron_SemiBold.json'
 import {
   forwardRef,
   useCallback,
@@ -15,7 +15,7 @@ export const TitleText = forwardRef(function TitleText(
   forwardedRef,
 ) {
   const mesh = useRef()
-  const font = useFont(Roboto)
+  const font = useFont(Orbitron)
 
   const [fontSize, setFontSize] = useState()
 

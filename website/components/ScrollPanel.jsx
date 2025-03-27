@@ -53,7 +53,7 @@ export const ScrollPanel = ({
       {...props}
     >
       <PanelTitle
-        text={`This is my title: measuring\nthings that are long.`}
+        text={`This is my title: measuring\nthings on the web.`}
         descriptionText={`In this article, we will go over\nsome examples. In the\nfirst example, some really\ncool shit happens.`}
         dateText='03/15/2025'
         fontSize={fontSize}

@@ -6,7 +6,7 @@ import { useThree } from '@react-three/fiber'
 import { Vector2, Vector4 } from 'three'
 
 export const ScrollBar = forwardRef(function ScrollBar(
-  { orbSize = 25, forceSize = 2 },
+  { orbSize = 18, forceSize = 2 },
   forwardedRef,
 ) {
   const blogOrb = useRef()
@@ -74,7 +74,7 @@ export const ScrollBar = forwardRef(function ScrollBar(
         ref={blogOrb}
         index={0}
         orbSize={orbSize}
-        color={colors.mint}
+        color={colors.black}
         padding={atomicPadding}
         count={4}
         activeIndex={activeIndex}
@@ -84,8 +84,8 @@ export const ScrollBar = forwardRef(function ScrollBar(
       <Orb
         ref={aboutOrb}
         index={1}
-        orbSize={21}
-        color={colors.charcoal}
+        orbSize={15}
+        color={colors.black}
         padding={atomicPadding}
         count={5}
         activeIndex={activeIndex}
@@ -96,7 +96,7 @@ export const ScrollBar = forwardRef(function ScrollBar(
         ref={portfolioOrb}
         index={2}
         orbSize={orbSize}
-        color={colors.red}
+        color={colors.black}
         padding={atomicPadding}
         count={7}
         activeIndex={activeIndex}
