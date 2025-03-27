@@ -6,7 +6,7 @@ import { FluidBackground } from '../components/FluidBackground.canvas'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { TitleText } from '../components/TitleText.canvas'
 import { useCallback, useEffect, useRef } from 'react'
-import { ScrollBar } from '../components/ScrollBar.canvas'
+import { Performance } from '../components/Performance.canvas'
 
 export const Home = () => {
   const { colors } = useTheme()
@@ -44,21 +44,15 @@ export const Home = () => {
         forceCallback={scroll.current?.forceCallback}
         colors={colors}
       />
-      <TitleText
-        fontSize={80}
+      {/* <TitleText
+        fontSize={60}
         ref={title}
         mask={true}
         text={`Technically creative`}
-      />
-      <ScrollBar ref={scroll} />
-      {/* <EffectComposer disableNormalPass multisampling={8}>
-        <Vignette
-          offset={0.5} // vignette offset
-          darkness={0.6} // vignette darkness
-          eskil={false} // Eskil's vignette technique
-        />
-      </EffectComposer> */}
+      /> */}
+
       <color attach='background' args={[colors.white]} />
+      <Performance />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
       <Environment preset='dawn' environmentIntensity={0.5} />
     </>

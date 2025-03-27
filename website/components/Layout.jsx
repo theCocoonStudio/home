@@ -10,6 +10,7 @@ import { Home } from '../pages/Home.view'
 import { usePointer } from '../hooks/usePointer'
 import { composeClassNames, nunito, orbitron } from '../utils/styles'
 import { useTheme } from '../hooks/useTheme'
+import { Footer } from './Footer'
 
 const theme = {
   utils: { compose: composeClassNames, nunito, orbitron },
@@ -21,18 +22,22 @@ const theme = {
     midnight: '#103334', // intermediate green
     slate: '#134643', // green (success)
     white: '#ffffff',
-    black: '#101010',
+    black: '#000000',
     grey: '#202020',
     red: '#330000', // errors
     charcoalTint: '#3D4F60',
   },
   lengths: {
     navHeight: 120,
+    footerHeight: 120,
     atomicPadding: 8,
   },
   markupIds: {
     scroll: {
       container: 'scroll-container',
+    },
+    fps: {
+      container: 'fps-container',
     },
   },
 }
@@ -45,6 +50,7 @@ export function Layout() {
           <Inner />
           <Menu />
           <Nav />
+          <Footer />
         </PointerProvider>
       </ResizeEventProvider>
     </ThemeProvider>

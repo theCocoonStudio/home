@@ -1,0 +1,78 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 300;
+}
+
+.settings {
+  border-radius: 8px;
+  background-color: white;
+  border: 3px solid black;
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
+  > * {
+    width: 39px;
+    height: 39px;
+    font-size: 13px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+
+    align-items: center;
+    > * {
+      text-align: left;
+      width: 100%;
+    }
+  }
+}
+
+.github,
+.linkedin,
+.youtube,
+.instagram {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  &:hover {
+    cursor: pointer;
+  }
+  svg {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    fill: white;
+    background-color: black;
+  }
+}
+
+.github:hover {
+  cursor: pointer;
+}
+.socials {
+  position: absolute;
+  bottom: 50%;
+  transform: translateY(50%);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
