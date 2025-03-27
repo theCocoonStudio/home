@@ -9,9 +9,6 @@
 }
 
 .settings {
-  border-radius: 8px;
-  background-color: white;
-  border: 3px solid black;
   position: absolute;
   bottom: 50%;
   transform: translateY(50%);
@@ -19,9 +16,33 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  &:hover {
-    cursor: pointer;
+  > * {
+    &:hover {
+      cursor: pointer;
+    }
   }
+}
+
+.icon {
+  border-radius: 8px;
+  background-color: white;
+  border: 3px solid black;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+}
+.performance {
+  border-radius: 8px;
+  background-color: white;
+  border: 3px solid black;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
   > * {
     width: 39px;
     height: 39px;
@@ -30,15 +51,14 @@
     flex-wrap: nowrap;
     flex-direction: column;
     justify-content: center;
-
     align-items: center;
-    > * {
-      text-align: left;
-      width: 100%;
-    }
   }
 }
 
+.fps > * {
+  text-align: left;
+  width: 100%;
+}
 .github,
 .linkedin,
 .youtube,

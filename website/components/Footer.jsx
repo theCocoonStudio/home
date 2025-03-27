@@ -6,6 +6,7 @@ import { GithubIcon } from 'website/components/GithubIcon'
 import { YoutubeIcon } from 'website/components/YoutubeIcon'
 import { InstagramIcon } from 'website/components/InstagramIcon'
 import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
+import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
 
 export const Footer = () => {
   const {
@@ -16,10 +17,17 @@ export const Footer = () => {
     'orbitron',
     600,
     ({ lengths: { atomicPadding } }) => ({
+      columnGap: `calc(2 * ${atomicPadding}px)`,
+    }),
+    styles.performance,
+  )
+
+  const settingsStyles = useMemo(
+    () => ({
       left: `calc(8 * ${atomicPadding}px)`,
       columnGap: `calc(2 * ${atomicPadding}px)`,
     }),
-    styles.settings,
+    [atomicPadding],
   )
 
   const footerStyles = useMemo(
@@ -47,13 +55,18 @@ export const Footer = () => {
           {<InstagramIcon color={black} />}
         </div>
       </div>
-      <div className={`${className}`} style={style}>
-        <div>
-          <Performance size={35} color={black} stroke={2} />
+      <div className={`${styles.settings}`} style={settingsStyles}>
+        <div className={`${styles.icon}`}>
+          <Settings size={35} color={black} stroke={2} />
         </div>
-        <div>
-          <div id='fps-container'>--</div>
-          <div>FPS</div>
+        <div className={`${className}`} style={style}>
+          <div>
+            <Performance size={35} color={black} stroke={2} />
+          </div>
+          <div className={`${styles.fps}`}>
+            <div id='fps-container'>--</div>
+            <div>FPS</div>
+          </div>
         </div>
       </div>
     </div>
