@@ -69,6 +69,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
+      <div className={`${styles.scroll}`} id='scroll-container' />
     </div>
   )
 }

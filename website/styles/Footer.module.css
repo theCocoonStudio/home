@@ -96,3 +96,16 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.scroll {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  border-radius: 8px;
+  border: 3px solid black;
+  transform: translate(-50%, 50%);
+  height: 45px;
+  width: 50vw;
+  justify-content: space-between;
+  align-items: center;
+}
