@@ -39,33 +39,65 @@ export const useMarkupBounds = (
   const resizeCallback = useCallback(() => {
     const element = elementRef ? elementRef.current : canvas
     if (element && (targetRef?.current || camZ)) {
+      const viewportVec2 = new Vector2(canvasWidth, canvasHeight)
       const contentRect = element.getBoundingClientRect()
       const distance = targetRef?.current
         ? getCameraDistance(targetRef.current, customCamera || defaultCamera)
         : camZ
 
-      const viewportVec2 = new Vector2(canvasWidth, canvasHeight)
+      if (Array.isArray(distance)) {
+        distance.forEach((_distance, index) => {
+          const viewBoundsPPWU = getViewBoundsPPWU(
+            customCamera || defaultCamera,
+            _distance,
+            viewportVec2,
+          )
+          const { min, max, ppwu } = getElementBounds(
+            contentRect,
+            viewBoundsPPWU,
+          )
 
-      const viewBoundsPPWU = getViewBoundsPPWU(
-        customCamera || defaultCamera,
-        distance,
-        viewportVec2,
-      )
-      const { min, max, ppwu } = getElementBounds(contentRect, viewBoundsPPWU)
-
-      if (typeof compute === 'function') {
-        compute({
-          target: targetRef?.current,
-          element,
-          contentRect,
-          min,
-          max,
-          ppwu,
-          camera: customCamera || defaultCamera,
-          distance,
+          if (Array.isArray(compute) && typeof compute[index] === 'function') {
+            compute[index]({
+              target: targetRef?.current,
+              element,
+              contentRect,
+              min,
+              max,
+              ppwu,
+              camera: customCamera || defaultCamera,
+              _distance,
+            })
+          } else {
+            throw new Error(
+              'useBounds: please include an options.compute array with a 1:1 mapping for each passed in distance',
+            )
+          }
         })
       } else {
-        throw new Error('useBounds: please include an options.compute argument')
+        const viewBoundsPPWU = getViewBoundsPPWU(
+          customCamera || defaultCamera,
+          distance,
+          viewportVec2,
+        )
+        const { min, max, ppwu } = getElementBounds(contentRect, viewBoundsPPWU)
+
+        if (typeof compute === 'function') {
+          compute({
+            target: targetRef?.current,
+            element,
+            contentRect,
+            min,
+            max,
+            ppwu,
+            camera: customCamera || defaultCamera,
+            distance,
+          })
+        } else {
+          throw new Error(
+            'useBounds: please include an options.compute argument',
+          )
+        }
       }
     }
   }, [
