@@ -87,7 +87,7 @@ export const FluidBackground = forwardRef(function FluidBackground(
         <GradientTexture
           attach='map'
           stops={[0.1, 0.5, 0.9]} // As many stops as you want
-          colors={[colors.slate, colors.mint, colors.slate]} // Colors need to match the number of stops
+          colors={[colors.white, colors.black, colors.white]} // Colors need to match the number of stops
           size={1024} // Size is optional, default = 1024
         />
       </meshBasicMaterial>

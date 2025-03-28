@@ -7,6 +7,7 @@ import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { TitleText } from '../components/TitleText.canvas'
 import { useCallback, useEffect, useRef } from 'react'
 import { Performance } from '../components/Performance.canvas'
+import { DragOrb } from '../components/DragOrb.canvas'
 
 export const Home = () => {
   const { colors } = useTheme()
@@ -14,10 +15,12 @@ export const Home = () => {
   const bg = useRef()
   const title = useRef()
   const scroll = useRef()
+  const orb = useRef()
 
-  const callback = useCallback((...args) => {
+  const callbackAt1 = useCallback((...args) => {
     bg.current?.boundsCallback && bg.current.boundsCallback(...args)
     title.current?.boundsCallback && title.current.boundsCallback(...args)
+    orb.current?.boundsCallback && orb.current.boundsCallback(...args)
   }, [])
 
   const data = useScroll()
@@ -28,8 +31,8 @@ export const Home = () => {
 
   useMarkupBounds(
     {
-      distance: 1,
-      callback,
+      distance: [1],
+      callback: [callbackAt1],
     },
     [],
   )
@@ -41,9 +44,10 @@ export const Home = () => {
       <FluidBackground
         ref={bg}
         stencil={title.current?.stencil}
-        forceCallback={scroll.current?.forceCallback}
+        forceCallback={orb.current?.forceCallback}
         colors={colors}
       />
+      <DragOrb ref={orb} />
       {/* <TitleText
         fontSize={60}
         ref={title}
@@ -54,7 +58,7 @@ export const Home = () => {
       <color attach='background' args={[colors.white]} />
       <Performance />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
-      <Environment preset='dawn' environmentIntensity={0.5} />
+      <Environment preset='park' environmentIntensity={1} />
     </>
   )
 }
