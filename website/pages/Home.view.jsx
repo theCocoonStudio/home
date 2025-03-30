@@ -5,16 +5,17 @@ import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../components/FluidBackground.canvas'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { TitleText } from '../components/TitleText.canvas'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { Performance } from '../components/Performance.canvas'
 import { DragOrb } from '../components/DragOrb.canvas'
+import { useFrame } from '@react-three/fiber'
+import { SetScroll } from '../components/SetScroll.canvas'
 
 export const Home = () => {
   const { colors } = useTheme()
 
   const bg = useRef()
   const title = useRef()
-  const scroll = useRef()
   const orb = useRef()
 
   const callbackAt1 = useCallback((...args) => {
@@ -25,10 +26,6 @@ export const Home = () => {
 
   const data = useScroll()
 
-  useEffect(() => {
-    bg.current?.scrollCallback(data.offset)
-  })
-
   useMarkupBounds(
     {
       distance: [1],
@@ -36,6 +33,11 @@ export const Home = () => {
     },
     [],
   )
+
+  useFrame((state, delta) => {
+    orb.current?.scrollCallback &&
+      orb.current.scrollCallback(state, delta, data)
+  })
 
   return (
     <>
@@ -48,6 +50,7 @@ export const Home = () => {
         colors={colors}
       />
       <DragOrb ref={orb} />
+      <SetScroll event='showScroll' rangeMin={0.2} />
       {/* <TitleText
         fontSize={60}
         ref={title}

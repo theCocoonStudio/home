@@ -8,13 +8,21 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { Vector2, Vector3, Vector4 } from 'three'
+import {
+  CurvePath,
+  EllipseCurve,
+  LineCurve,
+  Vector2,
+  Vector3,
+  Vector4,
+} from 'three'
 import { usePointer } from 'website/hooks/usePointer'
-import { damp3 } from 'maath/easing'
+import { damp, damp3 } from 'maath/easing'
 import { createSphereTwistBox } from '../utils/geometry'
+import { useTheme } from '../hooks/useTheme'
 
 export const DragOrb = forwardRef(function DragOrb(
-  { orbSize = 120, forceSize = 1, forceFactor = 1, zPos = 0 },
+  { orbSize = 90, forceSize = 1, forceFactor = 1, range = [0.01, 0.2] },
   forwardedRef,
 ) {
   const Geometry = useMemo(() => {
@@ -25,6 +33,10 @@ export const DragOrb = forwardRef(function DragOrb(
   useEffect(() => () => {
     Geometry.dispose()
   })
+
+  const {
+    lengths: { navHeight, footerHeight },
+  } = useTheme()
 
   const group = useRef()
   const mesh = useRef()
@@ -38,6 +50,11 @@ export const DragOrb = forwardRef(function DragOrb(
 
   const scale = useRef(new Vector3(1.0, 1.0, 1.0))
   const orbPosition = useRef(new Vector3(0, 0, 0))
+
+  const line1 = useRef(new LineCurve(new Vector2(), new Vector2()))
+  const line2 = useRef(new LineCurve(new Vector2(), new Vector2()))
+  const arc = useRef(new EllipseCurve())
+  const path = useRef(new CurvePath())
 
   const boundsCallback = useCallback(
     ({ min, max, ppwu }) => {
@@ -54,8 +71,19 @@ export const DragOrb = forwardRef(function DragOrb(
       )
       mesh.current.position.copy(orbPosition.current)
       mesh.current.scale.copy(scale.current)
+      // orb scroll-path
+      const _radius =
+        0.5 * Math.min(max.x - min.x, max.y - min.y) -
+        (navHeight + footerHeight) / ppwu.y
+      line1.current.v2.setY(-_radius)
+      line2.current.v1.setY(-_radius)
+      arc.current.xRadius = _radius
+      arc.current.yRadius = _radius
+      arc.current.aStartAngle = 2 * (3 / 4) * Math.PI
+      arc.current.aEndAngle = 2 * (3 / 4) * Math.PI + 2 * Math.PI
+      path.current.curves = [line1.current, arc.current, line2.current]
     },
-    [orbSize],
+    [footerHeight, navHeight, orbSize],
   )
 
   const forceCallback = useCallback(() => {
@@ -85,39 +113,66 @@ export const DragOrb = forwardRef(function DragOrb(
     orbSize,
   ])
 
+  const drag = useRef(new Vector3(0, 0, 0))
+  const morphTargetInfluences = useRef([0, 0])
+  const twist = useRef(true)
+
+  useEffect(() => {
+    drag.current.z = mesh.current.scale.z / 2
+  }, [])
+
+  useFrame(({ clock }, delta) => {
+    damp3(group.current?.position, drag.current, 0.1, delta)
+
+    damp(
+      morphTargetInfluences.current,
+      1,
+      twist.current ? 0.5 + 0.5 * Math.sin(clock.getElapsedTime()) : 0,
+      0.1,
+      delta,
+    )
+  })
+
+  const scrollCallback = useCallback(
+    (state, delta, scroll) => {
+      // go right
+      const offset = scroll.range(...range)
+      const visible = scroll.visible(...range)
+      const point = path.current.getPointAt(offset)
+      twist.current = !visible && offset < range[1] ? true : false
+      damp3(
+        mesh.current?.position,
+        [point.x, point.y, mesh.current?.position.z],
+        0.0,
+        delta,
+      )
+      damp3(
+        mesh.current?.rotation,
+        [Math.PI * offset, Math.PI * offset, 2 * Math.PI * offset],
+        0.15,
+        delta,
+      )
+
+      if (offset > 0 && visible) {
+        morphTargetInfluences.current[0] = offset
+      }
+    },
+    [range],
+  )
+
   useImperativeHandle(
     forwardedRef,
     () => ({
       forceCallback,
       boundsCallback,
+      scrollCallback,
     }),
-    [forceCallback, boundsCallback],
+    [forceCallback, boundsCallback, scrollCallback],
   )
-
-  const drag = useRef(new Vector3(0, 0, mesh.current?.scale.z / 2 || 0))
-  const toDamp = useRef(true)
-  const morphTargetInfluences = useRef([0, 0])
-
-  useFrame(({ clock }, delta) => {
-    morphTargetInfluences.current[0] =
-      0.5 + 0.5 * Math.sin(clock.getElapsedTime())
-    group.current.rotation.x =
-      0.5 + 0.5 * 2 * Math.PI * Math.sin(clock.getElapsedTime() / 2)
-    group.current.rotation.y =
-      0.5 + 0.5 * 2 * Math.PI * Math.sin(clock.getElapsedTime() / 2)
-    if (toDamp.current) {
-      damp3(group.current?.position, drag.current, 0.1, delta)
-    } else {
-      group.current?.position.copy(drag.current)
-    }
-  })
 
   return (
     <DragControls
       autoTransform={false}
-      onDragStart={() => {
-        toDamp.current = false
-      }}
       onDrag={(localMatrix) => {
         drag.current
           .setFromMatrixPosition(localMatrix)
@@ -125,13 +180,12 @@ export const DragOrb = forwardRef(function DragOrb(
       }}
       onDragEnd={() => {
         drag.current.set(0, 0, (mesh.current?.scale.z / 2) * Math.sqrt(2))
-        toDamp.current = true
       }}
       dragConfig={{
         preventScroll: true,
       }}
     >
-      <group ref={group}>
+      <group ref={group} position-z={drag.current.z}>
         <mesh
           morphTargetInfluences={morphTargetInfluences.current}
           onPointerDown={() => {
@@ -157,7 +211,7 @@ export const DragOrb = forwardRef(function DragOrb(
             squeeze
             squeezeMin={0.15}
             squeezeMax={1.1}
-            simplify
+            /* simplify */
           />
         </mesh>
         {/* <ambientLight intensity={20} /> */}
