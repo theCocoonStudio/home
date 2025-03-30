@@ -108,4 +108,5 @@
   width: 50vw;
   justify-content: space-between;
   align-items: center;
+  transition: opacity 1s;
 }
