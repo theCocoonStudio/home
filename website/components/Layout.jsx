@@ -11,6 +11,8 @@ import { usePointer } from '../hooks/usePointer'
 import { composeClassNames, nunito, orbitron } from '../utils/styles'
 import { useTheme } from '../hooks/useTheme'
 import { Footer } from './Footer'
+import { SetScroll } from './SetScroll.canvas'
+import { ScrollProvider } from '../context/ScrollProvider'
 
 const theme = {
   utils: { compose: composeClassNames, nunito, orbitron },
@@ -47,10 +49,12 @@ export function Layout() {
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
         <PointerProvider>
-          <Inner />
-          <Menu />
-          <Nav />
-          <Footer />
+          <ScrollProvider>
+            <Inner />
+            <Menu />
+            <Nav />
+            <Footer />
+          </ScrollProvider>
         </PointerProvider>
       </ResizeEventProvider>
     </ThemeProvider>
@@ -69,13 +73,14 @@ const Inner = () => {
   return (
     <div className={className}>
       <ThreeApp eventPrefix={'client'}>
-        <ScrollControls pages={3} enabled={true} damping={0}>
+        <ScrollControls pages={10} enabled={true} damping={0} distance={2}>
           <View.Port />
           <Html wrapperClass={styles.html} prepend transform={false}>
             <View className={styles.view} frames={1}>
               <Home />
             </View>
           </Html>
+          {/* <SetScroll isEventData={false} /> */}
         </ScrollControls>
       </ThreeApp>
     </div>
