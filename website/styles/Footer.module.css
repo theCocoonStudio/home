@@ -108,5 +108,28 @@
   width: 50vw;
   justify-content: space-between;
   align-items: center;
-  transition: opacity 1s;
+  transition: opacity 0.5s;
+}
+
+@keyframes reveal {
+  0% {
+    margin-bottom: 0px;
+  }
+  50% {
+    margin-bottom: -20px;
+  }
+  100% {
+    margin-bottom: 0px;
+  }
+}
+
+.down {
+  z-index: -1;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  animation: reveal 3s ease-in-out infinite;
+  pointer-events: none;
+  bottom: 150%;
+  transition: opacity 0.5s;
 }

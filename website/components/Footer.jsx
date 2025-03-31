@@ -7,6 +7,7 @@ import { YoutubeIcon } from 'website/components/YoutubeIcon'
 import { InstagramIcon } from 'website/components/InstagramIcon'
 import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
 import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
+import Down from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
 import { useScroll } from '../hooks/useScroll'
 
 export const Footer = () => {
@@ -55,6 +56,13 @@ export const Footer = () => {
     [showScroll],
   )
 
+  const downStyles = useMemo(
+    () => ({
+      opacity: showScroll ? '0' : '0.8',
+    }),
+    [showScroll],
+  )
+
   return (
     <div className={`${styles.footer}`} style={footerStyles}>
       <div className={styles.socials} style={socialStyles}>
@@ -78,6 +86,9 @@ export const Footer = () => {
             <div>FPS</div>
           </div>
         </div>
+      </div>
+      <div className={`${styles.down}`} style={downStyles}>
+        <Down size={1 * footerHeight} stroke={0.8} />
       </div>
       <div
         className={`${styles.scroll}`}
