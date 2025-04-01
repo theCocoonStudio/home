@@ -1,4 +1,4 @@
-import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
+import { PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Panels } from '../components/Panels.canvas'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
@@ -24,12 +24,16 @@ export const Home = () => {
     orb.current?.boundsCallback && orb.current.boundsCallback(...args)
   }, [])
 
+  const callbackAtHalf = useCallback((...args) => {
+    title.current?.boundsCallback && title.current.boundsCallback(...args)
+  }, [])
+
   const data = useScroll()
 
   useMarkupBounds(
     {
-      distance: [1],
-      callback: [callbackAt1],
+      distance: [1, 0.5],
+      callback: [callbackAt1, callbackAtHalf],
     },
     [],
   )
@@ -37,6 +41,8 @@ export const Home = () => {
   useFrame((state, delta) => {
     orb.current?.scrollCallback &&
       orb.current.scrollCallback(state, delta, data)
+    title.current?.scrollCallback &&
+      title.current.scrollCallback(state, delta, data)
   })
 
   return (
@@ -45,18 +51,13 @@ export const Home = () => {
       {/* <Panels /> */}
       <FluidBackground
         ref={bg}
-        stencil={title.current?.stencil}
+        /* stencil={title.current?.stencil} */
         forceCallback={orb.current?.forceCallback}
         colors={colors}
       />
       <DragOrb ref={orb} />
       <SetScroll event='showScroll' rangeMin={0.2} />
-      {/* <TitleText
-        fontSize={60}
-        ref={title}
-        mask={true}
-        text={`Technically creative`}
-      /> */}
+      <TitleText fontSize={60} ref={title} mask={false} text={`about`} />
 
       <color attach='background' args={[colors.white]} />
       <Performance />

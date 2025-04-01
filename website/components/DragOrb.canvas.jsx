@@ -22,7 +22,7 @@ import { createSphereTwistBox } from '../utils/geometry'
 import { useTheme } from '../hooks/useTheme'
 
 export const DragOrb = forwardRef(function DragOrb(
-  { orbSize = 90, forceSize = 1, forceFactor = 1, range = [0.01, 0.2] },
+  { orbSize = 90, forceSize = 1, forceFactor = 1, range = [0.01, 0.19] },
   forwardedRef,
 ) {
   const Geometry = useMemo(() => {
@@ -214,7 +214,6 @@ export const DragOrb = forwardRef(function DragOrb(
             /* simplify */
           />
         </mesh>
-        {/* <ambientLight intensity={20} /> */}
       </group>
     </DragControls>
   )
