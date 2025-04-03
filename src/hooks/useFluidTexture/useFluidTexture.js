@@ -46,18 +46,20 @@ export const useFluidTexture = (
     isViscous,
     BFECC,
     forceCallback,
+    customForceConfig,
   } = { ...defaultOpts, ...options }
 
-  const get = useThree(({ get }) => get)
   // independent data (along with hook's passed args)
+  const { width: defaultWidth, height: defaultHeight } = useThree(
+    ({ size }) => size,
+  )
   const { width, height } = useMemo(
     () => ({
-      width: fboWidth || get().size.width,
-      height: fboHeight || get().size.height,
+      width: fboWidth || defaultWidth,
+      height: fboHeight || defaultHeight,
     }),
-    [fboHeight, fboWidth, get],
+    [defaultHeight, defaultWidth, fboHeight, fboWidth],
   )
-
   // shared objects
   const camera = useRef(new Camera())
   const geometry = useRef(new PlaneGeometry(2.0, 2.0))
@@ -150,6 +152,10 @@ export const useFluidTexture = (
         },
       })
       .setFBO(vel1),
+  )
+
+  const customForcePass = useRef(
+    customForceConfig && new ShaderPass(customForceConfig).setFBO(vel1),
   )
   const viscousPass = useRef(
     new ShaderPass({
@@ -307,6 +313,9 @@ export const useFluidTexture = (
 
       forcePass.current.render(gl)
 
+      // custom force pass
+      customForcePass.current?.render(gl)
+
       // viscosity pass
       let vel = vel1
       if (isViscous) {
@@ -400,6 +409,22 @@ export const useFluidTexture = (
     },
     [],
   )
+
+  // updates to customForceConfig
+  useEffect(() => {
+    const prev = customForcePass.current
+    customForcePass.current =
+      customForceConfig && new ShaderPass(customForceConfig).setFBO(vel1)
+    return () => {
+      prev &&
+        prev.dispose(
+          prev?.material ? false : true,
+          prev?.geometry ? false : true,
+          false,
+          true,
+        )
+    }
+  }, [customForceConfig, vel1])
 
   return output.texture
 }

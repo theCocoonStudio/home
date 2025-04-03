@@ -13,6 +13,8 @@ export class ShaderPass {
   #children
   #onDispose
   #uniforms = {}
+  #onBeforeRender
+  #onAfterRender
   constructor({
     materialConfig: {
       vertexShader,
@@ -75,10 +77,10 @@ export class ShaderPass {
     }
 
     if (typeof onBeforeRender === 'function') {
-      this.scene.onBeforeRender = onBeforeRender
+      this.#onBeforeRender = onBeforeRender
     }
     if (typeof onAfterRender === 'function') {
-      this.scene.onAfterRender = onAfterRender
+      this.#onAfterRender = onAfterRender
     }
     if (fbo) {
       this.#fbo = fbo
@@ -110,21 +112,21 @@ export class ShaderPass {
   }
 
   setOnBeforeRender(func) {
-    this.scene.onBeforeRender = func
+    this.#onBeforeRender = func
     return this
   }
 
   get onBeforeRender() {
-    return this.scene.onBeforeRender
+    return this.#onBeforeRender
   }
 
   setOnAfterRender(func) {
-    this.scene.onAfterRender = func
+    this.#onAfterRender = func
     return this
   }
 
   get onAfterRenderRender() {
-    return this.scene.onAfterRender
+    return this.#onAfterRender
   }
 
   get uniforms() {
@@ -145,7 +147,9 @@ export class ShaderPass {
 
   render(renderer) {
     renderer.setRenderTarget(this.#fbo)
+    this.#onBeforeRender && this.#onBeforeRender(this)
     renderer.render(this.scene, this.camera)
+    this.#onAfterRender && this.#onAfterRender(this)
     renderer.setRenderTarget(null)
     return this
   }
