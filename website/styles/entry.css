@@ -14,7 +14,8 @@ body,
   overscroll-behavior: none;
 } */
 div,
-pre {
+pre,
+h1 {
   margin: 0;
   padding: 0;
 }
