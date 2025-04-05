@@ -1,7 +1,7 @@
 import { BoxGeometry, Float32BufferAttribute, Vector3 } from 'three'
 
 export const createSphereTwistBox = () => {
-  const geometry = new BoxGeometry(2, 2, 2, 6, 6, 6)
+  const geometry = new BoxGeometry(2, 2, 2, 6, 6, 6).toNonIndexed()
 
   // create an empty array to  hold targets for the attribute we want to morph
   // morphing positions and normals is supported
