@@ -119,28 +119,6 @@ export const Logo = function Logo({ size }) {
     [],
   )
 
-  const scroll = useScroll()
-
-  useFrame(() => {
-    if (ref?.current && groupProps && scroll) {
-      ref.current.rotation.x =
-        0.35 + Math.PI * 2 * Math.sin((scroll.offset * Math.PI) / 2)
-      ref.current.rotation.y =
-        0.48 + Math.PI * 2 * Math.sin((scroll.offset * Math.PI) / 2)
-      ref.current.rotation.z =
-        Math.PI * 2 * Math.sin((scroll.offset * Math.PI) / 2)
-      /* if (elapsed.current < 5) {
-        elapsed.current += delta
-        ref.current.rotation.y = 0.48
-      } else {
-        damp(ref.current.rotation, 'y', 0.48 + Math.PI * 2, 0.5, delta)
-        if (Math.abs(ref.current.rotation.y - (0.48 + Math.PI * 2)) < 0.02) {
-          elapsed.current = 0.0
-        }
-      } */
-    }
-  })
-
   return (
     groupProps && (
       <>
