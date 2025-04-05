@@ -108,7 +108,7 @@
   width: 50vw;
   justify-content: space-between;
   align-items: center;
-  transition: opacity 0.5s;
+  transition: opacity 0.1s;
 }
 
 @keyframes reveal {
@@ -130,6 +130,6 @@
   transform: translate(-50%, 50%);
   animation: reveal 3s ease-in-out infinite;
   pointer-events: none;
-  bottom: 150%;
-  transition: opacity 0.5s;
+  bottom: 25vh;
+  transition: opacity 0.1s;
 }
