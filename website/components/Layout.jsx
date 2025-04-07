@@ -45,7 +45,7 @@ const theme = {
 const pages = {
   home: {
     scrollControlsProps: { pages: 10, enabled: true, damping: 0, distance: 2 },
-    sectionEvents: { landingSection: [0, 0.2], aboutSection: [0.2, 1] },
+    sectionEvents: { landingSection: [0, 0.19], aboutSection: [0.19, 1] },
     Component: Home,
   },
 }
