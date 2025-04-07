@@ -30,9 +30,11 @@ export const Title = forwardRef(function Title(
       // make opaque
       const offset = scroll.range(...transparentRange)
       text.current?.style && (text.current.style.opacity = offset)
-      const target = scroll.range(...transparentRange)
       title.current?.style &&
-        (title.current.style.top = `calc((50vh - ${navHeight}px / 2) * ${target} * -1)`)
+        (title.current.style.top = `calc((50vh - ${navHeight}px / 2) * ${offset} * -1)`)
+      const visible = scroll.visible(transparentRange[0], 1)
+      title.current?.style &&
+        (title.current.style.display = visible ? 'flex' : 'none')
     },
     [navHeight, transparentRange],
   )
