@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -51,12 +52,11 @@ export const FluidBackground = forwardRef(function FluidBackground(
       isViscous,
       BFECC,
       isBounce,
+      forceCallback,
     }
-  }, [])
+  }, [forceCallback])
 
-  const texture = useFluidTexture(
-    forceCallback ? { options, forceCallback } : options,
-  )
+  const texture = useFluidTexture(options)
 
   const boundsCallback = useCallback(({ min, max }) => {
     const width = max.x - min.x
