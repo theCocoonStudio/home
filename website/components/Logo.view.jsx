@@ -1,4 +1,3 @@
-import { useFrame } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Color, Vector2 } from 'three'
 import { LineMaterial } from 'three-stdlib'
@@ -7,7 +6,7 @@ import {
   LineSegmentsGeometry,
 } from 'three/examples/jsm/Addons.js'
 import { useMarkupBounds } from 'src/hooks'
-import { PerspectiveCamera, useScroll } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 
 export const Logo = function Logo({ size }) {
   const { iLogo, materials, geometries } = useMemo(() => {
@@ -96,12 +95,10 @@ export const Logo = function Logo({ size }) {
   const ref = useRef()
   const iMesh = useRef()
 
-  const elapsed = useRef(0.0)
-
   const [groupProps, setGroupProps] = useState(null)
 
   const callback = useCallback(
-    ({ target, element, contentRect, min, max, ppwu, camera }) => {
+    ({ ppwu }) => {
       const scale = size / ppwu.x
 
       setGroupProps({
