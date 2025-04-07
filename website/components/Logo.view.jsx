@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
 import { Color, Vector2 } from 'three'
 import { LineMaterial } from 'three-stdlib'
 import {
@@ -95,14 +102,16 @@ export const Logo = function Logo({ size }) {
   const ref = useRef()
   const iMesh = useRef()
 
+  const [isPending, startTransition] = useTransition()
   const [groupProps, setGroupProps] = useState(null)
 
   const callback = useCallback(
     ({ ppwu }) => {
       const scale = size / ppwu.x
-
-      setGroupProps({
-        scale,
+      startTransition(() => {
+        setGroupProps({
+          scale,
+        })
       })
     },
     [size],

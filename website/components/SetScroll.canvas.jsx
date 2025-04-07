@@ -1,7 +1,7 @@
 import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState, useTransition } from 'react'
 import { useScroll as useMarkupScroll } from 'website/hooks/useScroll'
 
 export const SetScroll = ({
@@ -14,7 +14,14 @@ export const SetScroll = ({
 }) => {
   const scrollData = useScroll()
 
+  const [isPending, startTransition] = useTransition()
   const [calcData, setCalData] = useState()
+
+  const set = useCallback((args) => {
+    startTransition(() => {
+      setCalData(args)
+    })
+  }, [])
 
   const data = useMemo(
     () => (typeof eventData !== 'undefined' ? eventData : calcData),
@@ -29,7 +36,7 @@ export const SetScroll = ({
 
   return rangeMin || rangeMax ? (
     <Range
-      set={setCalData}
+      set={set}
       rangeMin={rangeMin || 0.01}
       rangeMax={rangeMax || 1}
       scrollData={scrollData}
