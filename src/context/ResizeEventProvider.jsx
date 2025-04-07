@@ -1,7 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
 import { ResizeEventContext } from './ResizeEventContext'
 
 export const ResizeEventProvider = ({ children }) => {
+  const [isPending, startTransition] = useTransition()
+
   const [entries, setEntries] = useState([])
   const refs = useRef([]) // make sure unsubscribing doesn't remove listener for other consumers (i.e. keep consumer count for each ref and check before subscribing/unsubscribing)
   const callback = useCallback((rawEntries) => {
@@ -9,7 +18,9 @@ export const ResizeEventProvider = ({ children }) => {
     for (const entry of rawEntries) {
       targets.push(entry.target)
     }
-    setEntries(targets)
+    startTransition(() => {
+      setEntries(targets)
+    })
   }, [])
   const observer = useMemo(() => new ResizeObserver(callback), [callback])
 
