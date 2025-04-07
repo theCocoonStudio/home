@@ -1,5 +1,7 @@
 import { Mask, useFont, useMask } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 import Orbitron from 'assets/Orbitron_SemiBold.json'
+
 import {
   forwardRef,
   useCallback,
@@ -9,7 +11,23 @@ import {
   useRef,
   useState,
 } from 'react'
+import { ShapeGeometry, Vector2 } from 'three'
 
+const vertexShader = `
+precision highp float;
+
+void main(){
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+`
+const fragmentShader = `
+precision highp float;
+
+void main(){
+    gl_FragColor = vec4(0, 0, 0, 1);
+}
+
+`
 export const TitleText = forwardRef(function TitleText(
   {
     text = 'hello',
@@ -29,11 +47,21 @@ export const TitleText = forwardRef(function TitleText(
 
   const [fontSize, setFontSize] = useState()
 
-  const shape = useMemo(() => {
+  const geometry = useMemo(() => {
     if (fontSize) {
-      return font.generateShapes(text, 1.0 * fontSize)
+      const shapes = font.generateShapes(text, fontSize)
+      const geometry = new ShapeGeometry(shapes)
+      geometry.center()
+      return geometry
     }
   }, [font, fontSize, text])
+
+  useEffect(
+    () => () => {
+      geometry && geometry.dispose()
+    },
+    [geometry],
+  )
 
   const boundsCallback = useCallback(
     ({ ppwu }) => {
@@ -59,19 +87,40 @@ export const TitleText = forwardRef(function TitleText(
 
   const stencil = useMask(id)
 
+  const camera = useThree(({ camera }) => camera)
+
+  const customForceConfig = useMemo(() => {
+    const materialConfig = {
+      vertexShader,
+      fragmentShader,
+    }
+    return geometry
+      ? {
+          materialConfig,
+          geometry,
+          camera,
+          fboConfig: { isNull: true },
+          onBeforeRender: (shaderPass) => {
+            shaderPass.mesh.visible = mesh.current.visible
+            shaderPass.mesh.position.copy(mesh.current.position)
+          },
+        }
+      : undefined
+  }, [camera, geometry])
+
   useImperativeHandle(
     forwardedRef,
-    () => ({ stencil: mask ? stencil : null, boundsCallback, scrollCallback }),
-    [boundsCallback, mask, scrollCallback, stencil],
+    () => ({
+      stencil: mask ? stencil : null,
+      boundsCallback,
+      scrollCallback,
+      customForceConfig,
+    }),
+    [boundsCallback, customForceConfig, mask, scrollCallback, stencil],
   )
 
-  const centerG = useCallback((renderer, scene, camera, geometry) => {
-    geometry.center()
-    geometry.computeTangents()
-  }, [])
-
   return (
-    shape &&
+    geometry &&
     (mask ? (
       <Mask
         colorWrite={!mask}
@@ -79,10 +128,10 @@ export const TitleText = forwardRef(function TitleText(
         {...props}
         ref={mesh}
         depthWrite
-        onBeforeRender={centerG}
         position-z={0.5}
         position-y={startY}
         visible={false}
+        geometry={geometry}
       >
         <meshPhongMaterial
           toneMapped={false}
@@ -90,17 +139,15 @@ export const TitleText = forwardRef(function TitleText(
           transparent
           opacity={0}
         />
-        <shapeGeometry args={[shape]} />
       </Mask>
     ) : (
       <mesh
-        onBeforeRender={centerG}
+        geometry={geometry}
         position-z={0.5}
         position-y={startY}
         ref={mesh}
         visible={false}
       >
-        <shapeGeometry args={[shape]} />
         <meshPhongMaterial
           toneMapped={false}
           color='black'

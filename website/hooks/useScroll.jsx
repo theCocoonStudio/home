@@ -2,7 +2,8 @@ import { useContext, useLayoutEffect, useMemo } from 'react'
 import { ScrollContext } from '../context/ScrollContext'
 
 export const useScroll = (eventKey, data, isEventData = true) => {
-  const { events, setEvents, scroll, setScroll } = useContext(ScrollContext)
+  const { events, setEvents, scroll, setScroll, scrollTo, target } =
+    useContext(ScrollContext)
 
   // if isScrollData
   useLayoutEffect(() => {
@@ -32,11 +33,8 @@ export const useScroll = (eventKey, data, isEventData = true) => {
   }, [data, eventKey, isEventData, setEvents])
 
   const value = useMemo(
-    () =>
-      eventKey && typeof data === 'undefined'
-        ? events[`${eventKey}`]
-        : { scroll, events },
-    [data, eventKey, events, scroll],
+    () => ({ scroll, events, scrollTo, target }),
+    [events, scroll, scrollTo, target],
   )
 
   return value

@@ -47,7 +47,10 @@ export const Footer = () => {
     [atomicPadding],
   )
 
-  const showScroll = useScroll('showScroll')
+  const {
+    scrollTo,
+    events: { showScroll },
+  } = useScroll('showScroll')
 
   const scrollStyles = useMemo(
     () => ({
@@ -59,6 +62,7 @@ export const Footer = () => {
   const downStyles = useMemo(
     () => ({
       opacity: showScroll ? '0' : '0.8',
+      display: showScroll ? 'none' : 'block',
     }),
     [showScroll],
   )
@@ -88,7 +92,13 @@ export const Footer = () => {
         </div>
       </div>
       <div className={`${styles.down}`} style={downStyles}>
-        <Down size={1 * footerHeight} stroke={0.8} />
+        <Down
+          size={1 * footerHeight}
+          stroke={0.8}
+          onClick={() => {
+            scrollTo(0.19, 0.25)
+          }}
+        />
       </div>
       <div
         className={`${styles.scroll}`}

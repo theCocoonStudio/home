@@ -1,11 +1,13 @@
 import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import { damp } from 'maath/easing'
 import { useMemo, useRef, useState } from 'react'
 import { useScroll as useMarkupScroll } from 'website/hooks/useScroll'
 
 export const SetScroll = ({
   event,
   eventData,
+  onEvent,
   isEventData = true,
   rangeMin,
   rangeMax,
@@ -19,31 +21,57 @@ export const SetScroll = ({
     [calcData, eventData],
   )
 
-  useMarkupScroll(
+  const _data = useMarkupScroll(
     isEventData ? event : undefined,
     isEventData ? data : scrollData,
     isEventData,
   )
 
-  return (
-    (rangeMin || rangeMax) && (
-      <Range
-        set={setCalData}
-        rangeMin={rangeMin || 0.01}
-        rangeMax={rangeMax || 1}
-        scrollData={scrollData}
-      />
-    )
+  return rangeMin || rangeMax ? (
+    <Range
+      set={setCalData}
+      rangeMin={rangeMin || 0.01}
+      rangeMax={rangeMax || 1}
+      scrollData={scrollData}
+      onEvent={onEvent}
+    />
+  ) : (
+    <ScrollTo scrollData={scrollData} targetRef={_data?.target} />
   )
 }
 
-const Range = ({ set, rangeMin, rangeMax, scrollData }) => {
+const Range = ({ set, rangeMin, rangeMax, scrollData, onEvent }) => {
   const visible = useRef()
   useFrame(() => {
     const updated = scrollData.visible(rangeMin, rangeMax)
     if (visible.current !== updated) {
       visible.current = updated
       set(updated)
+      onEvent && onEvent(updated)
+    }
+  })
+}
+
+const ScrollTo = ({ targetRef, scrollData }) => {
+  useFrame((state, delta) => {
+    // if target exists
+    if (typeof targetRef.current.value !== 'undefined') {
+      // if it's been reached, remove the target
+      if (Math.abs(targetRef.current.value - scrollData.el.scrollTop) < 1.0) {
+        targetRef.current.value = undefined
+      } else {
+        //otherwise, continue scrolling to it
+        damp(
+          scrollData.el,
+          'scrollTop',
+          targetRef.current.value,
+          targetRef.current.smoothTime,
+          delta,
+          Infinity,
+          undefined,
+          5.0,
+        )
+      }
     }
   })
 }

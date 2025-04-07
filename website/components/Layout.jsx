@@ -4,15 +4,13 @@ import { Nav } from './Nav'
 import { Menu } from './Menu'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
-import { PointerProvider } from 'website/context/PointerProvider'
 import { Html, ScrollControls, View } from '@react-three/drei'
 import { Home } from '../pages/Home.view'
-import { usePointer } from '../hooks/usePointer'
 import { composeClassNames, nunito, orbitron } from '../utils/styles'
-import { useTheme } from '../hooks/useTheme'
 import { Footer } from './Footer'
-import { SetScroll } from './SetScroll.canvas'
 import { ScrollProvider } from '../context/ScrollProvider'
+import { SetScroll } from './SetScroll.canvas'
+import { useMemo, useState } from 'react'
 
 const theme = {
   utils: { compose: composeClassNames, nunito, orbitron },
@@ -44,34 +42,43 @@ const theme = {
   },
 }
 
+const pages = {
+  home: {
+    scrollControlsProps: { pages: 10, enabled: true, damping: 0, distance: 2 },
+    sectionEvents: { landingSection: [0, 0.2], aboutSection: [0.2, 1] },
+    Component: Home,
+  },
+}
+
 export function Layout() {
+  const [page, setPage] = useState('home')
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
-        <PointerProvider>
-          <ScrollProvider>
-            <Inner />
-            <Menu />
-            <Nav />
-            <Footer />
-          </ScrollProvider>
-        </PointerProvider>
+        <ScrollProvider>
+          <Inner page={page} />
+          <Menu />
+          <Nav />
+          <Footer />
+        </ScrollProvider>
       </ResizeEventProvider>
     </ThemeProvider>
   )
 }
 
-const Inner = () => {
-  const { pointer } = usePointer()
-
-  const { utilReturn: className } = useTheme(
-    'compose',
-    styles.layout,
-    pointer && styles.pointer,
-  )
-
+const Inner = ({ page }) => {
+  const scrollEvents = useMemo(() => {
+    return Object.keys(pages[page].sectionEvents).map((section) => (
+      <SetScroll
+        key={section}
+        event={section}
+        rangeMin={pages[page].sectionEvents[section][0]}
+        rangeMax={pages[page].sectionEvents[section][1]}
+      />
+    ))
+  }, [page])
   return (
-    <div className={className}>
+    <div className={styles.layout}>
       <ThreeApp eventPrefix={'client'}>
         <ScrollControls pages={10} enabled={true} damping={0} distance={2}>
           <View.Port />
@@ -80,7 +87,8 @@ const Inner = () => {
               <Home />
             </View>
           </Html>
-          {/* <SetScroll isEventData={false} /> */}
+          <SetScroll isEventData={false} />
+          {scrollEvents}
         </ScrollControls>
       </ThreeApp>
     </div>

@@ -7,6 +7,7 @@ import About from '@tabler/icons-react/dist/esm/icons/IconUser'
 import Contact from '@tabler/icons-react/dist/esm/icons/IconAt'
 import Services from '@tabler/icons-react/dist/esm/icons/IconHeartHandshake'
 import Attribution from '@tabler/icons-react/dist/esm/icons/IconHandLoveYou'
+import { useScroll } from '../hooks/useScroll'
 
 export const Nav = () => {
   const {
@@ -34,6 +35,10 @@ export const Nav = () => {
     }),
     [atomicPadding],
   )
+
+  const {
+    events: { aboutSection },
+  } = useScroll()
   return (
     <div className={`${styles.nav}`} style={navStyles}>
       <div className={`${styles.logo}`} style={logoStyles}>
@@ -42,10 +47,19 @@ export const Nav = () => {
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>
-        <About size={45} color={black} stroke={2} />
-        <Contact size={45} color={black} stroke={2} />
-        <Services size={45} color={black} stroke={2} />
-        <Attribution size={45} color={black} stroke={2} />
+        <div>
+          <About size={45} color={black} stroke={2} />
+          {aboutSection && <div className={styles.active} />}
+        </div>
+        <div>
+          <Contact size={45} color={black} stroke={2} />
+        </div>
+        <div>
+          <Services size={45} color={black} stroke={2} />
+        </div>
+        <div>
+          <Attribution size={45} color={black} stroke={2} />
+        </div>
       </div>
     </div>
   )

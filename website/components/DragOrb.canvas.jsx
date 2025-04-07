@@ -16,7 +16,6 @@ import {
   Vector3,
   Vector4,
 } from 'three'
-import { usePointer } from 'website/hooks/usePointer'
 import { damp, damp3 } from 'maath/easing'
 import { createSphereTwistBox } from '../utils/geometry'
 import { useTheme } from '../hooks/useTheme'
@@ -51,8 +50,6 @@ export const DragOrb = forwardRef(function DragOrb(
 
   const group = useRef()
   const mesh = useRef()
-
-  const { setPointer } = usePointer()
 
   const camera = useThree(({ camera }) => camera)
 
@@ -234,10 +231,10 @@ export const DragOrb = forwardRef(function DragOrb(
           }}
           ref={mesh}
           onPointerOver={() => {
-            setPointer(true)
+            document.body.style.cursor = 'pointer'
           }}
           onPointerOut={() => {
-            setPointer(false)
+            document.body.style.cursor = 'auto'
           }}
           args={[Geometry]}
         >

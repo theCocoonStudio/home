@@ -132,4 +132,10 @@
   pointer-events: none;
   bottom: 25vh;
   transition: opacity 0.1s;
+  path {
+    pointer-events: all;
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
