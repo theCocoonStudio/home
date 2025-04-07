@@ -22,14 +22,10 @@
   height: 0;
   transform: none !important;
   position: sticky !important;
-  z-index: 200;
+  z-index: 200 !important;
 }
 
 .view {
   width: 100vw;
   height: 100vh;
-}
-
-.pointer {
-  cursor: pointer !important;
 }

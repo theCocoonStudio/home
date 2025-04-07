@@ -82,7 +82,7 @@ const Inner = ({ page }) => {
       <ThreeApp eventPrefix={'client'}>
         <ScrollControls pages={10} enabled={true} damping={0} distance={2}>
           <View.Port />
-          <Html wrapperClass={styles.html} prepend transform={false}>
+          <Html wrapperClass={styles.html} transform={false}>
             <View className={styles.view} frames={1}>
               <Home />
             </View>
