@@ -234,7 +234,7 @@ export const DragOrb = forwardRef(function DragOrb(
             document.body.style.cursor = 'pointer'
           }}
           onPointerOut={() => {
-            document.body.style.cursor = 'auto'
+            document.body.style.cursor = ''
           }}
           args={[Geometry]}
         >
