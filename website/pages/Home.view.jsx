@@ -1,4 +1,4 @@
-import { PerspectiveCamera, useScroll } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Panels } from '../components/Panels.canvas'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
@@ -10,13 +10,24 @@ import { DragOrb } from '../components/DragOrb.canvas'
 import { useFrame } from '@react-three/fiber'
 import { SetScroll } from '../components/SetScroll.canvas'
 import { Title } from '../components/Title.canvas'
+import { ScrollItem } from '../components/ScrollItem.canvas'
+import { Vector2 } from 'three'
+import { getMarkupBounds } from '../utils/bounds'
 
 export const Home = () => {
-  const { colors } = useTheme()
+  const {
+    colors,
+    markupIds: {
+      scroll: { container },
+    },
+  } = useTheme()
 
   const bg = useRef()
   const title = useRef()
   const orb = useRef()
+  const item = useRef()
+
+  const scrollBounds = useRef({ min: new Vector2(), max: new Vector2() })
 
   const data = useScroll()
   const callbackAt1 = useCallback(
@@ -28,11 +39,23 @@ export const Home = () => {
     },
     [data],
   )
+  const callbackAtHalf = useCallback(
+    ({ ...args }) => {
+      const _args = { ...args, scroll: data }
+      getMarkupBounds(_args, {
+        id: container,
+        marginPx: [1, 0, 1, 0],
+        ...scrollBounds.current,
+      })
+      item.current?.boundsCallback && item.current.boundsCallback(_args)
+    },
+    [container, data],
+  )
 
   useMarkupBounds(
     {
-      distance: [1],
-      callback: [callbackAt1],
+      distance: [1, 0.5],
+      callback: [callbackAt1, callbackAtHalf],
     },
     [],
   )
@@ -42,6 +65,8 @@ export const Home = () => {
       orb.current.scrollCallback(state, delta, data)
     title.current?.scrollCallback &&
       title.current.scrollCallback(state, delta, data)
+    item.current?.scrollCallback &&
+      item.current.scrollCallback(state, delta, data)
   })
 
   return (
@@ -53,13 +78,14 @@ export const Home = () => {
         forceCallback={orb.current?.forceCallback}
         colors={colors}
       />
+      <ScrollItem zPos={0.5} ref={item} scrollBoundsRef={scrollBounds} />
       <DragOrb ref={orb} />
       <SetScroll event='showScroll' rangeMin={0.01} />
       <Title ref={title} />
       <color attach='background' args={[colors.white]} />
       <Performance />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
-      <Environment preset='park' environmentIntensity={1} />
+      <Environment preset='park' environmentIntensity={0.5} />
     </>
   )
 }
