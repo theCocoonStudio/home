@@ -13,7 +13,7 @@ export const nunito = (
     style: {
       ...styles,
       fontWeight: `${weight}`,
-      fontVariationSettings: `'wdth' ${width}, 'YTLC' ${height};`,
+      fontVariationSettings: `'wdth' ${width}, 'YTLC' ${height}`,
     },
     className: composeClassNames('nunito-sans', ...classNames),
   }
