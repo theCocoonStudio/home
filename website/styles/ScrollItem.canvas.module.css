@@ -9,18 +9,22 @@
   align-items: center;
   justify-content: space-between;
   row-gap: 10px;
-
-  > div:first-child {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
 }
 
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 .paragraph {
   font-size: 18px;
   flex-shrink: 1;
   flex-grow: 1;
   overflow: hidden;
+}
+
+.date {
+  font-size: 12px;
+  width: 100%;
 }

@@ -199,6 +199,11 @@ export const ScrollItem = forwardRef(function ScrollItem(
     [black],
   )
 
+  const { style: dStyle, className: dClassName } = useMemo(
+    () => nunito([200], { color: black }, styles.date),
+    [black],
+  )
+
   return (
     scale && (
       <group position-z={zPos} ref={group} position-x={-10}>
@@ -215,14 +220,17 @@ export const ScrollItem = forwardRef(function ScrollItem(
           position={[scale / 2 + (scale * 10) / size, 0, 0]}
         >
           <div className={className} style={style}>
-            <div>
+            <div className={dClassName} style={dStyle}>
+              <div>April 1, 2025</div>
+            </div>
+            <div className={styles.title}>
               <span>Hello, this is just a title example. Here it is.</span>
             </div>
             <div className={pClassName} style={pStyle}>
               <div>
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum is simply dummy text of the printing and
-                typesetting industry.
+                typesetting.
               </div>
             </div>
           </div>
