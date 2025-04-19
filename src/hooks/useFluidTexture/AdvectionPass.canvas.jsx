@@ -2,6 +2,7 @@ import {
   BufferAttribute,
   BufferGeometry,
   LineSegments,
+  RawShaderMaterial,
   ShaderMaterial,
 } from 'three'
 import fragmentShader from './glsl/advection.frag?raw'
@@ -55,7 +56,7 @@ const children = () => {
   ])
   const geometry = new BufferGeometry()
   geometry.setAttribute('position', new BufferAttribute(positionBuffer, 3))
-  const material = new ShaderMaterial(boundaryMaterialConfig)
+  const material = new RawShaderMaterial(boundaryMaterialConfig)
   const boundary = new LineSegments(geometry, material)
   boundary.renderOrder = 1
   return boundary
