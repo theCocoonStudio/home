@@ -1,24 +1,22 @@
-import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
-import { Panels } from '../components/Panels.canvas'
+import { PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
-import { FluidBackground } from '../components/FluidBackground.canvas'
+import { FluidBackground } from '../../components/FluidBackground.canvas'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
 import { useCallback, useRef } from 'react'
-import { Performance } from '../components/Performance.canvas'
-import { DragOrb } from '../components/DragOrb.canvas'
+import { Performance } from '../../components/Performance.canvas'
+import { DragOrb } from '../../components/DragOrb.canvas'
 import { useFrame } from '@react-three/fiber'
-import { SetScroll } from '../components/SetScroll.canvas'
-import { Title } from '../components/Title.canvas'
-import { ScrollItem } from '../components/ScrollItem.canvas'
+import { Title } from '../../components/Title.canvas'
+import { ScrollItem } from '../../components/ScrollItem.canvas'
 import { Vector2 } from 'three'
-import { getMarkupBounds } from '../utils/bounds'
+import { getMarkupBounds } from '../../utils/bounds'
 
 export const Home = () => {
   const {
     colors,
     markupIds: {
-      scroll: { container },
+      footer: { scrollContainer },
     },
   } = useTheme()
 
@@ -43,13 +41,13 @@ export const Home = () => {
     ({ ...args }) => {
       const _args = { ...args, scroll: data }
       getMarkupBounds(_args, {
-        id: container,
+        id: scrollContainer,
         marginPx: [1, 0, 1, 0],
         ...scrollBounds.current,
       })
       item.current?.boundsCallback && item.current.boundsCallback(_args)
     },
-    [container, data],
+    [scrollContainer, data],
   )
 
   useMarkupBounds(
@@ -71,8 +69,6 @@ export const Home = () => {
 
   return (
     <>
-      {/* <OrbitControls /> */}
-      {/* <Panels /> */}
       <FluidBackground
         ref={bg}
         forceCallback={orb.current?.forceCallback}
@@ -80,7 +76,7 @@ export const Home = () => {
       />
       <ScrollItem zPos={0.5} ref={item} scrollBoundsRef={scrollBounds} />
       <DragOrb ref={orb} />
-      <SetScroll event='showScroll' rangeMin={0.01} />
+
       <Title ref={title} />
       <color attach='background' args={[colors.white]} />
       <Performance />

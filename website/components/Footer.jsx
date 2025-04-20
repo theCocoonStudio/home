@@ -8,9 +8,8 @@ import { InstagramIcon } from 'website/components/InstagramIcon'
 import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
 import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
 import Down from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
-import { useScroll } from '../hooks/useScroll'
 
-export const Footer = () => {
+export const Footer = ({ config }) => {
   const {
     lengths: { footerHeight, atomicPadding },
     colors: { black },
@@ -47,10 +46,7 @@ export const Footer = () => {
     [atomicPadding],
   )
 
-  const {
-    scrollTo,
-    events: { showScroll },
-  } = useScroll('showScroll')
+  const showScroll = false
 
   const scrollStyles = useMemo(
     () => ({

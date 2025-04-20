@@ -5,7 +5,7 @@ import { useTheme } from '../hooks/useTheme'
 export const Performance = () => {
   const {
     markupIds: {
-      fps: { container },
+      footer: { fpsContainer },
     },
   } = useTheme()
 
@@ -22,10 +22,10 @@ export const Performance = () => {
       /** Averages of frames taken over n iterations   */
       // averages,
     }) => {
-      const el = document.getElementById(container)
+      const el = document.getElementById(fpsContainer)
       el.innerHTML = `${fps}`
     },
-    [container],
+    [fpsContainer],
   )
   return <PerformanceMonitor onChange={onChange} />
 }
