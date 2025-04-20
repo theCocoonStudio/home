@@ -43,7 +43,7 @@ export const Nav = () => {
     <div className={`${styles.nav}`} style={navStyles}>
       <div className={`${styles.logo}`} style={logoStyles}>
         <View index={2} frames={1}>
-          <Logo size={40} left={8 * atomicPadding} top={navHeight / 2} />
+          <Logo size={40} />
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>

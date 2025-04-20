@@ -1,19 +1,12 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Color, Vector2 } from 'three'
 import { LineMaterial } from 'three-stdlib'
 import {
   LineSegments2,
   LineSegmentsGeometry,
 } from 'three/examples/jsm/Addons.js'
-import { useMarkupBounds } from 'src/hooks'
 import { PerspectiveCamera } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 
 export const Logo = function Logo({ size }) {
   const { iLogo, materials, geometries } = useMemo(() => {
@@ -102,43 +95,36 @@ export const Logo = function Logo({ size }) {
   const ref = useRef()
   const iMesh = useRef()
 
-  const [isPending, startTransition] = useTransition()
-  const [groupProps, setGroupProps] = useState(null)
+  const {
+    camera,
+    viewport,
+    size: cSize,
+  } = useThree(({ viewport, camera, size }) => ({
+    camera,
+    viewport,
+    size,
+  }))
 
-  const callback = useCallback(
-    ({ ppwu }) => {
-      const scale = size / ppwu.x
-      startTransition(() => {
-        setGroupProps({
-          scale,
-        })
-      })
-    },
-    [size],
-  )
-
-  useMarkupBounds(
-    {
-      distance: 0.5,
-      callback,
-    },
-    [],
-  )
+  useEffect(() => {
+    const { factor } = viewport.getCurrentViewport(
+      camera,
+      ref.current.position.clone(),
+      cSize,
+    )
+    ref.current.scale.set(size / factor, size / factor, size / factor)
+  }, [cSize, camera, size, viewport])
 
   return (
-    groupProps && (
-      <>
-        <group
-          rotation-x={0.35} // straight up view (x,y = 0)
-          rotation-y={0.48}
-          ref={ref}
-          position-z={0.5}
-          {...groupProps}
-        >
-          <primitive object={iLogo} ref={iMesh} />
-        </group>
-        <PerspectiveCamera makeDefault position-z={1} fov={10} />
-      </>
-    )
+    <>
+      <group
+        rotation-x={0.35} // straight up view (x,y = 0)
+        rotation-y={0.48}
+        ref={ref}
+        position-z={0.5}
+      >
+        <primitive object={iLogo} ref={iMesh} />
+      </group>
+      <PerspectiveCamera makeDefault position-z={1} fov={10} />
+    </>
   )
 }
