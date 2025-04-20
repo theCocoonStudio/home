@@ -1,22 +1,27 @@
 .footer {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
   margin: 0;
   padding: 0;
   z-index: 300;
+  pointer-events: none;
+  > * {
+    pointer-events: auto;
+  }
 }
 
 .settings {
   position: absolute;
   bottom: 50%;
+  left: 0;
   transform: translateY(50%);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  pointer-events: none;
   > * {
+    pointer-events: auto;
     &:hover {
       cursor: pointer;
     }
@@ -90,11 +95,16 @@
 .socials {
   position: absolute;
   bottom: 50%;
+  right: 0;
   transform: translateY(50%);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
+  pointer-events: none;
+  > * {
+    pointer-events: auto;
+  }
 }
 
 .scroll {
@@ -109,6 +119,7 @@
   justify-content: space-between;
   align-items: center;
   transition: opacity 0.1s;
+  pointer-events: none;
 }
 
 @keyframes reveal {

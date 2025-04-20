@@ -18,19 +18,14 @@ export const Nav = () => {
   const navStyles = useMemo(
     () => ({
       height: `${navHeight}px`,
-    }),
-    [navHeight],
-  )
-
-  const logoStyles = useMemo(
-    () => ({
+      right: `calc(8 * ${atomicPadding}px)`,
       left: `calc(8 * ${atomicPadding}px)`,
     }),
-    [atomicPadding],
+    [atomicPadding, navHeight],
   )
+
   const pagesStyles = useMemo(
     () => ({
-      right: `calc(8 * ${atomicPadding}px)`,
       columnGap: `calc(2 * ${atomicPadding}px)`,
     }),
     [atomicPadding],
@@ -41,7 +36,7 @@ export const Nav = () => {
   } = useScroll()
   return (
     <div className={`${styles.nav}`} style={navStyles}>
-      <div className={`${styles.logo}`} style={logoStyles}>
+      <div className={`${styles.logo}`}>
         <View index={2} frames={1}>
           <Logo size={40} />
         </View>

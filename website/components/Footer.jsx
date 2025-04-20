@@ -26,7 +26,6 @@ export const Footer = () => {
 
   const settingsStyles = useMemo(
     () => ({
-      left: `calc(8 * ${atomicPadding}px)`,
       columnGap: `calc(2 * ${atomicPadding}px)`,
     }),
     [atomicPadding],
@@ -35,13 +34,14 @@ export const Footer = () => {
   const footerStyles = useMemo(
     () => ({
       height: `${footerHeight}px`,
+      right: `calc(8 * ${atomicPadding}px)`,
+      left: `calc(8 * ${atomicPadding}px)`,
     }),
-    [footerHeight],
+    [atomicPadding, footerHeight],
   )
 
   const socialStyles = useMemo(
     () => ({
-      right: `calc(8 * ${atomicPadding}px)`,
       columnGap: `calc(2 * ${atomicPadding}px)`,
     }),
     [atomicPadding],
@@ -55,6 +55,7 @@ export const Footer = () => {
   const scrollStyles = useMemo(
     () => ({
       opacity: showScroll ? '1' : '0',
+      pointerEvents: showScroll ? 'auto' : 'none',
     }),
     [showScroll],
   )
