@@ -1,3 +1,4 @@
+import { FooterItems } from './FooterItems'
 import { Home } from './Home.view'
 import { NavItems } from './NavItems'
 
@@ -26,25 +27,21 @@ export const config = {
   nav: {
     logoRenderPriority: 2,
     NavItemsComponent: NavItems,
-    navItemsProps: {
-      sectionRanges: [
-        [0.1 + (0.8 / 4) * 0, 0.8 / 4],
-        [0.1 + (0.8 / 4) * 1, 0.8 / 4],
-        [0.1 + (0.8 / 4) * 2, 0.8 / 4],
-        [0.1 + (0.8 / 4) * 3, 0.8 / 4],
-      ],
-
-      viewRenderPriority: 3,
-    },
+    sectionRanges: [
+      [0.1 + (0.8 / 4) * 0, 0.8 / 4],
+      [0.1 + (0.8 / 4) * 1, 0.8 / 4],
+      [0.1 + (0.8 / 4) * 2, 0.8 / 4],
+      [0.1 + (0.8 / 4) * 3, 0.8 / 4],
+    ],
+    viewRenderPriority: 3,
   },
   footer: {
+    viewRenderPriority: 4,
+    showScrollRange: [0.01, 0.9 - 0.01],
+    ViewComponent: FooterItems,
     markupIds: {
-      scroll: {
-        container: 'scroll-container',
-      },
-      fps: {
-        container: 'fps-container',
-      },
+      scrollContainer: 'scroll-container',
+      fpsContainer: 'fps-container',
     },
   },
 }

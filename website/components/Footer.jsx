@@ -5,30 +5,15 @@ import { LinkedInIcon } from 'website/components/LinkedInIcon'
 import { GithubIcon } from 'website/components/GithubIcon'
 import { YoutubeIcon } from 'website/components/YoutubeIcon'
 import { InstagramIcon } from 'website/components/InstagramIcon'
-import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
-import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
-import Down from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
 
 export const Footer = ({ config }) => {
   const {
+    footer: { ViewComponent },
+  } = config
+  const {
     lengths: { footerHeight, atomicPadding },
     colors: { black },
-    utilReturn: { className, style },
-  } = useTheme(
-    'orbitron',
-    600,
-    ({ lengths: { atomicPadding } }) => ({
-      columnGap: `calc(2 * ${atomicPadding}px)`,
-    }),
-    styles.performance,
-  )
-
-  const settingsStyles = useMemo(
-    () => ({
-      columnGap: `calc(2 * ${atomicPadding}px)`,
-    }),
-    [atomicPadding],
-  )
+  } = useTheme()
 
   const footerStyles = useMemo(
     () => ({
@@ -46,24 +31,6 @@ export const Footer = ({ config }) => {
     [atomicPadding],
   )
 
-  const showScroll = false
-
-  const scrollStyles = useMemo(
-    () => ({
-      opacity: showScroll ? '1' : '0',
-      pointerEvents: showScroll ? 'auto' : 'none',
-    }),
-    [showScroll],
-  )
-
-  const downStyles = useMemo(
-    () => ({
-      opacity: showScroll ? '0' : '0.8',
-      display: showScroll ? 'none' : 'block',
-    }),
-    [showScroll],
-  )
-
   return (
     <div className={`${styles.footer}`} style={footerStyles}>
       <div className={styles.socials} style={socialStyles}>
@@ -74,34 +41,7 @@ export const Footer = ({ config }) => {
           {<InstagramIcon color={black} />}
         </div>
       </div>
-      <div className={`${styles.settings}`} style={settingsStyles}>
-        <div className={`${styles.icon}`}>
-          <Settings size={35} color={black} stroke={2} />
-        </div>
-        <div className={`${className}`} style={style}>
-          <div>
-            <Performance size={35} color={black} stroke={2} />
-          </div>
-          <div className={`${styles.fps}`}>
-            <div id='fps-container'>--</div>
-            <div>FPS</div>
-          </div>
-        </div>
-      </div>
-      <div className={`${styles.down}`} style={downStyles}>
-        <Down
-          size={1 * footerHeight}
-          stroke={0.8}
-          onClick={() => {
-            scrollTo(0.19, 0.25)
-          }}
-        />
-      </div>
-      <div
-        className={`${styles.scroll}`}
-        style={scrollStyles}
-        id='scroll-container'
-      />
+      <ViewComponent config={config} />
     </div>
   )
 }

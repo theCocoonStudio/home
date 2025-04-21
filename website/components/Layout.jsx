@@ -29,12 +29,6 @@ const theme = {
     footerHeight: 120,
     atomicPadding: 8,
   },
-  markupIds: {
-    footer: {
-      scrollContainer: 'scroll-container',
-      fpsContainer: 'fps-container',
-    },
-  },
 }
 
 export function Layout({ config = pagesConfig }) {
@@ -62,7 +56,7 @@ const Inner = ({ config }) => {
           <View.Port />
           <Html wrapperClass={styles.html} transform={false}>
             <View className={styles.view} index={renderPriority} frames={1}>
-              <ViewComponent />
+              <ViewComponent config={config} />
             </View>
           </Html>
         </ScrollControls>

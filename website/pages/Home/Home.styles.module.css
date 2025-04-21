@@ -1,0 +1,113 @@
+/* nav */
+
+.active {
+  background-color: #000;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  position: relative;
+  left: 50%;
+  top: 2px;
+  transform: translate(-50%);
+}
+
+/* footer */
+@keyframes reveal {
+  0% {
+    margin-bottom: 0px;
+  }
+  50% {
+    margin-bottom: -20px;
+  }
+  100% {
+    margin-bottom: 0px;
+  }
+}
+
+.down {
+  z-index: -1;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  animation: reveal 3s ease-in-out infinite;
+  pointer-events: none;
+  bottom: 25vh;
+  transition: opacity 0.1s;
+  path {
+    pointer-events: all;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.scroll {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  border-radius: 8px;
+  border: 3px solid black;
+  transform: translate(-50%, 50%);
+  height: 45px;
+  width: 50vw;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.1s;
+  pointer-events: none;
+}
+
+.performance {
+  border-radius: 8px;
+  background-color: white;
+  border: 3px solid black;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  > * {
+    width: 39px;
+    height: 39px;
+    font-size: 13px;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.fps > * {
+  text-align: left;
+  width: 100%;
+}
+
+.settings {
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  transform: translateY(50%);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  > * {
+    pointer-events: auto;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.icon {
+  border-radius: 8px;
+  background-color: white;
+  border: 3px solid black;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+}

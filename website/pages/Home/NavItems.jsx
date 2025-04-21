@@ -6,8 +6,13 @@ import { useTheme } from '../../hooks/useTheme'
 import { useCallback, useRef, useState, useTransition } from 'react'
 import { useScroll, View } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
+import styles from './Home.styles.module.css'
 
-export const NavItems = ({ styles, sectionRanges, viewRenderPriority }) => {
+export const NavItems = ({
+  config: {
+    nav: { sectionRanges, viewRenderPriority },
+  },
+}) => {
   const {
     colors: { black },
   } = useTheme()
@@ -39,7 +44,7 @@ export const NavItems = ({ styles, sectionRanges, viewRenderPriority }) => {
         {sectionIndex === 3 && <div className={styles.active} />}
       </div>
       <View
-        frames={0}
+        frames={1}
         visible={false}
         index={viewRenderPriority}
         style={{ display: 'none' }}
@@ -53,8 +58,7 @@ export const NavItems = ({ styles, sectionRanges, viewRenderPriority }) => {
 const CanvasHook = ({ setSection, sections }) => {
   const scroll = useScroll()
   const cache = useRef()
-
-  const frameCallback = useCallback(() => {
+  useFrame(() => {
     if (scroll.visible(...sections[0])) {
       if (cache.current !== 0) {
         cache.current = 0
@@ -81,10 +85,6 @@ const CanvasHook = ({ setSection, sections }) => {
         setSection(undefined)
       }
     }
-  }, [scroll, sections, setSection])
-
-  useFrame(() => {
-    frameCallback()
   })
   return <group />
 }

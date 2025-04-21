@@ -12,13 +12,14 @@ import { ScrollItem } from '../../components/ScrollItem.canvas'
 import { Vector2 } from 'three'
 import { getMarkupBounds } from '../../utils/bounds'
 
-export const Home = () => {
-  const {
-    colors,
-    markupIds: {
-      footer: { scrollContainer },
+export const Home = ({
+  config: {
+    footer: {
+      markupIds: { scrollContainer, fpsContainer },
     },
-  } = useTheme()
+  },
+}) => {
+  const { colors } = useTheme()
 
   const bg = useRef()
   const title = useRef()
@@ -74,12 +75,12 @@ export const Home = () => {
         forceCallback={orb.current?.forceCallback}
         colors={colors}
       />
-      <ScrollItem zPos={0.5} ref={item} scrollBoundsRef={scrollBounds} />
+      {/* <ScrollItem zPos={0.5} ref={item} scrollBoundsRef={scrollBounds} /> */}
       <DragOrb ref={orb} />
 
-      <Title ref={title} />
+      {/* <Title ref={title} /> */}
       <color attach='background' args={[colors.white]} />
-      <Performance />
+      <Performance fpsContainer={fpsContainer} />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
       <Environment preset='park' environmentIntensity={0.5} />
     </>

@@ -4,11 +4,10 @@ import { useMemo } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
 
-export const Nav = ({
-  config: {
-    nav: { NavItemsComponent, navItemsProps, logoRenderPriority },
-  },
-}) => {
+export const Nav = ({ config }) => {
+  const {
+    nav: { NavItemsComponent, logoRenderPriority },
+  } = config
   const {
     lengths: { navHeight, atomicPadding },
   } = useTheme()
@@ -37,7 +36,7 @@ export const Nav = ({
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>
-        <NavItemsComponent styles={styles} {...navItemsProps} />
+        <NavItemsComponent config={config} />
       </div>
     </div>
   )

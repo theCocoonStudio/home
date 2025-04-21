@@ -1,0 +1,133 @@
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
+import { useScroll, View } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+import styles from './Home.styles.module.css'
+import Down from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
+import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
+import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
+import { useTheme } from '../../hooks/useTheme'
+
+export const FooterItems = ({
+  config: {
+    footer: {
+      viewRenderPriority,
+      showScrollRange,
+      markupIds: { scrollContainer, fpsContainer },
+    },
+  },
+}) => {
+  const [isPending, startTransition] = useTransition()
+  const [showScroll, setShowScroll] = useState(false)
+
+  const setShowScrollCallback = useCallback((bool) => {
+    startTransition(() => {
+      setShowScroll(bool)
+    })
+  }, [])
+
+  const {
+    lengths: { footerHeight, atomicPadding },
+    colors: { black },
+    utilReturn: { className, style },
+  } = useTheme(
+    'orbitron',
+    600,
+    ({ lengths: { atomicPadding } }) => ({
+      columnGap: `calc(2 * ${atomicPadding}px)`,
+    }),
+    styles.performance,
+  )
+
+  const scrollStyles = useMemo(
+    () => ({
+      opacity: showScroll ? '1' : '0',
+      pointerEvents: showScroll ? 'auto' : 'none',
+    }),
+    [showScroll],
+  )
+
+  const downStyles = useMemo(
+    () => ({
+      opacity: showScroll ? '0' : '0.8',
+      display: showScroll ? 'none' : 'block',
+    }),
+    [showScroll],
+  )
+
+  const settingsStyles = useMemo(
+    () => ({
+      columnGap: `calc(2 * ${atomicPadding}px)`,
+    }),
+    [atomicPadding],
+  )
+  return (
+    <>
+      <div className={`${styles.settings}`} style={settingsStyles}>
+        <div className={`${styles.icon}`}>
+          <Settings size={35} color={black} stroke={2} />
+        </div>
+        <div className={`${className}`} style={style}>
+          <div>
+            <Performance size={35} color={black} stroke={2} />
+          </div>
+          <div className={`${styles.fps}`}>
+            <div id={fpsContainer}>--</div>
+            <div>FPS</div>
+          </div>
+        </div>
+      </div>
+      <div className={`${styles.down}`} style={downStyles}>
+        <Down
+          size={1 * footerHeight}
+          stroke={0.8}
+          onClick={() => {
+            scrollTo(0.19, 0.25)
+          }}
+        />
+      </div>
+      <div
+        className={`${styles.scroll}`}
+        style={scrollStyles}
+        id={scrollContainer}
+      />
+      <View
+        frames={1}
+        visible={false}
+        index={viewRenderPriority}
+        style={{ display: 'none' }}
+      >
+        <CanvasHook
+          showScrollRange={showScrollRange}
+          setScrolling={setShowScrollCallback}
+        />
+      </View>
+    </>
+  )
+}
+
+const CanvasHook = ({ showScrollRange: range, setScrolling }) => {
+  const scroll = useScroll()
+  const cache = useRef()
+
+  useFrame(() => {
+    if (scroll.visible(...range)) {
+      if (cache.current !== true) {
+        cache.current = true
+        setScrolling(true)
+      }
+    } else {
+      if (cache.current !== false) {
+        cache.current = false
+        setScrolling(false)
+      }
+    }
+  })
+  return <group />
+}
