@@ -55,7 +55,7 @@ const Inner = ({ config }) => {
         <ScrollControls {...scrollControlsProps}>
           <View.Port />
           <Html wrapperClass={styles.html} transform={false}>
-            <View className={styles.view} index={renderPriority} frames={1}>
+            <View className={styles.view} index={renderPriority}>
               <ViewComponent config={config} />
             </View>
           </Html>
