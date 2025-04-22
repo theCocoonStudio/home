@@ -68,7 +68,7 @@ const _FluidBackground = forwardRef(function FluidBackground(
     },
     (prev, curr) => {
       curr && mesh.current.scale.copy(curr)
-      return false
+      return true // equal, won't trigger rerender
     },
   )
 
