@@ -1,28 +1,22 @@
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from 'react'
+import { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
-import { GradientTexture } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
+import { Vector3 } from 'three'
 
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 50,
+  forceValue: 10,
   resolution: 0.5,
-  forceSize: 50,
-  viscosity: 30,
+  forceSize: 40,
+  viscosity: 20,
   dt: 0.014,
   isViscous: true,
   BFECC: true,
   isBounce: true,
 }
 
-export const FluidBackground = forwardRef(function FluidBackground(
+const _FluidBackground = forwardRef(function FluidBackground(
   { stencil = {}, forceCallback, colors, ...props },
   forwardedRef,
 ) {
@@ -58,39 +52,48 @@ export const FluidBackground = forwardRef(function FluidBackground(
 
   const texture = useFluidTexture(options)
 
-  const boundsCallback = useCallback(({ min, max }) => {
-    const width = max.x - min.x
-    const height = max.y - min.y
-    mesh.current.scale.setComponent(0, width)
-    mesh.current.scale.setComponent(1, height)
-  }, [])
-
-  const scrollCallback = useCallback((data) => {
-    /* console.log(data) */
-  }, [])
-
-  useImperativeHandle(
-    forwardedRef,
-    () => ({ boundsCallback, scrollCallback }),
-    [boundsCallback, scrollCallback],
+  useThree(
+    (state) => {
+      const {
+        size,
+        camera,
+        viewport: { getCurrentViewport },
+      } = state.get()
+      const current =
+        mesh?.current &&
+        getCurrentViewport(camera, mesh?.current.position.clone(), size)
+      return current?.width
+        ? new Vector3(current.width, current.height, mesh.current.scale.z)
+        : undefined
+    },
+    (prev, curr) => {
+      console.log(prev)
+      curr && mesh.current.scale.copy(curr)
+      return false
+    },
   )
 
   return (
     <mesh ref={mesh} {...props}>
       <planeGeometry args={[1, 1]} />
-      <meshBasicMaterial
-        transparent
-        alphaMap={texture}
-        opacity={1.0}
+      <meshStandardMaterial
+        /* transparent
+        alphaMap={texture} */
+        bumpMap={texture}
+        bumpScale={120}
+        roughness={0.1}
+        opacity={1}
+        metalness={0.5}
         {...stencil}
       >
-        <GradientTexture
+        {/*  <GradientTexture
           attach='map'
           stops={[0.1, 0.5, 0.9]} // As many stops as you want
-          colors={[colors.white, colors.black, colors.white]} // Colors need to match the number of stops
+          colors={[colors.red, colors.slate, colors.purple]} // Colors need to match the number of stops
           size={1024} // Size is optional, default = 1024
-        />
-      </meshBasicMaterial>
+        /> */}
+      </meshStandardMaterial>
     </mesh>
   )
 })
+export const FluidBackground = memo(_FluidBackground)
