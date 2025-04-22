@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Camera, PlaneGeometry, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
@@ -18,7 +18,7 @@ const defaultOpts = {
   resolution: 0.5,
   cursor_size: 100,
   viscous: 30,
-  isBounce: false,
+  isBounce: true,
   dt: 0.014,
   isViscous: false,
   BFECC: true,
@@ -46,20 +46,22 @@ export const useFluidTexture = (
     isViscous,
     BFECC,
     forceCallback,
-    customForceConfig,
   } = { ...defaultOpts, ...options }
 
   // independent data (along with hook's passed args)
-  const { width: defaultWidth, height: defaultHeight } = useThree(
-    ({ size }) => size,
-  )
-  const { width, height } = useMemo(
-    () => ({
-      width: fboWidth || defaultWidth,
-      height: fboHeight || defaultHeight,
+  const sizeCallback = useCallback(
+    (state) => ({
+      width: fboWidth || Math.floor(state.get().size.width * resolution),
+      height: fboHeight || Math.floor(state.get().size.height * resolution),
     }),
-    [defaultHeight, defaultWidth, fboHeight, fboWidth],
+    [fboHeight, fboWidth, resolution],
   )
+  const sizeEqFn = useCallback((prev, curr) => {
+    return prev.width === curr.width && prev.height === curr.height
+  }, [])
+
+  const { width, height } = useThree(sizeCallback, sizeEqFn)
+
   // shared objects
   const camera = useRef(new Camera())
   const geometry = useRef(new PlaneGeometry(2.0, 2.0))
@@ -69,14 +71,38 @@ export const useFluidTexture = (
   const oldPointer = useRef(new Vector2(0, 0))
 
   // fboReferences
-  const vel0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const vel1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const visc0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const visc1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const div = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const pressure0 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const pressure1 = useFBO(width, height, { depthBuffer: false, ...fboOpts })
-  const output = useFBO(width, height, { depthBuffer: false, ...fboOpts })
+  const vel0 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const vel1 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const visc0 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const visc1 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const div = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const pressure0 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const pressure1 = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
+  const output = useFBO(width, height, {
+    depthBuffer: false,
+    ...fboOpts,
+  })
 
   // uniform references
   const uniforms = useRef({
@@ -86,13 +112,16 @@ export const useFluidTexture = (
     force: new Vector2(),
     center: new Vector2(),
     scale: new Vector2(cursor_size, cursor_size),
+    dt,
+    viscous,
+    BFECC,
   })
 
   // reactive uniform updates
   useEffect(() => {
+    // vectors
     const { boundarySpace, cellScale, fboSize } = uniforms.current
-
-    fboSize.set(Math.round(width * resolution), Math.round(height * resolution))
+    fboSize.set(width, height)
     cellScale.set(1.0 / fboSize.x, 1.0 / fboSize.y)
 
     if (isBounce) {
@@ -100,7 +129,11 @@ export const useFluidTexture = (
     } else {
       boundarySpace.copy(cellScale)
     }
-  }, [height, isBounce, resolution, width])
+    // primitives
+    uniforms.current.dt = dt
+    uniforms.current.viscous = viscous
+    uniforms.current.BFECC = BFECC
+  }, [BFECC, dt, height, isBounce, viscous, width])
 
   // shader passes references
   const advectionPass = useRef(
@@ -154,9 +187,6 @@ export const useFluidTexture = (
       .setFBO(vel1),
   )
 
-  const customForcePass = useRef(
-    customForceConfig && new ShaderPass(customForceConfig).setFBO(vel1),
-  )
   const viscousPass = useRef(
     new ShaderPass({
       ...viscousPassConfig,
@@ -275,14 +305,7 @@ export const useFluidTexture = (
   useFrame(({ gl, pointer, clock }, delta) => {
     if (!pause?.current) {
       // advection pass
-      advectionPass.current.updateUniforms({
-        dt: {
-          value: dt,
-        },
-        isBFECC: {
-          value: BFECC,
-        },
-      }).children.visible = isBounce
+      advectionPass.current.children.visible = isBounce
       advectionPass.current.children.material.uniforms =
         advectionPass.current.uniforms
       advectionPass.current.render(gl)
@@ -313,9 +336,6 @@ export const useFluidTexture = (
 
       forcePass.current.render(gl)
 
-      // custom force pass
-      customForcePass.current?.render(gl)
-
       // viscosity pass
       let vel = vel1
       if (isViscous) {
@@ -330,12 +350,6 @@ export const useFluidTexture = (
           }
           viscousPass.current
             .updateUniforms({
-              v: {
-                value: viscous,
-              },
-              dt: {
-                value: dt,
-              },
               velocity_new: {
                 value: fbo_in.texture,
               },
@@ -350,9 +364,6 @@ export const useFluidTexture = (
       divergencePass.current
         .updateUniforms({
           velocity: { value: vel.texture },
-          dt: {
-            value: dt,
-          },
         })
         .render(gl)
 
@@ -376,9 +387,6 @@ export const useFluidTexture = (
       // pressure pass
       pressurePass.current
         .updateUniforms({
-          dt: {
-            value: dt,
-          },
           velocity: {
             value: vel.texture,
           },
@@ -409,22 +417,6 @@ export const useFluidTexture = (
     },
     [],
   )
-
-  // updates to customForceConfig
-  useEffect(() => {
-    const prev = customForcePass.current
-    customForcePass.current =
-      customForceConfig && new ShaderPass(customForceConfig).setFBO(vel1)
-    return () => {
-      prev &&
-        prev.dispose(
-          prev?.material ? false : true,
-          prev?.geometry ? false : true,
-          false,
-          true,
-        )
-    }
-  }, [customForceConfig, vel1])
 
   return output.texture
 }
