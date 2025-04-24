@@ -70,9 +70,7 @@ export class ShaderPass {
 
     if (children) {
       this.#children =
-        typeof children === 'function'
-          ? children({ uniforms: this.#uniforms, mesh: this.mesh })
-          : children
+        typeof children === 'function' ? children(this) : children
       this.scene.add(this.#children)
     }
 

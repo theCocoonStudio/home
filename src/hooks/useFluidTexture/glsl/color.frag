@@ -4,11 +4,11 @@ varying vec2 uvInternal;
 
 void main(){
     vec2 vel = texture2D(velocity, uvInternal).xy;
-    float len = length(vel);
+    float len = length(vel) / sqrt(2.0) ;
     vel = vel * 0.5 + 0.5;
     
-    vec3 colorInternal = vec3(vel.x, vel.y, 1.0);
-    colorInternal = mix(vec3(1.0), colorInternal, len);
+    // vec3 colorInternal = vec3(vel.x, vel.y, 1.0);
+    // colorInternal = mix(vec3(1.0), colorInternal, len);
     
     // old
     // gl_FragColor = vec4(colorInternal,  1.0);

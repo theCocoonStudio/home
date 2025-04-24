@@ -8,6 +8,7 @@ import {
 import fragmentShader from './glsl/advection.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
 import lineVert from './glsl/line.vert?raw'
+import lineFrag from './glsl/boundary.frag?raw'
 
 const materialConfig = {
   vertexShader,
@@ -37,7 +38,7 @@ const materialConfig = {
 const children = () => {
   const boundaryMaterialConfig = {
     vertexShader: lineVert,
-    fragmentShader,
+    fragmentShader: lineFrag,
     uniforms: materialConfig.uniforms,
   }
   // boundary buffer attribute

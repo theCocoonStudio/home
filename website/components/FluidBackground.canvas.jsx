@@ -1,7 +1,13 @@
-import { forwardRef, memo, useEffect, useMemo, useRef } from 'react'
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { useThree } from '@react-three/fiber'
-import { Vector3 } from 'three'
 
 const _opts = {
   poissonIterations: 32,
@@ -9,7 +15,7 @@ const _opts = {
   forceValue: 10,
   resolution: 0.5,
   forceSize: 40,
-  viscosity: 20,
+  viscosity: 15,
   dt: 0.014,
   isViscous: true,
   BFECC: true,
@@ -17,7 +23,7 @@ const _opts = {
 }
 
 const _FluidBackground = forwardRef(function FluidBackground(
-  { stencil = {}, forceCallback, colors, ...props },
+  { forceCallback, colors, ...props },
   forwardedRef,
 ) {
   const mesh = useRef()
@@ -52,26 +58,22 @@ const _FluidBackground = forwardRef(function FluidBackground(
 
   const texture = useFluidTexture(options)
 
-  useThree(
-    (state) => {
-      const {
-        size,
-        camera,
-        viewport: { getCurrentViewport },
-      } = state.get()
-      const current =
-        mesh?.current &&
-        getCurrentViewport(camera, mesh?.current.position.clone(), size)
-      return current?.width
-        ? new Vector3(current.width, current.height, mesh.current.scale.z)
-        : undefined
-    },
-    (prev, curr) => {
-      curr && mesh.current.scale.copy(curr)
-      return true // equal, won't trigger rerender
-    },
-  )
+  const stateCallback = useCallback(({ size, viewport, camera }) => {
+    return { size, viewport, camera }
+  }, [])
+  const { size, viewport, camera } = useThree(stateCallback)
 
+  useEffect(() => {
+    const current =
+      mesh?.current &&
+      viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
+    current?.width &&
+      mesh.current.scale.set(
+        current.width,
+        current.height,
+        mesh.current.scale.z,
+      )
+  }, [camera, size, viewport])
   return (
     <mesh ref={mesh} {...props}>
       <planeGeometry args={[1, 1]} />
@@ -79,11 +81,10 @@ const _FluidBackground = forwardRef(function FluidBackground(
         /* transparent
         alphaMap={texture} */
         bumpMap={texture}
-        bumpScale={120}
+        bumpScale={50}
         roughness={0.1}
         opacity={1}
         metalness={0.5}
-        {...stencil}
       >
         {/*  <GradientTexture
           attach='map'

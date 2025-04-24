@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Camera, PlaneGeometry, Vector2 } from 'three'
+import { Camera, HalfFloatType, PlaneGeometry, RGFormat, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
 import { advectionPassConfig } from './AdvectionPass.canvas'
 import { forcePassConfig } from './ForcePass.canvas'
@@ -14,13 +14,13 @@ import { ShaderPass } from './ShaderPass'
 const defaultOpts = {
   iterations_poisson: 32,
   iterations_viscous: 32,
-  mouse_force: 20,
+  mouse_force: 0.5,
   resolution: 0.5,
   cursor_size: 100,
   viscous: 30,
   isBounce: true,
   dt: 0.014,
-  isViscous: false,
+  isViscous: true,
   BFECC: true,
 }
 
@@ -31,7 +31,12 @@ const defaultForceCallback = (delta, clock, pointer, pointerDiff) => ({
 export const useFluidTexture = (
   options = {},
   priority = -1,
-  [fboWidth, fboHeight, fboOpts = {}] = [],
+  [
+    fboWidth,
+    fboHeight,
+    fboOpts = { type: HalfFloatType, format: RGFormat },
+    outputFboOpts = {},
+  ] = [undefined, undefined, { type: HalfFloatType, format: RGFormat }, {}],
   pause,
 ) => {
   const {
@@ -101,7 +106,7 @@ export const useFluidTexture = (
   })
   const output = useFBO(width, height, {
     depthBuffer: false,
-    ...fboOpts,
+    ...outputFboOpts,
   })
 
   // uniform references
@@ -295,7 +300,7 @@ export const useFluidTexture = (
           value: vel0.texture,
         },
         boundarySpace: {
-          value: new Vector2(),
+          value: uniforms.current.boundarySpace,
         },
       })
       .setFBO(output),
