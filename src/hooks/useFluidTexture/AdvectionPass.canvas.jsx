@@ -3,7 +3,6 @@ import {
   BufferGeometry,
   LineSegments,
   RawShaderMaterial,
-  ShaderMaterial,
 } from 'three'
 import fragmentShader from './glsl/advection.frag?raw'
 import vertexShader from './glsl/face.vert?raw'
@@ -35,7 +34,7 @@ const materialConfig = {
   },
 }
 
-const children = () => {
+const children = (pass) => {
   const boundaryMaterialConfig = {
     vertexShader: lineVert,
     fragmentShader: lineFrag,
@@ -59,7 +58,8 @@ const children = () => {
   geometry.setAttribute('position', new BufferAttribute(positionBuffer, 3))
   const material = new RawShaderMaterial(boundaryMaterialConfig)
   const boundary = new LineSegments(geometry, material)
-  boundary.renderOrder = 1
+  boundary.renderOrder = 0
+  pass.mesh.renderOrder = 1
   return boundary
 }
 

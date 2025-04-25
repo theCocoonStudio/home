@@ -3,6 +3,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
@@ -12,10 +13,10 @@ import { useThree } from '@react-three/fiber'
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 10,
+  forceValue: 40,
   resolution: 0.5,
-  forceSize: 40,
-  viscosity: 15,
+  forceSize: 30,
+  viscosity: 30,
   dt: 0.014,
   isViscous: true,
   BFECC: true,
@@ -56,8 +57,6 @@ const _FluidBackground = forwardRef(function FluidBackground(
     }
   }, [forceCallback])
 
-  const texture = useFluidTexture(options)
-
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
@@ -67,33 +66,38 @@ const _FluidBackground = forwardRef(function FluidBackground(
     const current =
       mesh?.current &&
       viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
+
+    const { width, height } = current || {}
     current?.width &&
-      mesh.current.scale.set(
-        current.width,
-        current.height,
-        mesh.current.scale.z,
-      )
+      mesh.current.scale.set(width, height, mesh.current.scale.z)
   }, [camera, size, viewport])
+
+  const texture = useFluidTexture(options)
+
+  useImperativeHandle(forwardedRef, () => mesh.current, [])
+
   return (
-    <mesh ref={mesh} {...props}>
-      <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial
-        /* transparent
-        alphaMap={texture} */
-        bumpMap={texture}
-        bumpScale={50}
-        roughness={0.1}
-        opacity={1}
-        metalness={0.5}
-      >
-        {/*  <GradientTexture
-          attach='map'
-          stops={[0.1, 0.5, 0.9]} // As many stops as you want
-          colors={[colors.red, colors.slate, colors.purple]} // Colors need to match the number of stops
-          size={1024} // Size is optional, default = 1024
-        /> */}
-      </meshStandardMaterial>
-    </mesh>
+    <>
+      <mesh ref={mesh} /* receiveShadow */ {...props}>
+        <planeGeometry args={[1, 1]} />
+        <meshStandardMaterial
+          transparent
+          /* alphaMap={texture} */
+          bumpMap={texture}
+          bumpScale={30}
+          color={'white'}
+          roughness={0.3}
+          metalness={0.8}
+        >
+          {/* <GradientTexture
+            attach='map'
+            stops={[0.1, 0.5, 0.9]} // As many stops as you want
+            colors={[colors.red, colors.slate, colors.purple]} // Colors need to match the number of stops
+            size={1024} // Size is optional, default = 1024
+          /> */}
+        </meshStandardMaterial>
+      </mesh>
+    </>
   )
 })
 export const FluidBackground = memo(_FluidBackground)

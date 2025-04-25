@@ -35,7 +35,7 @@ export const useFluidTexture = (
     fboWidth,
     fboHeight,
     fboOpts = { type: HalfFloatType, format: RGFormat },
-    outputFboOpts = {},
+    outputFboOpts = { type: HalfFloatType },
   ] = [undefined, undefined, { type: HalfFloatType, format: RGFormat }, {}],
   pause,
 ) => {
@@ -300,7 +300,7 @@ export const useFluidTexture = (
           value: vel0.texture,
         },
         boundarySpace: {
-          value: uniforms.current.boundarySpace,
+          value: new Vector2(0, 0),
         },
       })
       .setFBO(output),
