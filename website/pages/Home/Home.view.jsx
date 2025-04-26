@@ -2,9 +2,9 @@ import { PerspectiveCamera } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
-
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
+import { DirectionalLight } from '../../components/DirectionalLight.canvas'
 
 export const Home = ({
   config: {
@@ -18,31 +18,17 @@ export const Home = ({
 
   const bg = useRef()
 
-  const light = useRef()
-
-  useEffect(() => {
-    light.current.shadow.camera.near = 0
-    light.current.shadow.camera.far = 500
-    light.current.shadow.camera.right = 1
-    light.current.shadow.camera.left = -1
-    light.current.shadow.camera.top = 1
-    light.current.shadow.camera.bottom = -1
-    light.current.shadow.mapSize.width = 1024 // default
-    light.current.shadow.mapSize.height = 1024
-  }, [])
-
   return (
     <>
-      <directionalLight
-        position={[0.2, 0.5, 1.5]}
-        castShadow
-        ref={light}
-        args={['white', 10.3]}
-      />
       <FluidBackground
         ref={bg}
         /* forceCallback={} */
         colors={colors}
+      />
+      <DirectionalLight
+        position={[0.2, 0.5, 1.5]}
+        color={colors.white}
+        intensity={10.3}
       />
       <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />
