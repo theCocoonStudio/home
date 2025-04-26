@@ -2,13 +2,13 @@ import {
   forwardRef,
   memo,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { useThree } from '@react-three/fiber'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 const _opts = {
   poissonIterations: 32,
@@ -58,12 +58,12 @@ const _FluidBackground = forwardRef(function FluidBackground(
     }
   }, [forceCallback])
 
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
+  const stateCallback = useCallback(({ size, viewport, camera, gl }) => {
+    return { size, viewport, camera, canvas: gl.domElement }
   }, [])
-  const { size, viewport, camera } = useThree(stateCallback)
+  const { size, viewport, camera, canvas } = useThree(stateCallback)
 
-  useEffect(() => {
+  const resizeCallback = useCallback(() => {
     const current =
       mesh?.current &&
       viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
@@ -84,6 +84,8 @@ const _FluidBackground = forwardRef(function FluidBackground(
     curentBacking?.width &&
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [camera, size, viewport])
+
+  useResizeEvent(canvas, resizeCallback)
 
   const texture = useFluidTexture(options)
 
