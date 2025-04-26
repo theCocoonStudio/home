@@ -13,7 +13,7 @@ import { useThree } from '@react-three/fiber'
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 40,
+  forceValue: 20,
   resolution: 0.5,
   forceSize: 30,
   viscosity: 30,
@@ -28,6 +28,7 @@ const _FluidBackground = forwardRef(function FluidBackground(
   forwardedRef,
 ) {
   const mesh = useRef()
+  const backing = useRef()
 
   const options = useMemo(() => {
     const {
@@ -70,6 +71,18 @@ const _FluidBackground = forwardRef(function FluidBackground(
     const { width, height } = current || {}
     current?.width &&
       mesh.current.scale.set(width, height, mesh.current.scale.z)
+
+    const curentBacking =
+      backing?.current &&
+      viewport.getCurrentViewport(
+        camera,
+        backing?.current.position.clone(),
+        size,
+      )
+
+    const { width: bWidth, height: bHeight } = curentBacking || {}
+    curentBacking?.width &&
+      backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [camera, size, viewport])
 
   const texture = useFluidTexture(options)
@@ -78,24 +91,21 @@ const _FluidBackground = forwardRef(function FluidBackground(
 
   return (
     <>
-      <mesh ref={mesh} /* receiveShadow */ {...props}>
+      <mesh ref={mesh} /* receiveShadow castShadow */ {...props}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
           transparent
-          /* alphaMap={texture} */
+          alphaMap={texture}
           bumpMap={texture}
-          bumpScale={30}
-          color={'white'}
-          roughness={0.3}
-          metalness={0.8}
-        >
-          {/* <GradientTexture
-            attach='map'
-            stops={[0.1, 0.5, 0.9]} // As many stops as you want
-            colors={[colors.red, colors.slate, colors.purple]} // Colors need to match the number of stops
-            size={1024} // Size is optional, default = 1024
-          /> */}
-        </meshStandardMaterial>
+          bumpScale={300}
+          roughness={0.5}
+          metalness={0.7}
+          color='white'
+        ></meshStandardMaterial>
+      </mesh>
+      <mesh ref={backing} position-z={-0.5}>
+        <planeGeometry args={[1, 1]} />
+        <meshBasicMaterial transparent color={colors.slate} />
       </mesh>
     </>
   )

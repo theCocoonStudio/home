@@ -3,7 +3,7 @@ import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
 import { useMarkupBounds } from 'src/hooks/useBounds/useMarkupBounds'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DragOrb } from '../../components/DragOrb.canvas'
 import { useFrame } from '@react-three/fiber'
@@ -17,6 +17,7 @@ export const Home = ({
     footer: {
       markupIds: { scrollContainer, fpsContainer },
     },
+    effects: { renderPriority, Component: Effects },
   },
 }) => {
   const { colors } = useTheme()
@@ -32,7 +33,6 @@ export const Home = ({
   const callbackAt1 = useCallback(
     ({ ...args }) => {
       const _args = { ...args, scroll: data }
-      bg.current?.boundsCallback && bg.current.boundsCallback(_args)
       title.current?.boundsCallback && title.current.boundsCallback(_args)
       orb.current?.boundsCallback && orb.current.boundsCallback(_args)
     },
@@ -68,21 +68,40 @@ export const Home = ({
       item.current.scrollCallback(state, delta, data)
   })
 
+  const light = useRef()
+
+  useEffect(() => {
+    light.current.shadow.camera.near = 0
+    light.current.shadow.camera.far = 500
+    light.current.shadow.camera.right = 1
+    light.current.shadow.camera.left = -1
+    light.current.shadow.camera.top = 1
+    light.current.shadow.camera.bottom = -1
+    light.current.shadow.mapSize.width = 1024 // default
+    light.current.shadow.mapSize.height = 1024
+  }, [])
+
   return (
     <>
+      <directionalLight
+        position={[0.2, 0.5, 1.5]}
+        castShadow
+        ref={light}
+        args={['white', 10.3]}
+      />
       <FluidBackground
         ref={bg}
         forceCallback={orb.current?.forceCallback}
         colors={colors}
       />
       {/* <ScrollItem zPos={0.5} ref={item} scrollBoundsRef={scrollBounds} /> */}
-      <DragOrb ref={orb} />
-
+      {/* <DragOrb ref={orb} /> */}
       {/* <Title ref={title} /> */}
-      <color attach='background' args={[colors.white]} />
+      <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
-      <Environment preset='park' environmentIntensity={0.5} />
+      <Environment preset='city' environmentIntensity={1} />
+      <Effects renderPriority={renderPriority} />
     </>
   )
 }
