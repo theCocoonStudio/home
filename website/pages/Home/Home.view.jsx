@@ -2,9 +2,11 @@ import { PerspectiveCamera } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLight } from '../../components/DirectionalLight.canvas'
+import { useThree } from '@react-three/fiber'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Home = ({
   config: {
@@ -14,9 +16,16 @@ export const Home = ({
     effects: { renderPriority, Component: Effects },
   },
 }) => {
+  // reactive data
   const { colors } = useTheme()
-
+  const canvas = useThree(({ gl }) => gl.domElement)
+  // refs
   const bg = useRef()
+  // responsive
+  const resizeCallback = useCallback(() => {
+    bg?.current?.resizeCallback()
+  }, [])
+  useResizeEvent(canvas, resizeCallback)
 
   return (
     <>
