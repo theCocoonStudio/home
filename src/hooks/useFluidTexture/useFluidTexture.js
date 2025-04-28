@@ -14,7 +14,7 @@ import { ShaderPass } from './ShaderPass'
 const defaultOpts = {
   iterations_poisson: 32,
   iterations_viscous: 32,
-  mouse_force: 0.5,
+  mouse_force: 1,
   resolution: 0.5,
   cursor_size: 100,
   viscous: 30,
@@ -50,7 +50,7 @@ export const useFluidTexture = (
     dt,
     isViscous,
     BFECC,
-    forceCallback,
+    forceCallbackRef,
   } = { ...defaultOpts, ...options }
 
   // independent data (along with hook's passed args)
@@ -320,8 +320,8 @@ export const useFluidTexture = (
       oldPointer.current.copy(pointer)
 
       const fc =
-        typeof forceCallback === 'function'
-          ? forceCallback
+        typeof forceCallbackRef.current === 'function'
+          ? forceCallbackRef.current
           : defaultForceCallback
 
       const {
