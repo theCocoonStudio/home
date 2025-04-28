@@ -1,3 +1,8 @@
+/* main */
+.main {
+  position: absolute;
+  background: transparent;
+}
 /* nav */
 
 .active {

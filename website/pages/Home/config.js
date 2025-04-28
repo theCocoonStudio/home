@@ -1,7 +1,10 @@
 import { Effects } from './Effects.canvas'
-import { FooterItems } from './FooterItems'
 import { Home } from './Home.view'
+import { Main } from './Main'
 import { NavItems } from './NavItems'
+import { FooterItems } from './FooterItems'
+import { ScrollEventDispatcher } from './ScrollEventDispatcher.view'
+import { ScrollEventProvider } from './ScrollEventProvider'
 
 export const config = {
   scroll: {
@@ -12,6 +15,7 @@ export const config = {
       distance: 2,
     },
     ranges: {
+      preScroll: [0.0, 0.01],
       animationStart: [0.01, 0.1 - 0.01],
       about: [0.1 + (0.8 / 4) * 0, 0.8 / 4],
       contact: [0.1 + (0.8 / 4) * 1, 0.8 / 4],
@@ -24,26 +28,21 @@ export const config = {
     renderPriority: 2,
     Component: Effects,
   },
+  context: { Provider: ScrollEventProvider },
   main: {
+    Component: Main,
     ViewComponent: Home,
     renderPriority: 1,
+    eventDispatcherViewPriortity: 3,
+    EventDispatcherComponent: ScrollEventDispatcher,
   },
   sections: ['about, contact, services, attribution'],
   nav: {
-    logoRenderPriority: 3,
+    logoRenderPriority: 4,
     NavItemsComponent: NavItems,
-    sectionRanges: [
-      [0.1 + (0.8 / 4) * 0, 0.8 / 4],
-      [0.1 + (0.8 / 4) * 1, 0.8 / 4],
-      [0.1 + (0.8 / 4) * 2, 0.8 / 4],
-      [0.1 + (0.8 / 4) * 3, 0.8 / 4],
-    ],
-    viewRenderPriority: 4,
   },
   footer: {
-    viewRenderPriority: 5,
-    showScrollRange: [0.01, 0.9 - 0.01],
-    ViewComponent: FooterItems,
+    FooterItemsComponent: FooterItems,
     markupIds: {
       scrollContainer: 'scroll-container',
       fpsContainer: 'fps-container',

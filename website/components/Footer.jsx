@@ -8,7 +8,7 @@ import { InstagramIcon } from 'website/components/InstagramIcon'
 
 export const Footer = ({ config }) => {
   const {
-    footer: { ViewComponent },
+    footer: { FooterItemsComponent },
   } = config
   const {
     lengths: { footerHeight, atomicPadding },
@@ -41,7 +41,7 @@ export const Footer = ({ config }) => {
           {<InstagramIcon color={black} />}
         </div>
       </div>
-      <ViewComponent config={config} />
+      <FooterItemsComponent config={config} />
     </div>
   )
 }

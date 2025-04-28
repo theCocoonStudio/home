@@ -1,36 +1,20 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from 'react'
-import { useScroll, View } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useMemo } from 'react'
+
 import styles from './Home.styles.module.css'
 import Down from '@tabler/icons-react/dist/esm/icons/IconChevronDown'
 import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
 import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
 import { useTheme } from '../../hooks/useTheme'
+import { useScrollEvent } from './useScrollEvent'
 
 export const FooterItems = ({
   config: {
     footer: {
-      viewRenderPriority,
-      showScrollRange,
       markupIds: { scrollContainer, fpsContainer },
     },
   },
 }) => {
-  const [isPending, startTransition] = useTransition()
-  const [showScroll, setShowScroll] = useState(false)
-
-  const setShowScrollCallback = useCallback((bool) => {
-    startTransition(() => {
-      setShowScroll(bool)
-    })
-  }, [])
+  const preScroll = useScrollEvent('preScroll')
 
   const {
     lengths: { footerHeight, atomicPadding },
@@ -47,18 +31,18 @@ export const FooterItems = ({
 
   const scrollStyles = useMemo(
     () => ({
-      opacity: showScroll ? '1' : '0',
-      pointerEvents: showScroll ? 'auto' : 'none',
+      opacity: preScroll ? '0' : '1',
+      pointerEvents: preScroll ? 'none' : 'auto',
     }),
-    [showScroll],
+    [preScroll],
   )
 
   const downStyles = useMemo(
     () => ({
-      opacity: showScroll ? '0' : '0.8',
-      display: showScroll ? 'none' : 'block',
+      opacity: preScroll ? '0.8' : '0',
+      display: preScroll ? 'block' : 'none',
     }),
-    [showScroll],
+    [preScroll],
   )
 
   const settingsStyles = useMemo(
@@ -97,37 +81,6 @@ export const FooterItems = ({
         style={scrollStyles}
         id={scrollContainer}
       />
-      <View
-        frames={1}
-        visible={false}
-        index={viewRenderPriority}
-        style={{ display: 'none' }}
-      >
-        <CanvasHook
-          showScrollRange={showScrollRange}
-          setScrolling={setShowScrollCallback}
-        />
-      </View>
     </>
   )
-}
-
-const CanvasHook = ({ showScrollRange: range, setScrolling }) => {
-  const scroll = useScroll()
-  const cache = useRef()
-
-  useFrame(() => {
-    if (scroll.visible(...range)) {
-      if (cache.current !== true) {
-        cache.current = true
-        setScrolling(true)
-      }
-    } else {
-      if (cache.current !== false) {
-        cache.current = false
-        setScrolling(false)
-      }
-    }
-  })
-  return <group />
 }

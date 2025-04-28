@@ -33,12 +33,17 @@ const theme = {
 
 export function Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
+  const MainComponent = config[page].main.Component
+  const PageProvider = config[page].context.Provider
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
         <Inner config={config[page]} />
-        <Nav config={config[page]} />
-        <Footer config={config[page]} />
+        <PageProvider config={config[page]}>
+          <Nav config={config[page]} />
+          <MainComponent config={config[page]} />
+          <Footer config={config[page]} />
+        </PageProvider>
       </ResizeEventProvider>
     </ThemeProvider>
   )
