@@ -13,19 +13,10 @@ const _DirectionalLight = function DirectionalLight(
     light.current.shadow.camera.left = -1
     light.current.shadow.camera.top = 1
     light.current.shadow.camera.bottom = -1
-    light.current.shadow.mapSize.width = 1024 // default
-    light.current.shadow.mapSize.height = 1024
   }, [])
 
   useImperativeHandle(ref, () => light.current)
-  return (
-    <directionalLight
-      /* castShadow */
-      ref={light}
-      args={[color, intensity]}
-      {...props}
-    />
-  )
+  return <directionalLight ref={light} args={[color, intensity]} {...props} />
 }
 
 export const DirectionalLight = forwardRef(_DirectionalLight)
