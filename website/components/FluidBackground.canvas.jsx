@@ -14,7 +14,7 @@ const _opts = {
   viscousIterations: 32,
   forceValue: 20,
   resolution: 0.5,
-  forceSize: 30,
+  forceSize: 50,
   viscosity: 30,
   dt: 0.014,
   isViscous: true,
@@ -23,11 +23,13 @@ const _opts = {
 }
 
 const _FluidBackground = forwardRef(function FluidBackground(
-  { forceCallback, colors, ...props },
+  { colors, ...props },
   forwardedRef,
 ) {
   const mesh = useRef()
   const backing = useRef()
+  const backingMaterial = useRef()
+  const forceCallback = useRef(undefined)
 
   const options = useMemo(() => {
     const {
@@ -53,9 +55,9 @@ const _FluidBackground = forwardRef(function FluidBackground(
       isViscous,
       BFECC,
       isBounce,
-      forceCallback,
+      forceCallbackRef: forceCallback,
     }
-  }, [forceCallback])
+  }, [])
 
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
@@ -86,9 +88,19 @@ const _FluidBackground = forwardRef(function FluidBackground(
 
   const texture = useFluidTexture(options)
 
-  useImperativeHandle(forwardedRef, () => ({ resizeCallback }), [
-    resizeCallback,
-  ])
+  const setForceCallback = useCallback((fcb) => {
+    forceCallback.current = fcb
+  }, [])
+
+  useImperativeHandle(
+    forwardedRef,
+    () => ({
+      resizeCallback,
+      setForceCallback,
+      backingMaterialRef: backingMaterial,
+    }),
+    [resizeCallback, setForceCallback],
+  )
 
   return (
     <>
@@ -101,12 +113,12 @@ const _FluidBackground = forwardRef(function FluidBackground(
           bumpScale={300}
           roughness={0.5}
           metalness={0.7}
-          color='white'
-        ></meshStandardMaterial>
+          color={colors.white}
+        />
       </mesh>
       <mesh ref={backing} position-z={-0.5}>
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial transparent color={colors.slate} />
+        <meshBasicMaterial ref={backingMaterial} color={'red'} />
       </mesh>
     </>
   )
