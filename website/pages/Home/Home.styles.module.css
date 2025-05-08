@@ -1,11 +1,25 @@
-/* main */
-.main {
+.titleContainer {
   position: absolute;
-  background: transparent;
-  pointer-events: none;
+  left: 0;
+  right: 0;
+  top: 50vh;
+  transform: translateY(-50%);
 }
-/* nav */
 
+.title {
+  font-size: 12rem !important;
+  line-height: 1em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.subtitle {
+  font-size: 5rem !important;
+  line-height: 1em;
+  text-align: center;
+  text-transform: uppercase;
+}
 .active {
   background-color: #000;
   width: 7px;
@@ -38,7 +52,6 @@
   animation: reveal 3s ease-in-out infinite;
   pointer-events: none;
   bottom: 25vh;
-  transition: opacity 0.1s;
   path {
     pointer-events: all;
     &:hover {
@@ -58,7 +71,6 @@
   width: 50vw;
   justify-content: space-between;
   align-items: center;
-  transition: opacity 0.1s;
   pointer-events: none;
 }
 

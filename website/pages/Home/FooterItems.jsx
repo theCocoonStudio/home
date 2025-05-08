@@ -31,7 +31,7 @@ export const FooterItems = ({
 
   const scrollStyles = useMemo(
     () => ({
-      opacity: preScroll ? '0' : '1',
+      display: preScroll ? 'none' : 'block',
       pointerEvents: preScroll ? 'none' : 'auto',
     }),
     [preScroll],
@@ -48,8 +48,9 @@ export const FooterItems = ({
   const settingsStyles = useMemo(
     () => ({
       columnGap: `calc(2 * ${atomicPadding}px)`,
+      display: preScroll ? 'none' : 'flex',
     }),
-    [atomicPadding],
+    [atomicPadding, preScroll],
   )
   return (
     <>

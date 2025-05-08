@@ -15,8 +15,8 @@ export const config = {
       distance: 2,
     },
     ranges: {
-      preScroll: [0.0, 0.01],
-      animationStart: [0.01, 0.1 - 0.01],
+      preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
+      animationStart: [0.00001, 0.1 - 0.000001],
       about: [0.1 + (0.8 / 4) * 0, 0.8 / 4],
       contact: [0.1 + (0.8 / 4) * 1, 0.8 / 4],
       services: [0.1 + (0.8 / 4) * 2, 0.8 / 4],
@@ -33,12 +33,11 @@ export const config = {
     Component: Main,
     ViewComponent: Home,
     renderPriority: 1,
-    eventDispatcherViewPriortity: 3,
     EventDispatcherComponent: ScrollEventDispatcher,
   },
   sections: ['about, contact, services, attribution'],
   nav: {
-    logoRenderPriority: 4,
+    logoRenderPriority: 3,
     NavItemsComponent: NavItems,
   },
   footer: {

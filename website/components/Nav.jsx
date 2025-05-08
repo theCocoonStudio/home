@@ -3,6 +3,7 @@ import { useTheme } from 'website/hooks/useTheme'
 import { useMemo } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
+import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 
 export const Nav = ({ config }) => {
   const {
@@ -11,6 +12,8 @@ export const Nav = ({ config }) => {
   const {
     lengths: { navHeight, atomicPadding },
   } = useTheme()
+
+  const preScroll = useScrollEvent('preScroll')
 
   const navStyles = useMemo(
     () => ({
@@ -24,8 +27,9 @@ export const Nav = ({ config }) => {
   const pagesStyles = useMemo(
     () => ({
       columnGap: `calc(2 * ${atomicPadding}px)`,
+      display: preScroll ? 'none' : 'flex',
     }),
-    [atomicPadding],
+    [atomicPadding, preScroll],
   )
 
   return (

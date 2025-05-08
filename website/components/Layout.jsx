@@ -3,11 +3,13 @@ import { ThreeApp } from './ThreeApp.canvas'
 import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
-import { Html, ScrollControls, View } from '@react-three/drei'
+import { ScrollControls, View } from '@react-three/drei'
 import pagesConfig from 'website/pages'
 import { composeClassNames, nunito, orbitron } from '../utils/styles'
 import { Footer } from './Footer'
 import { useState } from 'react'
+import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
+import { createPortal } from 'react-dom'
 
 const theme = {
   utils: { compose: composeClassNames, nunito, orbitron },
@@ -33,39 +35,42 @@ const theme = {
 
 export function Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
-  const MainComponent = config[page].main.Component
-  const PageProvider = config[page].context.Provider
+  const [scrollContainer, setScrollContainer] = useState()
+
+  const {
+    main: { Component, ViewComponent, renderPriority },
+    context: { Provider },
+    scroll: { scrollControlsProps },
+  } = config[page]
+
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
-        <Inner config={config[page]} />
-        <PageProvider config={config[page]}>
+        <Provider config={config[page]}>
+          <div className={styles.layout}>
+            <ThreeApp eventPrefix={'client'}>
+              <ScrollControls {...scrollControlsProps}>
+                <View.Port />
+              </ScrollControls>
+            </ThreeApp>
+            {ViewComponent && (
+              <View className={styles.view} index={renderPriority}>
+                <ScrollHTMLRef setContainer={setScrollContainer} />
+                <ViewComponent config={config[page]} />
+              </View>
+            )}
+
+            {Component &&
+              scrollContainer &&
+              createPortal(
+                <Component config={config[page]} />,
+                scrollContainer,
+              )}
+          </div>
           <Nav config={config[page]} />
-          <MainComponent config={config[page]} />
           <Footer config={config[page]} />
-        </PageProvider>
+        </Provider>
       </ResizeEventProvider>
     </ThemeProvider>
-  )
-}
-
-const Inner = ({ config }) => {
-  const {
-    main: { ViewComponent, renderPriority },
-    scroll: { scrollControlsProps },
-  } = config
-  return (
-    <div className={styles.layout}>
-      <ThreeApp eventPrefix={'client'}>
-        <ScrollControls {...scrollControlsProps}>
-          <View.Port />
-          <Html wrapperClass={styles.html} transform={false}>
-            <View className={styles.view} index={renderPriority}>
-              <ViewComponent config={config} />
-            </View>
-          </Html>
-        </ScrollControls>
-      </ThreeApp>
-    </div>
   )
 }

@@ -1,13 +1,8 @@
 import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useContext, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 
-export const ScrollEventDispatcher = ({
-  config: {
-    scroll: { ranges },
-  },
-  setRange,
-}) => {
+export const ScrollEventDispatcher = ({ ranges, setRange }) => {
   const rangeKeys = useMemo(() => Object.keys(ranges), [ranges])
 
   const scroll = useScroll()

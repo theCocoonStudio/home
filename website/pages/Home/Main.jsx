@@ -1,39 +1,26 @@
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import styles from './Home.styles.module.css'
-import { View } from '@react-three/drei'
-import { ScrollEventContext } from './ScrollEventContext'
+import { nunito } from '../../utils/styles'
 
 export const Main = function Main({ config }) {
   const {
-    main: { EventDispatcherComponent, eventDispatcherViewPrority },
-  } = config
-  const {
-    lengths: { navHeight, footerHeight, atomicPadding },
-  } = useTheme()
+    utilReturn: { style, className },
+  } = useTheme('orbitron', 450, undefined, styles.title)
 
-  const mainStyles = useMemo(
-    () => ({
-      top: `${navHeight}px`,
-      right: `calc(8 * ${atomicPadding}px)`,
-      left: `calc(8 * ${atomicPadding}px)`,
-      bottom: `${footerHeight}px`,
-    }),
-    [atomicPadding, footerHeight, navHeight],
+  const { style: subStyle, className: subClass } = useMemo(
+    () => nunito([450, 125, 500], undefined, styles.subtitle),
+    [],
   )
-  const { setRange } = useContext(ScrollEventContext)
 
   return (
-    <>
-      <div style={mainStyles} className={styles.main}></div>
-      <View
-        frames={1}
-        visible={false}
-        index={eventDispatcherViewPrority}
-        style={{ display: 'none' }}
-      >
-        <EventDispatcherComponent config={config} setRange={setRange} />
-      </View>
-    </>
+    <div className={styles.titleContainer}>
+      <h1 style={style} className={className}>
+        izzy erlich
+      </h1>
+      <h2 className={subClass} style={subStyle}>
+        desiderata
+      </h2>
+    </div>
   )
 }

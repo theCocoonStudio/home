@@ -5,6 +5,7 @@ import { LinkedInIcon } from 'website/components/LinkedInIcon'
 import { GithubIcon } from 'website/components/GithubIcon'
 import { YoutubeIcon } from 'website/components/YoutubeIcon'
 import { InstagramIcon } from 'website/components/InstagramIcon'
+import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 
 export const Footer = ({ config }) => {
   const {
@@ -14,6 +15,8 @@ export const Footer = ({ config }) => {
     lengths: { footerHeight, atomicPadding },
     colors: { black },
   } = useTheme()
+
+  const preScroll = useScrollEvent('preScroll')
 
   const footerStyles = useMemo(
     () => ({
@@ -27,8 +30,9 @@ export const Footer = ({ config }) => {
   const socialStyles = useMemo(
     () => ({
       columnGap: `calc(2 * ${atomicPadding}px)`,
+      display: preScroll ? 'none' : 'flex',
     }),
-    [atomicPadding],
+    [atomicPadding, preScroll],
   )
 
   return (
