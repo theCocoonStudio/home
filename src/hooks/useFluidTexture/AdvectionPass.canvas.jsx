@@ -58,8 +58,8 @@ const children = (pass) => {
   geometry.setAttribute('position', new BufferAttribute(positionBuffer, 3))
   const material = new RawShaderMaterial(boundaryMaterialConfig)
   const boundary = new LineSegments(geometry, material)
-  boundary.renderOrder = 0
-  pass.mesh.renderOrder = 1
+  /* boundary.renderOrder = 0
+  pass.mesh.renderOrder = 1 */
   return boundary
 }
 

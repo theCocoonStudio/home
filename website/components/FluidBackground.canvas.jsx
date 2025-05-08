@@ -12,9 +12,9 @@ import { useThree } from '@react-three/fiber'
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
-  forceValue: 20,
+  forceValue: 80,
   resolution: 0.5,
-  forceSize: 50,
+  forceSize: 65,
   viscosity: 30,
   dt: 0.014,
   isViscous: true,
@@ -98,6 +98,7 @@ const _FluidBackground = forwardRef(function FluidBackground(
       resizeCallback,
       setForceCallback,
       backingMaterialRef: backingMaterial,
+      meshRef: mesh,
     }),
     [resizeCallback, setForceCallback],
   )
@@ -110,15 +111,17 @@ const _FluidBackground = forwardRef(function FluidBackground(
           transparent
           alphaMap={texture}
           bumpMap={texture}
-          bumpScale={300}
-          roughness={0.5}
-          metalness={0.7}
+          bumpScale={30}
+          /* roughness={0.2}
+          metalness={0.3} */
+          precision={'highp'}
           color={colors.white}
+          dithering
         />
       </mesh>
       <mesh ref={backing} position-z={-0.5}>
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial ref={backingMaterial} color={'red'} />
+        <meshBasicMaterial ref={backingMaterial} color={'black'} />
       </mesh>
     </>
   )
