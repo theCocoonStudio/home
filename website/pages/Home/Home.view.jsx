@@ -9,6 +9,7 @@ import { PrescrollAnimation } from '../../components/PrescrollAnimation.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { ScrollEventContext } from './ScrollEventContext'
+import { Software } from '../../components/Software.canvas'
 
 export const Home = ({
   config: {
@@ -17,7 +18,10 @@ export const Home = ({
     },
     effects: { renderPriority, Component: Effects },
     scroll: { ranges },
-    main: { EventDispatcherComponent },
+    main: {
+      EventDispatcherComponent,
+      markupIds: { title, subtitle },
+    },
   },
 }) => {
   // reactive data
@@ -26,20 +30,36 @@ export const Home = ({
   const scrollData = useScroll()
   // refs
   const preScrollAnimation = useRef()
+  const software = useRef()
   const bg = useRef()
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     bg?.current?.resizeCallback()
     preScrollAnimation?.current?.resizeCallback()
+    software?.current?.resizeCallback()
   }, [])
   useResizeEvent(canvas, resizeCallback)
   //scroll callbacks
+  const offsetCache = useRef(0.0)
+  const tailFrames = useRef(0)
   useFrame((state, delta) => {
-    preScrollAnimation.current?.scrollCallback &&
-      preScrollAnimation.current.scrollCallback(state, delta, scrollData)
+    if (
+      Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps ||
+      tailFrames.current++ < 10
+    ) {
+      if (Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps) {
+        tailFrames.current = 0
+      }
+      offsetCache.current = scrollData.offset
+      preScrollAnimation.current?.scrollCallback &&
+        preScrollAnimation.current.scrollCallback(state, delta, scrollData)
+      software.current?.scrollCallback &&
+        software.current.scrollCallback(state, delta, scrollData)
+    }
   })
 
   const { setRange } = useContext(ScrollEventContext)
+
   return (
     <>
       <EventDispatcherComponent ranges={ranges} setRange={setRange} />
@@ -47,6 +67,13 @@ export const Home = ({
         ref={preScrollAnimation}
         range={ranges.preScroll}
         bgRef={bg}
+      />
+      <Software
+        ref={software}
+        range={ranges.about}
+        titleId={title}
+        subtitleId={subtitle}
+        scrollData={scrollData}
       />
       <FluidBackground ref={bg} colors={colors} />
       <DirectionalLight

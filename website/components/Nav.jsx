@@ -26,8 +26,8 @@ export const Nav = ({ config }) => {
 
   const pagesStyles = useMemo(
     () => ({
-      columnGap: `calc(2 * ${atomicPadding}px)`,
-      display: preScroll ? 'none' : 'flex',
+      columnGap: `calc(2.5 * ${atomicPadding}px)`,
+      opacity: preScroll ? 0 : 0.8,
     }),
     [atomicPadding, preScroll],
   )
@@ -36,7 +36,7 @@ export const Nav = ({ config }) => {
     <div className={`${styles.nav}`} style={navStyles}>
       <div className={`${styles.logo}`}>
         <View index={logoRenderPriority} frames={1}>
-          <Logo size={40} />
+          <Logo size={30} />
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>

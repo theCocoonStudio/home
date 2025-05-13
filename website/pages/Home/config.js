@@ -16,12 +16,10 @@ export const config = {
     },
     ranges: {
       preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
-      animationStart: [0.00001, 0.1 - 0.000001],
-      about: [0.1 + (0.8 / 4) * 0, 0.8 / 4],
-      contact: [0.1 + (0.8 / 4) * 1, 0.8 / 4],
-      services: [0.1 + (0.8 / 4) * 2, 0.8 / 4],
-      attribution: [0.1 + (0.8 / 4) * 3, 0.8 / 4],
-      animationEnd: [0.9, 0.1],
+      about: [0.00001, 0.25 - 0.000001],
+      contact: [0.25, 0.25 - 0.000001],
+      services: [0.5, 0.25 - 0.000001],
+      attribution: [0.75, 0.25 - 0.000001],
     },
   },
   effects: {
@@ -34,6 +32,10 @@ export const config = {
     ViewComponent: Home,
     renderPriority: 1,
     EventDispatcherComponent: ScrollEventDispatcher,
+    markupIds: {
+      title: 'main-title-container',
+      subtitle: 'main-subtitle-container',
+    },
   },
   sections: ['about, contact, services, attribution'],
   nav: {

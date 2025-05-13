@@ -112,7 +112,9 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
         }
       } else {
         // outside range, so will have to be set when/if back
-        forceCallbackSet.current = false
+        if (forceCallbackSet.current) {
+          forceCallbackSet.current = false
+        }
       }
     },
     [bgRef, forceCallback, range],

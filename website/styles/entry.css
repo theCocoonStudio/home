@@ -29,12 +29,13 @@ html {
   font-size: 62.5%; /* default 16px --> 10px for clear rem values */
 }
 
-/* <weight>: 400-900 */
-.orbitron {
-  font-family: 'Orbitron', sans-serif;
+/* <weight>: 100-900 */
+/* <width>: 0-100 = 100 */
+.roboto {
+  font-family: 'Roboto', sans-serif;
   font-optical-sizing: auto;
-  font-style: normal;
-  /* font-weight: <weight> */
+  /* font-weight: <weight>;
+  font-variation-settings: 'wdth' <width>; */
 }
 
 /* <weight>: 200-1000 */
@@ -48,4 +49,12 @@ html {
   /* font-variation-settings:
     'wdth' <width>,
     'YTLC' <lowercase height>; */
+}
+
+/* <weight>: 100 - 700 */
+.roboto-mono {
+  font-family: 'Roboto Mono', monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+  /* font-weight: <weight>; */
 }
