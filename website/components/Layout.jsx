@@ -5,14 +5,14 @@ import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
 import pagesConfig from 'website/pages'
-import { composeClassNames, nunito, orbitron } from '../utils/styles'
+import { composeClassNames, nunito, roboto, robotoMono } from '../utils/styles'
 import { Footer } from './Footer'
 import { useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 
 const theme = {
-  utils: { compose: composeClassNames, nunito, orbitron },
+  utils: { compose: composeClassNames, nunito, roboto, robotoMono },
   colors: {
     mint: '#5CAB7D',
     charcoal: '#273B4E', // blue
