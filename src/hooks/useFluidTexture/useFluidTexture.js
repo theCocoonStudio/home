@@ -11,49 +11,35 @@ import { pressurePassConfig } from './PressurePass.canvas'
 import { outputPassConfig } from './OutputPass.canvas'
 import { ShaderPass } from './ShaderPass'
 
-const defaultOpts = {
-  iterations_poisson: 32,
-  iterations_viscous: 32,
-  mouse_force: 1,
-  resolution: 0.5,
-  cursor_size: 100,
-  viscous: 30,
-  isBounce: true,
-  dt: 0.014,
-  isViscous: true,
-  BFECC: true,
-}
-
+// force calculation default
 const defaultForceCallback = (delta, clock, pointer, pointerDiff) => ({
   force: pointerDiff,
   center: pointer,
 })
-export const useFluidTexture = (
-  options = {},
-  priority = -1,
-  [
-    fboWidth,
-    fboHeight,
-    fboOpts = { type: HalfFloatType, format: RGFormat },
-    outputFboOpts = { type: HalfFloatType },
-  ] = [undefined, undefined, { type: HalfFloatType, format: RGFormat }, {}],
-  pause,
-) => {
-  const {
-    iterations_poisson,
-    iterations_viscous,
-    mouse_force,
-    resolution,
-    cursor_size,
-    viscous,
-    isBounce,
-    dt,
-    isViscous,
-    BFECC,
-    forceCallbackRef,
-  } = { ...defaultOpts, ...options }
-
-  // independent data (along with hook's passed args)
+export const useFluidTexture = ({
+  /* simulation physics options */
+  poissonIterations = 32,
+  viscousIterations = 32,
+  forceValue = 1,
+  resolution = 0.5,
+  forceSize = 100,
+  viscous = 30,
+  isBounce = true,
+  dt = 0.014,
+  isViscous = true,
+  BFECC = true,
+  forceCallbackRef,
+  /* fbo options */
+  fboWidth,
+  fboHeight,
+  fboOpts = { type: HalfFloatType, format: RGFormat },
+  outputFboOpts = { type: HalfFloatType },
+  /* render options */
+  manual = false, // auto mode default
+  priority = -1, // auto mode only
+  pause = false, // auto mode only,
+}) => {
+  // reactive state data (along with passed args)
   const sizeCallback = useCallback(
     (state) => ({
       width: fboWidth || Math.floor(state.get().size.width * resolution),
@@ -66,12 +52,13 @@ export const useFluidTexture = (
   }, [])
 
   const { width, height } = useThree(sizeCallback, sizeEqFn)
+  const gl = useThree(({ gl }) => gl)
 
-  // shared objects
+  // shared object refs
   const camera = useRef(new Camera())
   const geometry = useRef(new PlaneGeometry(2.0, 2.0))
 
-  // intermediate values
+  // intermediate value refs
   const pointerDiff = useRef(new Vector2(0, 0))
   const oldPointer = useRef(new Vector2(0, 0))
 
@@ -109,14 +96,14 @@ export const useFluidTexture = (
     ...outputFboOpts,
   })
 
-  // uniform references
+  // uniforms refs
   const uniforms = useRef({
     boundarySpace: new Vector2(),
     cellScale: new Vector2(),
     fboSize: new Vector2(),
     force: new Vector2(),
     center: new Vector2(),
-    scale: new Vector2(cursor_size, cursor_size),
+    scale: new Vector2(forceSize, forceSize),
     dt,
     viscous,
     BFECC,
@@ -140,7 +127,7 @@ export const useFluidTexture = (
     uniforms.current.BFECC = BFECC
   }, [BFECC, dt, height, isBounce, viscous, width])
 
-  // shader passes references
+  // init shader passes references
   const advectionPass = useRef(
     new ShaderPass({
       ...advectionPassConfig,
@@ -305,10 +292,9 @@ export const useFluidTexture = (
       })
       .setFBO(output),
   )
-
-  // simulation updates
-  useFrame(({ gl, pointer, clock }, delta) => {
-    if (!pause?.current) {
+  // render callback
+  const render = useCallback(
+    (state, delta) => {
       // advection pass
       advectionPass.current.children.visible = isBounce
       advectionPass.current.children.material.uniforms =
@@ -316,26 +302,30 @@ export const useFluidTexture = (
       advectionPass.current.render(gl)
 
       // external force pass
-      pointerDiff.current.subVectors(pointer, oldPointer.current)
-      oldPointer.current.copy(pointer)
-
       const fc =
         typeof forceCallbackRef.current === 'function'
           ? forceCallbackRef.current
           : defaultForceCallback
 
+      const { clock, pointer } = state || {}
+
+      if (pointer) {
+        pointerDiff.current.subVectors(pointer, oldPointer.current)
+        oldPointer.current.copy(pointer)
+      }
+
       const {
         force,
         center,
-        radius = cursor_size,
+        radius = forceSize,
       } = fc(
         delta,
-        clock.getElapsedTime(),
-        pointer.clone(),
-        pointerDiff.current.clone(),
+        clock && clock.getElapsedTime(),
+        pointer && pointer.clone(),
+        pointer && pointerDiff.current.clone(),
       )
 
-      uniforms.current.force.set(force.x * mouse_force, force.y * mouse_force)
+      uniforms.current.force.set(force.x * forceValue, force.y * forceValue)
       uniforms.current.center.set(center.x, center.y)
       uniforms.current.scale.set(radius, radius)
 
@@ -345,7 +335,7 @@ export const useFluidTexture = (
       let vel = vel1
       if (isViscous) {
         let fbo_in, fbo_out
-        for (let i = 0; i < iterations_viscous; i++) {
+        for (let i = 0; i < viscousIterations; i++) {
           if (i % 2 == 0) {
             fbo_in = visc0
             fbo_out = visc1
@@ -374,7 +364,7 @@ export const useFluidTexture = (
 
       // poisson pass
       let p_in, p_out
-      for (let i = 0; i < iterations_poisson; i++) {
+      for (let i = 0; i < poissonIterations; i++) {
         if (i % 2 == 0) {
           p_in = pressure0
           p_out = pressure1
@@ -403,6 +393,28 @@ export const useFluidTexture = (
 
       // output pass
       outputPass.current.render(gl)
+    },
+    [
+      isBounce,
+      gl,
+      forceCallbackRef,
+      forceSize,
+      forceValue,
+      vel1,
+      isViscous,
+      viscousIterations,
+      visc0,
+      visc1,
+      poissonIterations,
+      pressure0,
+      pressure1,
+    ],
+  )
+
+  // simulation updates
+  useFrame((state, delta) => {
+    if (!manual && !pause) {
+      render(state, delta)
     }
   }, priority)
 
@@ -423,5 +435,5 @@ export const useFluidTexture = (
     [],
   )
 
-  return output.texture
+  return { texture: output.texture, render: manual ? render : undefined }
 }

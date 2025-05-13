@@ -32,29 +32,8 @@ const _FluidBackground = forwardRef(function FluidBackground(
   const forceCallback = useRef(undefined)
 
   const options = useMemo(() => {
-    const {
-      poissonIterations: iterations_poisson,
-      viscousIterations: iterations_viscous,
-      forceValue: mouse_force,
-      resolution,
-      forceSize: cursor_size,
-      viscosity: viscous,
-      dt,
-      isViscous,
-      BFECC,
-      isBounce,
-    } = _opts
     return {
-      iterations_poisson,
-      iterations_viscous,
-      mouse_force,
-      resolution,
-      cursor_size,
-      viscous,
-      dt,
-      isViscous,
-      BFECC,
-      isBounce,
+      ..._opts,
       forceCallbackRef: forceCallback,
     }
   }, [])
@@ -86,7 +65,7 @@ const _FluidBackground = forwardRef(function FluidBackground(
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [camera, size, viewport])
 
-  const texture = useFluidTexture(options)
+  const { texture } = useFluidTexture(options)
 
   const setForceCallback = useCallback((fcb) => {
     forceCallback.current = fcb
@@ -110,18 +89,23 @@ const _FluidBackground = forwardRef(function FluidBackground(
         <meshStandardMaterial
           transparent
           alphaMap={texture}
-          bumpMap={texture}
-          bumpScale={30}
+          /* bumpMap={texture}
+          bumpScale={15} */
           /* roughness={0.2}
           metalness={0.3} */
-          precision={'highp'}
+          /* precision={'highp'} */
           color={colors.white}
-          dithering
+          /* dithering */
         />
       </mesh>
       <mesh ref={backing} position-z={-0.5}>
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial ref={backingMaterial} color={'black'} />
+        <meshBasicMaterial
+          ref={backingMaterial}
+          metalness={0.2}
+          roughness={0.1}
+          color={'black'}
+        ></meshBasicMaterial>
       </mesh>
     </>
   )
