@@ -51,20 +51,26 @@ export function Layout({ config = pagesConfig }) {
             <ThreeApp eventPrefix={'client'}>
               <ScrollControls {...scrollControlsProps}>
                 <View.Port />
+                <ScrollHTMLRef setContainer={setScrollContainer} />
               </ScrollControls>
             </ThreeApp>
-            {ViewComponent && (
-              <View className={styles.view} index={renderPriority}>
-                <ScrollHTMLRef setContainer={setScrollContainer} />
-                <ViewComponent config={config[page]} />
-              </View>
-            )}
 
-            {Component &&
+            {(Component || ViewComponent) &&
               scrollContainer &&
               createPortal(
-                <Component config={config[page]} />,
-                scrollContainer,
+                <>
+                  {ViewComponent && (
+                    <View
+                      className={styles.view}
+                      index={renderPriority}
+                      frames={1}
+                    >
+                      <ViewComponent config={config[page]} />
+                    </View>
+                  )}
+                  {Component && <Component config={config[page]} />}
+                </>,
+                scrollContainer.children[0],
               )}
           </div>
           <Nav config={config[page]} />
