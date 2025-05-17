@@ -1,14 +1,7 @@
-import { useEffect, useMemo, useRef } from 'react'
-import { Color, Vector2 } from 'three'
-import { LineMaterial } from 'three-stdlib'
-import {
-  LineSegments2,
-  LineSegmentsGeometry,
-} from 'three/examples/jsm/Addons.js'
+import { useEffect, useRef } from 'react'
+
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { CarbonMaterial } from '../../web/components/CarbonMaterial.canvas'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const Logo = function Logo({ size }) {
   const ref = useRef()
@@ -31,6 +24,14 @@ export const Logo = function Logo({ size }) {
     )
     ref.current.scale.set(size / factor, size / factor, size / factor)
   }, [cSize, camera, size, viewport])
+
+  const { get } = useThree(({ get }) => ({
+    get,
+  }))
+
+  useEffect(() => {
+    get().setEvents({ enabled: false })
+  }, [get])
 
   return (
     <>

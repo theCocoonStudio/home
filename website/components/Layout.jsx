@@ -7,9 +7,10 @@ import { ScrollControls, View } from '@react-three/drei'
 import pagesConfig from 'website/pages'
 import { composeClassNames, nunito, roboto, robotoMono } from '../utils/styles'
 import { Footer } from './Footer'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
+import { EventLayerOn } from './EventLayerOn.canvas'
 
 const theme = {
   utils: { compose: composeClassNames, nunito, roboto, robotoMono },
@@ -30,10 +31,11 @@ const theme = {
     navHeight: 120,
     footerHeight: 120,
     atomicPadding: 8,
+    scrollContainerBorderSize: 2,
   },
 }
 
-export function Layout({ config = pagesConfig }) {
+function _Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
   const [scrollContainer, setScrollContainer] = useState()
 
@@ -66,6 +68,7 @@ export function Layout({ config = pagesConfig }) {
                       frames={1}
                     >
                       <ViewComponent config={config[page]} />
+                      <EventLayerOn />
                     </View>
                   )}
                   {Component && <Component config={config[page]} />}
@@ -80,3 +83,5 @@ export function Layout({ config = pagesConfig }) {
     </ThemeProvider>
   )
 }
+
+export const Layout = memo(_Layout)
