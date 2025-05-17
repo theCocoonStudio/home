@@ -8,13 +8,26 @@ import {
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { damp } from 'maath/easing'
+import { Color } from 'three'
+import { SoftwareItems } from './SoftwareItems.canvas'
 
 const _Software = function Software(
-  { range, titleId, subtitleId, scrollData },
+  {
+    range,
+    titleId,
+    subtitleId,
+    zPos,
+    scrollData,
+    bgRef,
+    itemGeometry,
+    items,
+    itemData,
+  },
   forwardedRef,
 ) {
   const {
     lengths: { navHeight, atomicPadding },
+    colors,
   } = useTheme()
 
   const [titleElement, setTitleElement] = useState()
@@ -65,11 +78,16 @@ const _Software = function Software(
   ])
 
   const dampedOffset = useRef(0.0)
+  const slate = useRef(new Color(colors.slate))
+  const black = useRef(new Color(colors.black))
+
+  const itemsRef = useRef()
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
+      itemsRef.current?.scrollCallback(state, delta, scrollData)
       if (titleElement && subtitleElement) {
-        const offset = scrollData.range(0, range[1] * 0.1)
-        const toDamp = damp(dampedOffset, 'current', offset, 0.03, delta)
+        const offset = scrollData.range(0, range[1] * (1 / (3 * items.length)))
+        const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
           // title
           titleElement.style.fontSize = `${4 + (1 - dampedOffset.current) * 4}rem`
@@ -79,22 +97,39 @@ const _Software = function Software(
           titleElement.style.left = leftTarget
           titleElement.style.top = topTarget
           // subtitle
-          subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 2}rem`
+          subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 4}rem`
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
           const leftTarget2 = `calc( (8 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - (8 * ${atomicPadding}px) - ${subtitleDOMRect.width / 2}px) )`
           const topTarget2 = `calc( ${navHeight}px + ${1.0 - dampedOffset.current} * (50% - ${navHeight}px) )`
           subtitleElement.style.left = leftTarget2
           subtitleElement.style.top = topTarget2
           subtitleElement.style.opacity = 1
+          // background color
+          bgRef.current.backingMaterialRef.current.color.lerpColors(
+            black.current,
+            slate.current,
+            dampedOffset.current,
+          )
         }
       }
     },
-    [atomicPadding, navHeight, range, subtitleElement, titleElement],
+    [atomicPadding, bgRef, navHeight, range, subtitleElement, titleElement],
   )
   useImperativeHandle(
     forwardedRef,
     () => ({ resizeCallback, scrollCallback }),
     [resizeCallback, scrollCallback],
+  )
+
+  return (
+    <SoftwareItems
+      zPos={zPos}
+      ref={itemsRef}
+      range={range}
+      itemGeometry={itemGeometry}
+      items={items}
+      itemData={itemData}
+    />
   )
 }
 

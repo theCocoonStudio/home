@@ -1,8 +1,8 @@
-import { PerspectiveCamera, useScroll } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
-import { useCallback, useContext, useRef } from 'react'
+import { useCallback, useContext, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLight } from '../../components/DirectionalLight.canvas'
 import { PrescrollAnimation } from '../../components/PrescrollAnimation.canvas'
@@ -10,6 +10,9 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { ScrollEventContext } from './ScrollEventContext'
 import { Software } from '../../components/Software.canvas'
+import { Vector3 } from 'three'
+import { getItemData } from '../../utils/bounds'
+import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 
 export const Home = ({
   config: {
@@ -22,22 +25,62 @@ export const Home = ({
       EventDispatcherComponent,
       markupIds: { title, subtitle },
     },
+    items: { count, software, photography, music, blog },
   },
+  zPos = 0.1,
+  itemSizePx = 300,
+  initialDepth = 0.05,
+  targetDepth = 0.0005,
 }) => {
   // reactive data
-  const { colors } = useTheme()
-  const canvas = useThree(({ gl }) => gl.domElement)
+  const {
+    colors,
+    lengths: { navHeight, scrollContainerBorderSize },
+  } = useTheme()
+  const { canvas, get } = useThree(({ gl, get }) => ({
+    canvas: gl.domElement,
+    get,
+  }))
   const scrollData = useScroll()
-  // refs
+  const [itemData, setItemData] = useState()
+  // component refs
   const preScrollAnimation = useRef()
-  const software = useRef()
+  const softwareRef = useRef()
   const bg = useRef()
   // responsive callbacks
   const resizeCallback = useCallback(() => {
+    // compute item data
+    setItemData(
+      getItemData({
+        id: scrollContainer,
+        scrollContainerBorderSize,
+        state: get(),
+        target: new Vector3(0, 0, zPos),
+        itemSizePx,
+        geometryDepth: initialDepth,
+        initialDepth,
+        targetDepth,
+        count,
+        focusTransformPx: new Vector3(0, -1 * navHeight, 0),
+        initialTransformPx: new Vector3(itemSizePx, 0, 0),
+      }),
+    )
+
+    // run child resize callbacks
     bg?.current?.resizeCallback()
     preScrollAnimation?.current?.resizeCallback()
-    software?.current?.resizeCallback()
-  }, [])
+    softwareRef?.current?.resizeCallback()
+  }, [
+    count,
+    get,
+    initialDepth,
+    itemSizePx,
+    navHeight,
+    scrollContainer,
+    scrollContainerBorderSize,
+    targetDepth,
+    zPos,
+  ])
   useResizeEvent(canvas, resizeCallback)
   //scroll callbacks
   const offsetCache = useRef(0.0)
@@ -53,12 +96,13 @@ export const Home = ({
       offsetCache.current = scrollData.offset
       preScrollAnimation.current?.scrollCallback &&
         preScrollAnimation.current.scrollCallback(state, delta, scrollData)
-      software.current?.scrollCallback &&
-        software.current.scrollCallback(state, delta, scrollData)
+      softwareRef.current?.scrollCallback &&
+        softwareRef.current.scrollCallback(state, delta, scrollData)
     }
   })
 
   const { setRange } = useContext(ScrollEventContext)
+  const itemGeometry = useItemGeometry(initialDepth)
 
   return (
     <>
@@ -69,11 +113,16 @@ export const Home = ({
         bgRef={bg}
       />
       <Software
-        ref={software}
-        range={ranges.about}
+        ref={softwareRef}
+        range={ranges.software}
         titleId={title}
         subtitleId={subtitle}
         scrollData={scrollData}
+        bgRef={bg}
+        zPos={zPos}
+        itemGeometry={itemGeometry}
+        items={software}
+        itemData={itemData}
       />
       <FluidBackground ref={bg} colors={colors} />
       <DirectionalLight
@@ -86,6 +135,7 @@ export const Home = ({
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
       <Environment preset='city' environmentIntensity={1} />
       <Effects renderPriority={renderPriority} />
+      {/* <OrbitControls /> */}
     </>
   )
 }
