@@ -35,7 +35,16 @@ export const config = {
     markupIds: {
       title: 'main-title-container',
       subtitle: 'main-subtitle-container',
+      description: 'main-description-container',
     },
+  },
+  sections: {
+    software: {
+      description: 'Select portfolio items, demos, tools, and more.',
+    },
+    photography: { description: '' },
+    music: { description: '' },
+    blog: { description: '' },
   },
   items: {
     _software: [{}, {}, {}, {}, {}, {}],

@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { damp } from 'maath/easing'
-import { Color } from 'three'
+import { Color, MathUtils } from 'three'
 import { SoftwareItems } from './SoftwareItems.canvas'
 
 const _Software = function Software(
@@ -16,7 +16,7 @@ const _Software = function Software(
     range,
     titleId,
     subtitleId,
-    zPos,
+    descriptionId,
     scrollData,
     bgRef,
     itemGeometry,
@@ -32,6 +32,7 @@ const _Software = function Software(
 
   const [titleElement, setTitleElement] = useState()
   const [subtitleElement, setSubtitleElement] = useState()
+  const [descriptionElement, setDescriptionElement] = useState()
 
   /* use for changing styles based on new width or aspect */
   const resizeCallback = useCallback(() => {
@@ -47,7 +48,20 @@ const _Software = function Software(
         setSubtitleElement(el)
       }
     }
-  }, [subtitleElement, subtitleId, titleElement, titleId])
+    if (!descriptionElement) {
+      const el = document.getElementById(descriptionId)
+      if (el) {
+        setDescriptionElement(el)
+      }
+    }
+  }, [
+    descriptionElement,
+    descriptionId,
+    subtitleElement,
+    subtitleId,
+    titleElement,
+    titleId,
+  ])
 
   useEffect(() => {
     if (scrollData.offset < scrollData.eps) {
@@ -85,7 +99,7 @@ const _Software = function Software(
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       itemsRef.current?.scrollCallback(state, delta, scrollData)
-      if (titleElement && subtitleElement) {
+      if (titleElement && subtitleElement && descriptionElement) {
         const offset = scrollData.range(0, range[1] * (1 / (3 * items.length)))
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
@@ -104,6 +118,12 @@ const _Software = function Software(
           subtitleElement.style.left = leftTarget2
           subtitleElement.style.top = topTarget2
           subtitleElement.style.opacity = 1
+          // description
+          descriptionElement.style.opacity = MathUtils.inverseLerp(
+            0.6,
+            1,
+            dampedOffset.current,
+          )
           // background color
           bgRef.current.backingMaterialRef.current.color.lerpColors(
             black.current,
@@ -113,7 +133,16 @@ const _Software = function Software(
         }
       }
     },
-    [atomicPadding, bgRef, navHeight, range, subtitleElement, titleElement],
+    [
+      atomicPadding,
+      bgRef,
+      descriptionElement,
+      items.length,
+      navHeight,
+      range,
+      subtitleElement,
+      titleElement,
+    ],
   )
   useImperativeHandle(
     forwardedRef,
@@ -123,7 +152,6 @@ const _Software = function Software(
 
   return (
     <SoftwareItems
-      zPos={zPos}
       ref={itemsRef}
       range={range}
       itemGeometry={itemGeometry}

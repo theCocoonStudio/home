@@ -17,7 +17,7 @@ import {
 import { ScrollDamper } from '../utils/damping'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  { size = 300, zPos, range, itemGeometry, items, itemData },
+  { size = 300, range, itemGeometry, items, itemData },
   forwardedRef,
 ) {
   const group = useRef()
@@ -73,7 +73,6 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     <>
       <group
         ref={group}
-        position-z={zPos}
         onPointerDown={() => {
           console.log('hi')
         }}

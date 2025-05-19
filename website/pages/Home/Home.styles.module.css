@@ -27,6 +27,19 @@
   display: inline-block;
 }
 
+.description {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  line-height: 1em;
+  padding-top: 8px;
+  text-align: center;
+  width: 400px;
+  opacity: 0;
+}
+
 /* nav */
 .iconContainer {
   > svg {

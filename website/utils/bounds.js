@@ -64,6 +64,7 @@ export const getItemData = ({
   scrollContainerBorderSize,
   state,
   target,
+  zPos,
   paddingFactor = 0.1,
   itemSizePx,
   geometryDepth,
@@ -79,6 +80,9 @@ export const getItemData = ({
   initialTransformScale = new Vector3(),
   focusTransformScale = new Vector3(),
   intermediateTransformScale = new Vector3(),
+  initialTransformViewport = new Vector3(),
+  focusTransformViewport = new Vector3(),
+  intermediateTransformViewport = new Vector3(),
 }) => {
   const { min, max, viewportSize, ppwu } = getMarkupBounds({
     id,
@@ -113,13 +117,15 @@ export const getItemData = ({
       data.initialScale.x / 2 +
       initialTransform.x +
       initialTransformPx.x / ppwu +
-      data.initialScale.x * initialTransformScale.x,
+      data.initialScale.x * initialTransformScale.x +
+      viewportSize.x * initialTransformViewport.x,
     0 +
       initialTransform.y +
       initialTransformPx.y / ppwu +
-      data.initialScale.y * initialTransformScale.y,
+      data.initialScale.y * initialTransformScale.y +
+      viewportSize.y * initialTransformViewport.y,
     /* closest face at 0 */
-    0 -
+    zPos -
       initialDepth / 2 +
       initialTransform.z +
       initialTransformPx.z / ppwu +
@@ -129,13 +135,15 @@ export const getItemData = ({
     0 +
       intermediateTransform.x +
       intermediateTransformPx.x / ppwu +
-      data.initialScale.x * intermediateTransformScale.x,
+      data.initialScale.x * intermediateTransformScale.x +
+      viewportSize.x * intermediateTransformViewport.x,
     0 +
       intermediateTransform.y +
       intermediateTransformPx.y / ppwu +
-      data.initialScale.y * intermediateTransformScale.y,
+      data.initialScale.y * intermediateTransformScale.y +
+      viewportSize.y * intermediateTransformViewport.y,
     /* closest face at 0 */
-    0 -
+    zPos -
       initialDepth / 2 +
       intermediateTransform.z +
       intermediateTransformPx.z / ppwu +
@@ -145,14 +153,16 @@ export const getItemData = ({
     0 +
       focusTransform.x +
       focusTransformPx.x / ppwu +
-      data.initialScale.x * focusTransformScale.x,
-    viewportSize.y / 2 -
-      data.initialScale.y / 2 +
+      data.initialScale.x * focusTransformScale.x +
+      viewportSize.x * focusTransformViewport.x,
+
+    0 +
       focusTransform.y +
       focusTransformPx.y / ppwu +
-      data.initialScale.y * focusTransformScale.y,
+      data.initialScale.y * focusTransformScale.y +
+      viewportSize.y * focusTransformViewport.y,
     /* closest face at 0 */
-    0 -
+    zPos -
       initialDepth / 2 +
       focusTransform.z +
       focusTransformPx.z / ppwu +
@@ -164,7 +174,7 @@ export const getItemData = ({
       min.x + data.targetScale.x / 2 + (data.targetScale.x + padding) * i,
       min.y + data.targetScale.y / 2,
       /* closest face at 0 */
-      0 - targetDepth / 2,
+      zPos - targetDepth / 2,
     )
   }
   return data

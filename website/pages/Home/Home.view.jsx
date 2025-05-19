@@ -23,19 +23,19 @@ export const Home = ({
     scroll: { ranges },
     main: {
       EventDispatcherComponent,
-      markupIds: { title, subtitle },
+      markupIds: { title, subtitle, description },
     },
     items: { count, software, photography, music, blog },
   },
   zPos = 0.1,
-  itemSizePx = 300,
+  itemSizePx = 400,
   initialDepth = 0.05,
   targetDepth = 0.0005,
 }) => {
   // reactive data
   const {
     colors,
-    lengths: { navHeight, scrollContainerBorderSize },
+    lengths: { navHeight, scrollContainerBorderSize, atomicPadding },
   } = useTheme()
   const { canvas, get } = useThree(({ gl, get }) => ({
     canvas: gl.domElement,
@@ -56,12 +56,14 @@ export const Home = ({
         scrollContainerBorderSize,
         state: get(),
         target: new Vector3(0, 0, zPos),
+        zPos,
         itemSizePx,
         geometryDepth: initialDepth,
         initialDepth,
         targetDepth,
         count,
-        focusTransformPx: new Vector3(0, -1 * navHeight, 0),
+        focusTransformPx: new Vector3(-8 * atomicPadding, 0, 0),
+        focusTransformScale: new Vector3(-0.5, 0, 0),
         initialTransformPx: new Vector3(itemSizePx, 0, 0),
       }),
     )
@@ -71,11 +73,11 @@ export const Home = ({
     preScrollAnimation?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
   }, [
+    atomicPadding,
     count,
     get,
     initialDepth,
     itemSizePx,
-    navHeight,
     scrollContainer,
     scrollContainerBorderSize,
     targetDepth,
@@ -117,9 +119,9 @@ export const Home = ({
         range={ranges.software}
         titleId={title}
         subtitleId={subtitle}
+        descriptionId={description}
         scrollData={scrollData}
         bgRef={bg}
-        zPos={zPos}
         itemGeometry={itemGeometry}
         items={software}
         itemData={itemData}
