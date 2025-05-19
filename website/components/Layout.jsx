@@ -65,7 +65,7 @@ function _Layout({ config = pagesConfig }) {
                     <View
                       className={styles.view}
                       index={renderPriority}
-                      frames={1}
+                      /* frames={1} */
                     >
                       <ViewComponent config={config[page]} />
                       <EventLayerOn />
