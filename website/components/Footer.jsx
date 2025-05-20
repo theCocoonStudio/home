@@ -3,13 +3,12 @@ import { useTheme } from 'website/hooks/useTheme'
 import { useMemo } from 'react'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 
-export const Footer = ({ config }) => {
+export const Footer = ({ config, scrollContainer }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
   const {
     lengths: { footerHeight, atomicPadding },
-    colors: { black },
   } = useTheme()
 
   const preScroll = useScrollEvent('preScroll')
@@ -82,7 +81,7 @@ export const Footer = ({ config }) => {
           </svg>
         </div>
       </div>
-      <FooterItemsComponent config={config} />
+      <FooterItemsComponent config={config} scrollContainer={scrollContainer} />
     </div>
   )
 }

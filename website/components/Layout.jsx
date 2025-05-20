@@ -67,17 +67,25 @@ function _Layout({ config = pagesConfig }) {
                       index={renderPriority}
                       /* frames={1} */
                     >
-                      <ViewComponent config={config[page]} />
+                      <ViewComponent
+                        config={config[page]}
+                        scrollContainer={scrollContainer}
+                      />
                       <EventLayerOn />
                     </View>
                   )}
-                  {Component && <Component config={config[page]} />}
+                  {Component && (
+                    <Component
+                      config={config[page]}
+                      scrollContainer={scrollContainer}
+                    />
+                  )}
                 </>,
                 scrollContainer.children[0],
               )}
           </div>
-          <Nav config={config[page]} />
-          <Footer config={config[page]} />
+          <Nav config={config[page]} scrollContainer={scrollContainer} />
+          <Footer config={config[page]} scrollContainer={scrollContainer} />
         </Provider>
       </ResizeEventProvider>
     </ThemeProvider>

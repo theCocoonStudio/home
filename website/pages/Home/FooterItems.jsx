@@ -1,27 +1,31 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from './Home.styles.module.css'
-import Performance from '@tabler/icons-react/dist/esm/icons/IconGauge'
-import Settings from '@tabler/icons-react/dist/esm/icons/IconAdjustmentsHorizontal'
+
 import { useTheme } from '../../hooks/useTheme'
 import { useScrollEvent } from './useScrollEvent'
+import { useScroll } from 'src/hooks/useScroll/useScroll'
 
 export const FooterItems = ({
   config: {
     footer: {
       markupIds: { scrollContainer, fpsContainer },
     },
+    scroll: {
+      ranges: { software },
+    },
+    items: { software: items },
   },
+  scrollContainer: scrollElement,
 }) => {
   const preScroll = useScrollEvent('preScroll')
 
   const {
     lengths: { atomicPadding },
-    colors: { black },
     utilReturn: { className, style },
   } = useTheme(
     'robotoMono',
     600,
-    ({ lengths: { atomicPadding } }) => ({
+    () => ({
       pointerEvents: preScroll ? 'none' : 'auto',
     }),
     styles.performance,
@@ -57,6 +61,12 @@ export const FooterItems = ({
     }),
     [preScroll],
   )
+
+  const scrollTo = useScroll(scrollElement)
+
+  const scrollDown = useCallback(() => {
+    scrollTo(software[1] * (1 / (3 * items.length)))
+  }, [items.length, scrollTo, software])
   return (
     <>
       <div className={`${styles.settings}`} style={settingsStyles}>
@@ -78,7 +88,7 @@ export const FooterItems = ({
           </div>
         </div>
       </div>
-      <div className={`${styles.down}`} style={downStyles}>
+      <div className={`${styles.down}`} style={downStyles} onClick={scrollDown}>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           height='1em'
