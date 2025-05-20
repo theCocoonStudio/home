@@ -1,11 +1,12 @@
 import styles from 'website/styles/Nav.module.css'
 import { useTheme } from 'website/hooks/useTheme'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
+import { useScroll } from 'src/hooks'
 
-export const Nav = ({ config }) => {
+export const Nav = ({ config, scrollContainer }) => {
   const {
     nav: { NavItemsComponent, logoRenderPriority },
   } = config
@@ -14,6 +15,10 @@ export const Nav = ({ config }) => {
   } = useTheme()
 
   const preScroll = useScrollEvent('preScroll')
+  const scrollTo = useScroll(scrollContainer)
+  const scrollHome = useCallback(() => {
+    scrollTo(0.0)
+  }, [scrollTo])
 
   const navStyles = useMemo(
     () => ({
@@ -34,13 +39,13 @@ export const Nav = ({ config }) => {
 
   return (
     <div className={`${styles.nav}`} style={navStyles}>
-      <div className={`${styles.logo}`}>
+      <div className={`${styles.logo}`} onClick={scrollHome}>
         <View index={logoRenderPriority} frames={1}>
           <Logo size={30} />
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>
-        <NavItemsComponent config={config} />
+        <NavItemsComponent config={config} scrollContainer={scrollContainer} />
       </div>
     </div>
   )

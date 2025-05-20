@@ -2,14 +2,34 @@ import { useMemo } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import styles from './Home.styles.module.css'
 import { useScrollEvent } from './useScrollEvent'
+import { useScroll } from 'src/hooks'
 
-export const NavItems = () => {
+export const NavItems = ({ config: { items }, scrollContainer }) => {
   const {
     colors: { slate, black, midnight, charcoal, purple },
   } = useTheme()
 
   const section = useScrollEvent()
-
+  const scrollTo = useScroll(scrollContainer)
+  const targets = useMemo(
+    () => ({
+      software: () => {
+        scrollTo(items.software[0].range[0] + items.software[0].range[1] / 2)
+      },
+      photography: () => {
+        scrollTo(
+          items.photography[0].range[0] + items.photography[0].range[1] / 2,
+        )
+      },
+      music: () => {
+        scrollTo(items.music[0].range[0] + items.music[0].range[1] / 2)
+      },
+      blog: () => {
+        scrollTo(items.blog[0].range[0] + items.blog[0].range[1] / 2)
+      },
+    }),
+    [items.blog, items.music, items.photography, items.software, scrollTo],
+  )
   const softwareStyle = useMemo(
     () => ({
       pointerEvents: section === 'preScroll' ? 'none' : 'auto',
@@ -81,7 +101,11 @@ export const NavItems = () => {
   )
   return (
     <>
-      <div className={styles.iconContainer} style={softwareStyle}>
+      <div
+        className={styles.iconContainer}
+        style={softwareStyle}
+        onClick={targets.software}
+      >
         {/* free-icons.github.io */}
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -95,7 +119,11 @@ export const NavItems = () => {
           <div style={slateStyle} className={styles.active} />
         )}
       </div>
-      <div className={styles.iconContainer} style={photographyStyle}>
+      <div
+        className={styles.iconContainer}
+        style={photographyStyle}
+        onClick={targets.photography}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           height='1em'
@@ -108,7 +136,11 @@ export const NavItems = () => {
           <div style={midnightStyle} className={styles.active} />
         )}
       </div>
-      <div className={styles.iconContainer} style={musicyStyle}>
+      <div
+        className={styles.iconContainer}
+        style={musicyStyle}
+        onClick={targets.music}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           height='1em'
@@ -121,7 +153,11 @@ export const NavItems = () => {
           <div style={charcoalStyle} className={styles.active} />
         )}
       </div>
-      <div className={styles.iconContainer} style={blogStyle}>
+      <div
+        className={styles.iconContainer}
+        style={blogStyle}
+        onClick={targets.blog}
+      >
         <svg
           xmlns='http://www.w3.org/2000/svg'
           height='1em'
