@@ -23,12 +23,11 @@ export const Home = ({
     scroll: { ranges },
     main: {
       EventDispatcherComponent,
-      markupIds: { title, subtitle, description },
+      markupIds: { title, subtitle, description, itemDescription },
     },
-    items: { count, software, photography, music, blog },
+    items: { count, software, photography, music, blog, itemSizePx },
   },
   zPos = 0.1,
-  itemSizePx = 400,
   initialDepth = 0.05,
   targetDepth = 0.0005,
 }) => {
@@ -62,7 +61,7 @@ export const Home = ({
         initialDepth,
         targetDepth,
         count,
-        focusTransformPx: new Vector3(-8 * atomicPadding, 0, 0),
+        focusTransformPx: new Vector3(-4 * atomicPadding, 0, 0),
         focusTransformScale: new Vector3(-0.5, 0, 0),
         initialTransformPx: new Vector3(itemSizePx, 0, 0),
       }),
@@ -120,6 +119,7 @@ export const Home = ({
         titleId={title}
         subtitleId={subtitle}
         descriptionId={description}
+        itemDescriptionId={itemDescription}
         scrollData={scrollData}
         bgRef={bg}
         itemGeometry={itemGeometry}

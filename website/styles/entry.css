@@ -1,3 +1,14 @@
+:root {
+  /* colors */
+  --charcoal: #273b4e;
+  --purple: #2b253a;
+  --gunmetal: #122629;
+  --midnight: #103334;
+  --slate: #134643;
+  --black: #101010;
+  --white: #ffffff;
+  --red: #330000;
+}
 * {
   box-sizing: border-box;
 }
@@ -9,6 +20,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  color: var(--black);
 }
 /* body {
   overscroll-behavior: none;
@@ -17,6 +29,7 @@ div,
 pre,
 h1,
 h2,
+h3,
 p {
   margin: 0;
   padding: 0;

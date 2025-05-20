@@ -27,16 +27,53 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.8rem;
-  line-height: 1em;
+  font-size: 2.2rem;
+  line-height: 1.3em;
+  padding: 4px;
   padding-top: 8px;
-  text-align: center;
-  width: 400px;
+  width: 100%;
   opacity: 0;
+}
+
+.itemDescription {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 16px 8px;
+  transition: opacity 0.1s ease-in;
+  opacity: 0;
+  pointer-events: none;
+  h1 {
+    font-size: 3.2rem;
+    line-height: 1.1em;
+    font-weight: 650;
+    font-variation-settings:
+      'wdth' 75,
+      'YTLC' 540;
+  }
+  h3 {
+    font-size: 1.4rem;
+    line-height: 1em;
+    font-weight: 400;
+    padding-top: 8px;
+    text-transform: uppercase;
+    font-variation-settings:
+      'wdth' 75,
+      'YTLC' 540;
+  }
+  p {
+    font-size: 2rem;
+    line-height: 1.5em;
+    padding-top: 12px;
+    font-weight: 300;
+    font-variation-settings: 'wdth' 100;
+  }
 }
 
 /* nav */
 .iconContainer {
+  transition: color 0.2s ease-in;
+
   > svg {
     width: 100%;
     height: 100%;

@@ -32,7 +32,7 @@ export class ScrollDamper {
     },
     {
       range,
-      focusFactor = 0.33,
+      focusFactor = 0.36,
       eps = 0.00001 /* @drei/ScrollControls default */,
     } = {},
   ) {
@@ -79,7 +79,7 @@ export class ScrollDamper {
     return this
   }
 
-  frame(delta, scrollData) {
+  frame(delta, scrollData, callback) {
     this.#items.forEach(({ ref, range, targetPosition }) => {
       const rangeOffset = scrollData.range(...range)
       const targetIndex = this.#offsetThresholds.findIndex(
@@ -120,6 +120,11 @@ export class ScrollDamper {
         dampE(ref.rotation, [thresholdOffset * Math.PI * 2, 0, 0], 0.05, delta)
       } else {
         dampE(ref.rotation, [0, 0, 0], 0.15, delta)
+      }
+
+      const isActive = scrollData.visible(...range)
+      if (isActive && callback) {
+        callback({ targetIndex, thresholdOffset })
       }
     })
     return this

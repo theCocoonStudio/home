@@ -36,6 +36,7 @@ export const config = {
       title: 'main-title-container',
       subtitle: 'main-subtitle-container',
       description: 'main-description-container',
+      itemDescription: 'main-item-description-container',
     },
   },
   sections: {
@@ -51,6 +52,7 @@ export const config = {
     _photography: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     _music: [{}, {}, {}],
     _blog: [{}, {}, {}, {}],
+    itemSizePx: 400,
     get count() {
       return (
         this._software.length +

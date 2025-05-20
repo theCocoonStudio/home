@@ -22,7 +22,7 @@ const theme = {
     midnight: '#103334', // intermediate green
     slate: '#134643', // green (success)
     white: '#ffffff',
-    black: '#000000',
+    black: '#101010',
     grey: '#202020',
     red: '#330000', // errors
     charcoalTint: '#3D4F60',

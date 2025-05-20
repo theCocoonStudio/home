@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Shape, ExtrudeGeometry } from 'three'
 
-export const useItemGeometry = (depth = 0.05, borderRadius = 0.05) => {
+export const useItemGeometry = (depth = 0.05, borderRadius = 0.02) => {
   const settings = useMemo(
     () => ({
       steps: 2,

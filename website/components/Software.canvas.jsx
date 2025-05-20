@@ -17,6 +17,7 @@ const _Software = function Software(
     titleId,
     subtitleId,
     descriptionId,
+    itemDescriptionId,
     scrollData,
     bgRef,
     itemGeometry,
@@ -33,6 +34,7 @@ const _Software = function Software(
   const [titleElement, setTitleElement] = useState()
   const [subtitleElement, setSubtitleElement] = useState()
   const [descriptionElement, setDescriptionElement] = useState()
+  const [itemDescription, setItemDescription] = useState()
 
   /* use for changing styles based on new width or aspect */
   const resizeCallback = useCallback(() => {
@@ -54,9 +56,17 @@ const _Software = function Software(
         setDescriptionElement(el)
       }
     }
+    if (!itemDescription) {
+      const el = document.getElementById(itemDescriptionId)
+      if (el) {
+        setItemDescription(el)
+      }
+    }
   }, [
     descriptionElement,
     descriptionId,
+    itemDescription,
+    itemDescriptionId,
     subtitleElement,
     subtitleId,
     titleElement,
@@ -157,6 +167,7 @@ const _Software = function Software(
       itemGeometry={itemGeometry}
       items={items}
       itemData={itemData}
+      itemDescription={itemDescription}
     />
   )
 }

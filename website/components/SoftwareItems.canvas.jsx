@@ -17,7 +17,7 @@ import {
 import { ScrollDamper } from '../utils/damping'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  { size = 300, range, itemGeometry, items, itemData },
+  { size = 300, range, itemGeometry, items, itemData, itemDescription },
   forwardedRef,
 ) {
   const group = useRef()
@@ -52,13 +52,33 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     }
   }, [itemData, range])
 
+  const itemDescriptionVisible = useRef(false)
+  const frameCallback = useCallback(
+    ({ targetIndex }) => {
+      if (targetIndex === 3) {
+        if (itemDescriptionVisible.current === false) {
+          itemDescription.style.opacity = 1
+          itemDescription.style.pointerEvents = 'auto'
+          itemDescriptionVisible.current = true
+        }
+      } else {
+        if (itemDescriptionVisible.current === true) {
+          itemDescription.style.opacity = 0
+          itemDescription.style.pointerEvents = 'none'
+          itemDescriptionVisible.current = false
+        }
+      }
+    },
+    [itemDescription],
+  )
+
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (damper) {
-        damper.frame(delta, scrollData)
+        damper.frame(delta, scrollData, itemDescription && frameCallback)
       }
     },
-    [damper],
+    [damper, frameCallback, itemDescription],
   )
 
   useImperativeHandle(
