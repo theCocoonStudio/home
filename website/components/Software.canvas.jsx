@@ -110,7 +110,10 @@ const _Software = function Software(
     (state, delta, scrollData) => {
       itemsRef.current?.scrollCallback(state, delta, scrollData)
       if (titleElement && subtitleElement && descriptionElement) {
-        const offset = scrollData.range(0, range[1] * (1 / (3 * items.length)))
+        const offset = scrollData.range(
+          0,
+          items[0].range[0] + items[0].range[1] / 2,
+        )
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
           // title

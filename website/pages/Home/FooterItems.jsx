@@ -10,9 +10,6 @@ export const FooterItems = ({
     footer: {
       markupIds: { scrollContainer, fpsContainer },
     },
-    scroll: {
-      ranges: { software },
-    },
     items: { software: items },
   },
   scrollContainer: scrollElement,
@@ -65,8 +62,8 @@ export const FooterItems = ({
   const scrollTo = useScroll(scrollElement)
 
   const scrollDown = useCallback(() => {
-    scrollTo(software[1] * (1 / (3 * items.length)))
-  }, [items.length, scrollTo, software])
+    scrollTo(items[0].range[0] + items[0].range[1] / 2)
+  }, [items, scrollTo])
   return (
     <>
       <div className={`${styles.settings}`} style={settingsStyles}>

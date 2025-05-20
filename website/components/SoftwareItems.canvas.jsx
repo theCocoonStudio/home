@@ -17,7 +17,7 @@ import {
 import { ScrollDamper } from '../utils/damping'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  { size = 300, range, itemGeometry, items, itemData, itemDescription },
+  { itemGeometry, items, itemData, itemDescription },
   forwardedRef,
 ) {
   const group = useRef()
@@ -26,12 +26,12 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const { colors } = useTheme()
   const softwareItems = useMemo(
     () =>
-      items.map(({ index }) => (
+      items.map(({ index, range }) => (
         <mesh
           key={`items${index}`}
           geometry={itemGeometry}
           position-x={2}
-          userData={{ index }}
+          userData={{ index, range }}
         >
           <meshStandardMaterial color={colors.slate} roughness={0.1} />
         </mesh>
@@ -44,13 +44,13 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
       const itemsArr = group.current?.children.map((child) => ({
         ref: child,
         index: child.userData.index,
+        range: child.userData.range,
       }))
       return scrollDamper.current.setData(itemsArr, itemData, {
-        range,
         /* focusFactor: 0.5, */
       })
     }
-  }, [itemData, range])
+  }, [itemData])
 
   const itemDescriptionVisible = useRef(false)
   const frameCallback = useCallback(

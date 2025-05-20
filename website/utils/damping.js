@@ -31,7 +31,6 @@ export class ScrollDamper {
       targetPositions,
     },
     {
-      range,
       focusFactor = 0.36,
       eps = 0.00001 /* @drei/ScrollControls default */,
     } = {},
@@ -44,10 +43,6 @@ export class ScrollDamper {
     this.#items = itemArray.map(({ index: itemIndex, ...item }, index) => ({
       ...item,
       targetPosition: targetPositions[itemIndex].clone(),
-      range: [
-        range[0] + index * (range[1] / itemArray.length),
-        range[1] / itemArray.length,
-      ],
     }))
     this.#offsetThresholds = [
       0,
