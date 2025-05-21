@@ -41,22 +41,24 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
 
   const damper = useMemo(() => {
     if (group.current?.children && itemData) {
-      const itemsArr = group.current?.children.map((child) => ({
+      const itemsArr = group.current?.children.map((child, index) => ({
         ref: child,
-        index: child.userData.index,
-        range: child.userData.range,
+        ...items[index],
       }))
       return scrollDamper.current.setData(itemsArr, itemData, {
         /* focusFactor: 0.5, */
       })
     }
-  }, [itemData])
+  }, [itemData, items])
 
   const itemDescriptionVisible = useRef(false)
   const frameCallback = useCallback(
-    ({ targetIndex }) => {
+    ({ targetIndex, item }) => {
       if (targetIndex === 3) {
         if (itemDescriptionVisible.current === false) {
+          itemDescription.children[0].innerText = item.title
+          itemDescription.children[1].innerText = item.date
+          itemDescription.children[2].innerText = item.description
           itemDescription.style.opacity = 1
           itemDescription.style.pointerEvents = 'auto'
           itemDescriptionVisible.current = true

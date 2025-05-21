@@ -6,9 +6,7 @@ import { useTheme } from '../../hooks/useTheme'
 
 export const Main = function Main({
   config: {
-    sections: {
-      software: { description },
-    },
+    sections,
     main: {
       markupIds: {
         title,
@@ -46,7 +44,7 @@ export const Main = function Main({
     [atomicPadding, itemSizePx],
   )
 
-  const preScroll = useScrollEvent('preScroll')
+  const section = useScrollEvent()
   return (
     <div className={styles.main}>
       <h1 style={style} className={className} id={title}>
@@ -54,9 +52,9 @@ export const Main = function Main({
       </h1>
       <br />
       <h2 className={subClass} style={subStyle} id={subtitle}>
-        {preScroll ? 'software developer' : 'SOFTWARE'}
+        {sections[section] ? section.toUpperCase() : 'software developer'}
         <p id={descriptionId} className={descClass} style={descStyle}>
-          {description}
+          {sections[section] ? sections[section].description : ''}
         </p>
       </h2>
       <div
@@ -64,12 +62,9 @@ export const Main = function Main({
         className={`${styles.itemDescription}`}
         id={itemDescription}
       >
-        <h1 className='nunito-sans'>This is my title and it is the best.</h1>
-        <h3 className='nunito-sans'>May 20, 2025</h3>
-        <p className='roboto'>
-          In this paragraph I try to fill some space. Lorem ipsum type shit.
-          Etc.
-        </p>
+        <h1 className='nunito-sans'></h1>
+        <h3 className='nunito-sans'></h3>
+        <p className='roboto'></p>
       </div>
     </div>
   )

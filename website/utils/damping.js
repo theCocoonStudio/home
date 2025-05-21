@@ -40,7 +40,7 @@ export class ScrollDamper {
     this.#initialPosition.copy(initialPosition)
     this.#intermediatePosition.copy(intermediatePosition)
     this.#focusPosition.copy(focusPosition)
-    this.#items = itemArray.map(({ index: itemIndex, ...item }, index) => ({
+    this.#items = itemArray.map(({ index: itemIndex, ...item }) => ({
       ...item,
       targetPosition: targetPositions[itemIndex].clone(),
     }))
@@ -75,7 +75,8 @@ export class ScrollDamper {
   }
 
   frame(delta, scrollData, callback) {
-    this.#items.forEach(({ ref, range, targetPosition }) => {
+    this.#items.forEach((item) => {
+      const { ref, range, targetPosition } = item
       const rangeOffset = scrollData.range(...range)
       const targetIndex = this.#offsetThresholds.findIndex(
         (threshold) => rangeOffset < threshold,
@@ -119,7 +120,7 @@ export class ScrollDamper {
 
       const isActive = scrollData.visible(...range)
       if (isActive && callback) {
-        callback({ targetIndex, thresholdOffset })
+        callback({ targetIndex, thresholdOffset, item })
       }
     })
     return this

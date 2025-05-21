@@ -14,7 +14,44 @@ const ranges = {
   blog: [0.75, 0.25 - 0.000001],
 }
 const items = {
-  _software: [{}, {}, {}, {}, {}, {}],
+  _software: [
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 20, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 21, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 22, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 23, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 24, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+    {
+      title: 'This is my title and it is the best.',
+      date: 'May 25, 2025',
+      description:
+        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+    },
+  ],
   _photography: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
   _music: [{}, {}, {}],
   _blog: [{}, {}, {}, {}],
@@ -50,9 +87,11 @@ export const config = {
     software: {
       description: 'Select portfolio items, demos, tools, and more.',
     },
-    photography: { description: '' },
-    music: { description: '' },
-    blog: { description: '' },
+    photography: {
+      description: 'Select photos taken with a variety of hardware.',
+    },
+    music: { description: 'Select items.' },
+    blog: { description: 'Life' },
   },
   items: {
     itemSizePx: 400,
