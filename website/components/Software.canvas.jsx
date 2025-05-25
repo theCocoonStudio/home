@@ -13,6 +13,7 @@ import { SoftwareItems } from './SoftwareItems.canvas'
 
 const _Software = function Software(
   {
+    focusFactor,
     range,
     titleId,
     subtitleId,
@@ -112,7 +113,7 @@ const _Software = function Software(
       if (titleElement && subtitleElement && descriptionElement) {
         const offset = scrollData.range(
           0,
-          items[0].range[0] + items[0].range[1] / 2,
+          items[0].range[0] + (items[0].range[1] * (1 - focusFactor)) / 2,
         )
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
@@ -124,7 +125,7 @@ const _Software = function Software(
           titleElement.style.left = leftTarget
           titleElement.style.top = topTarget
           // subtitle
-          subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 4}rem`
+          subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 7}rem`
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
           const leftTarget2 = `calc( (8 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - (8 * ${atomicPadding}px) - ${subtitleDOMRect.width / 2}px) )`
           const topTarget2 = `calc( ${navHeight}px + ${1.0 - dampedOffset.current} * (50% - ${navHeight}px) )`
@@ -150,6 +151,7 @@ const _Software = function Software(
       atomicPadding,
       bgRef,
       descriptionElement,
+      focusFactor,
       items,
       navHeight,
       subtitleElement,
@@ -170,6 +172,7 @@ const _Software = function Software(
       items={items}
       itemData={itemData}
       itemDescription={itemDescription}
+      focusFactor={focusFactor}
     />
   )
 }

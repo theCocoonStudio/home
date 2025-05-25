@@ -31,7 +31,7 @@ export class ScrollDamper {
       targetPositions,
     },
     {
-      focusFactor = 0.36,
+      focusFactor = 0.46,
       eps = 0.00001 /* @drei/ScrollControls default */,
     } = {},
   ) {

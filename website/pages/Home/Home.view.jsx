@@ -25,7 +25,8 @@ export const Home = ({
       EventDispatcherComponent,
       markupIds: { title, subtitle, description, itemDescription },
     },
-    items: { count, software, photography, music, blog, itemSizePx },
+    items: { focusFactor, count, software, photography, music, blog },
+    style: { itemSizePx, titleHeight },
   },
   zPos = 0.1,
   initialDepth = 0.05,
@@ -34,7 +35,12 @@ export const Home = ({
   // reactive data
   const {
     colors,
-    lengths: { navHeight, scrollContainerBorderSize, atomicPadding },
+    lengths: {
+      navHeight,
+      footerHeight,
+      scrollContainerBorderSize,
+      atomicPadding,
+    },
   } = useTheme()
   const { canvas, get } = useThree(({ gl, get }) => ({
     canvas: gl.domElement,
@@ -61,9 +67,10 @@ export const Home = ({
         initialDepth,
         targetDepth,
         count,
-        focusTransformPx: new Vector3(-4 * atomicPadding, 0, 0),
+        focusTransformPx: new Vector3(-4 * atomicPadding, -titleHeight / 2, 0),
         focusTransformScale: new Vector3(-0.5, 0, 0),
-        initialTransformPx: new Vector3(itemSizePx, 0, 0),
+        intermediateTransformPx: new Vector3(0, -titleHeight / 2, 0),
+        initialTransformPx: new Vector3(itemSizePx, -titleHeight / 2, 0),
       }),
     )
 
@@ -80,6 +87,7 @@ export const Home = ({
     scrollContainer,
     scrollContainerBorderSize,
     targetDepth,
+    titleHeight,
     zPos,
   ])
   useResizeEvent(canvas, resizeCallback)
@@ -125,6 +133,7 @@ export const Home = ({
         itemGeometry={itemGeometry}
         items={software}
         itemData={itemData}
+        focusFactor={focusFactor}
       />
       <FluidBackground ref={bg} colors={colors} />
       <DirectionalLight

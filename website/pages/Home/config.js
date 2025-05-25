@@ -19,37 +19,44 @@ const items = {
       title: 'This is my title and it is the best.',
       date: 'May 20, 2025',
       description:
-        'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+        'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+      tags: ['software'],
     },
     {
       title: 'This is my title and it is the best.',
       date: 'May 21, 2025',
       description:
         'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+      tags: ['software'],
     },
+
     {
       title: 'This is my title and it is the best.',
       date: 'May 22, 2025',
       description:
         'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+      tags: ['software'],
     },
     {
       title: 'This is my title and it is the best.',
       date: 'May 23, 2025',
       description:
         'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+      tags: ['software'],
     },
     {
       title: 'This is my title and it is the best.',
       date: 'May 24, 2025',
       description:
         'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+      tags: ['software'],
     },
     {
       title: 'This is my title and it is the best.',
       date: 'May 25, 2025',
       description:
         'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+      tags: ['software'],
     },
   ],
   _photography: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -93,8 +100,9 @@ export const config = {
     music: { description: 'Select items.' },
     blog: { description: 'Life' },
   },
+  style: { itemSizePx: 400, titleHeight: 180 },
   items: {
-    itemSizePx: 400,
+    focusFactor: 0.46,
     get count() {
       return (
         items._software.length +

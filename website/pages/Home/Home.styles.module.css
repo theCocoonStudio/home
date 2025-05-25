@@ -30,32 +30,37 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2.2rem;
-  line-height: 1.3em;
-  padding: 4px;
-  padding-top: 8px;
+  font-size: 3.2rem;
+  line-height: 1.1em;
+  padding: 8px 4px;
+  padding-left: 16px;
   width: 100%;
   opacity: 0;
 }
 
-.itemDescription {
+.itemDescriptionContainer {
   position: absolute;
   top: 50%;
   left: 50%;
-  padding: 16px 8px;
   transition: opacity 0.1s ease-in;
   opacity: 0;
   pointer-events: none;
+}
+.itemDescription {
+  position: relative;
+  margin-top: 16px;
+  padding-left: 16px;
+
   h1 {
-    font-size: 3.2rem;
+    font-size: 2.4rem;
     line-height: 1.1em;
-    font-weight: 650;
+    font-weight: 450;
     font-variation-settings:
       'wdth' 75,
       'YTLC' 540;
   }
   h3 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     line-height: 1em;
     font-weight: 400;
     padding-top: 8px;
@@ -65,11 +70,63 @@
       'YTLC' 540;
   }
   p {
-    font-size: 2rem;
+    font-size: 1.8rem;
     line-height: 1.5em;
     padding-top: 12px;
-    font-weight: 300;
+    font-weight: 400;
     font-variation-settings: 'wdth' 100;
+  }
+}
+
+.accent {
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  height: calc(100%);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  background-color: var(--slate);
+  opacity: 0.8;
+}
+
+.separator {
+  position: absolute;
+  width: 2px;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  opacity: 0.8;
+  background-color: var(--slate);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
+  border-radius: 2px;
+}
+
+.button {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 16px;
+  margin-top: 24px;
+  font-size: 1.8rem;
+  line-height: 1.5em;
+  padding: 6px;
+  font-variation-settings: 'wdth' 100;
+  text-transform: uppercase;
+  border-radius: 2px;
+  opacity: 0.8;
+  background-color: transparent;
+  border: 1px solid var(--black);
+  color: var(--black);
+  transition: all 0.1s ease-out;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid transparent;
+    background-color: var(--slate);
+    color: var(--white);
   }
 }
 
@@ -140,7 +197,7 @@
   border: 2px solid black;
   transform: translate(-50%, 50%);
   height: 34px;
-  width: 300px;
+  width: 450px;
   justify-content: space-between;
   align-items: center;
   pointer-events: none;
