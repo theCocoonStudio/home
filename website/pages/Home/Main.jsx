@@ -15,36 +15,51 @@ export const Main = function Main({
         itemDescription,
       },
     },
-    items: { itemSizePx },
+    style: { itemSizePx, titleHeight },
   },
 }) {
   const {
     lengths: { atomicPadding },
   } = useTheme()
   const { style, className } = useMemo(
-    () => nunito([900, 125], undefined, styles.title),
+    () => roboto([900], undefined, styles.title),
     [],
   )
 
   const { style: subStyle, className: subClass } = useMemo(
-    () => nunito([300, 100, 440], undefined, styles.subtitle),
+    () => nunito(300, undefined, styles.subtitle),
     [],
   )
 
   const { style: descStyle, className: descClass } = useMemo(
-    () => roboto([300], undefined, styles.description),
+    () => nunito(300, undefined, styles.description),
     [],
   )
+
+  const { style: buttonStyle, className: buttonClass } = useMemo(
+    () => nunito([600], undefined, styles.button),
+    [],
+  )
+
   const itemDescStyle = useMemo(
     () => ({
       width: `${itemSizePx}px`,
-      height: `${itemSizePx}px`,
-      transform: `translate(${4 * atomicPadding}px, -50%)`,
+      maxHeight: `${itemSizePx}px`,
     }),
-    [atomicPadding, itemSizePx],
+    [itemSizePx],
+  )
+  const section = useScrollEvent()
+  const itemDescContainerStyle = useMemo(
+    () => ({
+      width: `${itemSizePx}px`,
+      height: `${itemSizePx}px`,
+      transform: `translate(${4 * atomicPadding}px, calc(-50% + ${titleHeight / 2}px))`,
+      opacity: section === 'preScroll' ? 0 : undefined,
+      pointerEvents: section === 'preScroll' ? 'none' : undefined,
+    }),
+    [atomicPadding, itemSizePx, section, titleHeight],
   )
 
-  const section = useScrollEvent()
   return (
     <div className={styles.main}>
       <h1 style={style} className={className} id={title}>
@@ -55,16 +70,23 @@ export const Main = function Main({
         {sections[section] ? section.toUpperCase() : 'software developer'}
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
+          <span className={styles.separator} />
         </p>
       </h2>
       <div
-        style={itemDescStyle}
-        className={`${styles.itemDescription}`}
+        className={`${styles.itemDescriptionContainer}`}
+        style={itemDescContainerStyle}
         id={itemDescription}
       >
-        <h1 className='nunito-sans'></h1>
-        <h3 className='nunito-sans'></h3>
-        <p className='roboto'></p>
+        <div style={itemDescStyle} className={`${styles.itemDescription}`}>
+          <h1 className='roboto'></h1>
+          <h3 className='nunito'></h3>
+          <p className='nunito'></p>
+          <div className={styles.accent} />
+          <button className={buttonClass} style={buttonStyle}>
+            read more
+          </button>
+        </div>
       </div>
     </div>
   )
