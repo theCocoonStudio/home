@@ -60,7 +60,7 @@ export const getMarkupBounds = ({
 }
 
 export const getItemData = ({
-  id,
+  scrollContainerId,
   scrollContainerBorderSize,
   state,
   target,
@@ -85,7 +85,7 @@ export const getItemData = ({
   intermediateTransformViewport = new Vector3(),
 }) => {
   const { min, max, viewportSize, ppwu } = getMarkupBounds({
-    id,
+    id: scrollContainerId,
     state,
     target,
     marginPx: [

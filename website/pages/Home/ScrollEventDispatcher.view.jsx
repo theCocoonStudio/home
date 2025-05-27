@@ -2,7 +2,29 @@ import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 
-export const ScrollEventDispatcher = ({ ranges, setRange }) => {
+export const ScrollEventDispatcher = ({
+  config: {
+    scroll: {
+      ranges: { preScroll, postScroll },
+    },
+    content: { sections },
+  },
+  setRange,
+}) => {
+  const ranges = useMemo(() => {
+    return {
+      preScroll,
+      ...Object.keys(sections).reduce(
+        (accumulator, currentValue) => ({
+          ...accumulator,
+          [currentValue]: sections[currentValue].range,
+        }),
+        {},
+      ),
+      postScroll,
+    }
+  }, [postScroll, preScroll, sections])
+
   const rangeKeys = useMemo(() => Object.keys(ranges), [ranges])
 
   const scroll = useScroll()

@@ -13,8 +13,14 @@ import { SoftwareItems } from './SoftwareItems.canvas'
 
 const _Software = function Software(
   {
-    focusFactor,
-    range,
+    config: {
+      style: { focusFactor },
+      content: {
+        sections: {
+          software: { items, range },
+        },
+      },
+    },
     titleId,
     subtitleId,
     descriptionId,
@@ -22,7 +28,6 @@ const _Software = function Software(
     scrollData,
     bgRef,
     itemGeometry,
-    items,
     itemData,
   },
   forwardedRef,
@@ -93,14 +98,7 @@ const _Software = function Software(
         subtitleElement.style.opacity = 1
       }
     }
-  }, [
-    atomicPadding,
-    navHeight,
-    range,
-    scrollData,
-    subtitleElement,
-    titleElement,
-  ])
+  }, [atomicPadding, navHeight, scrollData, subtitleElement, titleElement])
 
   const dampedOffset = useRef(0.0)
   const slate = useRef(new Color(colors.slate))

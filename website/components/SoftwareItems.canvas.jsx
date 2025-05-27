@@ -47,6 +47,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
       }))
       return scrollDamper.current.setData(itemsArr, itemData, {
         focusFactor,
+        type: 0,
       })
     }
   }, [focusFactor, itemData, items])

@@ -11,6 +11,7 @@ export class ScrollDamper {
   #items
   #offsetThresholds
   #targets
+  #type
 
   #fromTo(fromVector, toVector, factor) {
     const from = fromVector.clone()
@@ -32,9 +33,11 @@ export class ScrollDamper {
     },
     {
       focusFactor = 0.46,
+      type,
       eps = 0.00001 /* @drei/ScrollControls default */,
     } = {},
   ) {
+    this.#type = type
     this.#initialScale.copy(initialScale)
     this.#targetScale.copy(targetScale)
     this.#initialPosition.copy(initialPosition)
@@ -74,7 +77,7 @@ export class ScrollDamper {
     return this
   }
 
-  frame(delta, scrollData, callback) {
+  #softwareFrame(delta, scrollData, callback) {
     this.#items.forEach((item) => {
       const { ref, range, targetPosition } = item
       const rangeOffset = scrollData.range(...range)
@@ -123,6 +126,12 @@ export class ScrollDamper {
         callback({ targetIndex, thresholdOffset, item })
       }
     })
+  }
+
+  frame(delta, scrollData, callback) {
+    if (this.#type === 0) {
+      this.#softwareFrame(delta, scrollData, callback)
+    }
     return this
   }
 }

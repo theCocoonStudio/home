@@ -6,7 +6,7 @@ import { useTheme } from '../../hooks/useTheme'
 
 export const Main = function Main({
   config: {
-    sections,
+    content: { sections },
     main: {
       markupIds: {
         title,

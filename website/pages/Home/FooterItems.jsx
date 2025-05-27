@@ -10,7 +10,11 @@ export const FooterItems = ({
     footer: {
       markupIds: { scrollContainer, fpsContainer },
     },
-    items: { software: items },
+    content: {
+      sections: {
+        software: { items },
+      },
+    },
   },
   scrollContainer: scrollElement,
 }) => {

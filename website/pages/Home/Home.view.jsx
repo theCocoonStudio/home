@@ -13,25 +13,27 @@ import { Software } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
 import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
+import { Photography } from '../../components/Photography.canvas'
 
 export const Home = ({
-  config: {
-    footer: {
-      markupIds: { scrollContainer, fpsContainer },
-    },
-    effects: { renderPriority, Component: Effects },
-    scroll: { ranges },
-    main: {
-      EventDispatcherComponent,
-      markupIds: { title, subtitle, description, itemDescription },
-    },
-    items: { focusFactor, count, software, photography, music, blog },
-    style: { itemSizePx, titleHeight },
-  },
+  config,
   zPos = 0.1,
   initialDepth = 0.05,
   targetDepth = 0.0005,
 }) => {
+  const {
+    footer: {
+      markupIds: { scrollContainer, fpsContainer },
+    },
+    effects: { renderPriority, Component: Effects },
+
+    main: {
+      EventDispatcherComponent,
+      markupIds: { title, subtitle, description, itemDescription },
+    },
+    content: { itemCount, sections },
+    style: { itemSizePx, titleHeight, focusFactor },
+  } = config
   // reactive data
   const {
     colors,
@@ -51,13 +53,14 @@ export const Home = ({
   // component refs
   const preScrollAnimation = useRef()
   const softwareRef = useRef()
+  const photographyRef = useRef()
   const bg = useRef()
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
     setItemData(
       getItemData({
-        id: scrollContainer,
+        scrollContainerId: scrollContainer,
         scrollContainerBorderSize,
         state: get(),
         target: new Vector3(0, 0, zPos),
@@ -66,7 +69,7 @@ export const Home = ({
         geometryDepth: initialDepth,
         initialDepth,
         targetDepth,
-        count,
+        count: itemCount,
         focusTransformPx: new Vector3(-4 * atomicPadding, -titleHeight / 2, 0),
         focusTransformScale: new Vector3(-0.5, 0, 0),
         intermediateTransformPx: new Vector3(0, -titleHeight / 2, 0),
@@ -78,11 +81,12 @@ export const Home = ({
     bg?.current?.resizeCallback()
     preScrollAnimation?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
+    photographyRef?.current?.resizeCallback()
   }, [
     atomicPadding,
-    count,
     get,
     initialDepth,
+    itemCount,
     itemSizePx,
     scrollContainer,
     scrollContainerBorderSize,
@@ -107,6 +111,8 @@ export const Home = ({
         preScrollAnimation.current.scrollCallback(state, delta, scrollData)
       softwareRef.current?.scrollCallback &&
         softwareRef.current.scrollCallback(state, delta, scrollData)
+      photographyRef.current?.scrollCallback &&
+        photographyRef.current.scrollCallback(state, delta, scrollData)
     }
   })
 
@@ -115,15 +121,11 @@ export const Home = ({
 
   return (
     <>
-      <EventDispatcherComponent ranges={ranges} setRange={setRange} />
-      <PrescrollAnimation
-        ref={preScrollAnimation}
-        range={ranges.preScroll}
-        bgRef={bg}
-      />
+      <EventDispatcherComponent config={config} setRange={setRange} />
+      <PrescrollAnimation ref={preScrollAnimation} config={config} bgRef={bg} />
       <Software
         ref={softwareRef}
-        range={ranges.software}
+        config={config}
         titleId={title}
         subtitleId={subtitle}
         descriptionId={description}
@@ -131,9 +133,15 @@ export const Home = ({
         scrollData={scrollData}
         bgRef={bg}
         itemGeometry={itemGeometry}
-        items={software}
         itemData={itemData}
-        focusFactor={focusFactor}
+      />
+      <Photography
+        ref={photographyRef}
+        config={config}
+        itemDescriptionId={itemDescription}
+        bgRef={bg}
+        itemGeometry={itemGeometry}
+        itemData={itemData}
       />
       <FluidBackground ref={bg} colors={colors} />
       <DirectionalLight

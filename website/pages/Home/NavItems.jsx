@@ -4,7 +4,14 @@ import styles from './Home.styles.module.css'
 import { useScrollEvent } from './useScrollEvent'
 import { useScroll } from 'src/hooks'
 
-export const NavItems = ({ config: { items }, scrollContainer }) => {
+export const NavItems = ({
+  config: {
+    content: {
+      sections: { software, photography, music, blog },
+    },
+  },
+  scrollContainer,
+}) => {
   const {
     colors: { slate, black, midnight, charcoal, purple },
   } = useTheme()
@@ -14,21 +21,21 @@ export const NavItems = ({ config: { items }, scrollContainer }) => {
   const targets = useMemo(
     () => ({
       software: () => {
-        scrollTo(items.software[0].range[0] + items.software[0].range[1] / 2)
+        scrollTo(software.items[0].range[0] + software.items[0].range[1] / 2)
       },
       photography: () => {
         scrollTo(
-          items.photography[0].range[0] + items.photography[0].range[1] / 2,
+          photography.items[0].range[0] + photography.items[0].range[1] / 2,
         )
       },
       music: () => {
-        scrollTo(items.music[0].range[0] + items.music[0].range[1] / 2)
+        scrollTo(music.items[0].range[0] + music.items[0].range[1] / 2)
       },
       blog: () => {
-        scrollTo(items.blog[0].range[0] + items.blog[0].range[1] / 2)
+        scrollTo(blog.items[0].range[0] + blog.items[0].range[1] / 2)
       },
     }),
-    [items.blog, items.music, items.photography, items.software, scrollTo],
+    [scrollTo, software.items, photography.items, music.items, blog.items],
   )
   const softwareStyle = useMemo(
     () => ({

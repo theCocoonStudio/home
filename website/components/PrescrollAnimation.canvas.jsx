@@ -14,7 +14,14 @@ import { BoundPathGenerator } from '../utils/path'
 
 /* const path = new Path().moveTo(0.0, -0.25).lineTo(0.0, 0.25) */
 const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
-  { range, bgRef },
+  {
+    config: {
+      scroll: {
+        ranges: { preScroll: range },
+      },
+    },
+    bgRef,
+  },
   forwardedRef,
 ) {
   const stateCallback = useCallback(({ size, viewport, camera }) => {
