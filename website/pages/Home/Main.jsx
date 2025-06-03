@@ -54,10 +54,8 @@ export const Main = function Main({
       width: `${itemSizePx}px`,
       height: `${itemSizePx}px`,
       transform: `translate(${4 * atomicPadding}px, calc(-50% + ${titleHeight / 2}px))`,
-      opacity: section === 'preScroll' ? 0 : undefined,
-      pointerEvents: section === 'preScroll' ? 'none' : undefined,
     }),
-    [atomicPadding, itemSizePx, section, titleHeight],
+    [atomicPadding, itemSizePx, titleHeight],
   )
 
   return (

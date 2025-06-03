@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { Vector2 } from 'three'
 import { useTheme } from '../hooks/useTheme'
@@ -21,9 +22,12 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
       },
     },
     bgRef,
+    itemDescriptionId,
   },
   forwardedRef,
 ) {
+  const [itemDescription, setItemDescription] = useState()
+
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
@@ -43,6 +47,13 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
   const path = useMemo(() => new BoundPathGenerator(uvSpaceClamps.current), [])
 
   const resizeCallback = useCallback(() => {
+    if (!itemDescription) {
+      const el = document.getElementById(itemDescriptionId)
+      if (el) {
+        setItemDescription(el)
+      }
+    }
+
     const target = bgRef.current?.meshRef.current
     const { width, height, factor } = viewport.getCurrentViewport(
       camera,
@@ -59,6 +70,8 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
     bgRef,
     camera,
     footerHeight,
+    itemDescription,
+    itemDescriptionId,
     navHeight,
     path,
     size,
@@ -110,21 +123,30 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
   )
 
   const forceCallbackSet = useRef(false)
+  const itemDescriptionVisible = useRef(null)
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (scrollData.visible(...range)) {
+        if (itemDescriptionVisible.current !== false && itemDescription) {
+          itemDescription.style.opacity = 0
+          itemDescription.style.pointerEvents = 'none'
+          itemDescriptionVisible.current = false
+        }
         if (!forceCallbackSet.current) {
           bgRef.current.setForceCallback(forceCallback)
           forceCallbackSet.current = true
         }
       } else {
+        if (typeof itemDescriptionVisible.current === 'boolean') {
+          itemDescriptionVisible.current = null
+        }
         // outside range, so will have to be set when/if back
         if (forceCallbackSet.current) {
           forceCallbackSet.current = false
         }
       }
     },
-    [bgRef, forceCallback, range],
+    [bgRef, forceCallback, itemDescription, range],
   )
 
   useImperativeHandle(

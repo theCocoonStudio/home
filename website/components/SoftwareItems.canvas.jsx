@@ -47,17 +47,16 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
       }))
       return scrollDamper.current.setData(itemsArr, itemData, {
         focusFactor,
-        type: 0,
       })
     }
   }, [focusFactor, itemData, items])
 
-  const itemDescriptionVisible = useRef(false)
+  const itemDescriptionVisible = useRef(null)
 
   const frameCallback = useCallback(
     ({ targetIndex, item }) => {
       if (targetIndex === 3) {
-        if (itemDescriptionVisible.current === false) {
+        if (itemDescriptionVisible.current !== true) {
           itemDescription.children[0].children[0].innerText = item.title
           itemDescription.children[0].children[1].innerText = item.date
           itemDescription.children[0].children[2].innerText = item.description
@@ -66,7 +65,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
           itemDescriptionVisible.current = true
         }
       } else {
-        if (itemDescriptionVisible.current === true) {
+        if (itemDescriptionVisible.current !== false) {
           itemDescription.style.opacity = 0
           itemDescription.style.pointerEvents = 'none'
           itemDescriptionVisible.current = false
@@ -80,12 +79,11 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     (state, delta, scrollData) => {
       if (damper) {
         damper.frame(delta, scrollData, itemDescription && frameCallback)
-        if (!scrollData.visible(...range)) {
-          if (itemDescriptionVisible.current === true) {
-            itemDescription.style.opacity = 0
-            itemDescription.style.pointerEvents = 'none'
-            itemDescriptionVisible.current = false
-          }
+        if (
+          !scrollData.visible(...range) &&
+          typeof itemDescriptionVisible.current === 'boolean'
+        ) {
+          itemDescriptionVisible.current = null
         }
       }
     },

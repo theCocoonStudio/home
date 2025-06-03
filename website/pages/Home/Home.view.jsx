@@ -122,7 +122,12 @@ export const Home = ({
   return (
     <>
       <EventDispatcherComponent config={config} setRange={setRange} />
-      <PrescrollAnimation ref={preScrollAnimation} config={config} bgRef={bg} />
+      <PrescrollAnimation
+        ref={preScrollAnimation}
+        config={config}
+        bgRef={bg}
+        itemDescriptionId={itemDescription}
+      />
       <Software
         ref={softwareRef}
         config={config}
