@@ -5,6 +5,7 @@ import { NavItems } from './NavItems'
 import { FooterItems } from './FooterItems'
 import { ScrollEventDispatcher } from './ScrollEventDispatcher.view'
 import { ScrollEventProvider } from './ScrollEventProvider'
+import dragonfly from 'assets/photography/test.jpg'
 
 const ranges = {
   preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
@@ -62,7 +63,20 @@ const sections = {
   },
   photography: {
     description: 'Select photos taken with a variety of hardware.',
-    items: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    items: [
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+      { url: dragonfly },
+    ],
   },
   music: { description: 'Select items.', items: [{}, {}, {}] },
   blog: { description: 'Life', items: [{}, {}, {}, {}] },

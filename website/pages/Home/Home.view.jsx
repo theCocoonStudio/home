@@ -55,6 +55,7 @@ export const Home = ({
   const softwareRef = useRef()
   const photographyRef = useRef()
   const bg = useRef()
+  const light = useRef()
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -78,10 +79,10 @@ export const Home = ({
     )
 
     // run child resize callbacks
-    bg?.current?.resizeCallback()
     preScrollAnimation?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
+    bg?.current?.resizeCallback()
   }, [
     atomicPadding,
     get,
@@ -113,6 +114,8 @@ export const Home = ({
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
         photographyRef.current.scrollCallback(state, delta, scrollData)
+      bg.current?.scrollCallback &&
+        bg.current.scrollCallback(state, delta, scrollData)
     }
   })
 
@@ -145,14 +148,19 @@ export const Home = ({
         config={config}
         itemDescriptionId={itemDescription}
         bgRef={bg}
+        lightRef={light}
         itemGeometry={itemGeometry}
         itemData={itemData}
+        zPos={zPos}
+        targetDepth={targetDepth}
       />
       <FluidBackground ref={bg} colors={colors} />
       <DirectionalLight
-        position={[0.25, 1.5, 1.5]}
+        ref={light}
+        position={[-0.15, 0.1, 0.3]}
         color={colors.white}
-        intensity={10.3}
+        bgRef={bg}
+        zPos={zPos}
       />
       <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />

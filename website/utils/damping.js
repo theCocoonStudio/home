@@ -38,11 +38,27 @@ export class ScrollDamper {
     } = {},
   ) {
     this.#type = type
-    this.#initialScale.copy(initialScale)
+    if (Array.isArray(initialScale)) {
+      this.#initialScale = [...initialScale]
+    } else {
+      this.#initialScale.copy(initialScale)
+    }
     this.#targetScale.copy(targetScale)
-    this.#initialPosition.copy(initialPosition)
-    this.#intermediatePosition.copy(intermediatePosition)
-    this.#focusPosition.copy(focusPosition)
+    if (Array.isArray(initialPosition)) {
+      this.#initialPosition = [...initialPosition]
+    } else {
+      this.#initialPosition.copy(initialPosition)
+    }
+    if (Array.isArray(intermediatePosition)) {
+      this.#intermediatePosition = [...intermediatePosition]
+    } else {
+      this.#intermediatePosition.copy(intermediatePosition)
+    }
+    if (Array.isArray(focusPosition)) {
+      this.#focusPosition = [...focusPosition]
+    } else {
+      this.#focusPosition.copy(focusPosition)
+    }
     this.#items = itemArray.map(({ index: itemIndex, ...item }) => ({
       ...item,
       targetPosition: targetPositions[itemIndex].clone(),
@@ -77,8 +93,8 @@ export class ScrollDamper {
     return this
   }
 
-  #softwareFrame(delta, scrollData, callback) {
-    this.#items.forEach((item) => {
+  #presetFrame(delta, scrollData, callback) {
+    this.#items.forEach((item, index) => {
       const { ref, range, targetPosition } = item
       const rangeOffset = scrollData.range(...range)
       const targetIndex = this.#offsetThresholds.findIndex(
@@ -86,12 +102,23 @@ export class ScrollDamper {
       )
       const {
         position: {
-          from: fromPosition,
-          to: toPosition = targetPosition.clone(),
+          from: fromPositionArray,
+          to: toPositionArray = targetPosition.clone(),
         },
-        scale: { from: fromScale, to: toScale },
+        scale: { from: fromScaleArray, to: toScaleArray },
       } = this.#targets[targetIndex - 1]
-
+      const fromPosition = Array.isArray(fromPositionArray)
+        ? fromPositionArray[index]
+        : fromPositionArray
+      const toPosition = Array.isArray(toPositionArray)
+        ? toPositionArray[index]
+        : toPositionArray
+      const fromScale = Array.isArray(fromScaleArray)
+        ? fromScaleArray[index]
+        : fromScaleArray
+      const toScale = Array.isArray(toScaleArray)
+        ? toScaleArray[index]
+        : toScaleArray
       const thresholdOffset = MathUtils.inverseLerp(
         this.#offsetThresholds[targetIndex - 1],
         this.#offsetThresholds[targetIndex],
@@ -129,8 +156,8 @@ export class ScrollDamper {
   }
 
   frame(delta, scrollData, callback) {
-    if (this.#type === 0) {
-      this.#softwareFrame(delta, scrollData, callback)
+    if (this.#type !== 'custom') {
+      this.#presetFrame(delta, scrollData, callback)
     }
     return this
   }

@@ -1,22 +1,54 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import {
+  /* CameraHelper,
+  DirectionalLightHelper, */
+  DirectionalLight as Light,
+} from 'three'
 
 const _DirectionalLight = function DirectionalLight(
-  { color, intensity, ...props },
+  { position, color, intensity = 10.3, zPos },
   ref,
 ) {
-  const light = useRef()
+  const { light /* cameraHelper, helper */ } = useMemo(() => {
+    const light = new Light(color, intensity)
+    light.target.position.setZ(zPos)
+    light.position.set(...position)
+    light.shadow.camera.near = 0
+    light.shadow.camera.far = 1
+    light.shadow.camera.left = -0.5
+    light.shadow.camera.right = 0.5
+    light.shadow.camera.bottom = -0.5
+    light.shadow.camera.top = 0.5
+    light.shadow.mapSize.width = 2048
+    light.shadow.mapSize.height = 2048
+    /* const cameraHelper = new CameraHelper(light.shadow.camera)
+    const helper = new DirectionalLightHelper(light) */
+    // update the light target's matrixWorld because it's needed by the helper
+    light.target.updateMatrixWorld()
+    /* helper.update() */
+    // update the light's shadow camera's projection matrix
+    light.shadow.camera.updateProjectionMatrix()
+    // and now update the camera helper we're using to show the light's shadow camera
+    /* cameraHelper.update() */
+    return { light /* cameraHelper, helper */ }
+  }, [color, intensity, position, zPos])
 
-  useEffect(() => {
-    light.current.shadow.camera.near = 0
-    light.current.shadow.camera.far = 500
-    light.current.shadow.camera.right = 1
-    light.current.shadow.camera.left = -1
-    light.current.shadow.camera.top = 1
-    light.current.shadow.camera.bottom = -1
-  }, [])
+  useImperativeHandle(
+    ref,
+    () => ({
+      ref: light,
+      defaultIntensity: intensity,
+    }),
+    [intensity, light],
+  )
 
-  useImperativeHandle(ref, () => light.current)
-  return <directionalLight ref={light} args={[color, intensity]} {...props} />
+  return (
+    <>
+      <primitive object={light} />
+      {/* <primitive object={cameraHelper} />
+      <primitive object={helper} /> */}
+    </>
+  )
 }
 
 export const DirectionalLight = forwardRef(_DirectionalLight)

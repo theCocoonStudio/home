@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { forwardRef } from 'react'
+import { PCFSoftShadowMap } from 'three'
 /* import styles from 'website/styles/ThreeApp.module.css' */
 
 export const ThreeApp = forwardRef(function ThreeApp(
@@ -12,7 +13,7 @@ export const ThreeApp = forwardRef(function ThreeApp(
       gl={{
         clearColor: 0x000000,
         autoClear: false,
-        shadowMap: { enabled: true },
+        shadowMap: { enabled: true, type: PCFSoftShadowMap },
         /* stencil: true, */
         antialias: true,
       }}

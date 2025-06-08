@@ -78,13 +78,15 @@ const _FluidBackground = forwardRef(function FluidBackground(
       setForceCallback,
       backingMaterialRef: backingMaterial,
       meshRef: mesh,
+      options,
+      texture,
     }),
-    [resizeCallback, setForceCallback],
+    [options, resizeCallback, setForceCallback, texture],
   )
 
   return (
     <>
-      <mesh ref={mesh} /* receiveShadow castShadow */ {...props}>
+      <mesh ref={mesh} receiveShadow {...props}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
           transparent

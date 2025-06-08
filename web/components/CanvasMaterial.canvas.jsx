@@ -18,7 +18,7 @@ export const CanvasMaterial = forwardRef(function CanvasMaterial(
   ])
 
   return (
-    <meshPhysicalMaterial
+    <meshStandardMaterial
       ref={ref}
       aoMap={aoMap}
       aoMap-wrapS={RepeatWrapping}
@@ -28,7 +28,7 @@ export const CanvasMaterial = forwardRef(function CanvasMaterial(
       normalMap-wrapS={RepeatWrapping}
       normalMap-wrapT={RepeatWrapping}
       normalMap-repeat={[aspect * repeatFactor, repeatFactor]}
-      normalScale={10}
+      normalScale={4}
       metalnessMap={metalnessMap}
       metalnessMap-wrapS={RepeatWrapping}
       metalnessMap-wrapT={RepeatWrapping}
@@ -37,11 +37,11 @@ export const CanvasMaterial = forwardRef(function CanvasMaterial(
       roughnessMap-wrapS={RepeatWrapping}
       roughnessMap-wrapT={RepeatWrapping}
       roughnessMap-repeat={[aspect * repeatFactor, repeatFactor]}
-      metalness={0.4}
+      metalness={0.1}
       roughness={7}
       {...props}
     >
       {children}
-    </meshPhysicalMaterial>
+    </meshStandardMaterial>
   )
 })

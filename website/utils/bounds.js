@@ -111,6 +111,10 @@ export const getItemData = ({
     intermediatePosition: new Vector3(),
     focusPosition: new Vector3(),
     targetPositions: [],
+    min,
+    max,
+    viewportSize,
+    ppwu,
   }
   data.initialPosition.set(
     viewportSize.x / 2 +
@@ -178,4 +182,38 @@ export const getItemData = ({
     )
   }
   return data
+}
+
+export const setImageScale = (
+  maxWidth,
+  maxHeight,
+  width,
+  height,
+  targetVec3,
+) => {
+  // square
+  if (width === height) {
+    targetVec3.setX(Math.min(maxWidth, maxHeight))
+    targetVec3.setY(Math.min(maxWidth, maxHeight))
+    // landscape
+  } else if (width > height) {
+    const aspect = height / width
+    if (maxWidth * aspect > maxHeight) {
+      targetVec3.setX(maxHeight / aspect)
+      targetVec3.setY(maxHeight)
+    } else {
+      targetVec3.setX(maxWidth)
+      targetVec3.setY(maxWidth * aspect)
+    }
+    // portrait
+  } else if (height > width) {
+    const aspect = width / height
+    if (maxHeight * aspect > maxWidth) {
+      targetVec3.setX(maxWidth)
+      targetVec3.setY(maxWidth / aspect)
+    } else {
+      targetVec3.setX(maxHeight * aspect)
+      targetVec3.setY(maxHeight)
+    }
+  }
 }
