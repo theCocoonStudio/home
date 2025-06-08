@@ -33,7 +33,7 @@ export const ScrollEventDispatcher = ({
   const offsetCache = useRef(0.0)
   useFrame(() => {
     // only run if scoll has changed
-    if (offsetCache.current !== scroll.offset) {
+    if (Math.abs(scroll.offset - offsetCache.current) > scroll.eps) {
       // update offsetCache
       offsetCache.current = scroll.offset
       // set stop to false each frame
