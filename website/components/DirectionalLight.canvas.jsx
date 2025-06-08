@@ -36,7 +36,7 @@ const _DirectionalLight = function DirectionalLight(
   useImperativeHandle(
     ref,
     () => ({
-      ref: light,
+      light,
       defaultIntensity: intensity,
     }),
     [intensity, light],

@@ -22,7 +22,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     focusFactor,
     titleHeight,
     zPos,
+    depth,
     targetDepth,
+    setPhotographyItemsGroup,
   },
   forwardedRef,
 ) {
@@ -47,7 +49,6 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         ppwu,
         initialPosition: defaultInitialPosition,
       } = itemData
-      const depth = 0.02
       const positionZ = zPos - depth / 2
 
       const maxHeight =
@@ -97,6 +98,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     }
   }, [
     atomicPadding,
+    depth,
     footerHeight,
     itemData,
     navHeight,
@@ -107,9 +109,16 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
   const geometry = useMemo(() => new BoxGeometry(1, 1, 1), [])
 
-  useEffect(() => () => {
-    geometry.dispose()
-  })
+  useEffect(
+    () => () => {
+      geometry.dispose()
+    },
+    [geometry],
+  )
+
+  useEffect(() => {
+    setPhotographyItemsGroup(group.current)
+  }, [setPhotographyItemsGroup])
 
   const softwareItems = useMemo(
     () =>

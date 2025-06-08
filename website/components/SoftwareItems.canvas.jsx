@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -17,7 +18,15 @@ import {
 import { ScrollDamper } from '../utils/damping'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  { itemGeometry, items, itemData, itemDescription, range, focusFactor },
+  {
+    itemGeometry,
+    items,
+    itemData,
+    itemDescription,
+    range,
+    focusFactor,
+    setSoftwareItemsGroup,
+  },
   forwardedRef,
 ) {
   const group = useRef()
@@ -98,6 +107,9 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     [scrollCallback],
   )
 
+  useEffect(() => {
+    setSoftwareItemsGroup(group.current)
+  }, [setSoftwareItemsGroup])
   return (
     <>
       <group

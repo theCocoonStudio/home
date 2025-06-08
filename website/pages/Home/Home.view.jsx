@@ -2,7 +2,7 @@ import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
-import { useCallback, useContext, useRef, useState } from 'react'
+import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLight } from '../../components/DirectionalLight.canvas'
 import { PrescrollAnimation } from '../../components/PrescrollAnimation.canvas'
@@ -14,6 +14,7 @@ import { Vector3 } from 'three'
 import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { Photography } from '../../components/Photography.canvas'
+import { useMarkupId } from '../../hooks/useMarkupId'
 
 export const Home = ({
   config,
@@ -54,8 +55,26 @@ export const Home = ({
   const preScrollAnimation = useRef()
   const softwareRef = useRef()
   const photographyRef = useRef()
-  const bg = useRef()
-  const light = useRef()
+  const bgRef = useRef()
+  const lightRef = useRef()
+  // markup
+  const titleElement = useMarkupId(title)
+  const subtitleElement = useMarkupId(subtitle)
+  const descriptionElement = useMarkupId(description)
+  const itemDescriptionElement = useMarkupId(itemDescription)
+  // animation targets
+  const animationTargets = useMemo(
+    () => ({
+      markup: {
+        titleElement,
+        subtitleElement,
+        descriptionElement,
+        itemDescriptionElement,
+      },
+      refs: { softwareRef, photographyRef, bgRef, lightRef },
+    }),
+    [descriptionElement, itemDescriptionElement, subtitleElement, titleElement],
+  )
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -82,7 +101,7 @@ export const Home = ({
     preScrollAnimation?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
-    bg?.current?.resizeCallback()
+    bgRef?.current?.resizeCallback()
   }, [
     atomicPadding,
     get,
@@ -114,8 +133,8 @@ export const Home = ({
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
         photographyRef.current.scrollCallback(state, delta, scrollData)
-      bg.current?.scrollCallback &&
-        bg.current.scrollCallback(state, delta, scrollData)
+      bgRef.current?.scrollCallback &&
+        bgRef.current.scrollCallback(state, delta, scrollData)
     }
   })
 
@@ -128,8 +147,7 @@ export const Home = ({
       <PrescrollAnimation
         ref={preScrollAnimation}
         config={config}
-        bgRef={bg}
-        itemDescriptionId={itemDescription}
+        animationTargets={animationTargets}
       />
       <Software
         ref={softwareRef}
@@ -139,7 +157,7 @@ export const Home = ({
         descriptionId={description}
         itemDescriptionId={itemDescription}
         scrollData={scrollData}
-        bgRef={bg}
+        bgRef={bgRef}
         itemGeometry={itemGeometry}
         itemData={itemData}
       />
@@ -147,19 +165,19 @@ export const Home = ({
         ref={photographyRef}
         config={config}
         itemDescriptionId={itemDescription}
-        bgRef={bg}
-        lightRef={light}
+        bgRef={bgRef}
+        lightRef={lightRef}
         itemGeometry={itemGeometry}
         itemData={itemData}
         zPos={zPos}
         targetDepth={targetDepth}
       />
-      <FluidBackground ref={bg} colors={colors} />
+      <FluidBackground ref={bgRef} colors={colors} />
       <DirectionalLight
-        ref={light}
-        position={[-0.15, 0.1, 0.3]}
+        ref={lightRef}
+        position={[-0.18, 0.1, 0.5]}
         color={colors.white}
-        bgRef={bg}
+        bgRef={bgRef}
         zPos={zPos}
       />
       <color attach='background' args={[colors.black]} />

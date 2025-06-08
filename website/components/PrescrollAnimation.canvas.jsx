@@ -21,13 +21,13 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
         ranges: { preScroll: range },
       },
     },
-    bgRef,
-    itemDescriptionId,
+    animationTargets: {
+      markup: { itemDescriptionElement },
+      refs: { bgRef, softwareRef, photographyRef, lightRef },
+    },
   },
   forwardedRef,
 ) {
-  const [itemDescription, setItemDescription] = useState()
-
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
@@ -47,14 +47,7 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
   const path = useMemo(() => new BoundPathGenerator(uvSpaceClamps.current), [])
 
   const resizeCallback = useCallback(() => {
-    if (!itemDescription) {
-      const el = document.getElementById(itemDescriptionId)
-      if (el) {
-        setItemDescription(el)
-      }
-    }
-
-    const target = bgRef.current?.meshRef.current
+    const target = bgRef.current?.backgroundRef.current
     const { width, height, factor } = viewport.getCurrentViewport(
       camera,
       target.position.clone(),
@@ -70,8 +63,6 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
     bgRef,
     camera,
     footerHeight,
-    itemDescription,
-    itemDescriptionId,
     navHeight,
     path,
     size,
@@ -127,9 +118,12 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (scrollData.visible(...range)) {
-        if (itemDescriptionVisible.current !== false && itemDescription) {
-          itemDescription.style.opacity = 0
-          itemDescription.style.pointerEvents = 'none'
+        if (
+          itemDescriptionVisible.current !== false &&
+          itemDescriptionElement
+        ) {
+          itemDescriptionElement.style.opacity = 0
+          itemDescriptionElement.style.pointerEvents = 'none'
           itemDescriptionVisible.current = false
         }
         if (!forceCallbackSet.current) {
@@ -146,7 +140,7 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
         }
       }
     },
-    [bgRef, forceCallback, itemDescription, range],
+    [bgRef, forceCallback, itemDescriptionElement, range],
   )
 
   useImperativeHandle(
@@ -154,6 +148,8 @@ const _PrescrollAnimation = forwardRef(function PrescrollAnimation(
     () => ({ resizeCallback, scrollCallback }),
     [resizeCallback, scrollCallback],
   )
+
+  console.log(lightRef.current)
 })
 
 export const PrescrollAnimation = memo(_PrescrollAnimation)

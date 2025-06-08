@@ -156,10 +156,11 @@ const _Software = function Software(
       titleElement,
     ],
   )
+  const [softwareItemsGroup, setSoftwareItemsGroup] = useState()
   useImperativeHandle(
     forwardedRef,
-    () => ({ resizeCallback, scrollCallback }),
-    [resizeCallback, scrollCallback],
+    () => ({ resizeCallback, scrollCallback, softwareItemsGroup }),
+    [resizeCallback, scrollCallback, softwareItemsGroup],
   )
 
   return (
@@ -171,6 +172,7 @@ const _Software = function Software(
       itemData={itemData}
       itemDescription={itemDescription}
       focusFactor={focusFactor}
+      setSoftwareItemsGroup={setSoftwareItemsGroup}
     />
   )
 }
