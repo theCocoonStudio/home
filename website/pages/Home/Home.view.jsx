@@ -2,12 +2,11 @@ import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackground } from '../../components/FluidBackground.canvas'
-import { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLight } from '../../components/DirectionalLight.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
-import { ScrollEventContext } from './ScrollEventContext'
 import { Software } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
 import { getItemData } from '../../utils/bounds'
@@ -156,12 +155,11 @@ export const Home = ({
     }
   })
 
-  const { setRange } = useContext(ScrollEventContext)
   const itemGeometry = useItemGeometry(initialDepth)
 
   return (
     <>
-      <EventDispatcherComponent config={config} setRange={setRange} />
+      <EventDispatcherComponent config={config} />
       <Software
         ref={softwareRef}
         config={config}
