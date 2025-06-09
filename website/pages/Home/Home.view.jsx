@@ -5,7 +5,6 @@ import { FluidBackground } from '../../components/FluidBackground.canvas'
 import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLight } from '../../components/DirectionalLight.canvas'
-import { PrescrollAnimation } from '../../components/PrescrollAnimation.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { ScrollEventContext } from './ScrollEventContext'
@@ -16,6 +15,8 @@ import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { Photography } from '../../components/Photography.canvas'
 import { useMarkupId } from '../../hooks/useMarkupId'
 import { useBoundPathForce } from '../../hooks/useBoundPathForce.canvas'
+import { useFluidBackgroundAnimation } from '../../hooks/useFluidBackgroundAnimation.canvas'
+import { useMarkupAnimation } from '../../hooks/useMarkupAnimation.canvas'
 
 export const Home = ({
   config,
@@ -54,7 +55,6 @@ export const Home = ({
   const [itemData, setItemData] = useState()
 
   // component refs
-  const preScrollAnimation = useRef()
   const softwareRef = useRef()
   const photographyRef = useRef()
   const bgRef = useRef()
@@ -113,7 +113,6 @@ export const Home = ({
     // run animation-callback resize callbacks
     boundPathForceResizeCallback()
     // run child resize callbacks
-    preScrollAnimation?.current?.resizeCallback?.()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
     bgRef?.current?.resizeCallback()
@@ -132,6 +131,8 @@ export const Home = ({
   ])
   useResizeEvent(canvas, resizeCallback)
   //scroll callbacks
+  const bgCallback = useFluidBackgroundAnimation(config, animationTargets)
+  const markupCallback = useMarkupAnimation(config, animationTargets)
   const offsetCache = useRef(0.0)
   const tailFrames = useRef(0)
   useFrame((state, delta) => {
@@ -143,8 +144,9 @@ export const Home = ({
         tailFrames.current = 0
       }
       offsetCache.current = scrollData.offset
-      preScrollAnimation.current?.scrollCallback &&
-        preScrollAnimation.current.scrollCallback(state, delta, scrollData)
+
+      bgCallback(state, delta, scrollData)
+      markupCallback(state, delta, scrollData)
       softwareRef.current?.scrollCallback &&
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
@@ -160,12 +162,6 @@ export const Home = ({
   return (
     <>
       <EventDispatcherComponent config={config} setRange={setRange} />
-      <PrescrollAnimation
-        ref={preScrollAnimation}
-        config={config}
-        animationTargets={animationTargets}
-        scrollData={scrollData}
-      />
       <Software
         ref={softwareRef}
         config={config}
