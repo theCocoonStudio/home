@@ -22,9 +22,9 @@ const _Photography = function Photography(
         },
       },
     },
-    itemDescriptionId,
-    bgRef,
-    lightRef,
+    animationTargets: {
+      refs: { bgRef, lightRef },
+    },
     itemData,
     zPos,
     targetDepth,
@@ -34,8 +34,6 @@ const _Photography = function Photography(
 ) {
   const { colors } = useTheme()
 
-  const [itemDescription, setItemDescription] = useState()
-
   const mesh = useRef()
 
   const stateCallback = useCallback(({ size, viewport, camera }) => {
@@ -44,24 +42,14 @@ const _Photography = function Photography(
   const { size, viewport, camera } = useThree(stateCallback)
 
   const resizeCallback = useCallback(() => {
-    if (!itemDescription) {
-      const el = document.getElementById(itemDescriptionId)
-      if (el) {
-        setItemDescription(el)
-      }
-      const current =
-        mesh?.current &&
-        viewport.getCurrentViewport(
-          camera,
-          mesh?.current.position.clone(),
-          size,
-        )
+    const current =
+      mesh?.current &&
+      viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
 
-      const { width, height } = current || {}
-      current?.width &&
-        mesh.current.scale.set(width, height, mesh.current.scale.z)
-    }
-  }, [camera, itemDescription, itemDescriptionId, size, viewport])
+    const { width, height } = current || {}
+    current?.width &&
+      mesh.current.scale.set(width, height, mesh.current.scale.z)
+  }, [camera, size, viewport])
 
   const dampedOffset = useRef(0.0)
   const slate = useRef(new Color(colors.slate))
@@ -125,10 +113,8 @@ const _Photography = function Photography(
     <>
       <PhotographyItems
         ref={itemsRef}
-        range={range}
         items={items}
         itemData={itemData}
-        itemDescription={itemDescription}
         focusFactor={focusFactor}
         titleHeight={titleHeight}
         zPos={zPos}

@@ -8,25 +8,10 @@ import {
 } from 'react'
 
 import { useTheme } from '../hooks/useTheme'
-import {
-  Environment,
-  MeshPortalMaterial,
-  PerspectiveCamera,
-  Scroll,
-  Stars,
-} from '@react-three/drei'
 import { ScrollDamper } from '../utils/damping'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  {
-    itemGeometry,
-    items,
-    itemData,
-    itemDescription,
-    range,
-    focusFactor,
-    setSoftwareItemsGroup,
-  },
+  { range, itemGeometry, items, itemData, focusFactor, setSoftwareItemsGroup },
   forwardedRef,
 ) {
   const group = useRef()
@@ -60,49 +45,37 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     }
   }, [focusFactor, itemData, items])
 
-  const itemDescriptionVisible = useRef(null)
-
-  const frameCallback = useCallback(
-    ({ targetIndex, item }) => {
-      if (targetIndex === 3) {
-        if (itemDescriptionVisible.current !== true) {
-          itemDescription.children[0].children[0].innerText = item.title
-          itemDescription.children[0].children[1].innerText = item.date
-          itemDescription.children[0].children[2].innerText = item.description
-          itemDescription.style.opacity = 1
-          itemDescription.style.pointerEvents = 'auto'
-          itemDescriptionVisible.current = true
-        }
-      } else {
-        if (itemDescriptionVisible.current !== false) {
-          itemDescription.style.opacity = 0
-          itemDescription.style.pointerEvents = 'none'
-          itemDescriptionVisible.current = false
-        }
-      }
-    },
-    [itemDescription],
-  )
+  const itemDescriptionVisible = useRef(false)
+  const activeItemIndex = useRef(null)
+  const frameCallback = useCallback(({ targetIndex, index }) => {
+    if (targetIndex === 3) {
+      itemDescriptionVisible.current = true
+      activeItemIndex.current = index
+    } else {
+      itemDescriptionVisible.current = false
+      activeItemIndex.current = undefined
+    }
+  }, [])
 
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (damper) {
-        damper.frame(delta, scrollData, itemDescription && frameCallback)
-        if (
-          !scrollData.visible(...range) &&
-          typeof itemDescriptionVisible.current === 'boolean'
-        ) {
-          itemDescriptionVisible.current = null
-        }
+        damper.frame(delta, scrollData, frameCallback)
+      }
+      if (!scrollData.visible(...range) && itemDescriptionVisible.current) {
+        itemDescriptionVisible.current = false
+        activeItemIndex.current = undefined
       }
     },
-    [damper, frameCallback, itemDescription, range],
+    [damper, frameCallback, range],
   )
 
   useImperativeHandle(
     forwardedRef,
     () => ({
       scrollCallback,
+      itemDescriptionVisibleRef: itemDescriptionVisible,
+      activeItemIndexRef: activeItemIndex,
     }),
     [scrollCallback],
   )

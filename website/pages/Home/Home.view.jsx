@@ -34,7 +34,7 @@ export const Home = ({
       markupIds: { title, subtitle, description, itemDescription },
     },
     content: { itemCount, sections },
-    style: { itemSizePx, titleHeight, focusFactor },
+    style: { itemSizePx, titleHeight },
   } = config
   // reactive data
   const {
@@ -131,7 +131,11 @@ export const Home = ({
   useResizeEvent(canvas, resizeCallback)
   //scroll callbacks
   const bgCallback = useFluidBackgroundAnimation(config, animationTargets)
-  const markupCallback = useMarkupAnimation(config, animationTargets)
+  const markupCallback = useMarkupAnimation(
+    config,
+    animationTargets,
+    scrollData,
+  )
   const offsetCache = useRef(0.0)
   const tailFrames = useRef(0)
   useFrame((state, delta) => {
@@ -163,21 +167,14 @@ export const Home = ({
       <Software
         ref={softwareRef}
         config={config}
-        titleId={title}
-        subtitleId={subtitle}
-        descriptionId={description}
-        itemDescriptionId={itemDescription}
-        scrollData={scrollData}
-        bgRef={bgRef}
+        animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
       />
       <Photography
         ref={photographyRef}
         config={config}
-        itemDescriptionId={itemDescription}
-        bgRef={bgRef}
-        lightRef={lightRef}
+        animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
         zPos={zPos}

@@ -15,10 +15,8 @@ import { setImageScale } from '../utils/bounds'
 
 export const PhotographyItems = forwardRef(function PhotographyItems(
   {
-    range,
     items,
     itemData,
-    itemDescription,
     focusFactor,
     titleHeight,
     zPos,
@@ -32,7 +30,6 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   const scrollDamper = useRef(new ScrollDamper())
 
   const {
-    colors,
     lengths: { footerHeight, navHeight, atomicPadding },
   } = useTheme()
 
@@ -171,27 +168,13 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     }
   }, [focusFactor, itemData, items, photoData, targetDepth])
 
-  const itemDescriptionVisible = useRef(null)
-  const frameCallback = useCallback(() => {
-    if (itemDescriptionVisible.current !== false && itemDescription) {
-      itemDescription.style.opacity = 0
-      itemDescription.style.pointerEvents = 'none'
-      itemDescriptionVisible.current = false
-    }
-  }, [itemDescription])
-
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (damper) {
-        damper.frame(delta, scrollData, itemDescription && frameCallback)
-        if (!scrollData.visible(...range)) {
-          if (typeof itemDescriptionVisible.current === 'boolean') {
-            itemDescriptionVisible.current = null
-          }
-        }
+        damper.frame(delta, scrollData)
       }
     },
-    [damper, frameCallback, itemDescription, range],
+    [damper],
   )
 
   useImperativeHandle(

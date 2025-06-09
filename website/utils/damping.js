@@ -150,7 +150,7 @@ export class ScrollDamper {
 
       const isActive = scrollData.visible(...range)
       if (isActive && callback) {
-        callback({ targetIndex, thresholdOffset, item })
+        callback({ targetIndex, thresholdOffset, item, index })
       }
     })
   }
