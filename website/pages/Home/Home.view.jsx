@@ -15,6 +15,7 @@ import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { Photography } from '../../components/Photography.canvas'
 import { useMarkupId } from '../../hooks/useMarkupId'
+import { useBoundPathForce } from '../../hooks/useBoundPathForce.canvas'
 
 export const Home = ({
   config,
@@ -51,6 +52,7 @@ export const Home = ({
   }))
   const scrollData = useScroll()
   const [itemData, setItemData] = useState()
+
   // component refs
   const preScrollAnimation = useRef()
   const softwareRef = useRef()
@@ -62,6 +64,11 @@ export const Home = ({
   const subtitleElement = useMarkupId(subtitle)
   const descriptionElement = useMarkupId(description)
   const itemDescriptionElement = useMarkupId(itemDescription)
+  // animation Callbacks
+  const {
+    forceCallback: boundPathForceCallback,
+    resizeCallback: boundPathForceResizeCallback,
+  } = useBoundPathForce(bgRef)
   // animation targets
   const animationTargets = useMemo(
     () => ({
@@ -72,8 +79,15 @@ export const Home = ({
         itemDescriptionElement,
       },
       refs: { softwareRef, photographyRef, bgRef, lightRef },
+      callbacks: { boundPathForceCallback },
     }),
-    [descriptionElement, itemDescriptionElement, subtitleElement, titleElement],
+    [
+      boundPathForceCallback,
+      descriptionElement,
+      itemDescriptionElement,
+      subtitleElement,
+      titleElement,
+    ],
   )
   // responsive callbacks
   const resizeCallback = useCallback(() => {
@@ -96,14 +110,16 @@ export const Home = ({
         initialTransformPx: new Vector3(itemSizePx, -titleHeight / 2, 0),
       }),
     )
-
+    // run animation-callback resize callbacks
+    boundPathForceResizeCallback()
     // run child resize callbacks
-    preScrollAnimation?.current?.resizeCallback()
+    preScrollAnimation?.current?.resizeCallback?.()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
     bgRef?.current?.resizeCallback()
   }, [
     atomicPadding,
+    boundPathForceResizeCallback,
     get,
     initialDepth,
     itemCount,
@@ -148,6 +164,7 @@ export const Home = ({
         ref={preScrollAnimation}
         config={config}
         animationTargets={animationTargets}
+        scrollData={scrollData}
       />
       <Software
         ref={softwareRef}
