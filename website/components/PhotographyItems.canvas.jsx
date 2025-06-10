@@ -163,18 +163,28 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         },
         {
           focusFactor,
+          rotate: false,
         },
       )
     }
   }, [focusFactor, itemData, items, photoData, targetDepth])
 
+  const frameCallback = useCallback(({ targetIndex, item: { ref } }) => {
+    ref.castShadow = targetIndex !== 4
+    group.current.children.forEach((child) => {
+      if (child.castShadow && child !== ref) {
+        child.castShadow = false
+      }
+    })
+  }, [])
+
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (damper) {
-        damper.frame(delta, scrollData)
+        damper.frame(delta, scrollData, group.current && frameCallback)
       }
     },
-    [damper],
+    [damper, frameCallback],
   )
 
   useImperativeHandle(

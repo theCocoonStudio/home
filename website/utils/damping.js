@@ -12,6 +12,7 @@ export class ScrollDamper {
   #offsetThresholds
   #targets
   #type
+  #rotate
 
   #fromTo(fromVector, toVector, factor) {
     const from = fromVector.clone()
@@ -34,10 +35,12 @@ export class ScrollDamper {
     {
       focusFactor = 0.46,
       type,
+      rotate = true,
       eps = 0.00001 /* @drei/ScrollControls default */,
     } = {},
   ) {
     this.#type = type
+    this.#rotate = rotate
     if (Array.isArray(initialScale)) {
       this.#initialScale = [...initialScale]
     } else {
@@ -133,7 +136,7 @@ export class ScrollDamper {
 
       damp3(ref.position, position, 0.0, delta)
       damp3(ref.scale, scale, 0.0, delta)
-      if (targetIndex === 1) {
+      if (targetIndex === 1 && this.#rotate) {
         dampE(
           ref.rotation,
           [0, 0, Math.PI + thresholdOffset * Math.PI],
@@ -142,7 +145,7 @@ export class ScrollDamper {
         )
       } else if (targetIndex === 3) {
         dampLookAt(ref, [0, 0, 1], 0.15, delta)
-      } else if (targetIndex === 4) {
+      } else if (targetIndex === 4 && this.#rotate) {
         dampE(ref.rotation, [thresholdOffset * Math.PI * 2, 0, 0], 0.05, delta)
       } else {
         dampE(ref.rotation, [0, 0, 0], 0.15, delta)
