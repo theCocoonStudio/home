@@ -77,7 +77,6 @@ export const Home = ({
         initialTransformPx: new Vector3(itemSizePx, -titleHeight / 2, 0),
       }),
     )
-
     // run child resize callbacks
     bgRef?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
@@ -116,6 +115,8 @@ export const Home = ({
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
         photographyRef.current.scrollCallback(state, delta, scrollData)
+      lightRef.current?.scrollCallback &&
+        lightRef.current.scrollCallback(state, delta, scrollData)
     }
   })
 
@@ -153,9 +154,10 @@ export const Home = ({
       />
       <DirectionalLightAnimation
         ref={lightRef}
+        config={config}
+        animationTargets={animationTargets}
         position={[-0.18, 0.1, 0.5]}
         color={colors.white}
-        bgRef={bgRef}
         zPos={zPos}
       />
       <color attach='background' args={[colors.black]} />

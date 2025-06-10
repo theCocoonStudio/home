@@ -1,4 +1,5 @@
-import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import { damp } from 'maath/easing'
+import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react'
 import {
   /* CameraHelper,
   DirectionalLightHelper, */
@@ -6,11 +7,24 @@ import {
 } from 'three'
 
 const _DirectionalLight = function DirectionalLightAnimation(
-  { position, color, intensity = 10.3, zPos },
+  {
+    config: {
+      content: {
+        sections: {
+          photography: { range: photographyRange },
+        },
+      },
+    },
+    position,
+    color,
+    defaultIntensity = 10.3,
+    intensity = 3.0,
+    zPos,
+  },
   ref,
 ) {
   const { light /* cameraHelper, helper */ } = useMemo(() => {
-    const light = new Light(color, intensity)
+    const light = new Light(color, defaultIntensity)
     light.target.position.setZ(zPos)
     light.position.set(...position)
     light.shadow.camera.near = 0
@@ -31,15 +45,44 @@ const _DirectionalLight = function DirectionalLightAnimation(
     // and now update the camera helper we're using to show the light's shadow camera
     /* cameraHelper.update() */
     return { light /* cameraHelper, helper */ }
-  }, [color, intensity, position, zPos])
+  }, [color, defaultIntensity, position, zPos])
+
+  // animation callback
+  const scrollCallback = useCallback(
+    (state, delta, scrollData) => {
+      const visible = scrollData.visible(...photographyRange)
+      if (visible) {
+        // light shadow
+        if (!light.castShadow) {
+          light.castShadow = true
+        }
+      } else {
+        // light shadow
+        if (light.castShadow) {
+          light.castShadow = false
+        }
+      }
+      // light intensity
+      damp(
+        light,
+        'intensity',
+        visible ? intensity : defaultIntensity,
+        0.3,
+        delta,
+      )
+    },
+    [defaultIntensity, intensity, light, photographyRange],
+  )
 
   useImperativeHandle(
     ref,
     () => ({
+      scrollCallback,
       light,
-      defaultIntensity: intensity,
+      defaultIntensity,
+      intensity,
     }),
-    [intensity, light],
+    [defaultIntensity, intensity, light, scrollCallback],
   )
 
   return (
