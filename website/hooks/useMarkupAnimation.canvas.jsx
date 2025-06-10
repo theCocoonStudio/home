@@ -3,26 +3,16 @@ import { useTheme } from './useTheme'
 import { damp } from 'maath/easing'
 import { MathUtils } from 'three'
 
-export const useMarkupAnimation = (
-  {
-    content: {
-      sections: {
-        software: { items: softwareItems },
-      },
-    },
-    style: { focusFactor },
-  },
-  {
-    markup: {
-      itemDescriptionElement,
-      titleElement,
-      subtitleElement,
-      descriptionElement,
-    },
-    refs: { softwareRef },
-  },
+export const useMarkupAnimation = ({
+  softwareItems,
+  focusFactor,
+  itemDescriptionElement,
+  titleElement,
+  subtitleElement,
+  descriptionElement,
+  softwareRef,
   scrollData,
-) => {
+}) => {
   const {
     lengths: { navHeight, atomicPadding },
   } = useTheme()
@@ -126,8 +116,7 @@ export const useMarkupAnimation = (
       atomicPadding,
       descriptionElement,
       focusFactor,
-      itemDescriptionElement.children,
-      itemDescriptionElement.style,
+      itemDescriptionElement,
       navHeight,
       softwareItems,
       softwareRef,

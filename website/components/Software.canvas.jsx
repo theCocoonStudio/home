@@ -5,9 +5,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useTheme } from '../hooks/useTheme'
-import { damp } from 'maath/easing'
-import { Color } from 'three'
 import { SoftwareItems } from './SoftwareItems.canvas'
 
 const _Software = function Software(
@@ -20,44 +17,18 @@ const _Software = function Software(
         },
       },
     },
-    animationTargets: {
-      refs: { bgRef },
-    },
     itemGeometry,
     itemData,
   },
   forwardedRef,
 ) {
-  const { colors } = useTheme()
-
   /* use for changing styles based on new width or aspect */
   const resizeCallback = useCallback(() => {}, [])
 
-  const dampedOffset = useRef(0.0)
-  const slate = useRef(new Color(colors.slate))
-  const black = useRef(new Color(colors.black))
-
   const itemsRef = useRef()
-  const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      itemsRef.current?.scrollCallback(state, delta, scrollData)
-
-      const offset = scrollData.range(
-        0,
-        items[0].range[0] + (items[0].range[1] * (1 - focusFactor)) / 2,
-      )
-      const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
-      if (toDamp) {
-        // background color
-        bgRef.current.backingMaterialRef.current.color.lerpColors(
-          black.current,
-          slate.current,
-          dampedOffset.current,
-        )
-      }
-    },
-    [bgRef, focusFactor, items],
-  )
+  const scrollCallback = useCallback((state, delta, scrollData) => {
+    itemsRef.current?.scrollCallback(state, delta, scrollData)
+  }, [])
   const [softwareItemsGroup, setSoftwareItemsGroup] = useState()
   useImperativeHandle(
     forwardedRef,

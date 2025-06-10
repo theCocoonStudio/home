@@ -5,7 +5,7 @@ import { useTheme } from './useTheme'
 import { useThree } from '@react-three/fiber'
 import { clamp } from 'three/src/math/MathUtils.js'
 
-export const useBoundPathForce = (bgRef) => {
+export const useBoundPathForce = (backgroundRef) => {
   // data
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
@@ -25,7 +25,7 @@ export const useBoundPathForce = (bgRef) => {
   const path = useMemo(() => new BoundPathGenerator(uvSpaceClamps.current), [])
   // update forceCallback data
   const resizeCallback = useCallback(() => {
-    const target = bgRef.current?.backgroundRef.current
+    const target = backgroundRef.current
     const { width, height, factor } = viewport.getCurrentViewport(
       camera,
       target.position.clone(),
@@ -38,7 +38,7 @@ export const useBoundPathForce = (bgRef) => {
     path.updatePadding(uvSpaceClamps.current)
   }, [
     atomicPadding,
-    bgRef,
+    backgroundRef,
     camera,
     footerHeight,
     navHeight,

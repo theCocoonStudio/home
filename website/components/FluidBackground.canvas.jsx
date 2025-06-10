@@ -8,6 +8,9 @@ import {
 } from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { useThree } from '@react-three/fiber'
+import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
+import { useTheme } from '../hooks/useTheme'
+import { useFluidBackgroundAnimation } from '../hooks/useFluidBackgroundAnimation.canvas'
 
 const _opts = {
   poissonIterations: 32,
@@ -23,27 +26,57 @@ const _opts = {
 }
 
 const _FluidBackground = forwardRef(function FluidBackground(
-  { colors, ...props },
+  {
+    config: {
+      content: {
+        sections: {
+          software: { items: softwareItems },
+        },
+      },
+      style: { focusFactor },
+    },
+    ...props
+  },
   forwardedRef,
 ) {
+  // refs
   const mesh = useRef()
   const backing = useRef()
   const backingMaterial = useRef()
   const forceCallback = useRef(undefined)
-
+  // simulation options
   const options = useMemo(() => {
     return {
       ..._opts,
       forceCallbackRef: forceCallback,
     }
   }, [])
-
+  // reactive data
+  const { colors } = useTheme()
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
   const { size, viewport, camera } = useThree(stateCallback)
 
+  // animation data
+  const setForceCallback = useCallback((fcb) => {
+    forceCallback.current = fcb
+  }, [])
+  const {
+    forceCallback: boundPathForceCallback,
+    resizeCallback: boundPathForceResizeCallback,
+  } = useBoundPathForce(mesh)
+  const scrollCallback = useFluidBackgroundAnimation({
+    boundPathForceCallback,
+    setForceCallback,
+    colors,
+    softwareItems,
+    focusFactor,
+    backingMaterialRef: backingMaterial,
+  })
+  // resize callback
   const resizeCallback = useCallback(() => {
+    boundPathForceResizeCallback()
     const current =
       mesh?.current &&
       viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
@@ -63,25 +96,21 @@ const _FluidBackground = forwardRef(function FluidBackground(
     const { width: bWidth, height: bHeight } = curentBacking || {}
     curentBacking?.width &&
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
-  }, [camera, size, viewport])
-
+  }, [boundPathForceResizeCallback, camera, size, viewport])
+  // simulation texture
   const { texture } = useFluidTexture(options)
-
-  const setForceCallback = useCallback((fcb) => {
-    forceCallback.current = fcb
-  }, [])
 
   useImperativeHandle(
     forwardedRef,
     () => ({
       resizeCallback,
-      setForceCallback,
+      scrollCallback,
       backingMaterialRef: backingMaterial,
       backgroundRef: mesh,
       options,
       texture,
     }),
-    [options, resizeCallback, setForceCallback, texture],
+    [options, resizeCallback, scrollCallback, texture],
   )
 
   return (
@@ -106,7 +135,7 @@ const _FluidBackground = forwardRef(function FluidBackground(
           ref={backingMaterial}
           metalness={0.2}
           roughness={0.1}
-          color={'black'}
+          color={colors.black}
         ></meshBasicMaterial>
       </mesh>
     </>

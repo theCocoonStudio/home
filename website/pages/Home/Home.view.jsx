@@ -12,10 +12,7 @@ import { Vector3 } from 'three'
 import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { Photography } from '../../components/Photography.canvas'
-import { useMarkupId } from '../../hooks/useMarkupId'
-import { useBoundPathForce } from '../../hooks/useBoundPathForce.canvas'
-import { useFluidBackgroundAnimation } from '../../hooks/useFluidBackgroundAnimation.canvas'
-import { useMarkupAnimation } from '../../hooks/useMarkupAnimation.canvas'
+import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 
 export const Home = ({
   config,
@@ -29,22 +26,14 @@ export const Home = ({
     },
     effects: { renderPriority, Component: Effects },
 
-    main: {
-      EventDispatcherComponent,
-      markupIds: { title, subtitle, description, itemDescription },
-    },
-    content: { itemCount, sections },
+    main: { EventDispatcherComponent },
+    content: { itemCount },
     style: { itemSizePx, titleHeight },
   } = config
   // reactive data
   const {
     colors,
-    lengths: {
-      navHeight,
-      footerHeight,
-      scrollContainerBorderSize,
-      atomicPadding,
-    },
+    lengths: { scrollContainerBorderSize, atomicPadding },
   } = useTheme()
   const { canvas, get } = useThree(({ gl, get }) => ({
     canvas: gl.domElement,
@@ -53,40 +42,19 @@ export const Home = ({
   const scrollData = useScroll()
   const [itemData, setItemData] = useState()
 
-  // component refs
+  // imperative component refs
+  const markupRef = useRef()
+  const bgRef = useRef()
   const softwareRef = useRef()
   const photographyRef = useRef()
-  const bgRef = useRef()
   const lightRef = useRef()
-  // markup
-  const titleElement = useMarkupId(title)
-  const subtitleElement = useMarkupId(subtitle)
-  const descriptionElement = useMarkupId(description)
-  const itemDescriptionElement = useMarkupId(itemDescription)
-  // animation Callbacks
-  const {
-    forceCallback: boundPathForceCallback,
-    resizeCallback: boundPathForceResizeCallback,
-  } = useBoundPathForce(bgRef)
+
   // animation targets
   const animationTargets = useMemo(
     () => ({
-      markup: {
-        titleElement,
-        subtitleElement,
-        descriptionElement,
-        itemDescriptionElement,
-      },
-      refs: { softwareRef, photographyRef, bgRef, lightRef },
-      callbacks: { boundPathForceCallback },
+      refs: { markupRef, softwareRef, photographyRef, bgRef, lightRef },
     }),
-    [
-      boundPathForceCallback,
-      descriptionElement,
-      itemDescriptionElement,
-      subtitleElement,
-      titleElement,
-    ],
+    [],
   )
   // responsive callbacks
   const resizeCallback = useCallback(() => {
@@ -109,15 +77,13 @@ export const Home = ({
         initialTransformPx: new Vector3(itemSizePx, -titleHeight / 2, 0),
       }),
     )
-    // run animation-callback resize callbacks
-    boundPathForceResizeCallback()
+
     // run child resize callbacks
+    bgRef?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
-    bgRef?.current?.resizeCallback()
   }, [
     atomicPadding,
-    boundPathForceResizeCallback,
     get,
     initialDepth,
     itemCount,
@@ -130,12 +96,6 @@ export const Home = ({
   ])
   useResizeEvent(canvas, resizeCallback)
   //scroll callbacks
-  const bgCallback = useFluidBackgroundAnimation(config, animationTargets)
-  const markupCallback = useMarkupAnimation(
-    config,
-    animationTargets,
-    scrollData,
-  )
   const offsetCache = useRef(0.0)
   const tailFrames = useRef(0)
   useFrame((state, delta) => {
@@ -148,14 +108,14 @@ export const Home = ({
       }
       offsetCache.current = scrollData.offset
 
-      bgCallback(state, delta, scrollData)
-      markupCallback(state, delta, scrollData)
+      markupRef.current?.scrollCallback &&
+        markupRef.current.scrollCallback(state, delta, scrollData)
+      bgRef.current?.scrollCallback &&
+        bgRef.current.scrollCallback(state, delta, scrollData)
       softwareRef.current?.scrollCallback &&
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
         photographyRef.current.scrollCallback(state, delta, scrollData)
-      bgRef.current?.scrollCallback &&
-        bgRef.current.scrollCallback(state, delta, scrollData)
     }
   })
 
@@ -164,6 +124,17 @@ export const Home = ({
   return (
     <>
       <EventDispatcherComponent config={config} />
+      <MarkupAnimation
+        ref={markupRef}
+        config={config}
+        animationTargets={animationTargets}
+        scrollData={scrollData}
+      />
+      <FluidBackground
+        ref={bgRef}
+        config={config}
+        animationTargets={animationTargets}
+      />
       <Software
         ref={softwareRef}
         config={config}
@@ -180,7 +151,6 @@ export const Home = ({
         zPos={zPos}
         targetDepth={targetDepth}
       />
-      <FluidBackground ref={bgRef} colors={colors} />
       <DirectionalLight
         ref={lightRef}
         position={[-0.18, 0.1, 0.5]}
