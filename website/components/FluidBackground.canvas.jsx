@@ -25,7 +25,7 @@ const _opts = {
   isBounce: true,
 }
 
-const _FluidBackground = forwardRef(function FluidBackground(
+const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   {
     config: {
       content: {
@@ -141,4 +141,4 @@ const _FluidBackground = forwardRef(function FluidBackground(
     </>
   )
 })
-export const FluidBackground = memo(_FluidBackground)
+export const FluidBackgroundAnimation = memo(_FluidBackground)

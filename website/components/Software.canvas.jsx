@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { SoftwareItems } from './SoftwareItems.canvas'
 
-const _Software = function Software(
+const _Software = function SoftwareAnimation(
   {
     config: {
       style: { focusFactor },
@@ -55,4 +55,4 @@ const _Software = function Software(
   )
 }
 
-export const Software = forwardRef(_Software)
+export const SoftwareAnimation = forwardRef(_Software)

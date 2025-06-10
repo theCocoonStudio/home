@@ -1,17 +1,17 @@
 import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
-import { FluidBackground } from '../../components/FluidBackground.canvas'
+import { FluidBackgroundAnimation } from '../../components/FluidBackground.canvas'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
-import { DirectionalLight } from '../../components/DirectionalLight.canvas'
+import { DirectionalLightAnimation } from '../../components/DirectionalLight.canvas'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
-import { Software } from '../../components/Software.canvas'
+import { SoftwareAnimation } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
 import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
-import { Photography } from '../../components/Photography.canvas'
+import { PhotographyAnimation } from '../../components/Photography.canvas'
 import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 
 export const Home = ({
@@ -130,19 +130,19 @@ export const Home = ({
         animationTargets={animationTargets}
         scrollData={scrollData}
       />
-      <FluidBackground
+      <FluidBackgroundAnimation
         ref={bgRef}
         config={config}
         animationTargets={animationTargets}
       />
-      <Software
+      <SoftwareAnimation
         ref={softwareRef}
         config={config}
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
       />
-      <Photography
+      <PhotographyAnimation
         ref={photographyRef}
         config={config}
         animationTargets={animationTargets}
@@ -151,7 +151,7 @@ export const Home = ({
         zPos={zPos}
         targetDepth={targetDepth}
       />
-      <DirectionalLight
+      <DirectionalLightAnimation
         ref={lightRef}
         position={[-0.18, 0.1, 0.5]}
         color={colors.white}

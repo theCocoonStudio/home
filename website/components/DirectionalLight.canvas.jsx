@@ -5,7 +5,7 @@ import {
   DirectionalLight as Light,
 } from 'three'
 
-const _DirectionalLight = function DirectionalLight(
+const _DirectionalLight = function DirectionalLightAnimation(
   { position, color, intensity = 10.3, zPos },
   ref,
 ) {
@@ -51,4 +51,4 @@ const _DirectionalLight = function DirectionalLight(
   )
 }
 
-export const DirectionalLight = forwardRef(_DirectionalLight)
+export const DirectionalLightAnimation = forwardRef(_DirectionalLight)

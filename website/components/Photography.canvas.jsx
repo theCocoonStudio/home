@@ -12,7 +12,7 @@ import { PhotographyItems } from './PhotographyItems.canvas'
 import { lerp } from 'three/src/math/MathUtils.js'
 import { useThree } from '@react-three/fiber'
 
-const _Photography = function Photography(
+const _Photography = function PhotographyAnimation(
   {
     config: {
       style: { focusFactor, titleHeight },
@@ -130,4 +130,4 @@ const _Photography = function Photography(
   )
 }
 
-export const Photography = forwardRef(_Photography)
+export const PhotographyAnimation = forwardRef(_Photography)
