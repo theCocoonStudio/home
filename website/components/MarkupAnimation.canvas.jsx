@@ -6,7 +6,13 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   {
     config: {
       main: {
-        markupIds: { title, subtitle, description, itemDescription },
+        markupIds: {
+          title,
+          subtitle,
+          description,
+          itemDescription,
+          photographyButton,
+        },
       },
       content: {
         sections: {
@@ -16,7 +22,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       style: { focusFactor },
     },
     animationTargets: {
-      refs: { softwareRef },
+      refs: { softwareRef, photographyRef },
     },
     scrollData,
   },
@@ -27,6 +33,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   const subtitleElement = useMarkupId(subtitle)
   const descriptionElement = useMarkupId(description)
   const itemDescriptionElement = useMarkupId(itemDescription)
+  const photographyButtonElement = useMarkupId(photographyButton)
 
   // callback
   const scrollCallback = useMarkupAnimation({
@@ -36,7 +43,9 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     titleElement,
     subtitleElement,
     descriptionElement,
+    photographyButtonElement,
     softwareRef,
+    photographyRef,
     scrollData,
   })
 
@@ -48,10 +57,12 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       subtitleElement,
       descriptionElement,
       itemDescriptionElement,
+      photographyButtonElement,
     }),
     [
       descriptionElement,
       itemDescriptionElement,
+      photographyButtonElement,
       scrollCallback,
       subtitleElement,
       titleElement,

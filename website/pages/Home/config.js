@@ -97,6 +97,7 @@ export const config = {
       subtitle: 'main-subtitle-container',
       description: 'main-description-container',
       itemDescription: 'main-item-description-container',
+      photographyButton: 'main-photography-button-container',
     },
   },
   style: { itemSizePx: 400, titleHeight: 149, focusFactor: 0.46 },

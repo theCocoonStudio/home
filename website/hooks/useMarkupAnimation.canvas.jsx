@@ -10,7 +10,9 @@ export const useMarkupAnimation = ({
   titleElement,
   subtitleElement,
   descriptionElement,
+  photographyButtonElement,
   softwareRef,
+  photographyRef,
   scrollData,
 }) => {
   const {
@@ -19,6 +21,7 @@ export const useMarkupAnimation = ({
 
   const titleInitialized = useRef(false)
   const itemDescriptionVisible = useRef(false)
+  const photographyButtonVisible = useRef(false)
   const dampedOffset = useRef(0.0)
 
   useEffect(() => {
@@ -80,6 +83,29 @@ export const useMarkupAnimation = ({
           itemDescriptionVisible.current = false
         }
       }
+      /* photographyButton */
+      // if in photography focus range, show software photographyButton
+      if (photographyRef.current.photographyButtonVisibleRef.current) {
+        if (!photographyButtonVisible.current) {
+          const { width, top } =
+            photographyRef.current.photoSizesPxRef.current[
+              photographyRef.current.activeItemIndexRef.current
+            ]
+          console.log(top)
+          photographyButtonElement.style.width = `${Math.round(width)}px`
+          photographyButtonElement.style.top = `${Math.round(top)}px`
+          photographyButtonElement.style.opacity = 1
+          photographyButtonElement.style.pointerEvents = 'auto'
+          photographyButtonVisible.current = true
+        }
+      } else {
+        // else, hide photographyButton
+        if (photographyButtonVisible.current) {
+          photographyButtonElement.style.opacity = 0
+          photographyButtonElement.style.pointerEvents = 'none'
+          photographyButtonVisible.current = false
+        }
+      }
       /* title elements initial preScroll animation */
       if (titleElement && subtitleElement && descriptionElement) {
         const offset = scrollData.range(
@@ -118,6 +144,8 @@ export const useMarkupAnimation = ({
       focusFactor,
       itemDescriptionElement,
       navHeight,
+      photographyButtonElement.style,
+      photographyRef,
       softwareItems,
       softwareRef,
       subtitleElement,

@@ -70,6 +70,9 @@ const _Photography = function PhotographyAnimation(
       scrollCallback,
       photographyItemsGroup,
       photographyBackgroundRef: mesh,
+      photographyButtonVisibleRef: itemsRef.current.photographyButtonVisibleRef,
+      activeItemIndexRef: itemsRef.current.activeItemIndexRef,
+      photoSizesPxRef: itemsRef.current.photoSizesPxRef,
     }),
     [photographyItemsGroup, resizeCallback, scrollCallback],
   )

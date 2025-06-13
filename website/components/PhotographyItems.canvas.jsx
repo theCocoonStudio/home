@@ -40,6 +40,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
   const textures = useTexture([...urls])
 
+  const photoSizesPx = useRef([])
   const photoData = useMemo(() => {
     if (itemData) {
       const {
@@ -54,7 +55,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         footerHeight / ppwu -
         navHeight / ppwu -
         titleHeight / ppwu -
-        (atomicPadding * 24) / ppwu
+        (atomicPadding * 30) / ppwu
       const maxWidth = viewportSize.x /* / 2 */ - (atomicPadding * 16) / ppwu
 
       const initialScale = []
@@ -74,7 +75,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
         const initialPos = new Vector3(
           -viewportSize.x / 2 - scale.x,
-          defaultInitialPosition.y,
+          defaultInitialPosition.y + (atomicPadding * 6) / ppwu,
           positionZ,
         )
         initialPosition[index] = initialPos
@@ -86,6 +87,14 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         const focusPos = intermediatePos.clone()
         focusPos.setX(0.0)
         focusPosition[index] = focusPos
+        photoSizesPx.current[index] = {
+          width: scale.x * ppwu,
+          top:
+            viewportSize.y * 0.5 * ppwu -
+            focusPos.y * ppwu +
+            scale.y * 0.5 * ppwu +
+            atomicPadding * 8,
+        }
       })
       return {
         initialScale,
@@ -170,8 +179,17 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     }
   }, [focusFactor, itemData, items, photoData, targetDepth])
 
+  const photographyButtonVisible = useRef(false)
+  const activeItemIndex = useRef(null)
   const frameCallback = useCallback(
-    ({ rangeOffset, item: { ref }, index }) => {
+    ({ targetIndex, item: { ref }, index }) => {
+      if (targetIndex === 3) {
+        photographyButtonVisible.current = true
+        activeItemIndex.current = index
+      } else {
+        photographyButtonVisible.current = false
+        activeItemIndex.current = undefined
+      }
       group.current.children.forEach((child) => {
         if (child === ref) {
           if (child.material !== activeMaterial) {
@@ -219,6 +237,10 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
       if (!scrollData.visible(...range)) {
+        if (photographyButtonVisible.current) {
+          photographyButtonVisible.current = false
+          activeItemIndex.current = undefined
+        }
         if (materialSet.current === false) {
           group.current.children.forEach((child) => {
             child.material = inactiveMaterial
@@ -240,6 +262,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     forwardedRef,
     () => ({
       scrollCallback,
+      photographyButtonVisibleRef: photographyButtonVisible,
+      activeItemIndexRef: activeItemIndex,
+      photoSizesPxRef: photoSizesPx,
     }),
     [scrollCallback],
   )

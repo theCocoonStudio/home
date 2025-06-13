@@ -13,6 +13,7 @@ export const Main = function Main({
         subtitle,
         description: descriptionId,
         itemDescription,
+        photographyButton,
       },
     },
     style: { itemSizePx, titleHeight },
@@ -38,6 +39,11 @@ export const Main = function Main({
 
   const { style: buttonStyle, className: buttonClass } = useMemo(
     () => nunito([600], undefined, styles.button),
+    [],
+  )
+
+  const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
+    () => nunito([600], undefined, styles.photoButton),
     [],
   )
 
@@ -86,6 +92,13 @@ export const Main = function Main({
           </button>
         </div>
       </div>
+      <button
+        className={photoButtonClass}
+        style={photoButtonStyle}
+        id={photographyButton}
+      >
+        view image
+      </button>
     </div>
   )
 }
