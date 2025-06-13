@@ -6,12 +6,12 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import { CanvasMaterial } from '../../web/components/CanvasMaterial.canvas'
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { useTexture } from '@react-three/drei'
-import { BoxGeometry, Vector3 } from 'three'
+import { BoxGeometry, MeshBasicMaterial, Vector3 } from 'three'
 import { setImageScale } from '../utils/bounds'
+import { useCanvasMaterial } from '../hooks/useCanvasMaterial.canvas'
 
 export const PhotographyItems = forwardRef(function PhotographyItems(
   {
@@ -23,12 +23,13 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     depth,
     targetDepth,
     setPhotographyItemsGroup,
+    range,
   },
   forwardedRef,
 ) {
   const group = useRef()
   const scrollDamper = useRef(new ScrollDamper())
-
+  const { colors } = useTheme()
   const {
     lengths: { footerHeight, navHeight, atomicPadding },
   } = useTheme()
@@ -53,7 +54,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         footerHeight / ppwu -
         navHeight / ppwu -
         titleHeight / ppwu -
-        (atomicPadding * 16) / ppwu
+        (atomicPadding * 24) / ppwu
       const maxWidth = viewportSize.x /* / 2 */ - (atomicPadding * 16) / ppwu
 
       const initialScale = []
@@ -105,38 +106,38 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   ])
 
   const geometry = useMemo(() => new BoxGeometry(1, 1, 1), [])
-
+  const activeMaterial = useCanvasMaterial()
+  const inactiveMaterial = useMemo(
+    () => new MeshBasicMaterial({ color: colors.midnight }),
+    [colors.midnight],
+  )
   useEffect(
     () => () => {
       geometry.dispose()
+      inactiveMaterial.dispose()
+      textures.forEach((texture) => texture.dispose())
     },
-    [geometry],
+    [geometry, inactiveMaterial, textures],
   )
 
   useEffect(() => {
     setPhotographyItemsGroup(group.current)
   }, [setPhotographyItemsGroup])
 
-  const softwareItems = useMemo(
-    () =>
-      items.map(({ index, range }, i) => (
-        <mesh
-          castShadow
-          key={`items${index}`}
-          geometry={geometry}
-          position-x={-10}
-          userData={{ index, range }}
-        >
-          <CanvasMaterial
-            repeatFactor={0.4}
-            /* color={colors.slate} */
-            map={textures[i]}
-            environmentIntensity={0}
+  const softwareItems = useMemo(() => {
+    if (photoData?.initialScale) {
+      return items.map(({ index, range }, i) => {
+        return (
+          <mesh
+            key={`items${index}`}
+            geometry={geometry}
+            position-x={-10}
+            userData={{ index, range }}
           />
-        </mesh>
-      )),
-    [geometry, items, textures],
-  )
+        )
+      })
+    }
+  }, [geometry, items, photoData])
 
   const damper = useMemo(() => {
     if (group.current?.children && itemData) {
@@ -163,28 +164,76 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         },
         {
           focusFactor,
-          rotate: false,
+          /* rotate: false, */
         },
       )
     }
   }, [focusFactor, itemData, items, photoData, targetDepth])
 
-  const frameCallback = useCallback(({ targetIndex, item: { ref } }) => {
-    ref.castShadow = targetIndex !== 4
-    group.current.children.forEach((child) => {
-      if (child.castShadow && child !== ref) {
-        child.castShadow = false
-      }
-    })
-  }, [])
+  const frameCallback = useCallback(
+    ({ rangeOffset, item: { ref }, index }) => {
+      group.current.children.forEach((child) => {
+        if (child === ref) {
+          if (child.material !== activeMaterial) {
+            const repeat = [
+              1.6 * photoData.initialScale[index].x,
+              1.6 * photoData.initialScale[index].y,
+              1.6 * photoData.initialScale[index].z,
+            ]
+            activeMaterial[0].normalMap.repeat.set(repeat[2], repeat[1])
+            activeMaterial[0].metalnessMap.repeat.set(repeat[2], repeat[1])
+            activeMaterial[0].roughnessMap.repeat.set(repeat[2], repeat[1])
+            activeMaterial[0].needsUpdate = true
 
+            activeMaterial[2].normalMap.repeat.set(repeat[0], repeat[2])
+            activeMaterial[2].metalnessMap.repeat.set(repeat[0], repeat[2])
+            activeMaterial[2].roughnessMap.repeat.set(repeat[0], repeat[2])
+            activeMaterial[2].needsUpdate = true
+
+            activeMaterial[4].map = textures[index]
+            activeMaterial[4].normalMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[4].metalnessMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[4].roughnessMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[4].needsUpdate = true
+
+            activeMaterial[5].normalMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[5].metalnessMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[5].roughnessMap.repeat.set(repeat[0], repeat[1])
+            activeMaterial[5].needsUpdate = true
+
+            ref.material = activeMaterial
+            ref.castShadow = true
+            //
+          }
+        } else {
+          if (child.material !== inactiveMaterial) {
+            child.material = inactiveMaterial
+            child.castShadow = false
+          }
+        }
+      })
+    },
+    [activeMaterial, inactiveMaterial, photoData, textures],
+  )
+  const materialSet = useRef(false)
   const scrollCallback = useCallback(
     (state, delta, scrollData) => {
+      if (!scrollData.visible(...range)) {
+        if (materialSet.current === false) {
+          group.current.children.forEach((child) => {
+            child.material = inactiveMaterial
+            child.castShadow = false
+          })
+          materialSet.current = true
+        }
+      } else {
+        materialSet.current = false
+      }
       if (damper) {
         damper.frame(delta, scrollData, group.current && frameCallback)
       }
     },
-    [damper, frameCallback],
+    [damper, frameCallback, inactiveMaterial, range],
   )
 
   useImperativeHandle(

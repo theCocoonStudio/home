@@ -156,14 +156,15 @@ export const Home = ({
         ref={lightRef}
         config={config}
         animationTargets={animationTargets}
-        position={[-0.18, 0.1, 0.5]}
+        position={new Vector3(-0.18, 0.2, 0.5)}
+        targetPosition={new Vector3(-0.38, 0.4, 0.5)}
         color={colors.white}
         zPos={zPos}
       />
       <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
-      <Environment preset='city' environmentIntensity={1} />
+      <Environment preset='city' environmentIntensity={0.9} />
       <Effects renderPriority={renderPriority} />
       {/* <OrbitControls /> */}
     </>

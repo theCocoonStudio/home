@@ -6,6 +6,10 @@ import { FooterItems } from './FooterItems'
 import { ScrollEventDispatcher } from './ScrollEventDispatcher.view'
 import { ScrollEventProvider } from './ScrollEventProvider'
 import dragonfly from 'assets/photography/test.jpg'
+import dragonfly2 from 'assets/photography/test2.jpg'
+import dragonfly3 from 'assets/photography/test3.jpg'
+import dragonfly4 from 'assets/photography/test4.jpg'
+import dragonfly5 from 'assets/photography/test5.jpg'
 
 const ranges = {
   preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
@@ -65,10 +69,10 @@ const sections = {
     description: 'Select photos taken with a variety of hardware.',
     items: [
       { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
+      { url: dragonfly2 },
+      { url: dragonfly3 },
+      { url: dragonfly4 },
+      { url: dragonfly5 },
       { url: dragonfly },
       { url: dragonfly },
       { url: dragonfly },

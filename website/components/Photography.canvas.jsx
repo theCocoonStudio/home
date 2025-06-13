@@ -1,13 +1,18 @@
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
-
+import normal from 'assets/wall/normal.jpg'
+import roughness from 'assets/wall/roughness.jpg'
 import { PhotographyItems } from './PhotographyItems.canvas'
 import { useThree } from '@react-three/fiber'
+import { useTexture } from '@react-three/drei'
+import { RepeatWrapping } from 'three'
+import { damp } from 'maath/easing'
 
 const _Photography = function PhotographyAnimation(
   {
@@ -23,14 +28,15 @@ const _Photography = function PhotographyAnimation(
     itemData,
     zPos,
     targetDepth,
-    depth = 0.02,
+    depth = 0.03,
+    repeatFactor = 5,
   },
   forwardedRef,
 ) {
   const mesh = useRef()
 
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
+  const stateCallback = useCallback(({ aspect, size, viewport, camera }) => {
+    return { size, viewport, camera, aspect }
   }, [])
   const { size, viewport, camera } = useThree(stateCallback)
 
@@ -50,14 +56,10 @@ const _Photography = function PhotographyAnimation(
       itemsRef.current?.scrollCallback(state, delta, scrollData)
 
       // background
-      const visible = scrollData.visible(...range)
-      if (visible && !mesh.current?.visible) {
-        mesh.current.visible = true
-      } else if (!visible) {
-        mesh.current.visible = false
-      }
+      const offset = scrollData.range(items[0].range[0], items[0].range[1] / 2)
+      damp(mesh.current.material, 'opacity', offset, 0.05, delta)
     },
-    [range],
+    [items],
   )
 
   const [photographyItemsGroup, setPhotographyItemsGroup] = useState()
@@ -72,6 +74,14 @@ const _Photography = function PhotographyAnimation(
     [photographyItemsGroup, resizeCallback, scrollCallback],
   )
 
+  const [normalMap, roughnessMap] = useTexture([normal, roughness])
+  useEffect(
+    () => () => {
+      normalMap.dispose()
+      roughnessMap.dispose()
+    },
+    [normalMap, roughnessMap],
+  )
   return (
     <>
       <PhotographyItems
@@ -84,10 +94,32 @@ const _Photography = function PhotographyAnimation(
         depth={depth}
         targetDepth={targetDepth}
         setPhotographyItemsGroup={setPhotographyItemsGroup}
+        range={range}
       />
-      <mesh ref={mesh} position-z={zPos - depth} receiveShadow visible={false}>
+      <mesh ref={mesh} position-z={zPos - depth} receiveShadow castShadow>
         <planeGeometry args={[1, 1]} />
-        <meshStandardMaterial /* color='blue'  */ />
+        <meshStandardMaterial
+          color={'#fff'}
+          transparent
+          normalMap={normalMap}
+          normalMap-wrapS={RepeatWrapping}
+          normalMap-wrapT={RepeatWrapping}
+          normalMap-repeat={[
+            /* repeatFactor * viewport.width,
+            repeatFactor * viewport.height, */
+            repeatFactor,
+            repeatFactor,
+          ]}
+          normalScale={5}
+          roughnessMap={roughnessMap}
+          roughnessMap-wrapS={RepeatWrapping}
+          roughnessMap-wrapT={RepeatWrapping}
+          roughnessMap-repeat={[
+            repeatFactor * viewport.width,
+            repeatFactor * viewport.height,
+          ]}
+          roughness={2}
+        />
       </mesh>
     </>
   )

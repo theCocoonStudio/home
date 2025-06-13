@@ -9,6 +9,7 @@ import {
 
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
+import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
   { range, itemGeometry, items, itemData, focusFactor, setSoftwareItemsGroup },
@@ -18,6 +19,22 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const scrollDamper = useRef(new ScrollDamper())
 
   const { colors } = useTheme()
+
+  const activeMaterial = useMemo(
+    () => new MeshStandardMaterial({ color: colors.slate, roughness: 0.1 }),
+    [colors.slate],
+  )
+  const inactiveMaterial = useMemo(
+    () => new MeshBasicMaterial({ color: colors.slate }),
+    [colors.slate],
+  )
+  useEffect(
+    () => () => {
+      activeMaterial.dispose()
+      inactiveMaterial.dispose()
+    },
+    [activeMaterial, inactiveMaterial],
+  )
   const softwareItems = useMemo(
     () =>
       items.map(({ index, range }) => (
@@ -26,11 +43,10 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
           geometry={itemGeometry}
           position-x={2}
           userData={{ index, range }}
-        >
-          <meshStandardMaterial color={colors.slate} roughness={0.1} />
-        </mesh>
+          material={inactiveMaterial}
+        />
       )),
-    [colors.slate, itemGeometry, items],
+    [inactiveMaterial, itemGeometry, items],
   )
 
   const damper = useMemo(() => {
@@ -45,29 +61,54 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     }
   }, [focusFactor, itemData, items])
 
+  const materialSet = useRef(false)
   const itemDescriptionVisible = useRef(false)
   const activeItemIndex = useRef(null)
-  const frameCallback = useCallback(({ targetIndex, index }) => {
-    if (targetIndex === 3) {
-      itemDescriptionVisible.current = true
-      activeItemIndex.current = index
-    } else {
-      itemDescriptionVisible.current = false
-      activeItemIndex.current = undefined
-    }
-  }, [])
-
-  const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      if (damper) {
-        damper.frame(delta, scrollData, frameCallback)
-      }
-      if (!scrollData.visible(...range) && itemDescriptionVisible.current) {
+  const frameCallback = useCallback(
+    ({ targetIndex, index, item: { ref } }) => {
+      if (targetIndex === 3) {
+        itemDescriptionVisible.current = true
+        activeItemIndex.current = index
+      } else {
         itemDescriptionVisible.current = false
         activeItemIndex.current = undefined
       }
+      group.current.children.forEach((child) => {
+        if (child === ref) {
+          if (child.material !== activeMaterial) {
+            child.material = activeMaterial
+          }
+        } else {
+          if (child.material !== inactiveMaterial) {
+            child.material = inactiveMaterial
+          }
+        }
+      })
     },
-    [damper, frameCallback, range],
+    [activeMaterial, inactiveMaterial],
+  )
+
+  const scrollCallback = useCallback(
+    (state, delta, scrollData) => {
+      if (!scrollData.visible(...range)) {
+        if (itemDescriptionVisible.current) {
+          itemDescriptionVisible.current = false
+          activeItemIndex.current = undefined
+        }
+        if (materialSet.current === false) {
+          group.current.children.forEach(
+            (child) => (child.material = inactiveMaterial),
+          )
+          materialSet.current = true
+        }
+      } else {
+        materialSet.current = false
+      }
+      if (damper) {
+        damper.frame(delta, scrollData, frameCallback)
+      }
+    },
+    [damper, frameCallback, inactiveMaterial, range],
   )
 
   useImperativeHandle(

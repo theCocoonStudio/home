@@ -136,24 +136,31 @@ export class ScrollDamper {
 
       damp3(ref.position, position, 0.0, delta)
       damp3(ref.scale, scale, 0.0, delta)
-      if (targetIndex === 1 && this.#rotate) {
-        dampE(
-          ref.rotation,
-          [0, 0, Math.PI + thresholdOffset * Math.PI],
-          0.05,
-          delta,
-        )
-      } else if (targetIndex === 3) {
-        dampLookAt(ref, [0, 0, 1], 0.15, delta)
-      } else if (targetIndex === 4 && this.#rotate) {
-        dampE(ref.rotation, [thresholdOffset * Math.PI * 2, 0, 0], 0.05, delta)
-      } else {
-        dampE(ref.rotation, [0, 0, 0], 0.15, delta)
+      if (this.#rotate) {
+        if (targetIndex === 1) {
+          dampE(
+            ref.rotation,
+            [0, 0, Math.PI + thresholdOffset * Math.PI],
+            0.05,
+            delta,
+          )
+        } else if (targetIndex === 3) {
+          dampLookAt(ref, [0, 0, 1], 0.15, delta)
+        } else if (targetIndex === 4) {
+          dampE(
+            ref.rotation,
+            [thresholdOffset * Math.PI * 2, 0, 0],
+            0.05,
+            delta,
+          )
+        } else {
+          dampE(ref.rotation, [0, 0, 0], 0.15, delta)
+        }
       }
 
       const isActive = scrollData.visible(...range)
       if (isActive && callback) {
-        callback({ targetIndex, thresholdOffset, item, index })
+        callback({ targetIndex, thresholdOffset, item, index, rangeOffset })
       }
     })
   }
