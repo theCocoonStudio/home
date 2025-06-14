@@ -113,7 +113,7 @@ const _Photography = function PhotographyAnimation(
             repeatFactor,
             repeatFactor,
           ]}
-          normalScale={5}
+          normalScale={10}
           roughnessMap={roughnessMap}
           roughnessMap-wrapS={RepeatWrapping}
           roughnessMap-wrapT={RepeatWrapping}

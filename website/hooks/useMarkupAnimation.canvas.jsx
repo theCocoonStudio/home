@@ -91,7 +91,6 @@ export const useMarkupAnimation = ({
             photographyRef.current.photoSizesPxRef.current[
               photographyRef.current.activeItemIndexRef.current
             ]
-          console.log(top)
           photographyButtonElement.style.width = `${Math.round(width)}px`
           photographyButtonElement.style.top = `${Math.round(top)}px`
           photographyButtonElement.style.opacity = 1
