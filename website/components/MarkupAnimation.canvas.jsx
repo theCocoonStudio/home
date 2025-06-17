@@ -17,12 +17,13 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       content: {
         sections: {
           software: { items: softwareItems },
+          blog: { items: blogItems },
         },
       },
       style: { focusFactor },
     },
     animationTargets: {
-      refs: { softwareRef, photographyRef },
+      refs: { softwareRef, photographyRef, blogRef },
     },
     scrollData,
   },
@@ -38,6 +39,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   // callback
   const scrollCallback = useMarkupAnimation({
     softwareItems,
+    blogItems,
     focusFactor,
     itemDescriptionElement,
     titleElement,
@@ -46,6 +48,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     photographyButtonElement,
     softwareRef,
     photographyRef,
+    blogRef,
     scrollData,
   })
 

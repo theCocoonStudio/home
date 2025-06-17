@@ -5,6 +5,7 @@ import { MathUtils } from 'three'
 
 export const useMarkupAnimation = ({
   softwareItems,
+  blogItems,
   focusFactor,
   itemDescriptionElement,
   titleElement,
@@ -13,6 +14,7 @@ export const useMarkupAnimation = ({
   photographyButtonElement,
   softwareRef,
   photographyRef,
+  blogRef,
   scrollData,
 }) => {
   const {
@@ -67,6 +69,17 @@ export const useMarkupAnimation = ({
         if (!itemDescriptionVisible.current) {
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
+          itemDescriptionElement.children[0].children[0].innerText = item.title
+          itemDescriptionElement.children[0].children[1].innerText = item.date
+          itemDescriptionElement.children[0].children[2].innerText =
+            item.description
+          itemDescriptionElement.style.opacity = 1
+          itemDescriptionElement.style.pointerEvents = 'auto'
+          itemDescriptionVisible.current = true
+        }
+      } else if (blogRef.current.itemDescriptionVisibleRef.current) {
+        if (!itemDescriptionVisible.current) {
+          const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
           itemDescriptionElement.children[0].children[1].innerText = item.date
           itemDescriptionElement.children[0].children[2].innerText =
@@ -139,9 +152,12 @@ export const useMarkupAnimation = ({
     },
     [
       atomicPadding,
+      blogItems,
+      blogRef,
       descriptionElement,
       focusFactor,
-      itemDescriptionElement,
+      itemDescriptionElement.children,
+      itemDescriptionElement.style,
       navHeight,
       photographyButtonElement.style,
       photographyRef,
