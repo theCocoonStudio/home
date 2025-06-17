@@ -85,7 +85,40 @@ const sections = {
     ],
   },
   music: { enabled: false, description: 'Select items.', items: [{}, {}, {}] },
-  blog: { enabled: true, description: 'Life', items: [{}, {}, {}, {}] },
+  blog: {
+    enabled: true,
+    description: 'Life',
+    items: [
+      {
+        title: 'This is my title and it is the best.',
+        date: 'May 20, 2025',
+        description:
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        tags: ['software'],
+      },
+      {
+        title: 'This is my title and it is the best.',
+        date: 'May 20, 2025',
+        description:
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        tags: ['software'],
+      },
+      {
+        title: 'This is my title and it is the best.',
+        date: 'May 20, 2025',
+        description:
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        tags: ['software'],
+      },
+      {
+        title: 'This is my title and it is the best.',
+        date: 'May 20, 2025',
+        description:
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+        tags: ['software'],
+      },
+    ],
+  },
 }
 export const config = {
   context: { Provider: ScrollEventProvider },
@@ -107,7 +140,10 @@ export const config = {
     get itemCount() {
       return Object.keys(sections).reduce(
         (accumulator, currentValue) =>
-          accumulator + sections[currentValue].items.length,
+          accumulator +
+          (sections[currentValue].enabled
+            ? sections[currentValue].items.length
+            : 0),
         0,
       )
     },

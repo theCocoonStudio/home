@@ -138,7 +138,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
       return items.map(({ index, range }, i) => {
         return (
           <mesh
-            key={`items${index}`}
+            key={`photographyItems${index}`}
             geometry={geometry}
             position-x={-10}
             userData={{ index, range }}

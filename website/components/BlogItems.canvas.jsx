@@ -6,13 +6,12 @@ import {
   useMemo,
   useRef,
 } from 'react'
-
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
 
-export const SoftwareItems = forwardRef(function SoftwareItems(
-  { range, itemGeometry, items, itemData, focusFactor, setSoftwareItemsGroup },
+export const BlogItems = forwardRef(function BlogItems(
+  { range, itemGeometry, items, itemData, focusFactor, setBlogItemsGroup },
   forwardedRef,
 ) {
   const group = useRef()
@@ -21,12 +20,12 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const { colors } = useTheme()
 
   const activeMaterial = useMemo(
-    () => new MeshStandardMaterial({ color: colors.slate, roughness: 0.1 }),
-    [colors.slate],
+    () => new MeshStandardMaterial({ color: colors.purple, roughness: 0.1 }),
+    [colors.purple],
   )
   const inactiveMaterial = useMemo(
-    () => new MeshBasicMaterial({ color: colors.slate }),
-    [colors.slate],
+    () => new MeshBasicMaterial({ color: colors.purple }),
+    [colors.purple],
   )
   useEffect(
     () => () => {
@@ -39,7 +38,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
     () =>
       items.map(({ index, range }) => (
         <mesh
-          key={`softwareItems${index}`}
+          key={`blogItems${index}`}
           geometry={itemGeometry}
           position-x={2}
           userData={{ index, range }}
@@ -122,8 +121,8 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   )
 
   useEffect(() => {
-    setSoftwareItemsGroup(group.current)
-  }, [setSoftwareItemsGroup])
+    setBlogItemsGroup(group.current)
+  }, [setBlogItemsGroup])
   return (
     <>
       <group

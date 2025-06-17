@@ -13,6 +13,7 @@ import { getItemData } from '../../utils/bounds'
 import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { PhotographyAnimation } from '../../components/Photography.canvas'
 import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
+import { BlogAnimation } from '../../components/Blog.canvas'
 
 export const Home = ({
   config,
@@ -47,15 +48,24 @@ export const Home = ({
   const bgRef = useRef()
   const softwareRef = useRef()
   const photographyRef = useRef()
+  const blogRef = useRef()
   const lightRef = useRef()
 
   // animation targets
   const animationTargets = useMemo(
     () => ({
-      refs: { markupRef, softwareRef, photographyRef, bgRef, lightRef },
+      refs: {
+        markupRef,
+        softwareRef,
+        photographyRef,
+        blogRef,
+        bgRef,
+        lightRef,
+      },
     }),
     [],
   )
+
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -81,6 +91,7 @@ export const Home = ({
     bgRef?.current?.resizeCallback()
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
+    blogRef?.current?.resizeCallback()
   }, [
     atomicPadding,
     get,
@@ -115,6 +126,8 @@ export const Home = ({
         softwareRef.current.scrollCallback(state, delta, scrollData)
       photographyRef.current?.scrollCallback &&
         photographyRef.current.scrollCallback(state, delta, scrollData)
+      blogRef.current?.scrollCallback &&
+        blogRef.current.scrollCallback(state, delta, scrollData)
       lightRef.current?.scrollCallback &&
         lightRef.current.scrollCallback(state, delta, scrollData)
     }
@@ -151,6 +164,13 @@ export const Home = ({
         itemData={itemData}
         zPos={zPos}
         targetDepth={targetDepth}
+      />
+      <BlogAnimation
+        ref={blogRef}
+        config={config}
+        animationTargets={animationTargets}
+        itemGeometry={itemGeometry}
+        itemData={itemData}
       />
       <DirectionalLightAnimation
         ref={lightRef}
