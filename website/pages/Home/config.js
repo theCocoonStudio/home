@@ -18,6 +18,7 @@ const ranges = {
 }
 const sections = {
   software: {
+    enabled: true,
     description: 'Select portfolio items, demos, tools, and more.',
     items: [
       {
@@ -66,6 +67,7 @@ const sections = {
     ],
   },
   photography: {
+    enabled: true,
     description: 'Select photos taken with a variety of hardware.',
     items: [
       { url: dragonfly },
@@ -82,8 +84,8 @@ const sections = {
       { url: dragonfly },
     ],
   },
-  music: { description: 'Select items.', items: [{}, {}, {}] },
-  blog: { description: 'Life', items: [{}, {}, {}, {}] },
+  music: { enabled: false, description: 'Select items.', items: [{}, {}, {}] },
+  blog: { enabled: true, description: 'Life', items: [{}, {}, {}, {}] },
 }
 export const config = {
   context: { Provider: ScrollEventProvider },
@@ -113,21 +115,23 @@ export const config = {
       let count = 0
       const itemRange = ranges.items[1] / this.itemCount
       const data = {}
-      Object.keys(sections).forEach((sectionName) => {
-        const items = sections[sectionName].items.map((item) => {
-          const index = count++
-          return {
-            ...item,
-            index,
-            range: [ranges.items[0] + index * itemRange, itemRange],
+      Object.keys(sections)
+        .filter((section) => sections[section].enabled)
+        .forEach((sectionName) => {
+          const items = sections[sectionName].items.map((item) => {
+            const index = count++
+            return {
+              ...item,
+              index,
+              range: [ranges.items[0] + index * itemRange, itemRange],
+            }
+          })
+          data[sectionName] = {
+            ...sections[sectionName],
+            items,
+            range: [items[0].range[0], items.length * itemRange],
           }
         })
-        data[sectionName] = {
-          ...sections[sectionName],
-          items,
-          range: [items[0].range[0], items.length * itemRange],
-        }
-      })
       return data
     },
   },

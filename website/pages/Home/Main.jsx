@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styles from './Home.styles.module.css'
 import { nunito, roboto } from '../../utils/styles'
 import { useScrollEvent } from './useScrollEvent'
 import { useTheme } from '../../hooks/useTheme'
+import { useScroll } from 'src/hooks'
 
 export const Main = function Main({
+  scrollContainer,
   config: {
     content: { sections },
     main: {
@@ -22,9 +24,21 @@ export const Main = function Main({
   const {
     lengths: { atomicPadding },
   } = useTheme()
+  const section = useScrollEvent()
+  const scrollTo = useScroll(scrollContainer)
+
+  const scrollHome = useCallback(() => {
+    scrollTo(0.0)
+  }, [scrollTo])
+
   const { style, className } = useMemo(
-    () => roboto([900], undefined, styles.title),
-    [],
+    () =>
+      roboto(
+        [900],
+        section === 'preScroll' ? undefined : { cursor: 'pointer' },
+        styles.title,
+      ),
+    [section],
   )
 
   const { style: subStyle, className: subClass } = useMemo(
@@ -54,7 +68,7 @@ export const Main = function Main({
     }),
     [itemSizePx],
   )
-  const section = useScrollEvent()
+
   const itemDescContainerStyle = useMemo(
     () => ({
       width: `${itemSizePx}px`,
@@ -66,7 +80,12 @@ export const Main = function Main({
 
   return (
     <div className={styles.main}>
-      <h1 style={style} className={className} id={title}>
+      <h1
+        style={style}
+        className={className}
+        id={title}
+        onClick={section === 'preScroll' ? undefined : scrollHome}
+      >
         Izzy&nbsp;Erlich
       </h1>
       <br />
