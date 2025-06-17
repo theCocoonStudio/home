@@ -38,6 +38,8 @@ export const useFluidTexture = ({
   manual = false, // auto mode default
   priority = -1, // auto mode only
   pause = false, // auto mode only,
+  pauseRef = {},
+  manualRef = {},
 }) => {
   // reactive state data (along with passed args)
   const sizeCallback = useCallback(
@@ -413,7 +415,7 @@ export const useFluidTexture = ({
 
   // simulation updates
   useFrame((state, delta) => {
-    if (!manual && !pause) {
+    if (!manual && !pause && !pauseRef?.current && !manualRef?.current) {
       render(state, delta)
     }
   }, priority)

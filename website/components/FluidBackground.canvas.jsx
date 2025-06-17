@@ -31,10 +31,12 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       content: {
         sections: {
           software: { items: softwareItems },
+          photography: { items: photographyItems, range: photographyRange },
         },
       },
       style: { focusFactor },
     },
+    animationTargets,
     ...props
   },
   forwardedRef,
@@ -44,11 +46,15 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   const backing = useRef()
   const backingMaterial = useRef()
   const forceCallback = useRef(undefined)
+  const pauseRef = useRef(false)
+  const manualRef = useRef(false)
   // simulation options
   const options = useMemo(() => {
     return {
       ..._opts,
       forceCallbackRef: forceCallback,
+      pauseRef,
+      manualRef,
     }
   }, [])
   // reactive data
@@ -73,6 +79,11 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     softwareItems,
     focusFactor,
     backingMaterialRef: backingMaterial,
+    pauseRef,
+    manualRef,
+    animationTargets,
+    photographyRange,
+    photographyItems,
   })
   // resize callback
   const resizeCallback = useCallback(() => {
@@ -98,7 +109,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [boundPathForceResizeCallback, camera, size, viewport])
   // simulation texture
-  const { texture } = useFluidTexture(options)
+  const { texture, render } = useFluidTexture(options)
 
   useImperativeHandle(
     forwardedRef,
@@ -107,10 +118,13 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       scrollCallback,
       backingMaterialRef: backingMaterial,
       backgroundRef: mesh,
+      pauseRef,
+      manualRef,
       options,
       texture,
+      render,
     }),
-    [options, resizeCallback, scrollCallback, texture],
+    [options, render, resizeCallback, scrollCallback, texture],
   )
 
   return (

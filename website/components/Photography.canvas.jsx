@@ -24,7 +24,7 @@ const _Photography = function PhotographyAnimation(
         },
       },
     },
-
+    animationTargets,
     itemData,
     zPos,
     targetDepth,
@@ -57,7 +57,7 @@ const _Photography = function PhotographyAnimation(
 
       // background
       const offset = scrollData.range(items[0].range[0], items[0].range[1] / 2)
-      damp(mesh.current.material, 'opacity', offset, 0.05, delta)
+      damp(mesh.current.material, 'opacity', 0.8 * offset, 0.05, delta)
     },
     [items],
   )
@@ -85,6 +85,7 @@ const _Photography = function PhotographyAnimation(
     },
     [normalMap, roughnessMap],
   )
+
   return (
     <>
       <PhotographyItems
@@ -102,7 +103,6 @@ const _Photography = function PhotographyAnimation(
       <mesh ref={mesh} position-z={zPos - depth} receiveShadow castShadow>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
-          color={'#fff'}
           transparent
           normalMap={normalMap}
           normalMap-wrapS={RepeatWrapping}
