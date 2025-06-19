@@ -14,6 +14,7 @@ export const useFluidBackgroundAnimation = ({
   animationTargets,
   photographyRange,
   photographyItems,
+  render,
 }) => {
   const forceCallbackSet = useRef(false)
   const dampedOffset = useRef(0.0)
@@ -59,19 +60,23 @@ export const useFluidBackgroundAnimation = ({
         )
       }
       /* pause */
-      const toPause = scrollData.visible(
+      manualRef.current = scrollData.visible(
         photographyItems[0].range[0] + photographyItems[0].range[1] / 2,
         photographyRange[1] - photographyItems[0].range[1] / 2,
       )
-      pauseRef.current = toPause
+
+      if (manualRef.current) {
+        render(state, delta)
+      }
     },
     [
       backingMaterialRef,
       boundPathForceCallback,
       focusFactor,
-      pauseRef,
+      manualRef,
       photographyItems,
       photographyRange,
+      render,
       setForceCallback,
       softwareItems,
     ],

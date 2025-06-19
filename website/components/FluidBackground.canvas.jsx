@@ -72,19 +72,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     forceCallback: boundPathForceCallback,
     resizeCallback: boundPathForceResizeCallback,
   } = useBoundPathForce(mesh)
-  const scrollCallback = useFluidBackgroundAnimation({
-    boundPathForceCallback,
-    setForceCallback,
-    colors,
-    softwareItems,
-    focusFactor,
-    backingMaterialRef: backingMaterial,
-    pauseRef,
-    manualRef,
-    animationTargets,
-    photographyRange,
-    photographyItems,
-  })
+
   // resize callback
   const resizeCallback = useCallback(() => {
     boundPathForceResizeCallback()
@@ -110,7 +98,20 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   }, [boundPathForceResizeCallback, camera, size, viewport])
   // simulation texture
   const { texture, render } = useFluidTexture(options)
-
+  const scrollCallback = useFluidBackgroundAnimation({
+    boundPathForceCallback,
+    setForceCallback,
+    colors,
+    softwareItems,
+    focusFactor,
+    backingMaterialRef: backingMaterial,
+    pauseRef,
+    manualRef,
+    animationTargets,
+    photographyRange,
+    photographyItems,
+    render,
+  })
   useImperativeHandle(
     forwardedRef,
     () => ({
