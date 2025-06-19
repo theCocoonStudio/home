@@ -437,5 +437,5 @@ export const useFluidTexture = ({
     [],
   )
 
-  return { texture: output.texture, render: manual ? render : undefined }
+  return { texture: output.texture, render }
 }
