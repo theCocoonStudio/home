@@ -14,6 +14,7 @@ import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { PhotographyAnimation } from '../../components/Photography.canvas'
 import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 import { BlogAnimation } from '../../components/Blog.canvas'
+import { useFrameCallback } from 'src/hooks/useFrameCallback'
 
 export const Home = ({
   config,
@@ -66,6 +67,39 @@ export const Home = ({
     [],
   )
 
+  //scroll callbacks
+  const offsetCache = useRef(0.0)
+  const scrollCallback = useCallback(
+    (state, delta, elapsed, timestamp) => {
+      markupRef.current?.scrollCallback &&
+        markupRef.current.scrollCallback(state, delta, scrollData)
+      bgRef.current?.scrollCallback &&
+        bgRef.current.scrollCallback(state, delta, scrollData)
+      softwareRef.current?.scrollCallback &&
+        softwareRef.current.scrollCallback(state, delta, scrollData)
+      photographyRef.current?.scrollCallback &&
+        photographyRef.current.scrollCallback(state, delta, scrollData)
+      blogRef.current?.scrollCallback &&
+        blogRef.current.scrollCallback(state, delta, scrollData)
+      lightRef.current?.scrollCallback &&
+        lightRef.current.scrollCallback(state, delta, scrollData)
+    },
+    [scrollData],
+  )
+  const tailFrames = useRef(0)
+  useFrame((state, delta) => {
+    if (
+      Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps ||
+      tailFrames.current++ < 10
+    ) {
+      if (Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps) {
+        tailFrames.current = 0
+      }
+      offsetCache.current = scrollData.offset
+      scrollCallback(state, delta)
+    }
+  })
+  const frame = useFrameCallback(scrollCallback)
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -92,8 +126,10 @@ export const Home = ({
     softwareRef?.current?.resizeCallback()
     photographyRef?.current?.resizeCallback()
     blogRef?.current?.resizeCallback()
+    frame()
   }, [
     atomicPadding,
+    frame,
     get,
     initialDepth,
     itemCount,
@@ -105,34 +141,6 @@ export const Home = ({
     zPos,
   ])
   useResizeEvent(canvas, resizeCallback)
-  //scroll callbacks
-  const offsetCache = useRef(0.0)
-  const tailFrames = useRef(0)
-  useFrame((state, delta) => {
-    if (
-      Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps ||
-      tailFrames.current++ < 10
-    ) {
-      if (Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps) {
-        tailFrames.current = 0
-      }
-      offsetCache.current = scrollData.offset
-
-      markupRef.current?.scrollCallback &&
-        markupRef.current.scrollCallback(state, delta, scrollData)
-      bgRef.current?.scrollCallback &&
-        bgRef.current.scrollCallback(state, delta, scrollData)
-      softwareRef.current?.scrollCallback &&
-        softwareRef.current.scrollCallback(state, delta, scrollData)
-      photographyRef.current?.scrollCallback &&
-        photographyRef.current.scrollCallback(state, delta, scrollData)
-      blogRef.current?.scrollCallback &&
-        blogRef.current.scrollCallback(state, delta, scrollData)
-      lightRef.current?.scrollCallback &&
-        lightRef.current.scrollCallback(state, delta, scrollData)
-    }
-  })
-
   const itemGeometry = useItemGeometry(initialDepth)
 
   return (
