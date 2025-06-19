@@ -21,6 +21,7 @@ const _Photography = function PhotographyAnimation(
       content: {
         sections: {
           photography: { range, items },
+          blog: { range: blogRange, items: blogItems },
         },
       },
     },
@@ -57,9 +58,19 @@ const _Photography = function PhotographyAnimation(
 
       // background
       const offset = scrollData.range(items[0].range[0], items[0].range[1] / 2)
-      damp(mesh.current.material, 'opacity', 0.8 * offset, 0.05, delta)
+      const hideOffset = scrollData.range(
+        blogItems[0].range[0],
+        blogItems[0].range[1] / 2,
+      )
+      damp(
+        mesh.current.material,
+        'opacity',
+        offset > 1.0 - scrollData.eps ? 0.8 * 1.0 - hideOffset : 0.8 * offset,
+        0.05,
+        delta,
+      )
     },
-    [items],
+    [blogItems, items],
   )
 
   const [photographyItemsGroup, setPhotographyItemsGroup] = useState()

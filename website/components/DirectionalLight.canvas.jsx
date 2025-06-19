@@ -46,7 +46,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
     // and now update the camera helper we're using to show the light's shadow camera
     /* cameraHelper.update() */
     return { light /* cameraHelper, helper */ }
-  }, [color, defaultIntensity, position, zPos])
+  }, [])
 
   // animation callback
 
