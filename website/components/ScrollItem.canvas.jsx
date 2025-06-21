@@ -11,7 +11,7 @@ import { ExtrudeGeometry, Shape, Vector3 } from 'three'
 import { useTheme } from '../hooks/useTheme'
 import { Html } from '@react-three/drei'
 import styles from 'website/styles/ScrollItem.canvas.module.css'
-import { nunito } from '../utils/styles'
+import { raleway } from '../utils/styles'
 import { damp3 } from 'maath/easing'
 
 export const ScrollItem = forwardRef(function ScrollItem(
@@ -195,12 +195,12 @@ export const ScrollItem = forwardRef(function ScrollItem(
   )
 
   const { style: pStyle, className: pClassName } = useMemo(
-    () => nunito([300], { color: black }, styles.paragraph),
+    () => raleway(400, false, { color: black }, styles.paragraph),
     [black],
   )
 
   const { style: dStyle, className: dClassName } = useMemo(
-    () => nunito([200], { color: black }, styles.date),
+    () => raleway(400, false, { color: black }, styles.date),
     [black],
   )
 

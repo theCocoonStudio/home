@@ -24,8 +24,9 @@ export const FooterItems = ({
     lengths: { atomicPadding },
     utilReturn: { className, style },
   } = useTheme(
-    'robotoMono',
+    'raleway',
     600,
+    false,
     () => ({
       pointerEvents: preScroll ? 'none' : 'auto',
     }),
@@ -83,9 +84,8 @@ export const FooterItems = ({
         </div>
         <div className={`${className}`} style={style}>
           <div className={`${styles.fps}`}>
-            <span>&#123;&nbsp;fps:&nbsp;</span>
             <span id={fpsContainer}>--</span>
-            <span>&nbsp;&#125;</span>
+            <span>&nbsp;fps</span>
           </div>
         </div>
       </div>

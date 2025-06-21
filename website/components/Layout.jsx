@@ -5,15 +5,16 @@ import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
 import pagesConfig from 'website/pages'
-import { composeClassNames, nunito, roboto, robotoMono } from '../utils/styles'
+import { composeClassNames, raleway, changaOne } from '../utils/styles'
 import { Footer } from './Footer'
 import { memo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
+import { LightBox } from './Lightbox'
 
 const theme = {
-  utils: { compose: composeClassNames, nunito, roboto, robotoMono },
+  utils: { compose: composeClassNames, raleway, changaOne },
   colors: {
     mint: '#5CAB7D',
     charcoal: '#273B4E', // blue
@@ -37,6 +38,7 @@ const theme = {
 
 function _Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
+  const [showLightbox, setShowLightbox] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
 
   const {
@@ -70,6 +72,8 @@ function _Layout({ config = pagesConfig }) {
                       <ViewComponent
                         config={config[page]}
                         scrollContainer={scrollContainer}
+                        showLightbox={showLightbox}
+                        setShowLightbox={setShowLightbox}
                       />
                       <EventLayerOn />
                     </View>
@@ -78,6 +82,8 @@ function _Layout({ config = pagesConfig }) {
                     <Component
                       config={config[page]}
                       scrollContainer={scrollContainer}
+                      showLightbox={showLightbox}
+                      setShowLightbox={setShowLightbox}
                     />
                   )}
                 </>,
@@ -86,6 +92,12 @@ function _Layout({ config = pagesConfig }) {
           </div>
           <Nav config={config[page]} scrollContainer={scrollContainer} />
           <Footer config={config[page]} scrollContainer={scrollContainer} />
+          <LightBox
+            config={config[page]}
+            scrollContainer={scrollContainer}
+            showLightbox={showLightbox}
+            setShowLightbox={setShowLightbox}
+          />
         </Provider>
       </ResizeEventProvider>
     </ThemeProvider>

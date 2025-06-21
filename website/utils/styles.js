@@ -4,33 +4,27 @@ export const composeClassNames = (initial, ...classNames) =>
     initial,
   )
 
-export const nunito = (weight, styles = {}, ...classNames) => {
+export const changaOne = (italic, styles = {}, ...classNames) => {
   return {
     style: {
       ...styles,
-      fontWeight: `${weight}`,
     },
-    className: composeClassNames('nunito', ...classNames),
+    className: composeClassNames(
+      italic ? 'changa-one-regular-italic' : 'changa-one-regular',
+      ...classNames,
+    ),
   }
 }
 
-export const roboto = ([weight, width = 100], styles = {}, ...classNames) => {
-  return {
-    style: {
-      ...styles,
-      fontWeight: `${weight}`,
-      fontVariationSettings: `'wdth' ${width}`,
-    },
-    className: composeClassNames('roboto', ...classNames),
-  }
-}
-
-export const robotoMono = (weight, styles = {}, ...classNames) => {
+export const raleway = (weight, italic, styles = {}, ...classNames) => {
   return {
     style: {
       ...styles,
       fontWeight: `${weight}`,
     },
-    className: composeClassNames('roboto-mono', ...classNames),
+    className: composeClassNames(
+      italic ? 'raleway-italic' : 'raleway',
+      ...classNames,
+    ),
   }
 }

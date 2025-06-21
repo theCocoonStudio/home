@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import styles from './Home.styles.module.css'
-import { nunito, roboto } from '../../utils/styles'
+import { raleway, changaOne } from '../../utils/styles'
 import { useScrollEvent } from './useScrollEvent'
 import { useTheme } from '../../hooks/useTheme'
 import { useScroll } from 'src/hooks'
@@ -20,6 +20,8 @@ export const Main = function Main({
     },
     style: { itemSizePx, titleHeight },
   },
+  showLightbox,
+  setShowLightbox,
 }) {
   const {
     lengths: { atomicPadding },
@@ -33,8 +35,8 @@ export const Main = function Main({
 
   const { style, className } = useMemo(
     () =>
-      roboto(
-        [900],
+      changaOne(
+        false,
         section === 'preScroll' ? undefined : { cursor: 'pointer' },
         styles.title,
       ),
@@ -42,22 +44,22 @@ export const Main = function Main({
   )
 
   const { style: subStyle, className: subClass } = useMemo(
-    () => nunito(300, undefined, styles.subtitle),
+    () => raleway(400, false, undefined, styles.subtitle),
     [],
   )
 
   const { style: descStyle, className: descClass } = useMemo(
-    () => nunito(300, undefined, styles.description),
+    () => raleway(400, false, undefined, styles.description),
     [],
   )
 
   const { style: buttonStyle, className: buttonClass } = useMemo(
-    () => nunito([600], undefined, styles.button),
+    () => raleway(600, false, undefined, styles.button),
     [],
   )
 
   const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
-    () => nunito([600], undefined, styles.photoButton),
+    () => raleway(600, false, undefined, styles.photoButton),
     [],
   )
 
@@ -90,7 +92,7 @@ export const Main = function Main({
       </h1>
       <br />
       <h2 className={subClass} style={subStyle} id={subtitle}>
-        {sections[section] ? section.toUpperCase() : 'software developer'}
+        {sections[section] ? section.toUpperCase() : 'software and stuff'}
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
           <span className={styles.separator} />
@@ -102,9 +104,9 @@ export const Main = function Main({
         id={itemDescription}
       >
         <div style={itemDescStyle} className={`${styles.itemDescription}`}>
-          <h1 className='roboto'></h1>
-          <h3 className='nunito'></h3>
-          <p className='nunito'></p>
+          <h1 className='raleway'></h1>
+          <h3 className='raleway'></h3>
+          <p className='raleway'></p>
           <div className={styles.accent} />
           <button className={buttonClass} style={buttonStyle}>
             read more
@@ -115,6 +117,9 @@ export const Main = function Main({
         className={photoButtonClass}
         style={photoButtonStyle}
         id={photographyButton}
+        onClick={() => {
+          setShowLightbox(true)
+        }}
       >
         view image
       </button>
