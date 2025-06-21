@@ -23,7 +23,7 @@ export const useFluidBackgroundAnimation = ({
   const black = useRef(new Color(colors.black))
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
+    (state, delta, scrollData, scrollRanges) => {
       /* set forceCallback */
       if (!forceCallbackSet.current) {
         setForceCallback(boundPathForceCallback)
@@ -31,11 +31,7 @@ export const useFluidBackgroundAnimation = ({
       }
 
       /* colors */
-      const offset = scrollData.range(
-        0,
-        softwareItems[0].range[0] +
-          (softwareItems[0].range[1] * (1 - focusFactor)) / 2,
-      )
+      const offset = scrollRanges.startSoftwareOffset
       const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
       if (toDamp) {
         // background color
@@ -45,10 +41,7 @@ export const useFluidBackgroundAnimation = ({
           dampedOffset.current,
         )
       }
-      const offset2 = scrollData.range(
-        photographyItems[0].range[0],
-        photographyItems[0].range[1] / 2,
-      )
+      const offset2 = scrollRanges.startPhotographyOffset
 
       const toDamp2 = damp(dampedOffset2, 'current', offset2, 0.0, delta)
       if (toDamp2) {
@@ -60,10 +53,7 @@ export const useFluidBackgroundAnimation = ({
         )
       }
       /* pause */
-      manualRef.current = scrollData.visible(
-        photographyItems[0].range[0] + photographyItems[0].range[1] / 2,
-        photographyRange[1] - photographyItems[0].range[1] / 2,
-      )
+      manualRef.current = scrollRanges.photographyDurationVisible
 
       if (manualRef.current) {
         render(state, delta)
@@ -72,13 +62,9 @@ export const useFluidBackgroundAnimation = ({
     [
       backingMaterialRef,
       boundPathForceCallback,
-      focusFactor,
       manualRef,
-      photographyItems,
-      photographyRange,
       render,
       setForceCallback,
-      softwareItems,
     ],
   )
   return scrollCallback

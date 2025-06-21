@@ -18,8 +18,8 @@ const _DirectionalLight = function DirectionalLightAnimation(
     position,
     /* targetPosition, */
     color,
-    defaultIntensity = 4.5,
-    intensity = 1.1,
+    defaultIntensity = 2.5,
+    intensity = 0.8,
     zPos,
   },
   ref,
@@ -51,8 +51,8 @@ const _DirectionalLight = function DirectionalLightAnimation(
   // animation callback
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      const visible = scrollData.visible(...photographyRange)
+    (state, delta, scrollData, scrollRanges) => {
+      const visible = scrollRanges.photographyVisible
       if (visible) {
         // light shadow
         if (!light.castShadow) {
@@ -65,10 +65,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
         }
       }
       // light intensity
-      const offset = scrollData.range(
-        photographyItems[0].range[0],
-        photographyItems[0].range[1] / 2,
-      )
+      const offset = scrollRanges.startPhotographyOffset
       damp(
         light,
         'intensity',
@@ -76,7 +73,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
         0.05,
         delta,
       )
-      const fullOffset = scrollData.range(...photographyRange)
+      const fullOffset = scrollRanges.photographyOffset
       damp(
         light.position,
         'x',
@@ -85,7 +82,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
         delta,
       )
     },
-    [defaultIntensity, intensity, light, photographyItems, photographyRange],
+    [defaultIntensity, intensity, light, photographyItems],
   )
 
   useImperativeHandle(

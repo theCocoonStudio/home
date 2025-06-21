@@ -4,19 +4,14 @@
 }
 
 .title {
-  font-size: 8rem;
   line-height: 1em;
   opacity: 0;
-  margin-bottom: 12px;
   display: inline-block;
   position: absolute;
 }
 
 .subtitle {
-  font-size: 2.8rem;
   line-height: 1em;
-  top: 50%;
-  left: 50%;
   opacity: 0;
   position: absolute;
   display: inline-block;

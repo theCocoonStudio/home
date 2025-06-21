@@ -16,6 +16,10 @@ export const useMarkupAnimation = ({
   photographyRef,
   blogRef,
   scrollData,
+  subtitleSizeInitial = 2.8,
+  subtitleSizeFinal = 9.8,
+  titleSizeInitial = 8,
+  titleSizeFinal = 4,
 }) => {
   const {
     lengths: { navHeight, atomicPadding },
@@ -26,26 +30,49 @@ export const useMarkupAnimation = ({
   const photographyButtonVisible = useRef(false)
   const dampedOffset = useRef(0.0)
 
+  const setTitlePositions = useCallback(
+    (rect, rect2) => {
+      const titleLeftInitial = `(50% - ${rect.width / 2}px)`
+      const titleLeftFinal = `(50px + (11 * ${atomicPadding}px))`
+      const leftTarget = `calc(${titleLeftInitial} + ${dampedOffset.current} * (${titleLeftFinal} - ${titleLeftInitial}) )`
+
+      const titleTopInitial = `(50% - ${rect.height}px)`
+      const titleTopFinal = `(${navHeight / 2}px - ${rect.height / 2}px)`
+      const topTarget = `calc( ${titleTopInitial} + ${dampedOffset.current} * (${titleTopFinal} - ${titleTopInitial}) )`
+
+      const subtitleLeftInitial = `50%`
+      const subtitleLeftFinal = `(8 * ${atomicPadding}px)`
+      const leftTarget2 = `calc(${subtitleLeftInitial} + ${dampedOffset.current} * (${subtitleLeftFinal} - ${subtitleLeftInitial}) )`
+
+      const subtitleTopInitial = `50%`
+      const subtitleTopFinal = `  ${navHeight}px`
+      const topTarget2 = `calc( ${subtitleTopInitial} + ${dampedOffset.current} * (${subtitleTopFinal} - ${subtitleTopInitial}) )`
+
+      titleElement.style.left = leftTarget
+      titleElement.style.top = topTarget
+      subtitleElement.style.left = leftTarget2
+      subtitleElement.style.top = topTarget2
+    },
+    [atomicPadding, navHeight, subtitleElement, titleElement],
+  )
+
   useEffect(() => {
     if (scrollData.offset < scrollData.eps && !titleInitialized.current) {
       titleInitialized.current = true
-      // title
-      titleElement.style.fontSize = `${4 + (1 - dampedOffset.current) * 4}rem`
+      /* titles */
+      // font size
+      titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
+      subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
+      // set positions
       const titleDOMRect = titleElement.getBoundingClientRect()
-      const leftTarget = `calc( 50px + (11 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - 50px - (11 * ${atomicPadding}px) - ${titleDOMRect.width / 2}px) )`
-      const topTarget = `calc( ${navHeight / 2}px - ${titleDOMRect.height / 2}px + ${1.0 - dampedOffset.current} * (50% - ${titleDOMRect.height / 2}px - ${navHeight / 2}px) )`
-      titleElement.style.left = leftTarget
-      titleElement.style.top = topTarget
-      titleElement.style.opacity = 1
-      // subtitle
-      subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 7}rem`
       const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-      const leftTarget2 = `calc( (8 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - (8 * ${atomicPadding}px) - ${subtitleDOMRect.width / 2}px) )`
-      const topTarget2 = `calc( ${navHeight}px + ${1.0 - dampedOffset.current} * (50% - ${navHeight}px) )`
-      subtitleElement.style.left = leftTarget2
-      subtitleElement.style.top = topTarget2
+      setTitlePositions(titleDOMRect, subtitleDOMRect)
+
+      // reveal
+      titleElement.style.opacity = 1
       subtitleElement.style.opacity = 1
-      // description
+
+      /* description */
       descriptionElement.style.opacity = MathUtils.inverseLerp(
         0.6,
         1,
@@ -57,12 +84,17 @@ export const useMarkupAnimation = ({
     descriptionElement,
     navHeight,
     scrollData,
+    setTitlePositions,
     subtitleElement,
+    subtitleSizeFinal,
+    subtitleSizeInitial,
     titleElement,
+    titleSizeFinal,
+    titleSizeInitial,
   ])
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
+    (state, delta, scrollData, scrollRanges) => {
       /* itemDescription */
       // if in software focus range, show software itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
@@ -120,28 +152,20 @@ export const useMarkupAnimation = ({
       }
       /* title elements initial preScroll animation */
       if (titleElement && subtitleElement && descriptionElement) {
-        const offset = scrollData.range(
-          0,
-          softwareItems[0].range[0] +
-            (softwareItems[0].range[1] * (1 - focusFactor)) / 2,
-        )
+        const offset = scrollRanges.startSoftwareOffset
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
-          // title
-          titleElement.style.fontSize = `${4 + (1 - dampedOffset.current) * 4}rem`
+          /* titles */
+          // font size
+          titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
+          subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
+          // set positions
           const titleDOMRect = titleElement.getBoundingClientRect()
-          const leftTarget = `calc( 50px + (11 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - 50px - (11 * ${atomicPadding}px) - ${titleDOMRect.width / 2}px) )`
-          const topTarget = `calc( ${navHeight / 2}px - ${titleDOMRect.height / 2}px + ${1.0 - dampedOffset.current} * (50% - ${titleDOMRect.height / 2}px - ${navHeight / 2}px) )`
-          titleElement.style.left = leftTarget
-          titleElement.style.top = topTarget
-          // subtitle
-          subtitleElement.style.fontSize = `${2.8 + dampedOffset.current * 7}rem`
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-          const leftTarget2 = `calc( (8 * ${atomicPadding}px) + ${1.0 - dampedOffset.current} * (50% - (8 * ${atomicPadding}px) - ${subtitleDOMRect.width / 2}px) )`
-          const topTarget2 = `calc( ${navHeight}px + ${1.0 - dampedOffset.current} * (50% - ${navHeight}px) )`
-          subtitleElement.style.left = leftTarget2
-          subtitleElement.style.top = topTarget2
-          // description
+          setTitlePositions(titleDOMRect, subtitleDOMRect)
+          // reveal
+
+          /* description */
           descriptionElement.style.opacity = MathUtils.inverseLerp(
             0.6,
             1,
@@ -151,20 +175,21 @@ export const useMarkupAnimation = ({
       }
     },
     [
-      atomicPadding,
       blogItems,
       blogRef,
       descriptionElement,
-      focusFactor,
-      itemDescriptionElement.children,
-      itemDescriptionElement.style,
-      navHeight,
-      photographyButtonElement.style,
+      itemDescriptionElement,
+      photographyButtonElement,
       photographyRef,
+      setTitlePositions,
       softwareItems,
       softwareRef,
       subtitleElement,
+      subtitleSizeFinal,
+      subtitleSizeInitial,
       titleElement,
+      titleSizeFinal,
+      titleSizeInitial,
     ],
   )
   return scrollCallback

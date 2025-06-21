@@ -26,8 +26,8 @@ const _Software = function SoftwareAnimation(
   const resizeCallback = useCallback(() => {}, [])
 
   const itemsRef = useRef()
-  const scrollCallback = useCallback((state, delta, scrollData) => {
-    itemsRef.current?.scrollCallback(state, delta, scrollData)
+  const scrollCallback = useCallback((...args) => {
+    itemsRef.current?.scrollCallback(...args)
   }, [])
   const [softwareItemsGroup, setSoftwareItemsGroup] = useState()
   useImperativeHandle(

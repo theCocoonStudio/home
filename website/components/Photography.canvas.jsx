@@ -53,15 +53,12 @@ const _Photography = function PhotographyAnimation(
 
   const itemsRef = useRef()
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      itemsRef.current?.scrollCallback(state, delta, scrollData)
+    (state, delta, scrollData, scrollRanges) => {
+      itemsRef.current?.scrollCallback(state, delta, scrollData, scrollRanges)
 
       // background
-      const offset = scrollData.range(items[0].range[0], items[0].range[1] / 2)
-      const hideOffset = scrollData.range(
-        blogItems[0].range[0],
-        blogItems[0].range[1] / 2,
-      )
+      const offset = scrollRanges.startPhotographyOffset
+      const hideOffset = scrollRanges.startBlogOffset
       damp(
         mesh.current.material,
         'opacity',
@@ -70,7 +67,7 @@ const _Photography = function PhotographyAnimation(
         delta,
       )
     },
-    [blogItems, items],
+    [],
   )
 
   const [photographyItemsGroup, setPhotographyItemsGroup] = useState()

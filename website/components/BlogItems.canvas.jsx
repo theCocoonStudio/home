@@ -88,8 +88,8 @@ export const BlogItems = forwardRef(function BlogItems(
   )
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      if (!scrollData.visible(...range)) {
+    (state, delta, scrollData, scrollRanges) => {
+      if (!scrollRanges.blogVisible) {
         if (itemDescriptionVisible.current) {
           itemDescriptionVisible.current = false
           activeItemIndex.current = undefined
@@ -107,7 +107,7 @@ export const BlogItems = forwardRef(function BlogItems(
         damper.frame(delta, scrollData, frameCallback)
       }
     },
-    [damper, frameCallback, inactiveMaterial, range],
+    [damper, frameCallback, inactiveMaterial],
   )
 
   useImperativeHandle(

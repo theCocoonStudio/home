@@ -235,8 +235,8 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   )
   const materialSet = useRef(false)
   const scrollCallback = useCallback(
-    (state, delta, scrollData) => {
-      if (!scrollData.visible(...range)) {
+    (state, delta, scrollData, scrollRanges) => {
+      if (!scrollRanges.photographyVisible) {
         if (photographyButtonVisible.current) {
           photographyButtonVisible.current = false
           activeItemIndex.current = undefined
@@ -255,7 +255,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         damper.frame(delta, scrollData, group.current && frameCallback)
       }
     },
-    [damper, frameCallback, inactiveMaterial, range],
+    [damper, frameCallback, inactiveMaterial],
   )
 
   useImperativeHandle(
