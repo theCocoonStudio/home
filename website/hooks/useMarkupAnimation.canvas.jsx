@@ -10,6 +10,7 @@ export const useMarkupAnimation = ({
   itemDescriptionElement,
   titleElement,
   subtitleElement,
+  subtitleTextElement,
   descriptionElement,
   photographyButtonElement,
   softwareRef,
@@ -29,6 +30,7 @@ export const useMarkupAnimation = ({
   const itemDescriptionVisible = useRef(false)
   const photographyButtonVisible = useRef(false)
   const dampedOffset = useRef(0.0)
+  const subtitleText = useRef('software and stuff')
 
   const setTitlePositions = useCallback(
     (rect, rect2) => {
@@ -96,7 +98,7 @@ export const useMarkupAnimation = ({
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
       /* itemDescription */
-      // if in software focus range, show software itemDescription
+      // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
         if (!itemDescriptionVisible.current) {
           const item =
@@ -150,22 +152,66 @@ export const useMarkupAnimation = ({
           photographyButtonVisible.current = false
         }
       }
-      /* title elements initial preScroll animation */
+
+      /* title elements styling, subtitle text */
+
       if (titleElement && subtitleElement && descriptionElement) {
         const offset = scrollRanges.startSoftwareOffset
+        // subtitle text
+        let subtitle
+        if (offset < 0.5 + scrollData.eps) {
+          subtitle = 'software and stuff'
+        } else if (scrollRanges.softwareVisible) {
+          subtitle = 'software'
+        } else if (scrollRanges.photographyVisible) {
+          subtitle = 'photography'
+        } else if (scrollRanges.blogVisible) {
+          subtitle = 'blog'
+        }
+        if (subtitleText.current !== subtitle) {
+          subtitleText.current = subtitle
+          subtitleTextElement.innerText = subtitle
+        }
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
-          /* titles */
           // font size
           titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
           subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
-          // set positions
+          // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
           setTitlePositions(titleDOMRect, subtitleDOMRect)
-          // reveal
+          // opacities and font families
+          if (dampedOffset.current < 0.5 + scrollData.eps) {
+            if (
+              subtitleElement.classList.contains('changa-one-regular-italic')
+            ) {
+              subtitleElement.classList.replace(
+                'changa-one-regular-italic',
+                'raleway',
+              )
+            }
 
-          /* description */
+            subtitleElement.style.opacity = MathUtils.inverseLerp(
+              0.1,
+              0,
+              dampedOffset.current,
+            )
+          } else {
+            if (subtitleElement.classList.contains('raleway')) {
+              subtitleElement.classList.replace(
+                'raleway',
+                'changa-one-regular-italic',
+              )
+            }
+
+            subtitleElement.style.opacity = MathUtils.inverseLerp(
+              0.6,
+              1,
+              dampedOffset.current,
+            )
+          }
+
           descriptionElement.style.opacity = MathUtils.inverseLerp(
             0.6,
             1,
@@ -178,8 +224,9 @@ export const useMarkupAnimation = ({
       blogItems,
       blogRef,
       descriptionElement,
-      itemDescriptionElement,
-      photographyButtonElement,
+      itemDescriptionElement.children,
+      itemDescriptionElement.style,
+      photographyButtonElement.style,
       photographyRef,
       setTitlePositions,
       softwareItems,
@@ -187,6 +234,7 @@ export const useMarkupAnimation = ({
       subtitleElement,
       subtitleSizeFinal,
       subtitleSizeInitial,
+      subtitleTextElement,
       titleElement,
       titleSizeFinal,
       titleSizeInitial,

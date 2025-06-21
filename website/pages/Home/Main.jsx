@@ -91,13 +91,13 @@ export const Main = function Main({
         Izzy&nbsp;Erlich
       </h1>
       <br />
-      <h2 className={subClass} style={subStyle} id={subtitle}>
-        {sections[section] ? section.toUpperCase() : 'software and stuff'}
+      <div className={subClass} id={subtitle}>
+        <h2 style={subStyle}>software and stuff</h2>
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
           <span className={styles.separator} />
         </p>
-      </h2>
+      </div>
       <div
         className={`${styles.itemDescriptionContainer}`}
         style={itemDescContainerStyle}

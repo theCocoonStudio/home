@@ -1,5 +1,6 @@
 import { forwardRef, useImperativeHandle } from 'react'
 import { useMarkupId } from '../hooks/useMarkupId'
+import { useMarkupQuerySelector } from '../hooks/useMarkupQuerySelector'
 import { useMarkupAnimation } from '../hooks/useMarkupAnimation.canvas'
 import { useScroll } from '@react-three/drei'
 
@@ -33,6 +34,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   // markup
   const titleElement = useMarkupId(title)
   const subtitleElement = useMarkupId(subtitle)
+  const subtitleTextElement = useMarkupQuerySelector(`#${subtitle} > h2`)
   const descriptionElement = useMarkupId(description)
   const itemDescriptionElement = useMarkupId(itemDescription)
   const photographyButtonElement = useMarkupId(photographyButton)
@@ -45,6 +47,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     itemDescriptionElement,
     titleElement,
     subtitleElement,
+    subtitleTextElement,
     descriptionElement,
     photographyButtonElement,
     softwareRef,
@@ -59,6 +62,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       scrollCallback,
       titleElement,
       subtitleElement,
+      subtitleTextElement,
       descriptionElement,
       itemDescriptionElement,
       photographyButtonElement,
@@ -69,6 +73,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       photographyButtonElement,
       scrollCallback,
       subtitleElement,
+      subtitleTextElement,
       titleElement,
     ],
   )
