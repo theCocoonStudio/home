@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react'
 import { useMarkupId } from '../hooks/useMarkupId'
 import { useMarkupAnimation } from '../hooks/useMarkupAnimation.canvas'
+import { useScroll } from '@react-three/drei'
 
 export const MarkupAnimation = forwardRef(function MarkupAnimation(
   {
@@ -25,10 +26,10 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     animationTargets: {
       refs: { softwareRef, photographyRef, blogRef },
     },
-    scrollData,
   },
   ref,
 ) {
+  const scrollData = useScroll()
   // markup
   const titleElement = useMarkupId(title)
   const subtitleElement = useMarkupId(subtitle)

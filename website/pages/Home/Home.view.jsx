@@ -1,11 +1,11 @@
-import { OrbitControls, PerspectiveCamera, useScroll } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackgroundAnimation } from '../../components/FluidBackground.canvas'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLightAnimation } from '../../components/DirectionalLight.canvas'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { SoftwareAnimation } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
@@ -14,7 +14,7 @@ import { useItemGeometry } from '../../hooks/useItemGeometry.canvas'
 import { PhotographyAnimation } from '../../components/Photography.canvas'
 import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 import { BlogAnimation } from '../../components/Blog.canvas'
-import { useFrameCallback } from 'src/hooks/useFrameCallback'
+import { useScrollAnimation } from '../../hooks/useScrollAnimation.canvas'
 
 export const Home = ({
   config,
@@ -41,7 +41,7 @@ export const Home = ({
     canvas: gl.domElement,
     get,
   }))
-  const scrollData = useScroll()
+
   const [itemData, setItemData] = useState()
 
   // imperative component refs
@@ -68,38 +68,7 @@ export const Home = ({
   )
 
   //scroll callbacks
-  const offsetCache = useRef(0.0)
-  const scrollCallback = useCallback(
-    (state, delta, elapsed, timestamp) => {
-      markupRef.current?.scrollCallback &&
-        markupRef.current.scrollCallback(state, delta, scrollData)
-      bgRef.current?.scrollCallback &&
-        bgRef.current.scrollCallback(state, delta, scrollData)
-      softwareRef.current?.scrollCallback &&
-        softwareRef.current.scrollCallback(state, delta, scrollData)
-      photographyRef.current?.scrollCallback &&
-        photographyRef.current.scrollCallback(state, delta, scrollData)
-      blogRef.current?.scrollCallback &&
-        blogRef.current.scrollCallback(state, delta, scrollData)
-      lightRef.current?.scrollCallback &&
-        lightRef.current.scrollCallback(state, delta, scrollData)
-    },
-    [scrollData],
-  )
-  const tailFrames = useRef(0)
-  useFrame((state, delta) => {
-    if (
-      Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps ||
-      tailFrames.current++ < 10
-    ) {
-      if (Math.abs(scrollData.offset - offsetCache.current) > scrollData.eps) {
-        tailFrames.current = 0
-      }
-      offsetCache.current = scrollData.offset
-      scrollCallback(state, delta)
-    }
-  })
-  const frame = useFrameCallback(scrollCallback)
+  const frame = useScrollAnimation(config, animationTargets)
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -150,7 +119,6 @@ export const Home = ({
         ref={markupRef}
         config={config}
         animationTargets={animationTargets}
-        scrollData={scrollData}
       />
       <FluidBackgroundAnimation
         ref={bgRef}
