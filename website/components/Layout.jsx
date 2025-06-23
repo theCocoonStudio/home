@@ -86,18 +86,24 @@ function _Layout({ config = pagesConfig }) {
                       setShowLightbox={setShowLightbox}
                     />
                   )}
+                  <Nav
+                    config={config[page]}
+                    scrollContainer={scrollContainer}
+                  />
+                  <Footer
+                    config={config[page]}
+                    scrollContainer={scrollContainer}
+                  />
                 </>,
                 scrollContainer.children[0],
               )}
+            <LightBox
+              config={config[page]}
+              scrollContainer={scrollContainer}
+              showLightbox={showLightbox}
+              setShowLightbox={setShowLightbox}
+            />
           </div>
-          <Nav config={config[page]} scrollContainer={scrollContainer} />
-          <Footer config={config[page]} scrollContainer={scrollContainer} />
-          <LightBox
-            config={config[page]}
-            scrollContainer={scrollContainer}
-            showLightbox={showLightbox}
-            setShowLightbox={setShowLightbox}
-          />
         </Provider>
       </ResizeEventProvider>
     </ThemeProvider>
