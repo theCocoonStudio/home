@@ -105,7 +105,7 @@ export const useMarkupAnimation = ({
             softwareItems[softwareRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
           itemDescriptionElement.children[0].children[1].innerText = item.date
-          itemDescriptionElement.children[0].children[2].innerText =
+          itemDescriptionElement.children[0].children[2].children[0].innerText =
             item.description
           itemDescriptionElement.style.opacity = 1
           itemDescriptionElement.style.pointerEvents = 'auto'
@@ -116,7 +116,7 @@ export const useMarkupAnimation = ({
           const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
           itemDescriptionElement.children[0].children[1].innerText = item.date
-          itemDescriptionElement.children[0].children[2].innerText =
+          itemDescriptionElement.children[0].children[2].children[0].innerText =
             item.description
           itemDescriptionElement.style.opacity = 1
           itemDescriptionElement.style.pointerEvents = 'auto'
@@ -170,7 +170,7 @@ export const useMarkupAnimation = ({
         }
         if (subtitleText.current !== subtitle) {
           subtitleText.current = subtitle
-          subtitleTextElement.innerText = subtitle
+          subtitleTextElement.innerText = subtitle.toUpperCase()
         }
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {

@@ -66,23 +66,14 @@ export const getItemData = ({
   target,
   zPos,
   paddingFactor = 0.1,
-  itemSizePx,
   geometryDepth,
   initialDepth,
   targetDepth,
   count,
-  initialTransform = new Vector3(),
-  focusTransform = new Vector3(),
-  intermediateTransform = new Vector3(),
-  initialTransformPx = new Vector3(),
-  focusTransformPx = new Vector3(),
-  intermediateTransformPx = new Vector3(),
-  initialTransformScale = new Vector3(),
-  focusTransformScale = new Vector3(),
-  intermediateTransformScale = new Vector3(),
-  initialTransformViewport = new Vector3(),
-  focusTransformViewport = new Vector3(),
-  intermediateTransformViewport = new Vector3(),
+  getInitialScale,
+  getInitialPosition,
+  getIntermediatePosition,
+  getFocusPosition,
 }) => {
   const { min, max, viewportSize, ppwu } = getMarkupBounds({
     id: scrollContainerId,
@@ -97,16 +88,8 @@ export const getItemData = ({
   })
 
   const data = {
-    initialScale: new Vector3(
-      itemSizePx / ppwu,
-      itemSizePx / ppwu,
-      initialDepth / geometryDepth,
-    ),
-    targetScale: new Vector3(
-      ((1 - paddingFactor) * (max.x - min.x)) / count,
-      max.y - min.y,
-      targetDepth / geometryDepth,
-    ),
+    initialScale: new Vector3(),
+    targetScale: new Vector3(),
     initialPosition: new Vector3(),
     intermediatePosition: new Vector3(),
     focusPosition: new Vector3(),
@@ -116,61 +99,47 @@ export const getItemData = ({
     viewportSize,
     ppwu,
   }
+  data.initialScale.set(
+    ...getInitialScale({ min, max, viewportSize, ppwu }),
+    initialDepth / geometryDepth,
+  )
+  data.targetScale.set(
+    ((1 - paddingFactor) * (max.x - min.x)) / count,
+    max.y - min.y,
+    targetDepth / geometryDepth,
+  )
   data.initialPosition.set(
-    viewportSize.x / 2 +
-      data.initialScale.x / 2 +
-      initialTransform.x +
-      initialTransformPx.x / ppwu +
-      data.initialScale.x * initialTransformScale.x +
-      viewportSize.x * initialTransformViewport.x,
-    0 +
-      initialTransform.y +
-      initialTransformPx.y / ppwu +
-      data.initialScale.y * initialTransformScale.y +
-      viewportSize.y * initialTransformViewport.y,
-    /* closest face at 0 */
-    zPos -
-      initialDepth / 2 +
-      initialTransform.z +
-      initialTransformPx.z / ppwu +
-      initialDepth * initialTransformScale.z,
+    ...getInitialPosition({
+      min,
+      max,
+      viewportSize,
+      ppwu,
+      initialScale: data.initialScale,
+    }),
+    zPos - initialDepth / 2,
   )
   data.intermediatePosition.set(
-    0 +
-      intermediateTransform.x +
-      intermediateTransformPx.x / ppwu +
-      data.initialScale.x * intermediateTransformScale.x +
-      viewportSize.x * intermediateTransformViewport.x,
-    0 +
-      intermediateTransform.y +
-      intermediateTransformPx.y / ppwu +
-      data.initialScale.y * intermediateTransformScale.y +
-      viewportSize.y * intermediateTransformViewport.y,
-    /* closest face at 0 */
-    zPos -
-      initialDepth / 2 +
-      intermediateTransform.z +
-      intermediateTransformPx.z / ppwu +
-      initialDepth * intermediateTransformScale.z,
+    ...getIntermediatePosition({
+      min,
+      max,
+      viewportSize,
+      ppwu,
+      initialScale: data.initialScale,
+      initialPosition: data.initialPosition,
+    }),
+    zPos - initialDepth / 2,
   )
   data.focusPosition.set(
-    0 +
-      focusTransform.x +
-      focusTransformPx.x / ppwu +
-      data.initialScale.x * focusTransformScale.x +
-      viewportSize.x * focusTransformViewport.x,
-
-    0 +
-      focusTransform.y +
-      focusTransformPx.y / ppwu +
-      data.initialScale.y * focusTransformScale.y +
-      viewportSize.y * focusTransformViewport.y,
-    /* closest face at 0 */
-    zPos -
-      initialDepth / 2 +
-      focusTransform.z +
-      focusTransformPx.z / ppwu +
-      initialDepth * focusTransformScale.z,
+    ...getFocusPosition({
+      min,
+      max,
+      viewportSize,
+      ppwu,
+      initialScale: data.initialScale,
+      initialPosition: data.initialPosition,
+      intermediatePosition: data.intermediatePosition,
+    }),
+    zPos - initialDepth / 2,
   )
   const padding = (paddingFactor * (max.x - min.x)) / (count - 1)
   for (let i = 0; i < count; i++) {

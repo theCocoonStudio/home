@@ -25,14 +25,14 @@ const sections = {
         title: 'This is my title and it is the best.',
         date: 'May 20, 2025',
         description:
-          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 21, 2025',
         description:
-          'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting.',
         tags: ['software'],
       },
 
@@ -40,28 +40,28 @@ const sections = {
         title: 'This is my title and it is the best.',
         date: 'May 22, 2025',
         description:
-          'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 23, 2025',
         description:
-          'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 24, 2025',
         description:
-          'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 25, 2025',
         description:
-          'In this paragraph I try to fill some space. Lorem ipsum type shit. Etc.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
     ],
@@ -93,28 +93,28 @@ const sections = {
         title: 'This is my title and it is the best.',
         date: 'May 20, 2025',
         description:
-          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 20, 2025',
         description:
-          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 20, 2025',
         description:
-          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
       {
         title: 'This is my title and it is the best.',
         date: 'May 20, 2025',
         description:
-          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+          'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
         tags: ['software'],
       },
     ],
@@ -135,7 +135,7 @@ export const config = {
       photographyButton: 'main-photography-button-container',
     },
   },
-  style: { itemSizePx: 400, titleHeight: 192, focusFactor: 0.46 },
+  style: { sidePaddingFactor: 8, titleHeight: 157, focusFactor: 0.46 },
   content: {
     get itemCount() {
       return Object.keys(sections).reduce(

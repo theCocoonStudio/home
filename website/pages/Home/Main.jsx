@@ -18,13 +18,13 @@ export const Main = function Main({
         photographyButton,
       },
     },
-    style: { itemSizePx, titleHeight },
+    style: { sidePaddingFactor, titleHeight },
   },
   showLightbox,
   setShowLightbox,
 }) {
   const {
-    lengths: { atomicPadding },
+    lengths: { atomicPadding, footerHeight, navHeight },
   } = useTheme()
   const section = useScrollEvent()
   const scrollTo = useScroll(scrollContainer)
@@ -43,9 +43,15 @@ export const Main = function Main({
     [section],
   )
 
-  const { style: subStyle, className: subClass } = useMemo(
-    () => raleway(400, false, undefined, styles.subtitle),
-    [],
+  const { style: subContainerStyle, className: subContainerClass } = useMemo(
+    () =>
+      raleway(
+        400,
+        false,
+        { width: `calc(50% - ${2 * sidePaddingFactor * atomicPadding}px)` },
+        styles.subtitleContainer,
+      ),
+    [atomicPadding, sidePaddingFactor],
   )
 
   const { style: descStyle, className: descClass } = useMemo(
@@ -63,21 +69,16 @@ export const Main = function Main({
     [],
   )
 
-  const itemDescStyle = useMemo(
-    () => ({
-      width: `${itemSizePx}px`,
-      maxHeight: `${itemSizePx}px`,
-    }),
-    [itemSizePx],
-  )
+  const itemDescStyle = useMemo(() => ({}), [])
 
   const itemDescContainerStyle = useMemo(
     () => ({
-      width: `${itemSizePx}px`,
-      height: `${itemSizePx}px`,
-      transform: `translate(${4 * atomicPadding}px, calc(-50% + ${titleHeight / 2}px))`,
+      top: `calc(${navHeight + titleHeight + 2 * sidePaddingFactor * atomicPadding}px)`,
+      bottom: `${footerHeight + 2 * sidePaddingFactor * atomicPadding}px`,
+      left: `calc(100% - 61.8%)`,
+      right: `0`,
     }),
-    [atomicPadding, itemSizePx, titleHeight],
+    [atomicPadding, footerHeight, navHeight, sidePaddingFactor, titleHeight],
   )
 
   return (
@@ -91,8 +92,12 @@ export const Main = function Main({
         Izzy&nbsp;Erlich
       </h1>
       <br />
-      <div className={subClass} id={subtitle}>
-        <h2 style={subStyle}>software and stuff</h2>
+      <div
+        className={subContainerClass}
+        style={subContainerStyle}
+        id={subtitle}
+      >
+        <h2 className={styles.subtitle}>software and stuff</h2>
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
           <span className={styles.separator} />
@@ -104,14 +109,18 @@ export const Main = function Main({
         id={itemDescription}
       >
         <div style={itemDescStyle} className={`${styles.itemDescription}`}>
-          <h1 className='raleway'></h1>
+          <h1 className='changa-one-regular'></h1>
           <h3 className='raleway'></h3>
-          <p className='raleway'></p>
-          <div className={styles.accent} />
+          <div className='raleway'>
+            <p></p>
+            <div className={styles.accent} />
+          </div>
+
           <button className={buttonClass} style={buttonStyle}>
             read more
           </button>
         </div>
+        <div className={styles.itemDescriptionBackground} />
       </div>
       <button
         className={photoButtonClass}

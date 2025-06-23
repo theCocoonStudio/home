@@ -30,12 +30,17 @@ export const Home = ({
 
     main: { EventDispatcherComponent },
     content: { itemCount },
-    style: { itemSizePx, titleHeight },
+    style: { sidePaddingFactor, titleHeight },
   } = config
   // reactive data
   const {
     colors,
-    lengths: { scrollContainerBorderSize, atomicPadding },
+    lengths: {
+      scrollContainerBorderSize,
+      atomicPadding,
+      navHeight,
+      footerHeight,
+    },
   } = useTheme()
   const { canvas, get } = useThree(({ gl, get }) => ({
     canvas: gl.domElement,
@@ -79,15 +84,40 @@ export const Home = ({
         state: get(),
         target: new Vector3(0, 0, zPos),
         zPos,
-        itemSizePx,
         geometryDepth: initialDepth,
         initialDepth,
         targetDepth,
         count: itemCount,
-        focusTransformPx: new Vector3(-4 * atomicPadding, -titleHeight / 2, 0),
-        focusTransformScale: new Vector3(-0.5, 0, 0),
-        intermediateTransformPx: new Vector3(0, -titleHeight / 2, 0),
-        initialTransformPx: new Vector3(itemSizePx, -titleHeight / 2, 0),
+        getInitialScale: ({ viewportSize, ppwu }) => {
+          const sideLength = Math.min(
+            viewportSize.x * (1.0 - 0.618) -
+              (3 * sidePaddingFactor * atomicPadding) / ppwu,
+            viewportSize.y -
+              navHeight / ppwu -
+              footerHeight / ppwu -
+              titleHeight / ppwu -
+              (4 * sidePaddingFactor * atomicPadding) / ppwu,
+          )
+          return [sideLength, sideLength]
+        },
+        getInitialPosition: ({ viewportSize, ppwu, initialScale }) => {
+          return [viewportSize.x / 2 + initialScale.x, -titleHeight / ppwu / 2]
+        },
+        getIntermediatePosition: ({ initialPosition }) => {
+          return [0, initialPosition.y]
+        },
+        getFocusPosition: ({ viewportSize, intermediatePosition, ppwu }) => {
+          const leftBound =
+            -viewportSize.x / 2 + (sidePaddingFactor * atomicPadding) / ppwu
+          const rightBound =
+            viewportSize.x / 2 -
+            viewportSize.x * 0.618 -
+            (2 * (sidePaddingFactor * atomicPadding)) / ppwu
+          return [
+            leftBound + (rightBound - leftBound) / 2,
+            intermediatePosition.y,
+          ]
+        },
       }),
     )
     // run child resize callbacks
@@ -98,13 +128,15 @@ export const Home = ({
     frame()
   }, [
     atomicPadding,
+    footerHeight,
     frame,
     get,
     initialDepth,
     itemCount,
-    itemSizePx,
+    navHeight,
     scrollContainer,
     scrollContainerBorderSize,
+    sidePaddingFactor,
     targetDepth,
     titleHeight,
     zPos,
