@@ -162,15 +162,15 @@ export const useMarkupAnimation = ({
         if (offset < 0.5 + scrollData.eps) {
           subtitle = 'software and stuff'
         } else if (scrollRanges.softwareVisible) {
-          subtitle = 'software'
+          subtitle = 'SOFTWARE'
         } else if (scrollRanges.photographyVisible) {
-          subtitle = 'photography'
+          subtitle = 'PHOTOGRAPHY'
         } else if (scrollRanges.blogVisible) {
-          subtitle = 'blog'
+          subtitle = 'BLOG'
         }
         if (subtitleText.current !== subtitle) {
           subtitleText.current = subtitle
-          subtitleTextElement.innerText = subtitle.toUpperCase()
+          subtitleTextElement.innerText = subtitle
         }
         const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
         if (toDamp) {
