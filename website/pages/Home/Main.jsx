@@ -60,12 +60,12 @@ export const Main = function Main({
   )
 
   const { style: buttonStyle, className: buttonClass } = useMemo(
-    () => raleway(600, false, undefined, styles.button),
+    () => raleway(350, false, undefined, styles.button),
     [],
   )
 
   const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
-    () => raleway(600, false, undefined, styles.photoButton),
+    () => raleway(350, false, undefined, styles.photoButton),
     [],
   )
 

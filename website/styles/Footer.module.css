@@ -17,8 +17,8 @@
   align-items: center;
   flex-shrink: 0;
   flex-grow: 0;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   &:hover {
     cursor: pointer;
   }
@@ -27,6 +27,13 @@
     height: 100%;
     filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
   }
+}
+
+.linkedin {
+  padding: 2px;
+}
+.github {
+  padding: 1px;
 }
 
 .socials {

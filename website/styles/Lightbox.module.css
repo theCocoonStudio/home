@@ -5,16 +5,24 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(20px);
   z-index: 400;
+  transition:
+    backdrop-filter 0.2s ease-in,
+    opacity 0.2s ease-in;
+  backdrop-filter: blur(0px);
 }
 
 .exit {
   position: absolute;
-  background: red;
+
   transform: translateY(-50%);
   width: 60px;
-  height: 60px;
+  height: 60x;
+
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
   &:hover {
     cursor: pointer;
   }
