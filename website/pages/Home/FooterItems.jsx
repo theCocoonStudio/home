@@ -11,9 +11,13 @@ export const FooterItems = ({
       markupIds: { scrollContainer, fpsContainer },
     },
     content: {
+      itemCount,
       sections: {
         software: { items },
       },
+    },
+    scroll: {
+      ranges: { items: scrollItemsRange },
     },
   },
   scrollContainer: scrollElement,
@@ -67,6 +71,28 @@ export const FooterItems = ({
 
   const scrollTo = useScroll(scrollElement)
 
+  const scrollItemStyles = useMemo(() => {}, [])
+
+  const scrollItems = useMemo(() => {
+    const items = []
+    for (let i = 0; i < itemCount; i++) {
+      const target =
+        scrollItemsRange[0] +
+        0.5 * (scrollItemsRange[1] / itemCount) +
+        i * (scrollItemsRange[1] / itemCount)
+      items[i] = (
+        <div
+          key={`scrollItem-${i}`}
+          style={scrollItemStyles}
+          onClick={() => {
+            scrollTo(target)
+          }}
+        />
+      )
+    }
+    return items
+  }, [itemCount, scrollItemStyles, scrollItemsRange, scrollTo])
+
   const scrollDown = useCallback(() => {
     scrollTo(items[0].range[0] + items[0].range[1] / 2)
   }, [items, scrollTo])
@@ -119,7 +145,9 @@ export const FooterItems = ({
         className={`${styles.scroll}`}
         style={scrollStyles}
         id={scrollContainer}
-      />
+      >
+        {scrollItems}
+      </div>
     </>
   )
 }
