@@ -3,7 +3,7 @@ import { useTheme } from 'website/hooks/useTheme'
 import { useMemo } from 'react'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 
-export const Footer = ({ config, scrollContainer }) => {
+export const Footer = ({ config, scrollContainer, showLightbox }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
@@ -26,9 +26,9 @@ export const Footer = ({ config, scrollContainer }) => {
   const socialStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll ? '0' : '.8',
+      opacity: preScroll || showLightbox ? '0' : '1',
     }),
-    [atomicPadding, preScroll],
+    [atomicPadding, preScroll, showLightbox],
   )
 
   const iconStyles = useMemo(
@@ -117,7 +117,11 @@ export const Footer = ({ config, scrollContainer }) => {
           </>
         </div>
       </div>
-      <FooterItemsComponent config={config} scrollContainer={scrollContainer} />
+      <FooterItemsComponent
+        config={config}
+        scrollContainer={scrollContainer}
+        showLightbox={showLightbox}
+      />
     </div>
   )
 }

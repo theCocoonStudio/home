@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
-
+import { useCallback, useEffect, useRef } from 'react'
+import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
+import { damp } from 'maath/easing'
 
-export const Logo = function Logo({ size }) {
+export const Logo = function Logo({ size, showLightbox }) {
   const ref = useRef()
 
   const {
@@ -33,6 +34,27 @@ export const Logo = function Logo({ size }) {
     get().setEvents({ enabled: false })
   }, [get])
 
+  const material = useRef()
+  const frameCallback = useCallback(
+    (state, delta) => {
+      if (material.current) {
+        if (showLightbox) {
+          return damp(material.current, 'opacity', 0.0, 100.0, delta)
+        } else {
+          return damp(material.current, 'opacity', 1.0, 100.0, delta)
+        }
+      }
+      return false
+    },
+    [showLightbox],
+  )
+
+  const frame = useFrameCallback()
+
+  useEffect(() => {
+    frame(frameCallback)
+  }, [frame, frameCallback, showLightbox])
+
   return (
     <>
       <group
@@ -46,7 +68,13 @@ export const Logo = function Logo({ size }) {
         <mesh>
           <boxGeometry />
           {/* <CarbonMaterial repeat={[0.6, 0.6]} /> */}
-          <meshStandardMaterial color={'#111'} roughness={0.1} />
+          <meshStandardMaterial
+            ref={material}
+            color={'#111'}
+            roughness={0.1}
+            transparent
+            opacity={1}
+          />
         </mesh>
       </group>
 

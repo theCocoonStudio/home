@@ -21,6 +21,7 @@ export const FooterItems = ({
     },
   },
   scrollContainer: scrollElement,
+  showLightbox,
 }) => {
   const preScroll = useScrollEvent('preScroll')
 
@@ -40,15 +41,15 @@ export const FooterItems = ({
 
   const scrollStyles = useMemo(
     () => ({
-      opacity: preScroll ? '0' : '.8',
+      opacity: preScroll || showLightbox ? '0' : '1',
       pointerEvents: preScroll ? 'none' : 'auto',
     }),
-    [preScroll],
+    [preScroll, showLightbox],
   )
 
   const downStyles = useMemo(
     () => ({
-      opacity: preScroll ? '0.8' : '0',
+      opacity: preScroll ? '1' : '0',
       pointerEvents: preScroll ? 'auto' : 'none',
     }),
     [preScroll],
@@ -57,9 +58,9 @@ export const FooterItems = ({
   const settingsStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll ? '0' : '.8',
+      opacity: preScroll || showLightbox ? '0' : '1',
     }),
-    [atomicPadding, preScroll],
+    [atomicPadding, preScroll, showLightbox],
   )
 
   const iconStyles = useMemo(

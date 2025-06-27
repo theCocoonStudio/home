@@ -37,10 +37,13 @@ export const Main = function Main({
     () =>
       changaOne(
         false,
-        section === 'preScroll' ? undefined : { cursor: 'pointer' },
+        {
+          cursor: section === 'preScroll' ? 'auto' : 'pointer',
+          opacity: showLightbox ? 0 : 1,
+        },
         styles.title,
       ),
-    [section],
+    [section, showLightbox],
   )
 
   const { style: subContainerStyle, className: subContainerClass } = useMemo(
@@ -48,10 +51,13 @@ export const Main = function Main({
       raleway(
         400,
         false,
-        { width: `calc(50% - ${2 * sidePaddingFactor * atomicPadding}px)` },
+        {
+          width: `calc(50% - ${2 * sidePaddingFactor * atomicPadding}px)`,
+          opacity: showLightbox ? 0 : 1,
+        },
         styles.subtitleContainer,
       ),
-    [atomicPadding, sidePaddingFactor],
+    [atomicPadding, showLightbox, sidePaddingFactor],
   )
 
   const { style: descStyle, className: descClass } = useMemo(

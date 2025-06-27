@@ -21,6 +21,7 @@ export const useMarkupAnimation = ({
   subtitleSizeFinal = 9.8,
   titleSizeInitial = 8,
   titleSizeFinal = 4,
+  showLightbox,
 }) => {
   const {
     lengths: { navHeight, atomicPadding },
@@ -31,6 +32,14 @@ export const useMarkupAnimation = ({
   const photographyButtonVisible = useRef(false)
   const dampedOffset = useRef(0.0)
   const subtitleText = useRef('software and stuff')
+
+  useEffect(() => {
+    if (showLightbox) {
+      photographyButtonElement.style.opacity = 0
+    } else if (photographyButtonVisible.current === true) {
+      photographyButtonElement.style.opacity = 1
+    }
+  }, [photographyButtonElement, showLightbox])
 
   const setTitlePositions = useCallback(
     (rect, rect2) => {

@@ -87,10 +87,12 @@ function _Layout({ config = pagesConfig }) {
                     />
                   )}
                   <Nav
+                    showLightbox={showLightbox}
                     config={config[page]}
                     scrollContainer={scrollContainer}
                   />
                   <Footer
+                    showLightbox={showLightbox}
                     config={config[page]}
                     scrollContainer={scrollContainer}
                   />

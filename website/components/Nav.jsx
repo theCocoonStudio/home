@@ -6,7 +6,7 @@ import { Logo } from './Logo.view'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 import { useScroll } from 'src/hooks'
 
-export const Nav = ({ config, scrollContainer }) => {
+export const Nav = ({ config, scrollContainer, showLightbox }) => {
   const {
     nav: { NavItemsComponent, logoRenderPriority },
   } = config
@@ -32,16 +32,16 @@ export const Nav = ({ config, scrollContainer }) => {
   const pagesStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll ? 0 : 0.8,
+      opacity: preScroll || showLightbox ? 0 : 1,
     }),
-    [atomicPadding, preScroll],
+    [atomicPadding, preScroll, showLightbox],
   )
 
   return (
     <div className={`${styles.nav}`} style={navStyles}>
       <div className={`${styles.logo}`} onClick={scrollHome}>
         <View index={logoRenderPriority} frames={1}>
-          <Logo size={30} />
+          <Logo size={30} showLightbox={showLightbox} />
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>

@@ -27,6 +27,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     animationTargets: {
       refs: { softwareRef, photographyRef, blogRef },
     },
+    showLightbox,
   },
   ref,
 ) {
@@ -54,6 +55,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     photographyRef,
     blogRef,
     scrollData,
+    showLightbox,
   })
 
   useImperativeHandle(

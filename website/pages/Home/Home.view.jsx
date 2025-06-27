@@ -18,6 +18,7 @@ import { useScrollAnimation } from '../../hooks/useScrollAnimation.canvas'
 
 export const Home = ({
   config,
+  showLightbox,
   zPos = 0.1,
   initialDepth = 0.05,
   targetDepth = 0.0005,
@@ -151,11 +152,13 @@ export const Home = ({
         ref={markupRef}
         config={config}
         animationTargets={animationTargets}
+        showLightbox={showLightbox}
       />
       <FluidBackgroundAnimation
         ref={bgRef}
         config={config}
         animationTargets={animationTargets}
+        showLightbox={showLightbox}
       />
       <SoftwareAnimation
         ref={softwareRef}
@@ -163,6 +166,7 @@ export const Home = ({
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
+        showLightbox={showLightbox}
       />
       <PhotographyAnimation
         ref={photographyRef}
@@ -172,6 +176,7 @@ export const Home = ({
         itemData={itemData}
         zPos={zPos}
         targetDepth={targetDepth}
+        showLightbox={showLightbox}
       />
       <BlogAnimation
         ref={blogRef}
@@ -179,6 +184,7 @@ export const Home = ({
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
+        showLightbox={showLightbox}
       />
       <DirectionalLightAnimation
         ref={lightRef}
@@ -188,6 +194,7 @@ export const Home = ({
         targetPosition={new Vector3(-0.38, 0.4, 0.5)}
         color={colors.white}
         zPos={zPos}
+        showLightbox={showLightbox}
       />
       <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />

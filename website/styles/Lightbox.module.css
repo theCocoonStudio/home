@@ -16,8 +16,8 @@
   position: absolute;
 
   transform: translateY(-50%);
-  width: 60px;
-  height: 60x;
+  width: 48px;
+  height: 48x;
 
   display: flex;
   flex-wrap: nowrap;
