@@ -4,6 +4,7 @@ import { raleway, changaOne } from '../../utils/styles'
 import { useScrollEvent } from './useScrollEvent'
 import { useTheme } from '../../hooks/useTheme'
 import { useScroll } from 'src/hooks'
+import { useTargetItems } from './useTargetItems'
 
 export const Main = function Main({
   scrollContainer,
@@ -86,6 +87,8 @@ export const Main = function Main({
     }),
     [atomicPadding, footerHeight, navHeight, sidePaddingFactor, titleHeight],
   )
+
+  const targetItems = useTargetItems()
 
   return (
     <div className={styles.main}>

@@ -15,6 +15,7 @@ import { PhotographyAnimation } from '../../components/Photography.canvas'
 import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 import { BlogAnimation } from '../../components/Blog.canvas'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation.canvas'
+import { useTargetItems } from './useTargetItems'
 
 export const Home = ({
   config,
@@ -72,7 +73,7 @@ export const Home = ({
     }),
     [],
   )
-
+  useTargetItems(animationTargets)
   //scroll callbacks
   const frame = useScrollAnimation(config, animationTargets)
   // responsive callbacks

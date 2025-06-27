@@ -4,7 +4,7 @@ import { Main } from './Main'
 import { NavItems } from './NavItems'
 import { FooterItems } from './FooterItems'
 import { ScrollEventDispatcher } from './ScrollEventDispatcher.view'
-import { ScrollEventProvider } from './ScrollEventProvider'
+import { HomeProvider } from './HomeProvider'
 import dragonfly from 'assets/photography/test.jpg'
 import dragonfly2 from 'assets/photography/test2.jpg'
 import dragonfly3 from 'assets/photography/test3.jpg'
@@ -121,7 +121,7 @@ const sections = {
   },
 }
 export const config = {
-  context: { Provider: ScrollEventProvider },
+  context: { Provider: HomeProvider },
   main: {
     Component: Main,
     ViewComponent: Home,
