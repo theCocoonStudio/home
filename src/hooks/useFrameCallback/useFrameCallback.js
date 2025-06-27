@@ -27,7 +27,7 @@ export const useFrameCallback = (defaultCallback) => {
           if (cb(get(), delta, elapsed, timestamp)) {
             requestAnimationFrame(step)
           } else {
-            onComplete()
+            onComplete && onComplete()
           }
         }
       }
