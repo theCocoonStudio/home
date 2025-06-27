@@ -5,7 +5,7 @@ export const useFrameCallback = (defaultCallback) => {
   const get = useThree(({ get }) => get)
 
   const frame = useCallback(
-    (callback) => {
+    (callback, onComplete) => {
       const cb = callback || defaultCallback
       let time, startTime
       const step = (timestamp) => {
@@ -26,6 +26,8 @@ export const useFrameCallback = (defaultCallback) => {
           // invoke callback and conditionally request frame based on return value
           if (cb(get(), delta, elapsed, timestamp)) {
             requestAnimationFrame(step)
+          } else {
+            onComplete()
           }
         }
       }
