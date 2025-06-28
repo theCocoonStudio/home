@@ -1,12 +1,15 @@
 import { useMemo } from 'react'
 import styles from 'website/styles/Lightbox.module.css'
 import { useTheme } from '../hooks/useTheme'
+import { useLightbox } from 'website/hooks/useLightbox'
 
-export const LightBox = ({ children, showLightbox, setShowLightbox }) => {
+export const LightBox = ({ children }) => {
   const {
-    colors: { white, black },
+    colors: { white },
     lengths: { atomicPadding, navHeight, footerHeight },
   } = useTheme()
+
+  const { showLightbox, onLightboxExitClick } = useLightbox()
 
   const style = useMemo(
     () => ({
@@ -32,29 +35,25 @@ export const LightBox = ({ children, showLightbox, setShowLightbox }) => {
       <div
         className={styles.exit}
         style={exitStyle}
-        onClick={() => setShowLightbox(false)}
+        onClick={onLightboxExitClick}
       >
         <svg
           viewBox='0,0,48,48'
           xmlns='http://www.w3.org/2000/svg'
-          width='48'
-          height='48'
-          strokeWidth='3'
+          width={48}
+          height={48}
+          strokeWidth={3}
           transform='rotate(0) matrix(1 0 0 1 0 0)'
         >
           <g
             fill='none'
-            stroke={black}
+            stroke={white}
             strokeLinecap='round'
             strokeLinejoin='round'
-            strokeWidth='3'
+            strokeWidth={3}
           >
-            <path d='M42 42L33 33M6 6L15 15L6 6Z'></path>
-            <path d='M6 42L15 33M42 6L33 15L42 6Z'></path>
-            <path
-              fill={white}
-              d='M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z'
-            ></path>
+            <path d='M8 8L40 40' />
+            <path d='M8 40L40 8' />
           </g>
         </svg>
       </div>

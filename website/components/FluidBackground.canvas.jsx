@@ -37,6 +37,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       style: { focusFactor },
     },
     animationTargets,
+    showLightbox,
     ...props
   },
   forwardedRef,
@@ -111,6 +112,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     photographyRange,
     photographyItems,
     render,
+    showLightbox,
   })
   useImperativeHandle(
     forwardedRef,

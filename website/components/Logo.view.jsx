@@ -3,8 +3,9 @@ import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
+import { useLightbox } from '../hooks/useLightbox'
 
-export const Logo = function Logo({ size, showLightbox }) {
+export const Logo = function Logo({ size }) {
   const ref = useRef()
 
   const {
@@ -16,6 +17,8 @@ export const Logo = function Logo({ size, showLightbox }) {
     viewport,
     size,
   }))
+
+  const { showLightbox } = useLightbox()
 
   useEffect(() => {
     const { factor } = viewport.getCurrentViewport(

@@ -166,3 +166,12 @@ html {
   font-weight: 400;
   font-style: italic;
 }
+
+.no-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 0px;
+  }
+}

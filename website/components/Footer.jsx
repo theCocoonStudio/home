@@ -2,8 +2,9 @@ import styles from 'website/styles/Footer.module.css'
 import { useTheme } from 'website/hooks/useTheme'
 import { useMemo } from 'react'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
+import { useLightbox } from '../hooks/useLightbox'
 
-export const Footer = ({ config, scrollContainer, showLightbox }) => {
+export const Footer = ({ config, scrollContainer }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
@@ -13,6 +14,8 @@ export const Footer = ({ config, scrollContainer, showLightbox }) => {
   } = useTheme()
 
   const preScroll = useScrollEvent('preScroll')
+
+  const { showLightbox } = useLightbox()
 
   const footerStyles = useMemo(
     () => ({

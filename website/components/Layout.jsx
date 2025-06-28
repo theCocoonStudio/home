@@ -12,6 +12,7 @@ import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
 import { LightBox } from './Lightbox'
+import { LightboxProvider } from 'website/context/LightboxProvider'
 
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
@@ -38,7 +39,7 @@ const theme = {
 
 function _Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
-  const [showLightbox, setShowLightbox] = useState(false)
+
   const [scrollContainer, setScrollContainer] = useState()
 
   const {
@@ -50,63 +51,57 @@ function _Layout({ config = pagesConfig }) {
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
-        <Provider config={config[page]}>
-          <div className={styles.layout}>
-            <ThreeApp eventPrefix={'client'}>
-              <ScrollControls {...scrollControlsProps}>
-                <View.Port />
-                <ScrollHTMLRef setContainer={setScrollContainer} />
-              </ScrollControls>
-            </ThreeApp>
+        <LightboxProvider>
+          <Provider config={config[page]}>
+            <div className={styles.layout}>
+              <ThreeApp eventPrefix={'client'}>
+                <ScrollControls {...scrollControlsProps}>
+                  <View.Port />
+                  <ScrollHTMLRef setContainer={setScrollContainer} />
+                </ScrollControls>
+              </ThreeApp>
 
-            {(Component || ViewComponent) &&
-              scrollContainer &&
-              createPortal(
-                <>
-                  {ViewComponent && (
-                    <View
-                      className={styles.view}
-                      index={renderPriority}
-                      /* frames={1} */
-                    >
-                      <ViewComponent
+              {(Component || ViewComponent) &&
+                scrollContainer &&
+                createPortal(
+                  <>
+                    {ViewComponent && (
+                      <View
+                        className={styles.view}
+                        index={renderPriority}
+                        /* frames={1} */
+                      >
+                        <ViewComponent
+                          config={config[page]}
+                          scrollContainer={scrollContainer}
+                        />
+                        <EventLayerOn />
+                      </View>
+                    )}
+                    {Component && (
+                      <Component
                         config={config[page]}
                         scrollContainer={scrollContainer}
-                        showLightbox={showLightbox}
-                        setShowLightbox={setShowLightbox}
                       />
-                      <EventLayerOn />
-                    </View>
-                  )}
-                  {Component && (
-                    <Component
+                    )}
+                    <Nav
                       config={config[page]}
                       scrollContainer={scrollContainer}
-                      showLightbox={showLightbox}
-                      setShowLightbox={setShowLightbox}
                     />
-                  )}
-                  <Nav
-                    showLightbox={showLightbox}
-                    config={config[page]}
-                    scrollContainer={scrollContainer}
-                  />
-                  <Footer
-                    showLightbox={showLightbox}
-                    config={config[page]}
-                    scrollContainer={scrollContainer}
-                  />
-                </>,
-                scrollContainer.children[0],
-              )}
-            <LightBox
-              config={config[page]}
-              scrollContainer={scrollContainer}
-              showLightbox={showLightbox}
-              setShowLightbox={setShowLightbox}
-            />
-          </div>
-        </Provider>
+                    <Footer
+                      config={config[page]}
+                      scrollContainer={scrollContainer}
+                    />
+                  </>,
+                  scrollContainer.children[0],
+                )}
+              <LightBox
+                config={config[page]}
+                scrollContainer={scrollContainer}
+              />
+            </div>
+          </Provider>
+        </LightboxProvider>
       </ResizeEventProvider>
     </ThemeProvider>
   )

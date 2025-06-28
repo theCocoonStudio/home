@@ -15,6 +15,7 @@ export const useFluidBackgroundAnimation = ({
   photographyRange,
   photographyItems,
   render,
+  showLightbox,
 }) => {
   const forceCallbackSet = useRef(false)
   const dampedOffset = useRef(0.0)
@@ -53,7 +54,9 @@ export const useFluidBackgroundAnimation = ({
         )
       }
       /* pause */
-      manualRef.current = scrollRanges.photographyDurationVisible
+      manualRef.current = showLightbox
+        ? false
+        : scrollRanges.photographyDurationVisible
 
       if (manualRef.current) {
         render(state, delta)
@@ -65,6 +68,7 @@ export const useFluidBackgroundAnimation = ({
       manualRef,
       render,
       setForceCallback,
+      showLightbox,
     ],
   )
   return scrollCallback

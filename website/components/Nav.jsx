@@ -5,14 +5,17 @@ import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 import { useScroll } from 'src/hooks'
+import { useLightbox } from '../hooks/useLightbox'
 
-export const Nav = ({ config, scrollContainer, showLightbox }) => {
+export const Nav = ({ config, scrollContainer }) => {
   const {
     nav: { NavItemsComponent, logoRenderPriority },
   } = config
   const {
     lengths: { navHeight, atomicPadding },
   } = useTheme()
+
+  const { showLightbox } = useLightbox()
 
   const preScroll = useScrollEvent('preScroll')
   const scrollTo = useScroll(scrollContainer)

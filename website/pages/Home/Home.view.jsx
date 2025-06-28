@@ -16,10 +16,10 @@ import { MarkupAnimation } from '../../components/MarkupAnimation.canvas'
 import { BlogAnimation } from '../../components/Blog.canvas'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation.canvas'
 import { useTargetItems } from './useTargetItems'
+import { useLightbox } from '../../hooks/useLightbox'
 
 export const Home = ({
   config,
-  showLightbox,
   zPos = 0.1,
   initialDepth = 0.05,
   targetDepth = 0.0005,
@@ -49,6 +49,7 @@ export const Home = ({
     get,
   }))
 
+  const { showLightbox } = useLightbox()
   const [itemData, setItemData] = useState()
 
   // imperative component refs
@@ -167,7 +168,6 @@ export const Home = ({
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
-        showLightbox={showLightbox}
       />
       <PhotographyAnimation
         ref={photographyRef}
@@ -177,7 +177,6 @@ export const Home = ({
         itemData={itemData}
         zPos={zPos}
         targetDepth={targetDepth}
-        showLightbox={showLightbox}
       />
       <BlogAnimation
         ref={blogRef}
@@ -185,7 +184,6 @@ export const Home = ({
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
-        showLightbox={showLightbox}
       />
       <DirectionalLightAnimation
         ref={lightRef}
@@ -195,7 +193,6 @@ export const Home = ({
         targetPosition={new Vector3(-0.38, 0.4, 0.5)}
         color={colors.white}
         zPos={zPos}
-        showLightbox={showLightbox}
       />
       <color attach='background' args={[colors.black]} />
       <Performance fpsContainer={fpsContainer} />

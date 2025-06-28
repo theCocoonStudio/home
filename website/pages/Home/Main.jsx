@@ -1,10 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import styles from './Home.styles.module.css'
 import { raleway, changaOne } from '../../utils/styles'
 import { useScrollEvent } from './useScrollEvent'
 import { useTheme } from '../../hooks/useTheme'
 import { useScroll } from 'src/hooks'
 import { useTargetItems } from './useTargetItems'
+import { useLightbox } from '../../hooks/useLightbox'
 
 export const Main = function Main({
   scrollContainer,
@@ -21,11 +22,10 @@ export const Main = function Main({
     },
     style: { sidePaddingFactor, titleHeight },
   },
-  showLightbox,
-  setShowLightbox,
 }) {
   const {
     lengths: { atomicPadding, footerHeight, navHeight },
+    colors: { black, white },
   } = useTheme()
   const section = useScrollEvent()
   const scrollTo = useScroll(scrollContainer)
@@ -33,6 +33,42 @@ export const Main = function Main({
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
+
+  const targetItems = useTargetItems()
+
+  const { showLightbox, setShowLightbox, setOnLightboxExitClick } =
+    useLightbox()
+
+  const openLightbox = useCallback(() => {
+    setShowLightbox(true)
+    scrollContainer.classList.add('no-scroll')
+    targetItems.refs.photographyRef.current.photographyBackgroundRef.current.visible = false
+    targetItems.refs.photographyRef.current.photographyItemsGroup.visible = false
+    targetItems.refs.softwareRef.current.softwareItemsGroup.visible = false
+    targetItems.refs.bgRef.current.manualRef.current = false
+
+    targetItems.refs.bgRef.current.backgroundRef.current.material.color.set(
+      black,
+    )
+    targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(white)
+  }, [black, scrollContainer, setShowLightbox, targetItems, white])
+
+  const closeLightbox = useCallback(() => {
+    setShowLightbox(false)
+    scrollContainer.classList.remove('no-scroll')
+    targetItems.refs.bgRef.current.backgroundRef.current.material.color.set(
+      white,
+    )
+    targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(black)
+    targetItems.refs.photographyRef.current.photographyBackgroundRef.current.visible = true
+    targetItems.refs.photographyRef.current.photographyItemsGroup.visible = true
+    targetItems.refs.softwareRef.current.softwareItemsGroup.visible = true
+    targetItems.refs.bgRef.current.manualRef.current = true
+  }, [black, scrollContainer, setShowLightbox, targetItems, white])
+
+  useEffect(() => {
+    setOnLightboxExitClick(closeLightbox)
+  }, [closeLightbox, setOnLightboxExitClick])
 
   const { style, className } = useMemo(
     () =>
@@ -88,8 +124,6 @@ export const Main = function Main({
     [atomicPadding, footerHeight, navHeight, sidePaddingFactor, titleHeight],
   )
 
-  const targetItems = useTargetItems()
-
   return (
     <div className={styles.main}>
       <h1
@@ -135,9 +169,7 @@ export const Main = function Main({
         className={photoButtonClass}
         style={photoButtonStyle}
         id={photographyButton}
-        onClick={() => {
-          setShowLightbox(true)
-        }}
+        onClick={openLightbox}
       >
         view image
       </button>
