@@ -20,6 +20,7 @@ const _ScrollHTMLRef = function ScrollHTMLRef({ setContainer }) {
   useEffect(() => {
     if (el) {
       setContainer(el)
+      el.classList.add('no-scroll')
     }
   }, [el, setContainer])
 }

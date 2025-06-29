@@ -13,7 +13,7 @@ export const LightBox = ({ children }) => {
 
   const style = useMemo(
     () => ({
-      backdropFilter: showLightbox ? 'blur(20px)' : 'blur(0px)',
+      backdropFilter: showLightbox ? 'blur(50px)' : 'blur(0px)',
       opacity: showLightbox ? 1 : 0,
       pointerEvents: showLightbox ? 'auto' : 'none',
       paddingRight: `calc(8 * ${atomicPadding}px)`,

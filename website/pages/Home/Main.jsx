@@ -41,7 +41,7 @@ export const Main = function Main({
 
   const openLightbox = useCallback(() => {
     setShowLightbox(true)
-    scrollContainer.classList.add('no-scroll')
+
     targetItems.refs.photographyRef.current.photographyBackgroundRef.current.visible = false
     targetItems.refs.photographyRef.current.photographyItemsGroup.visible = false
     targetItems.refs.softwareRef.current.softwareItemsGroup.visible = false
@@ -51,11 +51,9 @@ export const Main = function Main({
       black,
     )
     targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(white)
-  }, [black, scrollContainer, setShowLightbox, targetItems, white])
+  }, [black, setShowLightbox, targetItems, white])
 
   const closeLightbox = useCallback(() => {
-    setShowLightbox(false)
-    scrollContainer.classList.remove('no-scroll')
     targetItems.refs.bgRef.current.backgroundRef.current.material.color.set(
       white,
     )
@@ -64,7 +62,8 @@ export const Main = function Main({
     targetItems.refs.photographyRef.current.photographyItemsGroup.visible = true
     targetItems.refs.softwareRef.current.softwareItemsGroup.visible = true
     targetItems.refs.bgRef.current.manualRef.current = true
-  }, [black, scrollContainer, setShowLightbox, targetItems, white])
+    setShowLightbox(false)
+  }, [black, setShowLightbox, targetItems, white])
 
   useEffect(() => {
     setOnLightboxExitClick(closeLightbox)
