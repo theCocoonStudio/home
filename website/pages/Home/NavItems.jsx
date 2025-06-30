@@ -41,9 +41,9 @@ export const NavItems = ({
       color:
         section === 'preScroll' || section === 'software'
           ? `${black}`
-          : `${midnight}`,
+          : `${charcoal}`,
     }),
-    [black, midnight, section],
+    [black, charcoal, section],
   )
   const musicyStyle = useMemo(
     () => ({
@@ -199,7 +199,7 @@ export const NavItems = ({
         </>
 
         {currentRangeKey === 'photography' && (
-          <div style={midnightStyle} className={styles.active} />
+          <div style={charcoalStyle} className={styles.active} />
         )}
       </div>
       {Object.keys(sections).includes('music') && (

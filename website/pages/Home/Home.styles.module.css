@@ -129,9 +129,27 @@
   &:hover {
     cursor: pointer;
     border: 1px solid transparent;
-    background-color: var(--slate);
+    background-color: var(--black);
     color: var(--white);
   }
+}
+
+.slateBackground {
+  background-color: var(--slate);
+}
+.charcoalBackground {
+  background-color: var(--charcoal);
+}
+.purpleBackground {
+  background-color: var(--purple);
+}
+
+.slateBackgroundOnHover:hover {
+  background-color: var(--slate);
+}
+
+.purpleBackgroundOnHover:hover {
+  background-color: var(--purple);
 }
 
 .photoButton {
@@ -158,7 +176,7 @@
   &:hover {
     cursor: pointer;
     border: 1px solid transparent;
-    background-color: var(--midnight);
+    background-color: var(--charcoal);
     color: var(--white);
   }
 }

@@ -102,8 +102,17 @@ export const Main = function Main({
   )
 
   const { style: buttonStyle, className: buttonClass } = useMemo(
-    () => raleway(350, false, undefined, styles.button),
-    [],
+    () =>
+      raleway(
+        350,
+        false,
+        undefined,
+        styles.button,
+        section === 'blog'
+          ? styles.purpleBackgroundOnHover
+          : styles.slateBackgroundOnHover,
+      ),
+    [section],
   )
 
   const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
@@ -121,6 +130,12 @@ export const Main = function Main({
       right: `0`,
     }),
     [atomicPadding, footerHeight, navHeight, sidePaddingFactor, titleHeight],
+  )
+
+  const separatorClass = useMemo(
+    () =>
+      `${styles.separator} ${{ photography: styles.charcoalBackground, blog: styles.purpleBackground }[section] || styles.slateBackground}`,
+    [section],
   )
 
   return (
@@ -142,7 +157,7 @@ export const Main = function Main({
         <h2 className={styles.subtitle}>software and stuff</h2>
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
-          <span className={styles.separator} />
+          <span className={separatorClass} />
         </p>
       </div>
       <div
@@ -155,7 +170,9 @@ export const Main = function Main({
           <h3 className='raleway'></h3>
           <div className='raleway'>
             <p></p>
-            <div className={styles.accent} />
+            <div
+              className={`${styles.accent} ${section === 'blog' ? styles.purpleBackground : styles.slateBackground}`}
+            />
           </div>
 
           <button className={buttonClass} style={buttonStyle}>
