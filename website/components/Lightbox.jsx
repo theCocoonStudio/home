@@ -6,7 +6,7 @@ import { useLightbox } from 'website/hooks/useLightbox'
 export const LightBox = ({ children }) => {
   const {
     colors: { white },
-    lengths: { atomicPadding, navHeight, footerHeight },
+    lengths: { atomicPadding, navHeight },
   } = useTheme()
 
   const { showLightbox, onLightboxExitClick } = useLightbox()
@@ -16,12 +16,8 @@ export const LightBox = ({ children }) => {
       backdropFilter: showLightbox ? 'blur(50px)' : 'blur(0px)',
       opacity: showLightbox ? 1 : 0,
       pointerEvents: showLightbox ? 'auto' : 'none',
-      paddingRight: `calc(8 * ${atomicPadding}px)`,
-      paddingLeft: `calc(8 * ${atomicPadding}px)`,
-      paddingTop: `${navHeight}px`,
-      paddingBottom: `${footerHeight}px`,
     }),
-    [atomicPadding, footerHeight, navHeight, showLightbox],
+    [showLightbox],
   )
   const exitStyle = useMemo(
     () => ({

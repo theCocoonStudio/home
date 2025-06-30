@@ -10,6 +10,7 @@ import dragonfly2 from 'assets/photography/test2.jpg'
 import dragonfly3 from 'assets/photography/test3.jpg'
 import dragonfly4 from 'assets/photography/test4.jpg'
 import dragonfly5 from 'assets/photography/test5.jpg'
+import { Gallery } from '../../components/Gallery'
 
 const ranges = {
   preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
@@ -70,18 +71,66 @@ const sections = {
     enabled: true,
     description: 'Select photos taken with a variety of hardware.',
     items: [
-      { url: dragonfly },
-      { url: dragonfly2 },
-      { url: dragonfly3 },
-      { url: dragonfly4 },
-      { url: dragonfly5 },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
-      { url: dragonfly },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 1',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 2',
+        url: dragonfly2,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 3',
+        url: dragonfly3,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 4',
+        url: dragonfly4,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 5',
+        url: dragonfly5,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 6',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 7',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 8',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 9',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 10',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 11',
+        url: dragonfly,
+      },
+      {
+        description:
+          'Sony a7Riv + Sony FE 90mm f/2.8G OSS Macro Len + lighting 12',
+        url: dragonfly,
+      },
     ],
   },
   music: { enabled: false, description: 'Select items.', items: [{}, {}, {}] },
@@ -194,5 +243,8 @@ export const config = {
       scrollContainer: 'scroll-container',
       fpsContainer: 'fps-container',
     },
+  },
+  lightbox: {
+    Component: Gallery,
   },
 }
