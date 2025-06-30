@@ -65,14 +65,19 @@ const _DirectionalLight = function DirectionalLightAnimation(
         }
       }
       // light intensity
-      const offset = scrollRanges.startPhotographyOffset
+      const startPhotographyOffset = scrollRanges.startPhotographyOffset
+      const startBlogOffset = scrollRanges.startBlogOffset
       damp(
         light,
         'intensity',
-        defaultIntensity + offset * (intensity - defaultIntensity),
+        startBlogOffset > 0.0
+          ? intensity + startBlogOffset * (defaultIntensity - intensity)
+          : defaultIntensity +
+              startPhotographyOffset * (intensity - defaultIntensity),
         0.05,
         delta,
       )
+      // light position
       const fullOffset = scrollRanges.photographyOffset
       damp(
         light.position,
