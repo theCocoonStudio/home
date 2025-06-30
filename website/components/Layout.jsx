@@ -96,11 +96,15 @@ function _Layout({ config = pagesConfig }) {
                   </>,
                   scrollContainer.children[0],
                 )}
-              <LightBox config={config[page]} scrollContainer={scrollContainer}>
-                {LightBoxComponent && (
+
+              {LightBoxComponent && (
+                <LightBox
+                  config={config[page]}
+                  scrollContainer={scrollContainer}
+                >
                   <LightBoxComponent config={config[page]} />
-                )}
-              </LightBox>
+                </LightBox>
+              )}
             </div>
           </Provider>
         </LightboxProvider>
