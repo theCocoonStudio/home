@@ -117,8 +117,8 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   const geometry = useMemo(() => new BoxGeometry(1, 1, 1), [])
   const activeMaterial = useCanvasMaterial()
   const inactiveMaterial = useMemo(
-    () => new MeshBasicMaterial({ color: colors.midnight }),
-    [colors.midnight],
+    () => new MeshBasicMaterial({ color: colors.charcoal }),
+    [colors.charcoal],
   )
   useEffect(
     () => () => {
