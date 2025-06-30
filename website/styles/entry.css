@@ -96,8 +96,8 @@ textarea:not([rows]) {
 :root {
   /* colors */
   --white: #eaeaea;
-  --purple: #807c89;
-  --charcoal: #687683;
+  --purple: #403b4e;
+  --charcoal: #3d4f60;
   --slate: #426b69;
   --midnight: #405c5d;
   --black: #122629;

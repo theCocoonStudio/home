@@ -18,8 +18,8 @@ const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
   colors: {
     white: '#EAEAEA',
-    purple: '#807C89',
-    charcoal: '#687683',
+    purple: '#403B4E',
+    charcoal: '#3D4F60',
     slate: '#426B69',
     midnight: '#405C5D',
     black: '#122629',
