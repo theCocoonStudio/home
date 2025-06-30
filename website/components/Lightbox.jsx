@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import styles from 'website/styles/Lightbox.module.css'
 import { useTheme } from '../hooks/useTheme'
 import { useLightbox } from 'website/hooks/useLightbox'
@@ -26,6 +26,24 @@ export const LightBox = ({ children }) => {
     }),
     [atomicPadding, navHeight],
   )
+
+  const onEscapeKeyDown = useCallback(
+    (e) => {
+      if (showLightbox) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+          onLightboxExitClick()
+        }
+      }
+    },
+    [onLightboxExitClick, showLightbox],
+  )
+
+  useEffect(() => {
+    addEventListener('keydown', onEscapeKeyDown)
+    return () => {
+      removeEventListener('keydown', onEscapeKeyDown)
+    }
+  }, [onEscapeKeyDown])
   return (
     <div className={styles.container} style={style}>
       <div
