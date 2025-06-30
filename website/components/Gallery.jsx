@@ -1,6 +1,13 @@
 import styles from 'website/styles/Gallery.module.css'
 import { useTheme } from '../hooks/useTheme'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTargetItems } from '../pages/Home/useTargetItems'
 import { useLightbox } from '../hooks/useLightbox'
 import { raleway } from '../utils/styles'
@@ -101,6 +108,25 @@ export const Gallery = ({
   useLayoutEffect(() => {
     description.current.innerText = items[itemIndex].description
   }, [itemIndex, items])
+
+  const handleDirectionKeyDown = useCallback(
+    (e) => {
+      if (showLightbox) {
+        if (e.key === 'ArrowLeft' || e.key === 'Left') {
+          shiftLeft()
+        } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+          shiftRight()
+        }
+      }
+    },
+    [shiftLeft, shiftRight, showLightbox],
+  )
+  useEffect(() => {
+    addEventListener('keydown', handleDirectionKeyDown)
+    return () => {
+      removeEventListener('keydown', handleDirectionKeyDown)
+    }
+  }, [handleDirectionKeyDown])
   return (
     <>
       <div className={styles.container} style={containerStyle}>
