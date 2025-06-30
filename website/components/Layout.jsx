@@ -17,17 +17,12 @@ import { LightboxProvider } from 'website/context/LightboxProvider'
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
   colors: {
-    mint: '#5CAB7D',
-    charcoal: '#273B4E', // blue
-    purple: '#2B253A',
-    gunmetal: '#122629', // dark green
-    midnight: '#103334', // intermediate green
-    slate: '#134643', // green (success)
-    white: '#ffffff',
-    black: '#101010',
-    grey: '#202020',
-    red: '#330000', // errors
-    charcoalTint: '#3D4F60',
+    white: '#EAEAEA',
+    purple: '#807C89',
+    charcoal: '#687683',
+    slate: '#426B69',
+    midnight: '#405C5D',
+    black: '#122629',
   },
   lengths: {
     navHeight: 120,

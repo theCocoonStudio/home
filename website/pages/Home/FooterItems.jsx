@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react'
 import styles from './Home.styles.module.css'
-
 import { useTheme } from '../../hooks/useTheme'
 import { useScrollEvent } from './useScrollEvent'
 import { useScroll } from 'src/hooks/useScroll/useScroll'

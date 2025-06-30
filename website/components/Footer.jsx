@@ -10,7 +10,7 @@ export const Footer = ({ config, scrollContainer }) => {
   } = config
   const {
     lengths: { footerHeight, atomicPadding },
-    colors: { black },
+    colors: { black, white },
   } = useTheme()
 
   const preScroll = useScrollEvent('preScroll')
@@ -62,7 +62,7 @@ export const Footer = ({ config, scrollContainer }) => {
             </g>
             <defs>
               <clipPath id='clip0_910_21'>
-                <rect width={36} height={36} fill='white' />
+                <rect width={36} height={36} fill={white} />
               </clipPath>
             </defs>
           </svg>
@@ -112,9 +112,9 @@ export const Footer = ({ config, scrollContainer }) => {
                   stroke={black}
                   d='M44.0001 24C44.0001 35.0457 35.0458 44 24.0001 44C18.0266 44 4.00006 44 4.00006 44C4.00006 44 4.00006 29.0722 4.00006 24C4.00006 12.9543 12.9544 4 24.0001 4C35.0458 4 44.0001 12.9543 44.0001 24Z'
                 />
-                <path stroke='#fff' d='M14 18L32 18' />
-                <path stroke='#fff' d='M14 26H32' />
-                <path stroke='#fff' d='M14 34H24' />
+                <path stroke={white} d='M14 18L32 18' />
+                <path stroke={white} d='M14 26H32' />
+                <path stroke={white} d='M14 34H24' />
               </g>
             </svg>
           </>

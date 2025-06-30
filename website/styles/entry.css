@@ -95,14 +95,12 @@ textarea:not([rows]) {
 
 :root {
   /* colors */
-  --charcoal: #273b4e;
-  --purple: #2b253a;
-  --gunmetal: #122629;
-  --midnight: #103334;
-  --slate: #134643;
-  --black: #101010;
-  --white: #ffffff;
-  --red: #330000;
+  --white: #eaeaea;
+  --purple: #807c89;
+  --charcoal: #687683;
+  --slate: #426b69;
+  --midnight: #405c5d;
+  --black: #122629;
 }
 * {
   box-sizing: border-box;
