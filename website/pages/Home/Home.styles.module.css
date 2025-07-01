@@ -241,14 +241,11 @@
 }
 
 .scroll {
-  position: absolute;
-  bottom: 50%;
-  left: 50%;
   border-radius: 2px;
   border: 2px solid var(--black);
-  transform: translate(-50%, 50%);
   height: 34px;
-  width: 450px;
+  width: 100%;
+  max-width: 600px;
   justify-content: space-between;
   align-items: center;
   pointer-events: none;
@@ -278,7 +275,6 @@
 
 .fps {
   text-align: left;
-  width: 130px;
   height: 30px;
   display: flex;
   flex-wrap: nowrap;
@@ -291,10 +287,6 @@
 }
 
 .settings {
-  position: absolute;
-  bottom: 50%;
-  left: 0;
-  transform: translateY(50%);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;

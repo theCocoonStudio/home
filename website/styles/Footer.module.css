@@ -5,6 +5,11 @@
   padding: 0;
   z-index: 300;
   pointer-events: none;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 128px;
 }
 
 .github,
@@ -37,10 +42,6 @@
 }
 
 .socials {
-  position: absolute;
-  bottom: 50%;
-  right: 0;
-  transform: translateY(50%);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;

@@ -47,6 +47,11 @@ export const Footer = ({ config, scrollContainer }) => {
 
   return (
     <div className={`${styles.footer}`} style={footerStyles}>
+      <FooterItemsComponent
+        config={config}
+        scrollContainer={scrollContainer}
+        showLightbox={showLightbox}
+      />
       <div className={styles.socials} style={socialStyles}>
         <div className={styles.github} style={iconStyles}>
           <svg
@@ -124,11 +129,6 @@ export const Footer = ({ config, scrollContainer }) => {
           </>
         </div>
       </div>
-      <FooterItemsComponent
-        config={config}
-        scrollContainer={scrollContainer}
-        showLightbox={showLightbox}
-      />
     </div>
   )
 }

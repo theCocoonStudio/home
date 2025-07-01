@@ -65,7 +65,7 @@ export const getItemData = ({
   state,
   target,
   zPos,
-  paddingFactor = 0.1,
+  paddingPx = 2,
   geometryDepth,
   initialDepth,
   targetDepth,
@@ -104,10 +104,11 @@ export const getItemData = ({
     initialDepth / geometryDepth,
   )
   data.targetScale.set(
-    ((1 - paddingFactor) * (max.x - min.x)) / count,
+    (max.x - min.x - (paddingPx * (count - 1)) / ppwu) / count,
     max.y - min.y,
     targetDepth / geometryDepth,
   )
+
   data.initialPosition.set(
     ...getInitialPosition({
       min,
@@ -141,7 +142,7 @@ export const getItemData = ({
     }),
     zPos - initialDepth / 2,
   )
-  const padding = (paddingFactor * (max.x - min.x)) / (count - 1)
+  const padding = paddingPx / ppwu
   for (let i = 0; i < count; i++) {
     data.targetPositions[i] = new Vector3(
       min.x + data.targetScale.x / 2 + (data.targetScale.x + padding) * i,
