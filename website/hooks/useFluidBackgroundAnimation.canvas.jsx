@@ -9,6 +9,7 @@ export const useFluidBackgroundAnimation = ({
   softwareItems,
   focusFactor,
   backingMaterialRef,
+  meshRef,
   pauseRef,
   manualRef,
   animationTargets,
@@ -21,9 +22,11 @@ export const useFluidBackgroundAnimation = ({
   const dampedOffset = useRef(0.0)
   const dampedOffset2 = useRef(0.0)
   const dampedOffset3 = useRef(0.0)
+  const dampedOffset4 = useRef(0.0)
   const slate = useRef(new Color(colors.slate))
   const black = useRef(new Color(colors.black))
   const purple = useRef(new Color(colors.purple))
+  const white = useRef(new Color(colors.white))
 
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
@@ -35,34 +38,46 @@ export const useFluidBackgroundAnimation = ({
 
       /* colors */
       const offset = scrollRanges.startSoftwareOffset
+      const offset2 = scrollRanges.startPhotographyOffset
+      const offset3 = scrollRanges.startBlogOffset
+      const offset4 = scrollRanges.postScrollAnimationOffset
       const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
-      if (toDamp) {
-        // background color
+      const toDamp2 = damp(dampedOffset2, 'current', offset2, 0.0, delta)
+      const toDamp3 = damp(dampedOffset3, 'current', offset3, 0.0, delta)
+      const toDamp4 = damp(dampedOffset4, 'current', offset4, 0.0, delta)
+      // backing material color
+      if (toDamp && !(offset2 > 0)) {
         backingMaterialRef.current.color.lerpColors(
           black.current,
           slate.current,
           dampedOffset.current,
         )
+      } else if (toDamp2 && !(offset3 > 0)) {
+        backingMaterialRef.current.color.lerpColors(
+          slate.current,
+          black.current,
+          dampedOffset2.current,
+        )
+      } else if (toDamp3 && !(offset4 > 0)) {
+        backingMaterialRef.current.color.lerpColors(
+          black.current,
+          purple.current,
+          dampedOffset3.current,
+        )
+      } else if (toDamp4) {
+        backingMaterialRef.current.color.lerpColors(
+          purple.current,
+          white.current,
+          dampedOffset4.current,
+        )
       }
-      const offset2 = scrollRanges.startPhotographyOffset
-      const offset3 = scrollRanges.startBlogOffset
-      const toDamp2 = damp(dampedOffset2, 'current', offset2, 0.0, delta)
-      const toDamp3 = damp(dampedOffset3, 'current', offset3, 0.0, delta)
-      if (toDamp2 || toDamp3) {
-        // background color
-        if (offset3 > 0) {
-          backingMaterialRef.current.color.lerpColors(
-            black.current,
-            purple.current,
-            dampedOffset3.current,
-          )
-        } else {
-          backingMaterialRef.current.color.lerpColors(
-            slate.current,
-            black.current,
-            dampedOffset2.current,
-          )
-        }
+      // background mesh color
+      if (toDamp4) {
+        meshRef.current.material.color.lerpColors(
+          white.current,
+          black.current,
+          dampedOffset4.current,
+        )
       }
       /* pause */
       manualRef.current = showLightbox
@@ -77,6 +92,7 @@ export const useFluidBackgroundAnimation = ({
       backingMaterialRef,
       boundPathForceCallback,
       manualRef,
+      meshRef,
       render,
       setForceCallback,
       showLightbox,

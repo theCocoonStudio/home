@@ -35,6 +35,7 @@ export const useScrollAnimation = (config, animationTargets) => {
       )
       // section offsets
       ranges.photographyOffset = scrollData.range(...photographyRange)
+      ranges.postScrollOffset = scrollData.range(...postScrollRange)
       // subsection offsets
       ranges.startSoftwareOffset = scrollData.range(
         0,
@@ -48,6 +49,15 @@ export const useScrollAnimation = (config, animationTargets) => {
       ranges.startBlogOffset = scrollData.range(
         blogItems[0].range[0],
         blogItems[0].range[1] / 2,
+      )
+      ranges.postScrollAnimationOffset = scrollData.range(
+        blogItems[blogItems.length - 1].range[0] +
+          (blogItems[blogItems.length - 1].range[1] * (1 - focusFactor)) / 2 +
+          blogItems[blogItems.length - 1].range[1] * focusFactor,
+        1.0 -
+          (blogItems[blogItems.length - 1].range[0] +
+            (blogItems[blogItems.length - 1].range[1] * (1 - focusFactor)) / 2 +
+            blogItems[blogItems.length - 1].range[1] * focusFactor),
       )
       return ranges
     },

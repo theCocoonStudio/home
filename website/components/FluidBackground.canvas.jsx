@@ -106,6 +106,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     softwareItems,
     focusFactor,
     backingMaterialRef: backingMaterial,
+    meshRef: mesh,
     pauseRef,
     manualRef,
     animationTargets,

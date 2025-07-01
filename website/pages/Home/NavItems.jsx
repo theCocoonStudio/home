@@ -30,14 +30,16 @@ export const NavItems = ({
   }, [scrollTo, sections])
   const softwareStyle = useMemo(
     () => ({
-      pointerEvents: section === 'preScroll' ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
       color: section === 'preScroll' ? `${black}` : `${slate}`,
     }),
     [black, section, slate],
   )
   const photographyStyle = useMemo(
     () => ({
-      pointerEvents: section === 'preScroll' ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
       color:
         section === 'preScroll' || section === 'software'
           ? `${black}`
@@ -47,7 +49,8 @@ export const NavItems = ({
   )
   const musicyStyle = useMemo(
     () => ({
-      pointerEvents: section === 'preScroll' ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
       color:
         section === 'preScroll' ||
         section === 'software' ||
@@ -59,7 +62,8 @@ export const NavItems = ({
   )
   const blogStyle = useMemo(
     () => ({
-      pointerEvents: section === 'preScroll' ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
       color:
         section === 'preScroll' ||
         section === 'software' ||

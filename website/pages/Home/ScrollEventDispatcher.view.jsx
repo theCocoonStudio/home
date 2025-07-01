@@ -44,7 +44,10 @@ export const ScrollEventDispatcher = ({
         // if stop hasn't been set to true during an iteration
         if (!stop.current) {
           // and if its range is visible
-          if (scroll.visible(...ranges[key])) {
+          if (
+            (key !== 'postScroll' && scroll.visible(...ranges[key])) ||
+            (key === 'postScroll' && scroll.range(...ranges[key]) > 0)
+          ) {
             // stop forEach loop for this frame
             stop.current = true
             // and if it wasn't visible last frame

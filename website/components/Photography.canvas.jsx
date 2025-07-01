@@ -13,6 +13,7 @@ import { useThree } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import { RepeatWrapping } from 'three'
 import { damp } from 'maath/easing'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 const _Photography = function PhotographyAnimation(
   {
@@ -94,6 +95,12 @@ const _Photography = function PhotographyAnimation(
     [normalMap, roughnessMap],
   )
 
+  const postScroll = useScrollEvent('postScroll')
+  useEffect(() => {
+    if (photographyItemsGroup) {
+      photographyItemsGroup.visible = postScroll ? false : true
+    }
+  }, [postScroll, photographyItemsGroup])
   return (
     <>
       <PhotographyItems

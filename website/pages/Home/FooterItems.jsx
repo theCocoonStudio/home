@@ -22,7 +22,7 @@ export const FooterItems = ({
   scrollContainer: scrollElement,
   showLightbox,
 }) => {
-  const preScroll = useScrollEvent('preScroll')
+  const section = useScrollEvent()
 
   const {
     colors: { white, black },
@@ -33,40 +33,49 @@ export const FooterItems = ({
     600,
     false,
     () => ({
-      pointerEvents: preScroll ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
     }),
     styles.performance,
   )
 
   const scrollStyles = useMemo(
     () => ({
-      opacity: preScroll || showLightbox ? '0' : '1',
-      pointerEvents: preScroll ? 'none' : 'auto',
+      opacity:
+        section === 'preScroll' || section === 'postScroll' || showLightbox
+          ? '0'
+          : '1',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
     }),
-    [preScroll, showLightbox],
+    [section, showLightbox],
   )
 
   const downStyles = useMemo(
     () => ({
-      opacity: preScroll ? '1' : '0',
-      pointerEvents: preScroll ? 'auto' : 'none',
+      opacity: section === 'preScroll' ? '1' : '0',
+      pointerEvents: section === 'preScroll' ? 'auto' : 'none',
     }),
-    [preScroll],
+    [section],
   )
 
   const settingsStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll || showLightbox ? '0' : '1',
+      opacity:
+        section === 'preScroll' || section === 'postScroll' || showLightbox
+          ? '0'
+          : '1',
     }),
-    [atomicPadding, preScroll, showLightbox],
+    [atomicPadding, section, showLightbox],
   )
 
   const iconStyles = useMemo(
     () => ({
-      pointerEvents: preScroll ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
     }),
-    [preScroll],
+    [section],
   )
 
   const scrollTo = useScroll(scrollElement)

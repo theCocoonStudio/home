@@ -4,6 +4,7 @@ import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 import { useLightbox } from '../hooks/useLightbox'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const Logo = function Logo({ size }) {
   const ref = useRef()
@@ -58,6 +59,8 @@ export const Logo = function Logo({ size }) {
     frame(frameCallback)
   }, [frame, frameCallback, showLightbox])
 
+  const postScroll = useScrollEvent('postScroll')
+
   return (
     <>
       <group
@@ -73,7 +76,7 @@ export const Logo = function Logo({ size }) {
           {/* <CarbonMaterial repeat={[0.6, 0.6]} /> */}
           <meshStandardMaterial
             ref={material}
-            color={'#111'}
+            color={postScroll ? '#fff' : '#111'}
             roughness={0.1}
             transparent
             opacity={1}

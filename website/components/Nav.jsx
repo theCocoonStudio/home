@@ -17,12 +17,11 @@ export const Nav = ({ config, scrollContainer }) => {
 
   const { showLightbox } = useLightbox()
 
-  const preScroll = useScrollEvent('preScroll')
+  const section = useScrollEvent()
   const scrollTo = useScroll(scrollContainer)
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
-
   const navStyles = useMemo(
     () => ({
       height: `${navHeight}px`,
@@ -35,9 +34,12 @@ export const Nav = ({ config, scrollContainer }) => {
   const pagesStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll || showLightbox ? 0 : 1,
+      opacity:
+        section === 'preScroll' || section === 'postScroll' || showLightbox
+          ? 0
+          : 1,
     }),
-    [atomicPadding, preScroll, showLightbox],
+    [atomicPadding, section, showLightbox],
   )
 
   return (

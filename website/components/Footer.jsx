@@ -13,7 +13,7 @@ export const Footer = ({ config, scrollContainer }) => {
     colors: { black, white },
   } = useTheme()
 
-  const preScroll = useScrollEvent('preScroll')
+  const section = useScrollEvent()
 
   const { showLightbox } = useLightbox()
 
@@ -29,16 +29,20 @@ export const Footer = ({ config, scrollContainer }) => {
   const socialStyles = useMemo(
     () => ({
       columnGap: `calc(2.5 * ${atomicPadding}px)`,
-      opacity: preScroll || showLightbox ? '0' : '1',
+      opacity:
+        section === 'preScroll' || section === 'postScroll' || showLightbox
+          ? '0'
+          : '1',
     }),
-    [atomicPadding, preScroll, showLightbox],
+    [atomicPadding, section, showLightbox],
   )
 
   const iconStyles = useMemo(
     () => ({
-      pointerEvents: preScroll ? 'none' : 'auto',
+      pointerEvents:
+        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
     }),
-    [preScroll],
+    [section],
   )
 
   return (
