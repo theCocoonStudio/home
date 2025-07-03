@@ -11,6 +11,7 @@ import dragonfly3 from 'assets/photography/test3.jpg'
 import dragonfly4 from 'assets/photography/test4.jpg'
 import dragonfly5 from 'assets/photography/test5.jpg'
 import { Gallery } from '../../components/Gallery'
+import { DraggableMenu } from '../../components/DraggableMenu'
 
 const ranges = {
   preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
@@ -246,5 +247,8 @@ export const config = {
   },
   lightbox: {
     Component: Gallery,
+  },
+  menu: {
+    Component: DraggableMenu,
   },
 }

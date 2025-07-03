@@ -13,6 +13,8 @@ import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
 import { LightBox } from './Lightbox'
 import { LightboxProvider } from 'website/context/LightboxProvider'
+import { Menu } from './Menu'
+import { DndContext } from '@dnd-kit/core'
 
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
@@ -42,66 +44,76 @@ function _Layout({ config = pagesConfig }) {
     context: { Provider },
     scroll: { scrollControlsProps },
     lightbox: { Component: LightBoxComponent },
+    menu: { Component: MenuComponent },
   } = config[page]
 
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
         <LightboxProvider>
-          <Provider config={config[page]}>
-            <div className={styles.layout}>
-              <ThreeApp eventPrefix={'client'}>
-                <ScrollControls {...scrollControlsProps}>
-                  <View.Port />
-                  <ScrollHTMLRef setContainer={setScrollContainer} />
-                </ScrollControls>
-              </ThreeApp>
+          <DndContext>
+            <Provider config={config[page]}>
+              <div className={styles.layout}>
+                <ThreeApp eventPrefix={'client'}>
+                  <ScrollControls {...scrollControlsProps}>
+                    <View.Port />
+                    <ScrollHTMLRef setContainer={setScrollContainer} />
+                  </ScrollControls>
+                </ThreeApp>
 
-              {(Component || ViewComponent) &&
-                scrollContainer &&
-                createPortal(
-                  <>
-                    {ViewComponent && (
-                      <View
-                        className={styles.view}
-                        index={renderPriority}
-                        /* frames={1} */
-                      >
-                        <ViewComponent
+                {(Component || ViewComponent) &&
+                  scrollContainer &&
+                  createPortal(
+                    <>
+                      {ViewComponent && (
+                        <View
+                          className={styles.view}
+                          index={renderPriority}
+                          /* frames={1} */
+                        >
+                          <ViewComponent
+                            config={config[page]}
+                            scrollContainer={scrollContainer}
+                          />
+                          <EventLayerOn />
+                        </View>
+                      )}
+                      {Component && (
+                        <Component
                           config={config[page]}
                           scrollContainer={scrollContainer}
                         />
-                        <EventLayerOn />
-                      </View>
-                    )}
-                    {Component && (
-                      <Component
+                      )}
+                      <Nav
                         config={config[page]}
                         scrollContainer={scrollContainer}
                       />
-                    )}
-                    <Nav
-                      config={config[page]}
-                      scrollContainer={scrollContainer}
-                    />
-                    <Footer
-                      config={config[page]}
-                      scrollContainer={scrollContainer}
-                    />
-                  </>,
-                  scrollContainer.children[0],
-                )}
+                      <Footer
+                        config={config[page]}
+                        scrollContainer={scrollContainer}
+                      />
+                    </>,
+                    scrollContainer.children[0],
+                  )}
 
-              {LightBoxComponent && (
-                <LightBox
-                  config={config[page]}
-                  scrollContainer={scrollContainer}
-                >
-                  <LightBoxComponent config={config[page]} />
-                </LightBox>
-              )}
-            </div>
-          </Provider>
+                {LightBoxComponent && (
+                  <LightBox
+                    config={config[page]}
+                    scrollContainer={scrollContainer}
+                  >
+                    <LightBoxComponent config={config[page]} />
+                  </LightBox>
+                )}
+                {MenuComponent && (
+                  <Menu
+                    config={config[page]}
+                    scrollContainer={scrollContainer}
+                    MenuComponent={MenuComponent}
+                  />
+                )}
+              </div>
+            </Provider>
+          </DndContext>
         </LightboxProvider>
       </ResizeEventProvider>
     </ThemeProvider>
