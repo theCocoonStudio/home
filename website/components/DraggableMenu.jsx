@@ -26,7 +26,17 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const {
     colors: { black },
+    lengths: { atomicPadding, footerHeight },
   } = useTheme()
+
+  const draggableStyle = useMemo(
+    () => ({
+      left: `${8 * atomicPadding}px`,
+      bottom: `${footerHeight}px`,
+    }),
+    [atomicPadding, footerHeight],
+  )
+
   const { style: panelStyle, className: panelClassName } = useMemo(
     () => raleway(700, false, undefined, styles.panel),
     [styles.panel],
@@ -41,7 +51,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   }, [setShowMenu])
 
   return (
-    <div className={styles.draggable} ref={container}>
+    <div className={styles.draggable} ref={container} style={draggableStyle}>
       <h1 className={styles.settings}>
         <div style={panelStyle} className={panelClassName}>
           <div>

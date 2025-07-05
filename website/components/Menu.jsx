@@ -5,8 +5,13 @@ import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
 import { useMenu } from 'website/hooks/useMenu'
 import styles from 'website/styles/Menu.module.css'
+import { useTheme } from '../hooks/useTheme'
 
 export const Menu = ({ config, MenuComponent }) => {
+  const {
+    lengths: { footerHeight, atomicPadding },
+  } = useTheme()
+
   const draggable = useRef()
   const droppable = useRef()
 
@@ -17,21 +22,24 @@ export const Menu = ({ config, MenuComponent }) => {
     base.current = {
       x: clamp(
         base.current.x + offset.current.x,
-        0,
-        droppable.current.clientWidth - draggable.current.container.clientWidth,
+        -8 * atomicPadding,
+        droppable.current.clientWidth -
+          draggable.current.container.clientWidth -
+          8 * atomicPadding,
       ),
       y: clamp(
         base.current.y + offset.current.y,
         -1 *
           (droppable.current.clientHeight -
-            draggable.current.container.clientHeight),
-        0,
+            draggable.current.container.clientHeight -
+            footerHeight),
+        footerHeight,
       ),
     }
     offset.current = { x: 0, y: 0 }
     draggable.current.container.style.transition = 'transform .2s'
     draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
-  }, [draggable])
+  }, [atomicPadding, footerHeight])
 
   const onMenuDragMove = useCallback(
     ({ delta: { x: deltaX, y: deltaY } }) => {
