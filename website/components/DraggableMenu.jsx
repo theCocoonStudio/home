@@ -3,8 +3,10 @@ import {
   forwardRef,
   useCallback,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { raleway } from '../utils/styles'
@@ -14,6 +16,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   forwardedRef,
 ) {
   const container = useRef()
+  const content = useRef()
   const { attributes, listeners, setNodeRef, node } = useDraggable({
     id: 'draggable',
   })
@@ -29,6 +32,13 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     lengths: { atomicPadding, footerHeight },
   } = useTheme()
 
+  const [minimized, setMinimized] = useState(false)
+  const [contentHeight, setContentHeight] = useState()
+
+  useLayoutEffect(() => {
+    setContentHeight(content.current.clientHeight)
+  }, [])
+
   const draggableStyle = useMemo(
     () => ({
       left: `${8 * atomicPadding}px`,
@@ -41,18 +51,27 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     () => raleway(700, false, undefined, styles.panel),
     [styles.panel],
   )
-  const { style: contentStyle, className: contentClassName } = useMemo(
-    () => raleway(400, false, undefined, styles.content),
-    [styles.content],
-  )
+  const { style: contentStyle, className: contentClassName } = useMemo(() => {
+    return raleway(
+      400,
+      false,
+      contentHeight && { maxHeight: minimized ? '0' : `${contentHeight}px` },
+      undefined,
+      styles.content,
+    )
+  }, [contentHeight, minimized, styles.content])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
   }, [setShowMenu])
 
+  const toggleMinimized = useCallback(() => {
+    setMinimized((prev) => !prev)
+  }, [])
+
   return (
     <div className={styles.draggable} ref={container} style={draggableStyle}>
-      <h1 className={styles.settings}>
+      <div className={styles.settings}>
         <div style={panelStyle} className={panelClassName}>
           <div>
             <div
@@ -80,7 +99,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
           </div>
           <h3>Page Settings</h3>
           <div>
-            <div className={styles.icon}>
+            <div className={styles.icon} onClick={toggleMinimized}>
               <svg
                 viewBox='0,0,48,48'
                 xmlns='http://www.w3.org/2000/svg'
@@ -122,10 +141,10 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
             </div>
           </div>
         </div>
-        <div style={contentStyle} className={contentClassName}>
+        <div style={contentStyle} className={contentClassName} ref={content}>
           {children}
         </div>
-      </h1>
+      </div>
     </div>
   )
 })
