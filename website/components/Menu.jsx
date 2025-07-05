@@ -1,8 +1,9 @@
 import { Droppable } from './Droppable'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
+import { useMenu } from 'website/hooks/useMenu'
 import styles from 'website/styles/Menu.module.css'
 
 export const Menu = ({ config, MenuComponent }) => {
@@ -49,12 +50,21 @@ export const Menu = ({ config, MenuComponent }) => {
     onDragMove: onMenuDragMove,
     onDragStart: onMenuDragStart,
   })
-  return (
+
+  const { showMenu, setShowMenu } = useMenu()
+
+  useEffect(() => {
+    if (!showMenu) {
+      base.current = { x: 0, y: 0 }
+      offset.current = { x: 0, y: 0 }
+    }
+  }, [showMenu])
+  return showMenu ? (
     <>
-      <DraggableMenu styles={styles} ref={draggable}>
+      <DraggableMenu styles={styles} ref={draggable} setShowMenu={setShowMenu}>
         <MenuComponent config={config} />
       </DraggableMenu>
       <Droppable ref={droppable} styles={styles} />
     </>
-  )
+  ) : null
 }

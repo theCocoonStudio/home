@@ -15,6 +15,7 @@ import { LightBox } from './Lightbox'
 import { LightboxProvider } from 'website/context/LightboxProvider'
 import { Menu } from './Menu'
 import { DndContext } from '@dnd-kit/core'
+import { MenuProvider } from 'website/context/MenuProvider'
 
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
@@ -51,69 +52,71 @@ function _Layout({ config = pagesConfig }) {
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
         <LightboxProvider>
-          <DndContext>
-            <Provider config={config[page]}>
-              <div className={styles.layout}>
-                <ThreeApp eventPrefix={'client'}>
-                  <ScrollControls {...scrollControlsProps}>
-                    <View.Port />
-                    <ScrollHTMLRef setContainer={setScrollContainer} />
-                  </ScrollControls>
-                </ThreeApp>
+          <MenuProvider>
+            <DndContext>
+              <Provider config={config[page]}>
+                <div className={styles.layout}>
+                  <ThreeApp eventPrefix={'client'}>
+                    <ScrollControls {...scrollControlsProps}>
+                      <View.Port />
+                      <ScrollHTMLRef setContainer={setScrollContainer} />
+                    </ScrollControls>
+                  </ThreeApp>
 
-                {(Component || ViewComponent) &&
-                  scrollContainer &&
-                  createPortal(
-                    <>
-                      {ViewComponent && (
-                        <View
-                          className={styles.view}
-                          index={renderPriority}
-                          /* frames={1} */
-                        >
-                          <ViewComponent
+                  {(Component || ViewComponent) &&
+                    scrollContainer &&
+                    createPortal(
+                      <>
+                        {ViewComponent && (
+                          <View
+                            className={styles.view}
+                            index={renderPriority}
+                            /* frames={1} */
+                          >
+                            <ViewComponent
+                              config={config[page]}
+                              scrollContainer={scrollContainer}
+                            />
+                            <EventLayerOn />
+                          </View>
+                        )}
+                        {Component && (
+                          <Component
                             config={config[page]}
                             scrollContainer={scrollContainer}
                           />
-                          <EventLayerOn />
-                        </View>
-                      )}
-                      {Component && (
-                        <Component
+                        )}
+                        <Nav
                           config={config[page]}
                           scrollContainer={scrollContainer}
                         />
-                      )}
-                      <Nav
-                        config={config[page]}
-                        scrollContainer={scrollContainer}
-                      />
-                      <Footer
-                        config={config[page]}
-                        scrollContainer={scrollContainer}
-                      />
-                    </>,
-                    scrollContainer.children[0],
-                  )}
+                        <Footer
+                          config={config[page]}
+                          scrollContainer={scrollContainer}
+                        />
+                      </>,
+                      scrollContainer.children[0],
+                    )}
 
-                {LightBoxComponent && (
-                  <LightBox
-                    config={config[page]}
-                    scrollContainer={scrollContainer}
-                  >
-                    <LightBoxComponent config={config[page]} />
-                  </LightBox>
-                )}
-                {MenuComponent && (
-                  <Menu
-                    config={config[page]}
-                    scrollContainer={scrollContainer}
-                    MenuComponent={MenuComponent}
-                  />
-                )}
-              </div>
-            </Provider>
-          </DndContext>
+                  {LightBoxComponent && (
+                    <LightBox
+                      config={config[page]}
+                      scrollContainer={scrollContainer}
+                    >
+                      <LightBoxComponent config={config[page]} />
+                    </LightBox>
+                  )}
+                  {MenuComponent && (
+                    <Menu
+                      config={config[page]}
+                      scrollContainer={scrollContainer}
+                      MenuComponent={MenuComponent}
+                    />
+                  )}
+                </div>
+              </Provider>
+            </DndContext>
+          </MenuProvider>
         </LightboxProvider>
       </ResizeEventProvider>
     </ThemeProvider>

@@ -108,57 +108,54 @@ export const NavItems = ({
         style={softwareStyle}
         onClick={targets.software}
       >
-        {/* free-icons.github.io */}
-        <>
-          <svg
-            viewBox='0,0,48,48'
-            xmlns='http://www.w3.org/2000/svg'
-            width={36}
-            height={36}
-            strokeWidth={3}
-            transform='rotate(0) matrix(1 0 0 1 0 0)'
-          >
-            <g fill='none'>
-              <path
-                stroke={`${black}`}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={3}
-                d='M23 40H7C5.34315 40 4 38.6569 4 37V11C4 9.34315 5.34315 8 7 8H41C42.6569 8 44 9.34315 44 11V25.8824'
-              />
-              <path
-                fill={softwareStyle.color}
-                stroke={`${black}`}
-                strokeWidth={3}
-                d='M4 11C4 9.34315 5.34315 8 7 8H41C42.6569 8 44 9.34315 44 11V20H4V11Z'
-              />
-              <path
-                stroke={`${black}`}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={3}
-                d='M34 33L30 37L34 41'
-              />
-              <path
-                stroke={`${black}`}
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={3}
-                d='M40 33L44 37L40 41'
-              />
-              <circle
-                r={2}
-                fill={`${white}`}
-                transform='matrix(0 -1 -1 0 10 14)'
-              />
-              <circle
-                r={2}
-                fill={`${white}`}
-                transform='matrix(0 -1 -1 0 16 14)'
-              />
-            </g>
-          </svg>
-        </>
+        <svg
+          viewBox='0,0,48,48'
+          xmlns='http://www.w3.org/2000/svg'
+          width={36}
+          height={36}
+          strokeWidth={3}
+          transform='rotate(0) matrix(1 0 0 1 0 0)'
+        >
+          <g fill='none'>
+            <path
+              stroke={`${black}`}
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={3}
+              d='M23 40H7C5.34315 40 4 38.6569 4 37V11C4 9.34315 5.34315 8 7 8H41C42.6569 8 44 9.34315 44 11V25.8824'
+            />
+            <path
+              fill={softwareStyle.color}
+              stroke={`${black}`}
+              strokeWidth={3}
+              d='M4 11C4 9.34315 5.34315 8 7 8H41C42.6569 8 44 9.34315 44 11V20H4V11Z'
+            />
+            <path
+              stroke={`${black}`}
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={3}
+              d='M34 33L30 37L34 41'
+            />
+            <path
+              stroke={`${black}`}
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={3}
+              d='M40 33L44 37L40 41'
+            />
+            <circle
+              r={2}
+              fill={`${white}`}
+              transform='matrix(0 -1 -1 0 10 14)'
+            />
+            <circle
+              r={2}
+              fill={`${white}`}
+              transform='matrix(0 -1 -1 0 16 14)'
+            />
+          </g>
+        </svg>
 
         {currentRangeKey === 'software' && (
           <div style={slateStyle} className={styles.active} />

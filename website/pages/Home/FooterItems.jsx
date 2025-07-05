@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import styles from './Home.styles.module.css'
 import { useTheme } from '../../hooks/useTheme'
+import { useMenu } from '../../hooks/useMenu'
 import { useScrollEvent } from './useScrollEvent'
 import { useScroll } from 'src/hooks/useScroll/useScroll'
 
@@ -105,11 +106,20 @@ export const FooterItems = ({
   const scrollDown = useCallback(() => {
     scrollTo(items[0].range[0] + items[0].range[1] / 2)
   }, [items, scrollTo])
+
+  const { setShowMenu, showMenu } = useMenu()
+  const toggleMenu = useCallback(() => {
+    setShowMenu((prev) => !prev)
+  }, [setShowMenu])
   return (
     <>
       <div className={`${styles.settings}`} style={settingsStyles}>
-        <div className={`${styles.icon}`} style={iconStyles}>
-          <>
+        <div
+          className={`${styles.icon}`}
+          style={iconStyles}
+          onClick={toggleMenu}
+        >
+          <div>
             <svg
               viewBox='0,0,48,48'
               xmlns='http://www.w3.org/2000/svg'
@@ -131,7 +141,8 @@ export const FooterItems = ({
                 />
               </g>
             </svg>
-          </>
+            {showMenu && <div className={styles.active} />}
+          </div>
         </div>
         <div className={`${className}`} style={style}>
           <div className={`${styles.fps}`}>

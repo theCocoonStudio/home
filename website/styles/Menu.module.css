@@ -77,5 +77,6 @@
   justify-content: center;
   &:hover {
     cursor: pointer;
+    backdrop-filter: invert(100%) opacity(0.1);
   }
 }

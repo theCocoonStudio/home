@@ -1,10 +1,16 @@
 import { useDraggable } from '@dnd-kit/core'
-import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { raleway } from '../utils/styles'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
-  { children, styles },
+  { children, styles, setShowMenu },
   forwardedRef,
 ) {
   const container = useRef()
@@ -29,6 +35,10 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     () => raleway(400, false, undefined, styles.content),
     [styles.content],
   )
+
+  const closeMenu = useCallback(() => {
+    setShowMenu(false)
+  }, [setShowMenu])
 
   return (
     <div className={styles.draggable} ref={container}>
@@ -79,7 +89,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
                 />
               </svg>
             </div>
-            <div className={styles.icon}>
+            <div className={styles.icon} onClick={closeMenu}>
               <svg
                 viewBox='0,0,48,48'
                 xmlns='http://www.w3.org/2000/svg'
