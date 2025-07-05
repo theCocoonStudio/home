@@ -52,7 +52,7 @@ export const Menu = ({ config, MenuComponent }) => {
   return (
     <>
       <DraggableMenu styles={styles} ref={draggable}>
-        {/* <MenuComponent config={config} /> */}
+        <MenuComponent config={config} />
       </DraggableMenu>
       <Droppable ref={droppable} styles={styles} />
     </>
