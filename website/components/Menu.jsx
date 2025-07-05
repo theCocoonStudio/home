@@ -2,6 +2,7 @@ import { Droppable } from './Droppable'
 import { useCallback, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
+import { DraggableMenu } from './DraggableMenu'
 
 export const Menu = ({ config, MenuComponent }) => {
   const draggable = useRef()
@@ -23,7 +24,8 @@ export const Menu = ({ config, MenuComponent }) => {
         0,
       ),
     }
-
+    offset.current = { x: 0, y: 0 }
+    draggable.current.style.transition = 'transform .2s'
     draggable.current.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
   }, [draggable])
 
@@ -35,13 +37,20 @@ export const Menu = ({ config, MenuComponent }) => {
     [draggable],
   )
 
+  const onMenuDragStart = useCallback(() => {
+    draggable.current.style.transition = 'none'
+  }, [])
+
   useDndMonitor({
     onDragEnd: onMenuDragEnd,
     onDragMove: onMenuDragMove,
+    onDragStart: onMenuDragStart,
   })
   return (
     <>
-      <MenuComponent config={config} ref={draggable} />
+      <DraggableMenu config={config} ref={draggable}>
+        <MenuComponent config={config} />
+      </DraggableMenu>
       <Droppable ref={droppable} />
     </>
   )

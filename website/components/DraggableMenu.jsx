@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
 import { forwardRef, useImperativeHandle } from 'react'
-import styles from 'website/styles/DraggableMenu.module.css'
+import styles from 'website/styles/Menu.module.css'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
   { children },
