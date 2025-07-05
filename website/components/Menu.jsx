@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
+import styles from 'website/styles/Menu.module.css'
 
 export const Menu = ({ config, MenuComponent }) => {
   const draggable = useRef()
@@ -48,10 +49,10 @@ export const Menu = ({ config, MenuComponent }) => {
   })
   return (
     <>
-      <DraggableMenu config={config} ref={draggable}>
-        <MenuComponent config={config} />
+      <DraggableMenu styles={styles} ref={draggable}>
+        {/* <MenuComponent config={config} /> */}
       </DraggableMenu>
-      <Droppable ref={droppable} />
+      <Droppable ref={droppable} styles={styles} />
     </>
   )
 }

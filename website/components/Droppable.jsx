@@ -1,9 +1,8 @@
 import { useDroppable } from '@dnd-kit/core'
 import { forwardRef, useImperativeHandle } from 'react'
-import styles from 'website/styles/Menu.module.css'
 
 export const Droppable = forwardRef(function Droppable(
-  { children },
+  { children, styles },
   forwardedRef,
 ) {
   const { setNodeRef, node } = useDroppable({
