@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core'
-import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { changaOne, raleway } from '../utils/styles'
 
@@ -7,11 +7,16 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   { children, styles },
   forwardedRef,
 ) {
+  const container = useRef()
   const { attributes, listeners, setNodeRef, node } = useDraggable({
     id: 'draggable',
   })
 
-  useImperativeHandle(forwardedRef, () => node.current, [node])
+  useImperativeHandle(
+    forwardedRef,
+    () => ({ handle: node.current, container: container.current }),
+    [node],
+  )
 
   const {
     colors: { white, black },
@@ -33,16 +38,16 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   )
 
   return (
-    <div
-      className={styles.draggable}
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-    >
+    <div className={styles.draggable} ref={container}>
       <h1 className={styles.settings}>
         <div style={panelStyle} className={panelClassName}>
           <div>
-            <div className={styles.dragCursor}>
+            <div
+              className={styles.dragCursor}
+              ref={setNodeRef}
+              {...listeners}
+              {...attributes}
+            >
               <svg
                 viewBox='0,0,48,48'
                 xmlns='http://www.w3.org/2000/svg'

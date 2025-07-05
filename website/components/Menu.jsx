@@ -17,29 +17,31 @@ export const Menu = ({ config, MenuComponent }) => {
       x: clamp(
         base.current.x + offset.current.x,
         0,
-        droppable.current.clientWidth - draggable.current.clientWidth,
+        droppable.current.clientWidth - draggable.current.container.clientWidth,
       ),
       y: clamp(
         base.current.y + offset.current.y,
-        -1 * (droppable.current.clientHeight - draggable.current.clientHeight),
+        -1 *
+          (droppable.current.clientHeight -
+            draggable.current.container.clientHeight),
         0,
       ),
     }
     offset.current = { x: 0, y: 0 }
-    draggable.current.style.transition = 'transform .2s'
-    draggable.current.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
+    draggable.current.container.style.transition = 'transform .2s'
+    draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
   }, [draggable])
 
   const onMenuDragMove = useCallback(
     ({ delta: { x: deltaX, y: deltaY } }) => {
       offset.current = { x: deltaX, y: deltaY }
-      draggable.current.style.transform = `translate3d(${base.current.x + offset.current.x}px, ${base.current.y + offset.current.y}px, 0)`
+      draggable.current.container.style.transform = `translate3d(${base.current.x + offset.current.x}px, ${base.current.y + offset.current.y}px, 0)`
     },
     [draggable],
   )
 
-  const onMenuDragStart = useCallback(() => {
-    draggable.current.style.transition = 'none'
+  const onMenuDragStart = useCallback((e) => {
+    draggable.current.container.style.transition = 'none'
   }, [])
 
   useDndMonitor({
