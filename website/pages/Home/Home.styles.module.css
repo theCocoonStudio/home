@@ -276,6 +276,7 @@
 .fps {
   text-align: left;
   height: 30px;
+  width: 41px; /* content-based */
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-start;
