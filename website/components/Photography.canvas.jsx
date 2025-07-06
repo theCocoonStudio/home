@@ -31,7 +31,7 @@ const _Photography = function PhotographyAnimation(
     zPos,
     targetDepth,
     depth = 0.03,
-    repeatFactor = 5,
+    repeatFactor = 4.2,
   },
   forwardedRef,
 ) {
@@ -128,7 +128,7 @@ const _Photography = function PhotographyAnimation(
             repeatFactor,
             repeatFactor,
           ]}
-          normalScale={10}
+          normalScale={40}
           roughnessMap={roughnessMap}
           roughnessMap-wrapS={RepeatWrapping}
           roughnessMap-wrapT={RepeatWrapping}

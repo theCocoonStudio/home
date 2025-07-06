@@ -28,8 +28,8 @@ export const useCanvasMaterial = () => {
       material.roughnessMap.wrapS = RepeatWrapping
       material.roughnessMap.wrapT = RepeatWrapping
       material.normalScale.set(6.0, 6.0)
-      material.metalness = 0.5
-      material.roughness = 1.0
+      material.metalness = 0.1
+      material.roughness = 0.5
       material.needsUpdate = true
     })
     return {

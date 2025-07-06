@@ -198,6 +198,7 @@ export const Home = ({
       <Performance fpsContainer={fpsContainer} />
       <PerspectiveCamera makeDefault position-z={1} fov={30} />
       <Environment preset='city' environmentIntensity={0.9} />
+      <ambientLight intensity={0.7} />
       <Effects renderPriority={renderPriority} />
       {/* <OrbitControls /> */}
     </>

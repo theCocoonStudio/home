@@ -9,7 +9,7 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { useTexture } from '@react-three/drei'
-import { BoxGeometry, MeshBasicMaterial, Vector3 } from 'three'
+import { BoxGeometry, MeshBasicMaterial, SRGBColorSpace, Vector3 } from 'three'
 import { setImageScale } from '../utils/bounds'
 import { useCanvasMaterial } from '../hooks/useCanvasMaterial.canvas'
 
@@ -39,6 +39,13 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   }, [items])
 
   const textures = useTexture([...urls])
+
+  useEffect(() => {
+    textures.forEach((texture) => {
+      texture.colorSpace = SRGBColorSpace
+      texture.needsUpdate = true
+    })
+  }, [])
 
   const photoSizesPx = useRef([])
   const photoData = useMemo(() => {
@@ -194,9 +201,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         if (child === ref) {
           if (child.material !== activeMaterial) {
             const repeat = [
-              1.6 * photoData.initialScale[index].x,
-              1.6 * photoData.initialScale[index].y,
-              1.6 * photoData.initialScale[index].z,
+              1.7 * photoData.initialScale[index].x,
+              1.7 * photoData.initialScale[index].y,
+              1.7 * photoData.initialScale[index].z,
             ]
             activeMaterial[0].normalMap.repeat.set(repeat[2], repeat[1])
             activeMaterial[0].metalnessMap.repeat.set(repeat[2], repeat[1])

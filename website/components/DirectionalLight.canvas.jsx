@@ -19,7 +19,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
     /* targetPosition, */
     color,
     defaultIntensity = 2.5,
-    intensity = 0.8,
+    intensity = 1.7,
     zPos,
   },
   ref,
