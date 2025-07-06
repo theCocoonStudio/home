@@ -1,11 +1,13 @@
 import { Droppable } from './Droppable'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useContext, useEffect, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
 import { useMenu } from 'website/hooks/useMenu'
 import styles from 'website/styles/Menu.module.css'
 import { useTheme } from '../hooks/useTheme'
+import { ResizeEventContext } from '../../src/context/ResizeEventContext'
+import { useLightbox } from '../hooks/useLightbox'
 
 export const Menu = ({ config, MenuComponent }) => {
   const {
@@ -66,6 +68,21 @@ export const Menu = ({ config, MenuComponent }) => {
   })
 
   const { showMenu, setShowMenu } = useMenu()
+  const { showLightbox } = useLightbox()
+
+  const { entries } = useContext(ResizeEventContext)
+
+  // hide menu on resize
+  useEffect(() => {
+    setShowMenu(false)
+  }, [entries, setShowMenu])
+
+  // hide menu on lightbox open
+  useEffect(() => {
+    if (showLightbox) {
+      setShowMenu(false)
+    }
+  }, [setShowMenu, showLightbox])
 
   useEffect(() => {
     if (!showMenu) {
