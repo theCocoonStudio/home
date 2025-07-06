@@ -12,11 +12,12 @@ import { useTheme } from '../hooks/useTheme'
 import { raleway } from '../utils/styles'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
-  { children, styles, setShowMenu },
+  { children, styles, setShowMenu, onBeforeMaximize },
   forwardedRef,
 ) {
   const container = useRef()
   const content = useRef()
+  const panel = useRef()
   const { attributes, listeners, setNodeRef, node } = useDraggable({
     id: 'draggable',
   })
@@ -33,10 +34,13 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   } = useTheme()
 
   const [minimized, setMinimized] = useState(false)
-  const [contentHeight, setContentHeight] = useState()
+  const [markupHeights, setMarkupHeights] = useState()
 
   useLayoutEffect(() => {
-    setContentHeight(content.current.clientHeight)
+    setMarkupHeights({
+      content: content.current.clientHeight,
+      panel: panel.current.clientHeight,
+    })
   }, [])
 
   const draggableStyle = useMemo(
@@ -48,31 +52,44 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   )
 
   const { style: panelStyle, className: panelClassName } = useMemo(
-    () => raleway(700, false, undefined, styles.panel),
-    [styles.panel],
+    () =>
+      raleway(
+        700,
+        false,
+        !minimized
+          ? undefined
+          : { boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px' },
+        styles.panel,
+      ),
+    [minimized, styles.panel],
   )
   const { style: contentStyle, className: contentClassName } = useMemo(() => {
     return raleway(
       400,
       false,
-      contentHeight && { maxHeight: minimized ? '0' : `${contentHeight}px` },
+      markupHeights && {
+        maxHeight: minimized ? '0' : `${markupHeights.content}px`,
+      },
       undefined,
       styles.content,
     )
-  }, [contentHeight, minimized, styles.content])
+  }, [markupHeights, minimized, styles.content])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
   }, [setShowMenu])
 
   const toggleMinimized = useCallback(() => {
+    if (minimized) {
+      onBeforeMaximize(markupHeights.content + markupHeights.panel)
+    }
     setMinimized((prev) => !prev)
-  }, [])
+  }, [markupHeights, minimized, onBeforeMaximize])
 
   return (
     <div className={styles.draggable} ref={container} style={draggableStyle}>
       <div className={styles.settings}>
-        <div style={panelStyle} className={panelClassName}>
+        <div style={panelStyle} className={panelClassName} ref={panel}>
           <div>
             <div
               className={styles.dragCursor}

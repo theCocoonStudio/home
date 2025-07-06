@@ -18,28 +18,34 @@ export const Menu = ({ config, MenuComponent }) => {
   const offset = useRef({ x: 0, y: 0 })
   const base = useRef({ x: 0, y: 0 })
 
-  const onMenuDragEnd = useCallback(() => {
-    base.current = {
-      x: clamp(
-        base.current.x + offset.current.x,
-        -8 * atomicPadding,
-        droppable.current.clientWidth -
-          draggable.current.container.clientWidth -
-          8 * atomicPadding,
-      ),
-      y: clamp(
-        base.current.y + offset.current.y,
-        -1 *
-          (droppable.current.clientHeight -
-            draggable.current.container.clientHeight -
-            footerHeight),
-        footerHeight,
-      ),
-    }
-    offset.current = { x: 0, y: 0 }
-    draggable.current.container.style.transition = 'transform .2s'
-    draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
-  }, [atomicPadding, footerHeight])
+  const onMenuDragEnd = useCallback(
+    (height) => {
+      base.current = {
+        x: clamp(
+          base.current.x + offset.current.x,
+          -8 * atomicPadding,
+          droppable.current.clientWidth -
+            draggable.current.container.clientWidth -
+            8 * atomicPadding,
+        ),
+        y: clamp(
+          base.current.y + offset.current.y,
+          -1 *
+            (droppable.current.clientHeight -
+              (typeof height === 'number'
+                ? height
+                : draggable.current.container.clientHeight) -
+              footerHeight),
+          footerHeight,
+        ),
+      }
+      offset.current = { x: 0, y: 0 }
+
+      draggable.current.container.style.transition = 'transform .2s'
+      draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
+    },
+    [atomicPadding, footerHeight],
+  )
 
   const onMenuDragMove = useCallback(
     ({ delta: { x: deltaX, y: deltaY } }) => {
@@ -69,7 +75,12 @@ export const Menu = ({ config, MenuComponent }) => {
   }, [showMenu])
   return showMenu ? (
     <>
-      <DraggableMenu styles={styles} ref={draggable} setShowMenu={setShowMenu}>
+      <DraggableMenu
+        styles={styles}
+        ref={draggable}
+        setShowMenu={setShowMenu}
+        onBeforeMaximize={onMenuDragEnd}
+      >
         <MenuComponent config={config} />
       </DraggableMenu>
       <Droppable ref={droppable} styles={styles} />
