@@ -51,6 +51,11 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     [atomicPadding, footerHeight],
   )
 
+  const minimizeStyle = useMemo(
+    () => (!minimized ? { transform: 'rotate(0deg)' } : {}),
+    [minimized],
+  )
+
   const { style: panelStyle, className: panelClassName } = useMemo(
     () =>
       raleway(
@@ -58,7 +63,10 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
         false,
         !minimized
           ? undefined
-          : { boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px' },
+          : {
+              boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px',
+              transform: 'rotate(0)',
+            },
         styles.panel,
       ),
     [minimized, styles.panel],
@@ -118,6 +126,8 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
           <div>
             <div className={styles.icon} onClick={toggleMinimized}>
               <svg
+                style={minimizeStyle}
+                className={styles.minimize}
                 viewBox='0,0,48,48'
                 xmlns='http://www.w3.org/2000/svg'
                 width={20}

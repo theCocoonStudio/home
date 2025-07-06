@@ -296,6 +296,7 @@
 }
 
 .icon {
+  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -304,7 +305,6 @@
   width: 36px;
   height: 36px;
   position: relative;
-  transition: all 0.3s ease-out;
 
   &:hover {
     cursor: pointer;
@@ -315,8 +315,5 @@
     left: 0;
     right: 0;
     bottom: 0;
-    svg {
-      transition: transform 0.3s ease-out;
-    }
   }
 }
