@@ -71,12 +71,24 @@ export const FooterItems = ({
     [atomicPadding, section, showLightbox],
   )
 
+  const { setShowMenu, showMenu } = useMenu()
+
   const iconStyles = useMemo(
     () => ({
       pointerEvents:
         section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
+      filter: showMenu
+        ? 'drop-shadow(3px 3px 12px rgb(0 0 0 / 0.2)) drop-shadow(-3px -3px 12px rgb(0 0 0 / 0.2))'
+        : 'drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3))',
     }),
-    [section],
+    [section, showMenu],
+  )
+
+  const gearStyles = useMemo(
+    () => ({
+      transform: showMenu ? 'scale(1.1) rotate(90deg)' : 'scale(1)',
+    }),
+    [showMenu],
   )
 
   const scrollTo = useScroll(scrollElement)
@@ -107,7 +119,6 @@ export const FooterItems = ({
     scrollTo(items[0].range[0] + items[0].range[1] / 2)
   }, [items, scrollTo])
 
-  const { setShowMenu, showMenu } = useMenu()
   const toggleMenu = useCallback(() => {
     setShowMenu((prev) => !prev)
   }, [setShowMenu])
@@ -121,6 +132,7 @@ export const FooterItems = ({
         >
           <div>
             <svg
+              style={gearStyles}
               viewBox='0,0,48,48'
               xmlns='http://www.w3.org/2000/svg'
               width={36}
