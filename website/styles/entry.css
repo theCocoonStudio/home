@@ -20,6 +20,7 @@ h1,
 h2,
 h3,
 h4,
+h5,
 p,
 figure,
 blockquote,
@@ -45,6 +46,7 @@ h1,
 h2,
 h3,
 h4,
+h5,
 button,
 input,
 label {
@@ -55,7 +57,8 @@ label {
 /* h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
   text-wrap: balance;
 } */
 
@@ -124,6 +127,7 @@ h1,
 h2,
 h3,
 h4,
+h5,
 p {
   margin: 0;
   padding: 0;
