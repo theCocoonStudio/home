@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline'
 import Popover from '@mui/material/Popover'
 import { ClickAwayListener, Slider } from '@mui/material'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 export const HomeSettings = ({ config }) => {
   const {
@@ -38,36 +39,52 @@ export const HomeSettings = ({ config }) => {
     [atomicPadding],
   )
 
-  const [checked, setChecked] = useState(true)
+  const { style: buttonStyle, className: buttonClassname } = useMemo(
+    () => raleway(350, false, undefined, styles.button),
+    [],
+  )
+
   const [performanceAnchor, setPerformanceAnchor] = useState(null)
   const [scrollAnchor, setScrollAnchor] = useState(null)
-  const [resolution, setResolution] = useState(0.5)
-  const [frames, setFrames] = useState(1)
-  const [mapSize, setMapsize] = useState(1.0)
-  const [focusFactor, setFocusFactor] = useState(1.0)
-  const [scrollDistance, setScrollDistance] = useState(1.0)
 
+  const {
+    original,
+    resetSettings,
+    auto,
+    setAuto,
+    resolution,
+    setResolution,
+    frames,
+    setFrames,
+    mapSize,
+    setMapsize,
+    focusFactor,
+    setFocusFactor,
+    scrollDistance,
+    setScrollDistance,
+  } = useSettings()
   const labelStyles = useMemo(
     () => ({
       autoThrottle: {
-        color: checked ? black : white,
-        backgroundColor: checked ? white : black,
+        color: auto ? black : white,
+        backgroundColor: auto ? white : black,
       },
       resolution: {
-        color: !checked ? black : white,
-        backgroundColor: !checked ? white : black,
+        color: !auto ? black : white,
+        backgroundColor: !auto ? white : black,
       },
       frames: {
-        color: !checked ? black : white,
-        backgroundColor: !checked ? white : black,
+        color: !auto ? black : white,
+        backgroundColor: !auto ? white : black,
       },
       mapsize: {
-        color: !checked ? black : white,
-        backgroundColor: !checked ? white : black,
+        color: !auto ? black : white,
+        backgroundColor: !auto ? white : black,
       },
     }),
-    [black, checked, white],
+    [black, auto, white],
   )
+
   return (
     <div className={styles.container}>
       <div className={titleClassName} style={titleStyle}>
@@ -93,7 +110,7 @@ export const HomeSettings = ({ config }) => {
             }}
           >
             <ClickAwayListener
-              onClickAway={(e) => {
+              onClickAway={() => {
                 if (performanceAnchor) {
                   setPerformanceAnchor(null)
                 }
@@ -114,7 +131,7 @@ export const HomeSettings = ({ config }) => {
         <div>
           <h5>Auto-throttle:</h5>
           <div style={labelStyles.autoThrottle}>
-            <span>{checked ? 'ON' : 'OFF'}</span>
+            <span>{auto ? 'ON' : 'OFF'}</span>
           </div>
         </div>
         <div>
@@ -141,9 +158,9 @@ export const HomeSettings = ({ config }) => {
               />
             }
             edge='end'
-            checked={checked}
+            checked={auto}
             onChange={() => {
-              setChecked((prev) => !prev)
+              setAuto((prev) => !prev)
             }}
           />
         </div>
@@ -168,7 +185,7 @@ export const HomeSettings = ({ config }) => {
             max={1}
             shiftStep={0.1}
             step={0.1}
-            disabled={checked}
+            disabled={auto}
           />
         </div>
       </div>
@@ -192,7 +209,7 @@ export const HomeSettings = ({ config }) => {
             max={6}
             shiftStep={1}
             step={1}
-            disabled={checked}
+            disabled={auto}
           />
         </div>
       </div>
@@ -216,7 +233,7 @@ export const HomeSettings = ({ config }) => {
             max={1.0}
             shiftStep={0.1}
             step={0.1}
-            disabled={checked}
+            disabled={auto}
           />
         </div>
       </div>
@@ -243,7 +260,7 @@ export const HomeSettings = ({ config }) => {
             }}
           >
             <ClickAwayListener
-              onClickAway={(e) => {
+              onClickAway={() => {
                 if (scrollAnchor) {
                   setScrollAnchor(null)
                 }
@@ -304,6 +321,15 @@ export const HomeSettings = ({ config }) => {
             shiftStep={0.1}
             step={0.1}
           />
+        </div>
+      </div>
+      <div className={styles.buttons}>
+        <div
+          onClick={original ? undefined : resetSettings}
+          className={`${buttonClassname} ${original ? styles.disabledButton : styles.activeButton}`}
+          style={buttonStyle}
+        >
+          reset
         </div>
       </div>
     </div>

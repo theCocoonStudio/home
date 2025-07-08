@@ -54,6 +54,7 @@
     > div {
       /* background-color: var(--black); */
       border: 1px solid var(--black);
+      transition: all 0.1s ease-out;
       font-size: 1.2rem;
       text-transform: uppercase;
       line-height: 1em;
@@ -111,6 +112,7 @@
     > div {
       /* background-color: var(--black); */
       border: 1px solid var(--black);
+      transition: all 0.1s ease-out;
       font-size: 1.2rem;
       text-transform: uppercase;
       line-height: 1em;
@@ -132,5 +134,49 @@
     flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-end;
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  column-gap: 24px;
+  padding: 0 24px;
+  margin-top: 24px;
+}
+
+.button {
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 6px;
+  border-radius: 2px;
+  border: 1px solid var(--black);
+  transition: all 0.1s ease-out;
+}
+
+.activeButton {
+  opacity: 1;
+  background-color: transparent;
+  color: var(--black);
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 2px;
+  &:hover {
+    cursor: pointer;
+    background-color: var(--black);
+    color: var(--white);
+  }
+}
+.disabledButton {
+  opacity: 0.2;
+  background-color: var(--black);
+  color: var(--white);
+  &:hover {
+    cursor: not-allowed;
   }
 }
