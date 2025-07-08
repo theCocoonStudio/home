@@ -223,7 +223,7 @@ export const config = {
   },
   scroll: {
     scrollControlsProps: {
-      pages: 15,
+      pages: 20,
       enabled: true,
       damping: 0,
       distance: 2,

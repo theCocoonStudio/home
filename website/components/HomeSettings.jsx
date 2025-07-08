@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
 import { changaOne, raleway } from '../utils/styles'
 import styles from 'website/styles/HomeSettings.module.css'
@@ -10,7 +10,7 @@ import Popover from '@mui/material/Popover'
 import { ClickAwayListener, Slider } from '@mui/material'
 import { useSettings } from 'website/pages/Home/useSettings'
 
-export const HomeSettings = ({ config }) => {
+export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
   const {
     colors: { white, black },
     lengths: { atomicPadding },
@@ -84,6 +84,10 @@ export const HomeSettings = ({ config }) => {
     }),
     [black, auto, white],
   )
+
+  useEffect(() => {
+    setScrollDistanceFactor(scrollDistance)
+  }, [scrollDistance, setScrollDistanceFactor])
 
   return (
     <div className={styles.container}>
@@ -294,7 +298,7 @@ export const HomeSettings = ({ config }) => {
             }}
             color='common.black'
             min={0.1}
-            max={3.0}
+            max={5.0}
             shiftStep={0.1}
             step={0.1}
           />

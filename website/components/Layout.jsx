@@ -51,6 +51,7 @@ function _Layout({ config = pagesConfig }) {
   const [page, setPage] = useState('home')
 
   const [scrollContainer, setScrollContainer] = useState()
+  const [scrollDistanceFactor, setScrollDistanceFactor] = useState()
 
   const {
     main: { Component, ViewComponent, renderPriority },
@@ -70,7 +71,10 @@ function _Layout({ config = pagesConfig }) {
                 <Provider config={config[page]}>
                   <div className={styles.layout}>
                     <ThreeApp eventPrefix={'client'}>
-                      <ScrollControls {...scrollControlsProps}>
+                      <ScrollControls
+                        {...scrollControlsProps}
+                        distance={scrollDistanceFactor}
+                      >
                         <View.Port />
                         <ScrollHTMLRef setContainer={setScrollContainer} />
                       </ScrollControls>
@@ -124,6 +128,7 @@ function _Layout({ config = pagesConfig }) {
                         config={config[page]}
                         scrollContainer={scrollContainer}
                         MenuComponent={MenuComponent}
+                        setScrollDistanceFactor={setScrollDistanceFactor}
                       />
                     )}
                   </div>

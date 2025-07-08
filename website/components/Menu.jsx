@@ -9,7 +9,7 @@ import { useTheme } from '../hooks/useTheme'
 import { ResizeEventContext } from '../../src/context/ResizeEventContext'
 import { useLightbox } from '../hooks/useLightbox'
 
-export const Menu = ({ config, MenuComponent }) => {
+export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
   const {
     lengths: { footerHeight, atomicPadding },
   } = useTheme()
@@ -98,7 +98,10 @@ export const Menu = ({ config, MenuComponent }) => {
         setShowMenu={setShowMenu}
         onBeforeMaximize={onMenuDragEnd}
       >
-        <MenuComponent config={config} />
+        <MenuComponent
+          config={config}
+          setScrollDistanceFactor={setScrollDistanceFactor}
+        />
       </DraggableMenu>
       <Droppable ref={droppable} styles={styles} />
     </>
