@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Camera, HalfFloatType, PlaneGeometry, RGFormat, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
@@ -10,6 +10,7 @@ import { poissonPassConfig } from './PoissonPass.canvas'
 import { pressurePassConfig } from './PressurePass.canvas'
 import { outputPassConfig } from './OutputPass.canvas'
 import { ShaderPass } from './ShaderPass'
+import { FrameSplitter } from '../../../website/utils/frame'
 
 // force calculation default
 const defaultForceCallback = (delta, clock, pointer, pointerDiff) => ({
@@ -22,6 +23,7 @@ export const useFluidTexture = ({
   viscousIterations = 32,
   forceValue = 1,
   resolution = 0.5,
+  runEvery = 1,
   forceSize = 100,
   viscous = 30,
   isBounce = true,
@@ -413,10 +415,15 @@ export const useFluidTexture = ({
     ],
   )
 
+  // frame splitter and reactive updates
+  const frameSplitter = useMemo(() => new FrameSplitter(), [])
+  useEffect(() => {
+    frameSplitter.set(render, runEvery)
+  }, [frameSplitter, render, runEvery])
   // simulation updates
   useFrame((state, delta) => {
     if (!manual && !pause && !pauseRef?.current && !manualRef?.current) {
-      render(state, delta)
+      frameSplitter.frame(state, delta)
     }
   }, priority)
 

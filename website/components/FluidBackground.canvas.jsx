@@ -11,12 +11,14 @@ import { useThree } from '@react-three/fiber'
 import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
 import { useTheme } from '../hooks/useTheme'
 import { useFluidBackgroundAnimation } from '../hooks/useFluidBackgroundAnimation.canvas'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 const _opts = {
   poissonIterations: 32,
   viscousIterations: 32,
   forceValue: 80,
   resolution: 0.5,
+  runEvery: 1,
   forceSize: 65,
   viscosity: 30,
   dt: 0.014,
@@ -48,15 +50,21 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   const forceCallback = useRef(undefined)
   const pauseRef = useRef(false)
   const manualRef = useRef(false)
+
   // simulation options
+  const { resolution, frames: runEvery } = useSettings()
+
   const options = useMemo(() => {
     return {
       ..._opts,
+      resolution,
+      runEvery,
       forceCallbackRef: forceCallback,
       pauseRef,
       manualRef,
     }
-  }, [])
+  }, [resolution, runEvery])
+
   // reactive data
   const { colors } = useTheme()
   const stateCallback = useCallback(({ size, viewport, camera }) => {
