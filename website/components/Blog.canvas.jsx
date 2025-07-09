@@ -8,11 +8,11 @@ import {
 } from 'react'
 import { BlogItems } from './BlogItems.canvas'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 const _Blog = function BlogAnimation(
   {
     config: {
-      style: { focusFactor },
       content: {
         sections: {
           blog: { items, range },
@@ -24,7 +24,8 @@ const _Blog = function BlogAnimation(
   },
   forwardedRef,
 ) {
-  /* use for changing styles based on new width or aspect */
+  const { focusFactor } = useSettings()
+
   const resizeCallback = useCallback(() => {}, [])
 
   const itemsRef = useRef()

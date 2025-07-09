@@ -6,7 +6,6 @@ import { Color, MathUtils } from 'three'
 export const useMarkupAnimation = ({
   softwareItems,
   blogItems,
-  focusFactor,
   itemDescriptionElement,
   titleElement,
   subtitleElement,

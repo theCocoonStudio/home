@@ -14,19 +14,18 @@ import { useTexture } from '@react-three/drei'
 import { RepeatWrapping } from 'three'
 import { damp } from 'maath/easing'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 const _Photography = function PhotographyAnimation(
   {
     config: {
-      style: { focusFactor, titleHeight },
+      style: { titleHeight },
       content: {
         sections: {
           photography: { range, items },
-          blog: { range: blogRange, items: blogItems },
         },
       },
     },
-    animationTargets,
     itemData,
     zPos,
     targetDepth,
@@ -37,6 +36,7 @@ const _Photography = function PhotographyAnimation(
 ) {
   const mesh = useRef()
 
+  const { focusFactor } = useSettings()
   const stateCallback = useCallback(({ aspect, size, viewport, camera }) => {
     return { size, viewport, camera, aspect }
   }, [])

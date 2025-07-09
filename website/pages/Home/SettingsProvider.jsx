@@ -1,7 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { SettingsContext } from './SettingsContext'
 
-export const SettingsProvider = ({ children }) => {
+export const SettingsProvider = ({
+  children,
+  config: {
+    style: { focusFactor: defaultFocusFactor },
+  },
+}) => {
   const defaultSettings = useMemo(
     () => ({
       performance: {
@@ -11,14 +16,19 @@ export const SettingsProvider = ({ children }) => {
         mapSize: { value: 1.0, original: (val) => !(val < 1.0) },
       },
       scroll: {
-        focusFactor: { value: 1.0, original: (val) => val > 0.9 && val < 1.1 },
+        focusFactor: {
+          value: defaultFocusFactor,
+          original: (val) =>
+            val > defaultFocusFactor - 0.005 &&
+            val < defaultFocusFactor + 0.005,
+        },
         scrollDistance: {
           value: 1.0,
           original: (val) => val > 0.9 && val < 1.1,
         },
       },
     }),
-    [],
+    [defaultFocusFactor],
   )
   const [auto, setAuto] = useState(defaultSettings.performance.auto.value)
   const [resolution, setResolution] = useState(

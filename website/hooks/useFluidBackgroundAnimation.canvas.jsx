@@ -7,7 +7,6 @@ export const useFluidBackgroundAnimation = ({
   setForceCallback,
   colors,
   softwareItems,
-  focusFactor,
   backingMaterialRef,
   meshRef,
   pauseRef,

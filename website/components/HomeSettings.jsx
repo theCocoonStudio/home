@@ -321,9 +321,9 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
             }}
             color='common.black'
             min={0.1}
-            max={3.0}
-            shiftStep={0.1}
-            step={0.1}
+            max={0.9}
+            shiftStep={0.01}
+            step={0.01}
           />
         </div>
       </div>

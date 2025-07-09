@@ -5,7 +5,7 @@ import { TargetItemProvider } from './TargetItemProvider'
 export const HomeProvider = ({ children, config }) => (
   <ScrollEventProvider config={config}>
     <TargetItemProvider>
-      <SettingsProvider>{children}</SettingsProvider>
+      <SettingsProvider config={config}>{children}</SettingsProvider>
     </TargetItemProvider>
   </ScrollEventProvider>
 )

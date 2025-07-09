@@ -2,8 +2,11 @@ import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useCallback, useRef } from 'react'
 import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 export const useScrollAnimation = (config, animationTargets) => {
+  const { focusFactor } = useSettings()
+
   const scroll = useScroll()
   const tailFrames = useRef(0)
   const offsetCache = useRef(0.0)
@@ -18,7 +21,7 @@ export const useScrollAnimation = (config, animationTargets) => {
             blog: { items: blogItems, range: blogRange },
           },
         },
-        style: { focusFactor },
+
         scroll: {
           ranges: { preScroll: presScrollRange, postScroll: postScrollRange },
         },
@@ -61,7 +64,7 @@ export const useScrollAnimation = (config, animationTargets) => {
       )
       return ranges
     },
-    [config],
+    [config, focusFactor],
   )
 
   const scrollCallback = useCallback(

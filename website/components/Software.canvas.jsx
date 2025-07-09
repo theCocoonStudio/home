@@ -8,11 +8,11 @@ import {
 } from 'react'
 import { SoftwareItems } from './SoftwareItems.canvas'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 const _Software = function SoftwareAnimation(
   {
     config: {
-      style: { focusFactor },
       content: {
         sections: {
           software: { items, range },
@@ -24,7 +24,7 @@ const _Software = function SoftwareAnimation(
   },
   forwardedRef,
 ) {
-  /* use for changing styles based on new width or aspect */
+  const { focusFactor } = useSettings()
   const resizeCallback = useCallback(() => {}, [])
 
   const itemsRef = useRef()
