@@ -18,7 +18,9 @@ export class FrameSplitter {
   frame(...args) {
     // increment frame counter; if pre-increment value is 0, run callback
     if (this.#idleFramesSinceInvocation++ === 0) {
-      this.#callback(...args)
+      if (this.#callback) {
+        this.#callback(...args)
+      }
     }
     // if post-increment value is equal to n, set frame counter to 0
     if (this.#idleFramesSinceInvocation >= this.#n) {

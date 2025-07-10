@@ -11,19 +11,43 @@ export const SettingsProvider = ({
     () => ({
       performance: {
         auto: { value: true, original: (val) => val === true },
-        resolution: { value: 0.5, original: (val) => val > 0.4 && val < 0.6 },
-        frames: { value: 1, original: (val) => val === 1 },
-        mapSize: { value: 11, original: (val) => !(val < 11) },
+        resolution: {
+          value: 0.5,
+          min: 0.1,
+          max: 1.0,
+          step: 0.1,
+          original: (val) => val > 0.4 && val < 0.6,
+        },
+        frames: {
+          value: 1,
+          min: 1,
+          max: 6,
+          step: 1,
+          original: (val) => val === 1,
+        },
+        mapSize: {
+          value: 11,
+          min: 8,
+          max: 11,
+          step: 1,
+          original: (val) => !(val < 11),
+        },
       },
       scroll: {
         focusFactor: {
           value: defaultFocusFactor,
+          min: 0.1,
+          max: 0.9,
+          step: 0.01,
           original: (val) =>
             val > defaultFocusFactor - 0.005 &&
             val < defaultFocusFactor + 0.005,
         },
         scrollDistance: {
           value: 1.0,
+          min: 0.1,
+          max: 5.0,
+          step: 0.1,
           original: (val) => val > 0.9 && val < 1.1,
         },
       },

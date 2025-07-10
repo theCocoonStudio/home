@@ -62,6 +62,7 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
     setFocusFactor,
     scrollDistance,
     setScrollDistance,
+    defaultSettings,
   } = useSettings()
   const labelStyles = useMemo(
     () => ({
@@ -185,10 +186,10 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               setResolution(parseFloat(newVal.toFixed(2)))
             }}
             color='common.black'
-            min={0.1}
-            max={1}
-            shiftStep={0.1}
-            step={0.1}
+            min={defaultSettings.performance.resolution.min}
+            max={defaultSettings.performance.resolution.max}
+            shiftStep={defaultSettings.performance.resolution.step}
+            step={defaultSettings.performance.resolution.step}
             disabled={auto}
           />
         </div>
@@ -209,10 +210,10 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               setFrames(parseInt(newVal))
             }}
             color='common.black'
-            min={1}
-            max={6}
-            shiftStep={1}
-            step={1}
+            min={defaultSettings.performance.frames.min}
+            max={defaultSettings.performance.frames.max}
+            shiftStep={defaultSettings.performance.frames.step}
+            step={defaultSettings.performance.frames.step}
             disabled={auto}
           />
         </div>
@@ -233,10 +234,10 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               setMapsize(parseInt(newVal))
             }}
             color='common.black'
-            min={8}
-            max={11}
-            shiftStep={1}
-            step={1}
+            min={defaultSettings.performance.mapSize.min}
+            max={defaultSettings.performance.mapSize.max}
+            shiftStep={defaultSettings.performance.mapSize.step}
+            step={defaultSettings.performance.mapSize.step}
             disabled={auto}
           />
         </div>
@@ -297,10 +298,10 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               setScrollDistance(parseFloat(newVal.toFixed(2)))
             }}
             color='common.black'
-            min={0.1}
-            max={5.0}
-            shiftStep={0.1}
-            step={0.1}
+            min={defaultSettings.scroll.scrollDistance.min}
+            max={defaultSettings.scroll.scrollDistance.max}
+            shiftStep={defaultSettings.scroll.scrollDistance.step}
+            step={defaultSettings.scroll.scrollDistance.step}
           />
         </div>
       </div>
@@ -320,10 +321,10 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               setFocusFactor(parseFloat(newVal.toFixed(2)))
             }}
             color='common.black'
-            min={0.1}
-            max={0.9}
-            shiftStep={0.01}
-            step={0.01}
+            min={defaultSettings.scroll.focusFactor.min}
+            max={defaultSettings.scroll.focusFactor.max}
+            shiftStep={defaultSettings.scroll.focusFactor.step}
+            step={defaultSettings.scroll.focusFactor.step}
           />
         </div>
       </div>

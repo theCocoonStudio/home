@@ -60,40 +60,42 @@ const _DirectionalLight = function DirectionalLightAnimation(
   // animation callback
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
-      const visible = scrollRanges.photographyVisible
-      if (visible) {
-        // light shadow
-        if (!light.castShadow) {
-          light.castShadow = true
+      if (light) {
+        const visible = scrollRanges.photographyVisible
+        if (visible) {
+          // light shadow
+          if (!light.castShadow) {
+            light.castShadow = true
+          }
+        } else {
+          // light shadow
+          if (light.castShadow) {
+            light.castShadow = false
+          }
         }
-      } else {
-        // light shadow
-        if (light.castShadow) {
-          light.castShadow = false
-        }
+        // light intensity
+        const startPhotographyOffset = scrollRanges.startPhotographyOffset
+        const startBlogOffset = scrollRanges.startBlogOffset
+        damp(
+          light,
+          'intensity',
+          startBlogOffset > 0.0
+            ? intensity + startBlogOffset * (defaultIntensity - intensity)
+            : defaultIntensity +
+                startPhotographyOffset * (intensity - defaultIntensity),
+          0.05,
+          delta,
+        )
+        // light position
+        const fullOffset = scrollRanges.photographyOffset
+        damp(
+          light.position,
+          'x',
+          Math.sin(fullOffset * photographyItems.length * 2 * Math.PI) / 2,
+          0.0,
+          delta,
+        )
       }
-      // light intensity
-      const startPhotographyOffset = scrollRanges.startPhotographyOffset
-      const startBlogOffset = scrollRanges.startBlogOffset
-      damp(
-        light,
-        'intensity',
-        startBlogOffset > 0.0
-          ? intensity + startBlogOffset * (defaultIntensity - intensity)
-          : defaultIntensity +
-              startPhotographyOffset * (intensity - defaultIntensity),
-        0.05,
-        delta,
-      )
-      // light position
-      const fullOffset = scrollRanges.photographyOffset
-      damp(
-        light.position,
-        'x',
-        Math.sin(fullOffset * photographyItems.length * 2 * Math.PI) / 2,
-        0.0,
-        delta,
-      )
     },
     [defaultIntensity, intensity, light, photographyItems],
   )
