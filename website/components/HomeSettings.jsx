@@ -122,11 +122,19 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               }}
             >
               <p style={popoverStyle} className={popoverClassName}>
-                Use the radio buttons to adjust the anchorOrigin and
-                transformOrigin positions. You can also set the anchorReference
-                to anchorPosition or anchorEl. When it is anchorPosition, the
-                component will, instead of anchorEl, refer to the anchorPosition
-                prop which you can adjust to set the position of the popover.
+                This page relies on the CPU and GPU to carry out graphics
+                calculations each frame. Your device&#39;s hardware capability
+                and/or battery level may result in reduced frame rates. These
+                settings can degrade the graphics quality to improve frame rates
+                or enhance it for greater visual aesthetic. <br />
+                <br />
+                <i>Auto-throttle</i> will automatically degrade/boost graphics
+                to reach an ideal frame rate and UX.
+                <br />
+                <br />
+                <strong>
+                  Toggling <i>auto-throttle</i> is recommended for nerds only.
+                </strong>
               </p>
             </ClickAwayListener>
           </Popover>
@@ -247,7 +255,7 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
         <div
           onClick={(e) => {
             if (!scrollAnchor) {
-              setPerformanceAnchor(e.target)
+              setScrollAnchor(e.target)
             }
           }}
         >
@@ -272,11 +280,20 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
               }}
             >
               <p style={popoverStyle} className={popoverClassName}>
-                Use the radio buttons to adjust the anchorOrigin and
-                transformOrigin positions. You can also set the anchorReference
-                to anchorPosition or anchorEl. When it is anchorPosition, the
-                component will, instead of anchorEl, refer to the anchorPosition
-                prop which you can adjust to set the position of the popover.
+                These settings let you modify the scroll-based interaction with
+                the page content to your liking.
+                <br />
+                <br />
+                <i>Scroll Distance:</i>
+                <br /> A factor controlling scroll speed. Scroll distance is
+                inversely proportional to scroll speed.
+                <br />
+                <br />
+                <i>Focus Factor:</i> <br />
+                Each content item is animated within its scroll range from
+                hidden to focused (visible and stationary), then from focused to
+                hidden again. This setting controls the proportion of the
+                item&#39;s scroll range during which it is focused.
               </p>
             </ClickAwayListener>
           </Popover>

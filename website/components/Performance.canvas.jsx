@@ -75,7 +75,7 @@ export const Performance = ({ fpsContainer }) => {
     [defaultSettings, height, width],
   )
   const onChange = useCallback(
-    ({ fps, factor /* refreshrate, frames, averages */ }) => {
+    ({ fps, factor /*refreshrate , frames, averages */ }) => {
       container.innerHTML = `${fps}`
 
       // throttle or boost performance
@@ -92,6 +92,9 @@ export const Performance = ({ fpsContainer }) => {
     },
     [auto, container, setAuto, setFrames, setMapsize, setResolution, targets],
   )
+  const bounds = useCallback((rr) => {
+    return [Math.min(rr - 10, 50), Math.min(rr, 60)]
+  }, [])
 
-  return <PerformanceMonitor onChange={onChange} factor={0.5} />
+  return <PerformanceMonitor onChange={onChange} factor={0.5} bounds={bounds} />
 }
