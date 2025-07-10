@@ -189,7 +189,6 @@ export const Home = ({
         ref={lightRef}
         config={config}
         animationTargets={animationTargets}
-        position={new Vector3(-0.18, 0.2, 0.5)}
         targetPosition={new Vector3(-0.38, 0.4, 0.5)}
         color={colors.white}
         zPos={zPos}

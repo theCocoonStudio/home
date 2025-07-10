@@ -221,7 +221,7 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
         <div>
           <h5>Light Resolution:</h5>
           <div style={labelStyles.mapsize}>
-            <span>{mapSize}</span>
+            <span>{parseInt(2 ** mapSize)}</span>
           </div>
         </div>
         <div>
@@ -230,13 +230,13 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
             value={mapSize}
             valueLabelDisplay='off'
             onChange={(e, newVal) => {
-              setMapsize(parseFloat(newVal.toFixed(2)))
+              setMapsize(parseInt(newVal))
             }}
             color='common.black'
-            min={0.5}
-            max={1.0}
-            shiftStep={0.1}
-            step={0.1}
+            min={8}
+            max={11}
+            shiftStep={1}
+            step={1}
             disabled={auto}
           />
         </div>

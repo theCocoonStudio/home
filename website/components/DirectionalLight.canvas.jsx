@@ -1,10 +1,13 @@
 import { damp } from 'maath/easing'
-import { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react'
 import {
-  /* CameraHelper,
-  DirectionalLightHelper, */
-  DirectionalLight as Light,
-} from 'three'
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react'
+import { DirectionalLight as Light } from 'three'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 const _DirectionalLight = function DirectionalLightAnimation(
   {
@@ -15,41 +18,46 @@ const _DirectionalLight = function DirectionalLightAnimation(
         },
       },
     },
-    position,
-    /* targetPosition, */
     color,
     defaultIntensity = 2.5,
     intensity = 1.7,
+    posY = 0.2,
+    posZ = 0.5,
     zPos,
   },
   ref,
 ) {
-  const { light /* cameraHelper, helper */ } = useMemo(() => {
-    const light = new Light(color, defaultIntensity)
-    light.target.position.setZ(zPos)
-    light.position.set(...position)
-    light.shadow.camera.near = 0
-    light.shadow.camera.far = 1
-    light.shadow.camera.left = -0.5
-    light.shadow.camera.right = 0.5
-    light.shadow.camera.bottom = -0.5
-    light.shadow.camera.top = 0.5
-    light.shadow.mapSize.width = 2048
-    light.shadow.mapSize.height = 2048
-    /* const cameraHelper = new CameraHelper(light.shadow.camera)
-    const helper = new DirectionalLightHelper(light) */
-    // update the light target's matrixWorld because it's needed by the helper
-    light.target.updateMatrixWorld()
-    /* helper.update() */
-    // update the light's shadow camera's projection matrix
-    light.shadow.camera.updateProjectionMatrix()
-    // and now update the camera helper we're using to show the light's shadow camera
-    /* cameraHelper.update() */
-    return { light /* cameraHelper, helper */ }
-  }, [])
+  const { mapSize } = useSettings()
+  const [light, setLight] = useState()
 
+  useEffect(() => {
+    const posX = light ? light.position.x : 0
+    const _light = new Light(color, defaultIntensity)
+    _light.target.position.setZ(zPos)
+    _light.position.setX(posX)
+    _light.position.setY(posY)
+    _light.position.setZ(posZ)
+    _light.shadow.camera.near = 0
+    _light.shadow.camera.far = 1
+    _light.shadow.camera.left = -0.5
+    _light.shadow.camera.right = 0.5
+    _light.shadow.camera.bottom = -0.5
+    _light.shadow.camera.top = 0.5
+    _light.shadow.mapSize.set(2 ** mapSize, 2 ** mapSize)
+    _light.target.updateMatrixWorld()
+    _light.shadow.camera.updateProjectionMatrix()
+    _light.castShadow = true
+
+    setLight(_light)
+  }, [mapSize])
+
+  useEffect(
+    () => () => {
+      light && light.dispose()
+    },
+    [light],
+  )
   // animation callback
-
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
       const visible = scrollRanges.photographyVisible
@@ -101,13 +109,7 @@ const _DirectionalLight = function DirectionalLightAnimation(
     [defaultIntensity, intensity, light, scrollCallback],
   )
 
-  return (
-    <>
-      <primitive object={light} />
-      {/* <primitive object={cameraHelper} />
-      <primitive object={helper} /> */}
-    </>
-  )
+  return light && <primitive object={light} />
 }
 
 export const DirectionalLightAnimation = forwardRef(_DirectionalLight)

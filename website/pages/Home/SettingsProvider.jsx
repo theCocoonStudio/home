@@ -13,7 +13,7 @@ export const SettingsProvider = ({
         auto: { value: true, original: (val) => val === true },
         resolution: { value: 0.5, original: (val) => val > 0.4 && val < 0.6 },
         frames: { value: 1, original: (val) => val === 1 },
-        mapSize: { value: 1.0, original: (val) => !(val < 1.0) },
+        mapSize: { value: 11, original: (val) => !(val < 11) },
       },
       scroll: {
         focusFactor: {
