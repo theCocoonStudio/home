@@ -2,10 +2,15 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import preload from 'vite-plugin-preload'
 import { resolve } from 'path'
+import { analyzer } from 'vite-bundle-analyzer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), preload()],
+  plugins: [
+    react(),
+    preload(),
+    /* analyzer(), */
+  ],
   assetsInclude: ['**/*.glb', '**/*.hdr', '**/*.mp4', '**/*.ttf', '**/*.jpg'],
   resolve: {
     alias: {
@@ -17,26 +22,24 @@ export default defineConfig({
     },
   },
   build: {
-    lib: {
-      formats: ['es'],
-      // Could also be a dictionary or array of multiple entry points
-      entry: resolve(__dirname, 'src/index.js'),
-      name: 'izzy-web-lib',
-      // the proper extensions will be added
-      fileName: 'izzy',
-    },
+    sourcemap: true,
+    manifest: true,
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [
+      /* external: [
         'react, react-dom, three, three-stdlib, @react-three-/fiber, @react-three/drei',
-      ],
+      ], */
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
         globals: {
           react: 'React',
-          three: 'THREE',
+          /* three: 'THREE', */
+        },
+        manualChunks: {
+          three: ['three'],
+          mui: ['@mui/material'],
         },
       },
     },
