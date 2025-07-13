@@ -139,8 +139,16 @@ export const Main = function Main({
     [section],
   )
 
+  const bgStyles = useMemo(
+    () => ({
+      opacity: ready ? 0 : 1,
+    }),
+    [ready],
+  )
+
   return (
     <div className={styles.main}>
+      <div className={styles.bg} style={bgStyles} />
       <h1
         style={style}
         className={className}

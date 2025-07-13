@@ -5,6 +5,7 @@ import { useMenu } from '../../hooks/useMenu'
 import { useScrollEvent } from './useScrollEvent'
 import { useScroll } from 'src/hooks/useScroll/useScroll'
 import CircularProgress from '@mui/material/CircularProgress'
+import { raleway } from '../../utils/styles'
 
 export const FooterItems = ({
   config: {
@@ -83,6 +84,10 @@ export const FooterItems = ({
     [section],
   )
 
+  const { style: instructionStyle, className: instructionClass } = useMemo(
+    () => raleway(400, false, { paddingTop: '8px' }, styles.instruction),
+    [],
+  )
   const scrollTo = useScroll(scrollElement)
 
   const scrollItemStyles = useMemo(() => {}, [])
@@ -163,9 +168,13 @@ export const FooterItems = ({
         >
           <path d='M 269.2206572769953 384.60093896713613 Q 256 396.61971830985914 242.7793427230047 384.60093896713613 L 12.018779342723004 153.84037558685446 L 12.018779342723004 153.84037558685446 Q 0 140.61971830985917 12.018779342723004 127.39906103286386 Q 25.239436619718308 115.38028169014085 38.460093896713616 127.39906103286386 L 256 343.73708920187795 L 256 343.73708920187795 L 473.5399061032864 127.39906103286386 L 473.5399061032864 127.39906103286386 Q 486.76056338028167 115.38028169014085 499.981220657277 127.39906103286386 Q 512 140.61971830985917 499.981220657277 153.84037558685446 L 269.2206572769953 384.60093896713613 L 269.2206572769953 384.60093896713613 Z' />
         </svg>
+        <div style={instructionStyle} className={instructionClass}>
+          scroll down
+        </div>
       </div>
       {!ready && (
         <div className={`${styles.progress}`}>
+          <div className={instructionClass}>loading GPU resources...</div>
           <CircularProgress disableShrink color='common.black' size={50} />
         </div>
       )}

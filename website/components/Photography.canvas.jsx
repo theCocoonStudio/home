@@ -119,6 +119,7 @@ const _Photography = function PhotographyAnimation(
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
           transparent
+          opacity={0}
           normalMap={normalMap}
           normalMap-wrapS={RepeatWrapping}
           normalMap-wrapT={RepeatWrapping}

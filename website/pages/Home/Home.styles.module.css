@@ -3,6 +3,16 @@
   height: 100%;
 }
 
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(-45deg, var(--white), #899394);
+  transition: opacity 1s;
+}
+
 .title {
   left: -100%;
   line-height: 1em;
@@ -331,4 +341,15 @@
     right: 0;
     bottom: 0;
   }
+}
+
+.instruction {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8rem;
+  width: 250px;
+  text-align: center;
+  padding-top: 16px;
 }
