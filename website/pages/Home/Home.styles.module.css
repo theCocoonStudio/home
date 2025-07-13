@@ -244,6 +244,16 @@
   }
 }
 
+.progress {
+  z-index: -1;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  pointer-events: none;
+  bottom: 25vh;
+  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
+}
+
 .scroll {
   border-radius: 2px;
   border: 2px solid var(--black);

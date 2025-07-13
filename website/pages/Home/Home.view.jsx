@@ -5,7 +5,7 @@ import { FluidBackgroundAnimation } from '../../components/FluidBackground.canva
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLightAnimation } from '../../components/DirectionalLight.canvas'
-import { useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { SoftwareAnimation } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
@@ -20,6 +20,8 @@ import { useLightbox } from '../../hooks/useLightbox'
 
 export const Home = ({
   config,
+  ready,
+  setReady,
   zPos = 0.1,
   initialDepth = 0.05,
   targetDepth = 0.0005,
@@ -146,6 +148,15 @@ export const Home = ({
   ])
   useResizeEvent(canvas, resizeCallback)
   const itemGeometry = useItemGeometry(initialDepth)
+
+  const readyRef = useRef(false)
+
+  useFrame(() => {
+    if (!readyRef.current) {
+      setReady(true)
+      readyRef.current = true
+    }
+  })
 
   return (
     <>

@@ -49,7 +49,7 @@ function _Layout({ config = pagesConfig }) {
     typography: { switchIcon: '2rem' },
   })
   const [page, setPage] = useState('home')
-
+  const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState()
 
@@ -91,6 +91,8 @@ function _Layout({ config = pagesConfig }) {
                               /* frames={1} */
                             >
                               <ViewComponent
+                                ready={ready}
+                                setReady={setReady}
                                 config={config[page]}
                                 scrollContainer={scrollContainer}
                               />
@@ -99,6 +101,8 @@ function _Layout({ config = pagesConfig }) {
                           )}
                           {Component && (
                             <Component
+                              ready={ready}
+                              setReady={setReady}
                               config={config[page]}
                               scrollContainer={scrollContainer}
                             />
@@ -110,6 +114,7 @@ function _Layout({ config = pagesConfig }) {
                           <Footer
                             config={config[page]}
                             scrollContainer={scrollContainer}
+                            ready={ready}
                           />
                         </>,
                         scrollContainer.children[0],
@@ -119,6 +124,8 @@ function _Layout({ config = pagesConfig }) {
                       <LightBox
                         config={config[page]}
                         scrollContainer={scrollContainer}
+                        ready={ready}
+                        setReady={setReady}
                       >
                         <LightBoxComponent config={config[page]} />
                       </LightBox>

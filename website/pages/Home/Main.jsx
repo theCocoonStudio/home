@@ -9,6 +9,7 @@ import { useLightbox } from '../../hooks/useLightbox'
 
 export const Main = function Main({
   scrollContainer,
+  ready,
   config: {
     content: { sections },
     main: {

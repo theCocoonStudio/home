@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 import { useLightbox } from '../hooks/useLightbox'
 
-export const Footer = ({ config, scrollContainer }) => {
+export const Footer = ({ config, scrollContainer, ready }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
@@ -51,6 +51,7 @@ export const Footer = ({ config, scrollContainer }) => {
         config={config}
         scrollContainer={scrollContainer}
         showLightbox={showLightbox}
+        ready={ready}
       />
       <div className={styles.socials} style={socialStyles}>
         <div className={styles.github} style={iconStyles}>

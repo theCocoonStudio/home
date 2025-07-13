@@ -45,7 +45,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
       texture.colorSpace = SRGBColorSpace
       texture.needsUpdate = true
     })
-  }, [])
+  }, [textures])
 
   const photoSizesPx = useRef([])
   const photoData = useMemo(() => {
