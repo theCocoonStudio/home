@@ -82,6 +82,9 @@ export const useMarkupAnimation = ({
   useEffect(() => {
     if (scrollData.offset < scrollData.eps && !titleInitialized.current) {
       titleInitialized.current = true
+      /* remove initial transforms */
+      titleElement.style.transform = 'none'
+      subtitleElement.style.transform = 'none'
       /* titles */
       // font size
       titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
@@ -153,7 +156,7 @@ export const useMarkupAnimation = ({
       }
       /* photographyButton */
       // if in photography focus range, show software photographyButton
-      if (photographyRef.current.photographyButtonVisibleRef.current) {
+      if (photographyRef.current?.photographyButtonVisibleRef.current) {
         if (!photographyButtonVisible.current) {
           const { width, top } =
             photographyRef.current.photoSizesPxRef.current[
