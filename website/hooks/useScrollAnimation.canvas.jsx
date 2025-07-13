@@ -78,6 +78,7 @@ export const useScrollAnimation = (config, animationTargets) => {
             delta,
             scroll,
             scrollRanges,
+            tailFrames,
           ),
       )
     },

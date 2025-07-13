@@ -28,7 +28,7 @@ export const useFluidBackgroundAnimation = ({
   const white = useRef(new Color(colors.white))
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData, scrollRanges) => {
+    (state, delta, scrollData, scrollRanges, tailFrames) => {
       /* set forceCallback */
       if (!forceCallbackSet.current) {
         setForceCallback(boundPathForceCallback)
@@ -83,7 +83,7 @@ export const useFluidBackgroundAnimation = ({
         ? false
         : scrollRanges.photographyDurationVisible
 
-      if (manualRef.current) {
+      if (manualRef.current && tailFrames.current === 0) {
         render(state, delta)
       }
     },
