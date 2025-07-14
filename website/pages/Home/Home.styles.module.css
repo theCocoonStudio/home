@@ -105,7 +105,7 @@
 
 .accent {
   box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  border-radius: 2px;
+  border-radius: 4px;
   position: absolute;
   left: 0;
   top: 0;
@@ -122,7 +122,7 @@
   left: 0;
   background-color: var(--slate);
   box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .button {
@@ -133,7 +133,7 @@
   margin-top: 24px;
   font-variation-settings: 'wdth' 100;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 4px;
 
   background-color: transparent;
   border: 1px solid var(--black);
@@ -177,7 +177,7 @@
   padding: 6px;
   font-variation-settings: 'wdth' 100;
   text-transform: uppercase;
-  border-radius: 2px;
+  border-radius: 4px;
   opacity: 0;
   background-color: transparent;
   border: 1px solid var(--black);
@@ -265,7 +265,7 @@
 }
 
 .scroll {
-  border-radius: 2px;
+  border-radius: 4px;
   border: 2px solid var(--black);
   height: 34px;
   width: 100%;

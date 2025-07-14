@@ -156,7 +156,7 @@
   justify-content: center;
   align-items: center;
   padding: 6px;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid var(--black);
   transition: all 0.1s ease-out;
 }
