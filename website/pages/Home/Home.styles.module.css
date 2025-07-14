@@ -210,9 +210,9 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  position: relative;
+  position: absolute;
   left: 50%;
-  top: 6px;
+  top: calc(100% + 6px);
   transform: translate(-50%);
 }
 
