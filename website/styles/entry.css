@@ -178,3 +178,55 @@ html {
     display: none;
   }
 }
+
+.contact-dialog {
+  background-color: var(--white);
+  color: var(--black);
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    line-height: 1.1em;
+    letter-spacing: 0.02em;
+  }
+}
+
+.contact-email {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  column-gap: 32px;
+  font-size: 1.8rem;
+  line-height: 2em;
+  margin-top: 16px;
+  padding-left: 16px;
+  font-weight: 400;
+  background-color: var(--black);
+  color: var(--white);
+  border-radius: 4px;
+  border: 1px solid var(--black);
+  span:last-child {
+    display: inline-block;
+    height: 100%;
+    font-size: 1.4rem;
+    line-height: 3.6rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    display: inline-flex;
+    padding: 0 16px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background-color: var(--white);
+    color: var(--black);
+    &:hover {
+      cursor: pointer;
+      font-weight: 500;
+    }
+    span {
+      width: 51px;
+      text-align: center;
+    }
+  }
+}

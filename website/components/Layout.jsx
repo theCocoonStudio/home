@@ -7,7 +7,7 @@ import { ScrollControls, View } from '@react-three/drei'
 import pagesConfig from 'website/pages'
 import { composeClassNames, raleway, changaOne } from '../utils/styles'
 import { Footer } from './Footer'
-import { memo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
@@ -20,6 +20,7 @@ import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles'
+import { Dialog } from '@mui/material'
 
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
@@ -52,6 +53,15 @@ function _Layout({ config = pagesConfig }) {
   const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState()
+  const [copied, setCopied] = useState(false)
+  const [contactOpen, setContactOpen] = useState(false)
+
+  const closeContact = useCallback(() => {
+    setContactOpen(false)
+  }, [])
+  const openContact = useCallback(() => {
+    setContactOpen(true)
+  }, [])
 
   const {
     main: { Component, ViewComponent, renderPriority },
@@ -60,6 +70,32 @@ function _Layout({ config = pagesConfig }) {
     lightbox: { Component: LightBoxComponent },
     menu: { Component: MenuComponent },
   } = config[page]
+
+  const { style: contactStyle, className: contactClass } = useMemo(
+    () =>
+      changaOne(
+        false,
+        { padding: `${4 * theme.lengths.atomicPadding}px` },
+        'contact-dialog',
+      ),
+    [],
+  )
+  const { style: emailStyle, className: emailClass } = useMemo(
+    () => raleway(400, false, undefined, 'contact-email'),
+    [],
+  )
+
+  const copy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText('izzy.erlich@thecooon.studio')
+      setCopied(true)
+      setTimeout(() => {
+        setCopied(false)
+      }, 6000)
+    } catch (error) {
+      console.error('caught error copying text programmatically')
+    }
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
@@ -114,6 +150,7 @@ function _Layout({ config = pagesConfig }) {
                           <Footer
                             config={config[page]}
                             scrollContainer={scrollContainer}
+                            openContact={openContact}
                             ready={ready}
                           />
                         </>,
@@ -138,6 +175,17 @@ function _Layout({ config = pagesConfig }) {
                         setScrollDistanceFactor={setScrollDistanceFactor}
                       />
                     )}
+                    <Dialog open={contactOpen} onClose={closeContact}>
+                      <div className={contactClass} style={contactStyle}>
+                        <h1>Send me an email!</h1>
+                        <p style={emailStyle} className={emailClass}>
+                          <span>izzy@thecocoon.studio</span>
+                          <span onClick={copy}>
+                            <span>{copied ? 'copied' : 'copy'}</span>
+                          </span>
+                        </p>
+                      </div>
+                    </Dialog>
                   </div>
                 </Provider>
               </MuiThemeProvider>

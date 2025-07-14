@@ -7,7 +7,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import LinkedInIcon from '@mui/icons-material/LinkedIn'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 
-export const Footer = ({ config, scrollContainer, ready }) => {
+export const Footer = ({ config, scrollContainer, ready, openContact }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
@@ -62,7 +62,11 @@ export const Footer = ({ config, scrollContainer, ready }) => {
         <div className={styles.linkedin} style={iconStyles}>
           <LinkedInIcon />
         </div>
-        <div className={styles.contact} style={iconStyles}>
+        <div
+          className={styles.contact}
+          style={iconStyles}
+          onClick={openContact}
+        >
           <AlternateEmailIcon />
         </div>
       </div>
