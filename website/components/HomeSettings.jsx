@@ -293,19 +293,17 @@ export const HomeSettings = ({
             >
               <p style={popoverStyle} className={popoverClassName}>
                 These settings let you modify the scroll-based interaction with
-                the page content to your liking.
+                the page content.
                 <br />
                 <br />
                 <i>Scroll Distance:</i>
-                <br /> A factor controlling scroll speed. Scroll distance is
-                inversely proportional to scroll speed.
+                <br /> Greater distance, slower scroll. Smaller distance, faster
+                scroll.
                 <br />
                 <br />
                 <i>Focus Factor:</i> <br />
-                Each content item is animated within its scroll range from
-                hidden to focused (visible and stationary), then from focused to
-                hidden again. This setting controls the proportion of the
-                item&#39;s scroll range during which it is focused.
+                The proportion of animation time during which items are in focus
+                and stationary.
               </p>
             </ClickAwayListener>
           </Popover>

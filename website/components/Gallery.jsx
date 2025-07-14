@@ -11,6 +11,8 @@ import {
 import { useTargetItems } from '../pages/Home/useTargetItems'
 import { useLightbox } from '../hooks/useLightbox'
 import { raleway } from '../utils/styles'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 
 export const Gallery = ({
   config: {
@@ -139,53 +141,13 @@ export const Gallery = ({
         style={controlsDescriptionContainerStyle}
       >
         <div className={styles.control} onClick={shiftLeft}>
-          <svg
-            viewBox='0,0,48,48'
-            xmlns='http://www.w3.org/2000/svg'
-            width={48}
-            height={48}
-            strokeWidth={3}
-            transform='rotate(0) matrix(1 0 0 1 0 0)'
-          >
-            <g fill='none' strokeLinejoin='round' strokeWidth={3}>
-              <path
-                fill={black}
-                stroke={white}
-                d='M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z'
-              />
-              <path
-                stroke={white}
-                strokeLinecap='round'
-                d='M27 33L18 24L27 15'
-              />
-            </g>
-          </svg>
+          <ArrowBackIosIcon />
         </div>
         <p ref={description} style={descStyle} className={descClass}>
           test wqoifhqw doiqwhdq
         </p>
         <div className={styles.control} onClick={shiftRight}>
-          <svg
-            viewBox='0,0,48,48'
-            xmlns='http://www.w3.org/2000/svg'
-            width={48}
-            height={48}
-            strokeWidth={3}
-            transform='rotate(0) matrix(1 0 0 1 0 0)'
-          >
-            <g fill='none' strokeLinejoin='round' strokeWidth={3}>
-              <path
-                fill={black}
-                stroke={white}
-                d='M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z'
-              />
-              <path
-                stroke={white}
-                strokeLinecap='round'
-                d='M27 33L18 24L27 15'
-              />
-            </g>
-          </svg>
+          <ArrowForwardIosIcon />
         </div>
       </div>
     </>

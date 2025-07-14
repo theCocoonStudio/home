@@ -19,7 +19,7 @@ export const useMarkupAnimation = ({
   subtitleSizeInitial = 2.8,
   subtitleSizeFinal = 9.8,
   titleSizeInitial = 8,
-  titleSizeFinal = 4,
+  titleSizeFinal = 3,
   showLightbox,
 }) => {
   const {

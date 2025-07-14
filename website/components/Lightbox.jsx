@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import styles from 'website/styles/Lightbox.module.css'
 import { useTheme } from '../hooks/useTheme'
 import { useLightbox } from 'website/hooks/useLightbox'
+import ClearIcon from '@mui/icons-material/Clear'
 
 export const LightBox = ({ children }) => {
   const {
@@ -51,25 +52,7 @@ export const LightBox = ({ children }) => {
         style={exitStyle}
         onClick={onLightboxExitClick}
       >
-        <svg
-          viewBox='0,0,48,48'
-          xmlns='http://www.w3.org/2000/svg'
-          width={48}
-          height={48}
-          strokeWidth={3}
-          transform='rotate(0) matrix(1 0 0 1 0 0)'
-        >
-          <g
-            fill='none'
-            stroke={white}
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth={3}
-          >
-            <path d='M8 8L40 40' />
-            <path d='M8 40L40 8' />
-          </g>
-        </svg>
+        <ClearIcon color={white} fontSize='inherit' />
       </div>
       {children}
     </div>

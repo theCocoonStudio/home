@@ -6,6 +6,7 @@ import { useScrollEvent } from './useScrollEvent'
 import { useScroll } from 'src/hooks/useScroll/useScroll'
 import CircularProgress from '@mui/material/CircularProgress'
 import { raleway } from '../../utils/styles'
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 
 export const FooterItems = ({
   config: {
@@ -65,7 +66,7 @@ export const FooterItems = ({
 
   const settingsStyles = useMemo(
     () => ({
-      columnGap: `calc(2.5 * ${atomicPadding}px)`,
+      columnGap: `calc(2 * ${atomicPadding}px)`,
       opacity:
         section === 'preScroll' || section === 'postScroll' || showLightbox
           ? '0'
@@ -128,27 +129,7 @@ export const FooterItems = ({
           onClick={toggleMenu}
         >
           <div>
-            <svg
-              viewBox='0,0,48,48'
-              xmlns='http://www.w3.org/2000/svg'
-              width={36}
-              height={36}
-              strokeWidth={3}
-              transform='rotate(0) matrix(1 0 0 1 0 0)'
-            >
-              <g fill='none' strokeLinejoin='round' strokeWidth={3}>
-                <path
-                  fill={'none'}
-                  stroke={black}
-                  d='M36.686 15.171C37.9364 16.9643 38.8163 19.0352 39.2147 21.2727H44V26.7273H39.2147C38.8163 28.9648 37.9364 31.0357 36.686 32.829L40.0706 36.2137L36.2137 40.0706L32.829 36.686C31.0357 37.9364 28.9648 38.8163 26.7273 39.2147V44H21.2727V39.2147C19.0352 38.8163 16.9643 37.9364 15.171 36.686L11.7863 40.0706L7.92939 36.2137L11.314 32.829C10.0636 31.0357 9.18372 28.9648 8.78533 26.7273H4V21.2727H8.78533C9.18372 19.0352 10.0636 16.9643 11.314 15.171L7.92939 11.7863L11.7863 7.92939L15.171 11.314C16.9643 10.0636 19.0352 9.18372 21.2727 8.78533V4H26.7273V8.78533C28.9648 9.18372 31.0357 10.0636 32.829 11.314L36.2137 7.92939L40.0706 11.7863L36.686 15.171Z'
-                />
-                <path
-                  fill={'none'}
-                  stroke={black}
-                  d='M24 29C26.7614 29 29 26.7614 29 24C29 21.2386 26.7614 19 24 19C21.2386 19 19 21.2386 19 24C19 26.7614 21.2386 29 24 29Z'
-                />
-              </g>
-            </svg>
+            <SettingsApplicationsIcon />
             {showMenu && <div className={styles.active} />}
           </div>
         </div>
@@ -169,7 +150,7 @@ export const FooterItems = ({
           <path d='M 269.2206572769953 384.60093896713613 Q 256 396.61971830985914 242.7793427230047 384.60093896713613 L 12.018779342723004 153.84037558685446 L 12.018779342723004 153.84037558685446 Q 0 140.61971830985917 12.018779342723004 127.39906103286386 Q 25.239436619718308 115.38028169014085 38.460093896713616 127.39906103286386 L 256 343.73708920187795 L 256 343.73708920187795 L 473.5399061032864 127.39906103286386 L 473.5399061032864 127.39906103286386 Q 486.76056338028167 115.38028169014085 499.981220657277 127.39906103286386 Q 512 140.61971830985917 499.981220657277 153.84037558685446 L 269.2206572769953 384.60093896713613 L 269.2206572769953 384.60093896713613 Z' />
         </svg>
         <div style={instructionStyle} className={instructionClass}>
-          scroll down
+          scroll
         </div>
       </div>
       {!ready && (
