@@ -70,30 +70,35 @@ export const SettingsProvider = ({
   )
 
   const resetSettings = useCallback(() => {
-    setAuto(defaultSettings.performance.auto.value)
-    setResolution(defaultSettings.performance.resolution.value)
-    setFrames(defaultSettings.performance.frames.value)
-    setMapsize(defaultSettings.performance.mapSize.value)
-    setFocusFactor(defaultSettings.scroll.focusFactor.value)
-    setScrollDistance(defaultSettings.scroll.scrollDistance.value)
-  }, [
-    defaultSettings.performance.auto.value,
-    defaultSettings.performance.frames.value,
-    defaultSettings.performance.mapSize.value,
-    defaultSettings.performance.resolution.value,
-    defaultSettings.scroll.focusFactor.value,
-    defaultSettings.scroll.scrollDistance.value,
-  ])
+    if (auto) {
+      setFocusFactor(defaultSettings.scroll.focusFactor.value)
+      setScrollDistance(defaultSettings.scroll.scrollDistance.value)
+    } else {
+      setAuto(defaultSettings.performance.auto.value)
+      setResolution(defaultSettings.performance.resolution.value)
+      setFrames(defaultSettings.performance.frames.value)
+      setMapsize(defaultSettings.performance.mapSize.value)
+      setFocusFactor(defaultSettings.scroll.focusFactor.value)
+      setScrollDistance(defaultSettings.scroll.scrollDistance.value)
+    }
+  }, [auto, defaultSettings])
   const original = useMemo(() => {
     const { performance, scroll } = defaultSettings
-    return (
-      performance.auto.original(auto) &&
-      performance.resolution.original(resolution) &&
-      performance.frames.original(frames) &&
-      performance.mapSize.original(mapSize) &&
-      scroll.focusFactor.original(focusFactor) &&
-      scroll.scrollDistance.original(scrollDistance)
-    )
+    if (auto) {
+      return (
+        scroll.focusFactor.original(focusFactor) &&
+        scroll.scrollDistance.original(scrollDistance)
+      )
+    } else {
+      return (
+        performance.auto.original(auto) &&
+        performance.resolution.original(resolution) &&
+        performance.frames.original(frames) &&
+        performance.mapSize.original(mapSize) &&
+        scroll.focusFactor.original(focusFactor) &&
+        scroll.scrollDistance.original(scrollDistance)
+      )
+    }
   }, [
     auto,
     defaultSettings,
