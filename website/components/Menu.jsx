@@ -100,6 +100,7 @@ export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
       >
         <MenuComponent
           config={config}
+          setShowMenu={setShowMenu}
           setScrollDistanceFactor={setScrollDistanceFactor}
         />
       </DraggableMenu>

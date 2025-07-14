@@ -9,8 +9,13 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline'
 import Popover from '@mui/material/Popover'
 import { ClickAwayListener, Slider } from '@mui/material'
 import { useSettings } from 'website/pages/Home/useSettings'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
-export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
+export const HomeSettings = ({
+  config,
+  setScrollDistanceFactor,
+  setShowMenu,
+}) => {
   const {
     colors: { white, black },
     lengths: { atomicPadding },
@@ -89,6 +94,13 @@ export const HomeSettings = ({ config, setScrollDistanceFactor }) => {
   useEffect(() => {
     setScrollDistanceFactor(scrollDistance)
   }, [scrollDistance, setScrollDistanceFactor])
+
+  const section = useScrollEvent()
+  useEffect(() => {
+    if (section === 'preScroll' || section === 'postScroll') {
+      setShowMenu(false)
+    }
+  }, [section, setShowMenu])
 
   return (
     <div className={styles.container}>
