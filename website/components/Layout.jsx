@@ -58,6 +58,7 @@ function _Layout({ config = pagesConfig }) {
 
   const closeContact = useCallback(() => {
     setContactOpen(false)
+    setCopied(false)
   }, [])
   const openContact = useCallback(() => {
     setContactOpen(true)
