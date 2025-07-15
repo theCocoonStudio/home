@@ -11,6 +11,7 @@
   bottom: 0;
   background: linear-gradient(-45deg, var(--white), #899394);
   transition: opacity 1s;
+  z-index: -1;
 }
 
 .title {
