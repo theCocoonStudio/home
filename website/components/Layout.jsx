@@ -4,7 +4,6 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import pagesConfig from 'website/pages'
 import { composeClassNames, raleway, changaOne } from '../utils/styles'
 import { Footer } from './Footer'
 import { memo, useCallback, useMemo, useState } from 'react'
@@ -21,6 +20,9 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles'
 import { Dialog } from '@mui/material'
+import pagesConfig from 'website/pages'
+import { useParams } from 'react-router'
+import { WrongWay } from './WrongWay'
 
 const theme = {
   utils: { compose: composeClassNames, raleway, changaOne },
@@ -40,7 +42,17 @@ const theme = {
   },
 }
 
-function _Layout({ config = pagesConfig }) {
+function _Layout() {
+  const { '*': splat } = useParams()
+  const config = splat === '' ? pagesConfig['home'] : pagesConfig[splat]
+  const {
+    main: { Component, ViewComponent, renderPriority },
+    context: { Provider },
+    scroll: { scrollControlsProps },
+    lightbox: { Component: LightBoxComponent },
+    menu: { Component: MenuComponent },
+  } = config || { main: {}, context: {}, scroll: {}, lightbox: {}, menu: {} }
+
   const muiTheme = createTheme({
     spacing: theme.atomicPadding / 2,
     palette: {
@@ -49,7 +61,7 @@ function _Layout({ config = pagesConfig }) {
     },
     typography: { switchIcon: '2rem' },
   })
-  const [page, setPage] = useState('home')
+
   const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState()
@@ -63,14 +75,6 @@ function _Layout({ config = pagesConfig }) {
   const openContact = useCallback(() => {
     setContactOpen(true)
   }, [])
-
-  const {
-    main: { Component, ViewComponent, renderPriority },
-    context: { Provider },
-    scroll: { scrollControlsProps },
-    lightbox: { Component: LightBoxComponent },
-    menu: { Component: MenuComponent },
-  } = config[page]
 
   const { style: contactStyle, className: contactClass } = useMemo(
     () =>
@@ -105,90 +109,94 @@ function _Layout({ config = pagesConfig }) {
           <MenuProvider>
             <DndContext>
               <MuiThemeProvider theme={muiTheme}>
-                <Provider config={config[page]}>
-                  <div className={styles.layout}>
-                    <ThreeApp eventPrefix={'client'}>
-                      <ScrollControls
-                        {...scrollControlsProps}
-                        distance={scrollDistanceFactor}
-                      >
-                        <View.Port />
-                        <ScrollHTMLRef setContainer={setScrollContainer} />
-                      </ScrollControls>
-                    </ThreeApp>
+                {typeof config === 'undefined' ? (
+                  <WrongWay />
+                ) : (
+                  <Provider config={config}>
+                    <div className={styles.layout}>
+                      <ThreeApp eventPrefix={'client'}>
+                        <ScrollControls
+                          {...scrollControlsProps}
+                          distance={scrollDistanceFactor}
+                        >
+                          <View.Port />
+                          <ScrollHTMLRef setContainer={setScrollContainer} />
+                        </ScrollControls>
+                      </ThreeApp>
 
-                    {(Component || ViewComponent) &&
-                      scrollContainer &&
-                      createPortal(
-                        <>
-                          {ViewComponent && (
-                            <View
-                              className={styles.view}
-                              index={renderPriority}
-                              /* frames={1} */
-                            >
-                              <ViewComponent
+                      {(Component || ViewComponent) &&
+                        scrollContainer &&
+                        createPortal(
+                          <>
+                            {ViewComponent && (
+                              <View
+                                className={styles.view}
+                                index={renderPriority}
+                                /* frames={1} */
+                              >
+                                <ViewComponent
+                                  ready={ready}
+                                  setReady={setReady}
+                                  config={config}
+                                  scrollContainer={scrollContainer}
+                                />
+                                <EventLayerOn />
+                              </View>
+                            )}
+                            {Component && (
+                              <Component
                                 ready={ready}
                                 setReady={setReady}
-                                config={config[page]}
+                                config={config}
                                 scrollContainer={scrollContainer}
                               />
-                              <EventLayerOn />
-                            </View>
-                          )}
-                          {Component && (
-                            <Component
-                              ready={ready}
-                              setReady={setReady}
-                              config={config[page]}
+                            )}
+                            <Nav
+                              config={config}
                               scrollContainer={scrollContainer}
                             />
-                          )}
-                          <Nav
-                            config={config[page]}
-                            scrollContainer={scrollContainer}
-                          />
-                          <Footer
-                            config={config[page]}
-                            scrollContainer={scrollContainer}
-                            openContact={openContact}
-                            ready={ready}
-                          />
-                        </>,
-                        scrollContainer.children[0],
-                      )}
+                            <Footer
+                              config={config}
+                              scrollContainer={scrollContainer}
+                              openContact={openContact}
+                              ready={ready}
+                            />
+                          </>,
+                          scrollContainer.children[0],
+                        )}
 
-                    {LightBoxComponent && (
-                      <LightBox
-                        config={config[page]}
-                        scrollContainer={scrollContainer}
-                        ready={ready}
-                        setReady={setReady}
-                      >
-                        <LightBoxComponent config={config[page]} />
-                      </LightBox>
-                    )}
-                    {MenuComponent && (
-                      <Menu
-                        config={config[page]}
-                        scrollContainer={scrollContainer}
-                        MenuComponent={MenuComponent}
-                        setScrollDistanceFactor={setScrollDistanceFactor}
-                      />
-                    )}
-                    <Dialog open={contactOpen} onClose={closeContact}>
-                      <div className={contactClass} style={contactStyle}>
-                        <h1>Send me an email!</h1>
-                        <p style={emailStyle} className={emailClass}>
-                          <span>izzy@thecocoon.studio</span>
-                          <span onClick={copy}>
-                            <span>{copied ? 'copied' : 'copy'}</span>
-                          </span>
-                        </p>
-                      </div>
-                    </Dialog>
-                  </div>
-                </Provider>
+                      {LightBoxComponent && (
+                        <LightBox
+                          config={config}
+                          scrollContainer={scrollContainer}
+                          ready={ready}
+                          setReady={setReady}
+                        >
+                          <LightBoxComponent config={config} />
+                        </LightBox>
+                      )}
+                      {MenuComponent && (
+                        <Menu
+                          config={config}
+                          scrollContainer={scrollContainer}
+                          MenuComponent={MenuComponent}
+                          setScrollDistanceFactor={setScrollDistanceFactor}
+                        />
+                      )}
+                      <Dialog open={contactOpen} onClose={closeContact}>
+                        <div className={contactClass} style={contactStyle}>
+                          <h1>Send me an email!</h1>
+                          <p style={emailStyle} className={emailClass}>
+                            <span>izzy@thecocoon.studio</span>
+                            <span onClick={copy}>
+                              <span>{copied ? 'copied' : 'copy'}</span>
+                            </span>
+                          </p>
+                        </div>
+                      </Dialog>
+                    </div>
+                  </Provider>
+                )}
               </MuiThemeProvider>
             </DndContext>
           </MenuProvider>
