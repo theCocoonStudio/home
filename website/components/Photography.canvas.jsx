@@ -29,6 +29,7 @@ const _Photography = function PhotographyAnimation(
     itemData,
     zPos,
     targetDepth,
+    setReady,
     depth = 0.03,
     repeatFactor = 4.2,
   },
@@ -114,6 +115,7 @@ const _Photography = function PhotographyAnimation(
         targetDepth={targetDepth}
         setPhotographyItemsGroup={setPhotographyItemsGroup}
         range={range}
+        setReady={setReady}
       />
       <mesh ref={mesh} position-z={zPos - depth} receiveShadow castShadow>
         <planeGeometry args={[1, 1]} />

@@ -243,6 +243,7 @@ export const config = {
     markupIds: {
       scrollContainer: 'scroll-container',
       fpsContainer: 'fps-container',
+      progressContainer: 'progress-status',
     },
   },
   lightbox: {

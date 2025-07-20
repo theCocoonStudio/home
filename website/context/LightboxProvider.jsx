@@ -5,7 +5,6 @@ export const LightboxProvider = ({ children }) => {
   const [showLightbox, setShowLightbox] = useState(false)
   const [onLightboxExitClick, _setOnLightboxExitClick] = useState(() => () => {
     {
-      console.log('setting')
       setShowLightbox(false)
     }
   })

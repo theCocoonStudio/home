@@ -9,9 +9,18 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { useTexture } from '@react-three/drei'
-import { BoxGeometry, MeshBasicMaterial, SRGBColorSpace, Vector3 } from 'three'
+import {
+  MeshBasicMaterial,
+  RepeatWrapping,
+  SRGBColorSpace,
+  Vector3,
+} from 'three'
 import { setImageScale } from '../utils/bounds'
-import { useCanvasMaterial } from '../hooks/useCanvasMaterial.canvas'
+import metal from 'website/assets/canvas/metal.png'
+import norm from 'website/assets/canvas/norm.png'
+import rough from 'website/assets/canvas/rough.png'
+import { compileSceneAsync } from '../utils/gl'
+import { useThree } from '@react-three/fiber'
 
 export const PhotographyItems = forwardRef(function PhotographyItems(
   {
@@ -23,7 +32,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     depth,
     targetDepth,
     setPhotographyItemsGroup,
-    range,
+    setReady,
   },
   forwardedRef,
 ) {
@@ -39,14 +48,25 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   }, [items])
 
   const textures = useTexture([...urls])
-
+  const materialTextures = useTexture([metal, norm, rough])
   useEffect(() => {
     textures.forEach((texture) => {
       texture.colorSpace = SRGBColorSpace
       texture.needsUpdate = true
     })
   }, [textures])
-
+  useEffect(
+    () => () => {
+      textures.forEach((texture) => texture.dispose())
+    },
+    [textures],
+  )
+  useEffect(
+    () => () => {
+      materialTextures.forEach((texture) => texture.dispose())
+    },
+    [materialTextures, textures],
+  )
   const photoSizesPx = useRef([])
   const photoData = useMemo(() => {
     if (itemData) {
@@ -121,19 +141,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     zPos,
   ])
 
-  const geometry = useMemo(() => new BoxGeometry(1, 1, 1), [])
-  const activeMaterial = useCanvasMaterial()
   const inactiveMaterial = useMemo(
     () => new MeshBasicMaterial({ color: colors.charcoal }),
     [colors.charcoal],
-  )
-  useEffect(
-    () => () => {
-      geometry.dispose()
-      inactiveMaterial.dispose()
-      textures.forEach((texture) => texture.dispose())
-    },
-    [geometry, inactiveMaterial, textures],
   )
 
   useEffect(() => {
@@ -142,18 +152,136 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
   const softwareItems = useMemo(() => {
     if (photoData?.initialScale) {
+      const [metalnessMap, normalMap, roughnessMap] = materialTextures
       return items.map(({ index, range }, i) => {
+        const repeat = [
+          1.7 * photoData.initialScale[i].x,
+          1.7 * photoData.initialScale[i].y,
+          1.7 * photoData.initialScale[i].z,
+        ]
         return (
           <mesh
             key={`photographyItems${index}`}
-            geometry={geometry}
             position-x={-10}
             userData={{ index, range }}
-          />
+            /* material={[]} */
+            castShadow
+          >
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial
+              attach='material-0'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[2], repeat[1]]}
+              metalnessMap-repeat={[repeat[2], repeat[1]]}
+              roughnessMap-repeat={[repeat[2], repeat[1]]}
+            />
+            <meshStandardMaterial
+              attach='material-1'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[2], repeat[1]]}
+              metalnessMap-repeat={[repeat[2], repeat[1]]}
+              roughnessMap-repeat={[repeat[2], repeat[1]]}
+            />
+            <meshStandardMaterial
+              attach='material-2'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[0], repeat[2]]}
+              metalnessMap-repeat={[repeat[0], repeat[2]]}
+              roughnessMap-repeat={[repeat[0], repeat[2]]}
+            />
+            <meshStandardMaterial
+              attach='material-3'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[0], repeat[2]]}
+              metalnessMap-repeat={[repeat[0], repeat[2]]}
+              roughnessMap-repeat={[repeat[0], repeat[2]]}
+            />
+            <meshStandardMaterial
+              map={textures[i]}
+              attach='material-4'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[0], repeat[1]]}
+              metalnessMap-repeat={[repeat[0], repeat[1]]}
+              roughnessMap-repeat={[repeat[0], repeat[1]]}
+            />
+            <meshStandardMaterial
+              attach='material-5'
+              metalnessMap={metalnessMap}
+              normalMap={normalMap}
+              roughnessMap={roughnessMap}
+              normalMap-wrapS={RepeatWrapping}
+              normalMap-wrapT={RepeatWrapping}
+              metalnessMap-wrapS={RepeatWrapping}
+              metalnessMap-wrapT={RepeatWrapping}
+              roughnessMap-wrapS={RepeatWrapping}
+              roughnessMap-wrapT={RepeatWrapping}
+              normalScale={[6.0, 6.0]}
+              metalness={0.1}
+              roughness={0.5}
+              normalMap-repeat={[repeat[0], repeat[1]]}
+              metalnessMap-repeat={[repeat[0], repeat[1]]}
+              roughnessMap-repeat={[repeat[0], repeat[1]]}
+            />
+          </mesh>
         )
       })
     }
-  }, [geometry, items, photoData])
+  }, [items, materialTextures, photoData?.initialScale, textures])
 
   const damper = useMemo(() => {
     if (group.current?.children && itemData) {
@@ -188,59 +316,23 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
   const photographyButtonVisible = useRef(false)
   const activeItemIndex = useRef(null)
-  const frameCallback = useCallback(
-    ({ targetIndex, item: { ref }, index }) => {
-      if (targetIndex === 3) {
-        photographyButtonVisible.current = true
-        activeItemIndex.current = index
-      } else {
-        photographyButtonVisible.current = false
-        activeItemIndex.current = undefined
-      }
+  const frameCallback = useCallback(({ targetIndex, item: { ref }, index }) => {
+    if (targetIndex === 3) {
+      photographyButtonVisible.current = true
+      activeItemIndex.current = index
+    } else {
+      photographyButtonVisible.current = false
+      activeItemIndex.current = undefined
+    }
+    if (group.current) {
       group.current.children.forEach((child) => {
         if (child === ref) {
-          if (child.material !== activeMaterial) {
-            const repeat = [
-              1.7 * photoData.initialScale[index].x,
-              1.7 * photoData.initialScale[index].y,
-              1.7 * photoData.initialScale[index].z,
-            ]
-            activeMaterial[0].normalMap.repeat.set(repeat[2], repeat[1])
-            activeMaterial[0].metalnessMap.repeat.set(repeat[2], repeat[1])
-            activeMaterial[0].roughnessMap.repeat.set(repeat[2], repeat[1])
-            activeMaterial[0].needsUpdate = true
-
-            activeMaterial[2].normalMap.repeat.set(repeat[0], repeat[2])
-            activeMaterial[2].metalnessMap.repeat.set(repeat[0], repeat[2])
-            activeMaterial[2].roughnessMap.repeat.set(repeat[0], repeat[2])
-            activeMaterial[2].needsUpdate = true
-
-            activeMaterial[4].map = textures[index]
-            activeMaterial[4].normalMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[4].metalnessMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[4].roughnessMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[4].needsUpdate = true
-
-            activeMaterial[5].normalMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[5].metalnessMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[5].roughnessMap.repeat.set(repeat[0], repeat[1])
-            activeMaterial[5].needsUpdate = true
-
-            ref.material = activeMaterial
-            ref.castShadow = true
-            //
-          }
-        } else {
-          if (child.material !== inactiveMaterial) {
-            child.material = inactiveMaterial
-            child.castShadow = false
-          }
+          //
         }
       })
-    },
-    [activeMaterial, inactiveMaterial, photoData, textures],
-  )
-  const materialSet = useRef(false)
+    }
+  }, [])
+
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
       if (!scrollRanges.photographyVisible) {
@@ -248,21 +340,12 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
           photographyButtonVisible.current = false
           activeItemIndex.current = undefined
         }
-        if (materialSet.current === false) {
-          group.current.children.forEach((child) => {
-            child.material = inactiveMaterial
-            child.castShadow = false
-          })
-          materialSet.current = true
-        }
-      } else {
-        materialSet.current = false
       }
       if (damper) {
         damper.frame(delta, scrollData, group.current && frameCallback)
       }
     },
-    [damper, frameCallback, inactiveMaterial],
+    [damper, frameCallback],
   )
 
   useImperativeHandle(
@@ -276,12 +359,22 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     [scrollCallback],
   )
 
+  const get = useThree(({ get }) => get)
+
+  useEffect(() => {
+    if (group.current?.children?.length > 0) {
+      const { gl, scene, camera } = get()
+      compileSceneAsync(gl, scene, camera, () => {
+        setReady(true)
+      })
+    }
+  })
   return (
     <>
       <group
         ref={group}
         onPointerDown={() => {
-          console.log('hi')
+          console.log(group.current)
         }}
       >
         {softwareItems}

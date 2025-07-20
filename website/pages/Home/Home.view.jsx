@@ -1,11 +1,11 @@
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { PerspectiveCamera } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
 import { FluidBackgroundAnimation } from '../../components/FluidBackground.canvas'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { Suspense, useCallback, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { DirectionalLightAnimation } from '../../components/DirectionalLight.canvas'
-import { useFrame, useThree } from '@react-three/fiber'
+import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { SoftwareAnimation } from '../../components/Software.canvas'
 import { Vector3 } from 'three'
@@ -20,7 +20,6 @@ import { useLightbox } from '../../hooks/useLightbox'
 
 export const Home = ({
   config,
-  ready,
   setReady,
   zPos = 0.1,
   initialDepth = 0.05,
@@ -149,17 +148,8 @@ export const Home = ({
   useResizeEvent(canvas, resizeCallback)
   const itemGeometry = useItemGeometry(initialDepth)
 
-  const readyRef = useRef(false)
-
-  useFrame(() => {
-    if (!readyRef.current) {
-      setReady(true)
-      readyRef.current = true
-    }
-  })
-
   return (
-    <>
+    <Suspense>
       <EventDispatcherComponent config={config} />
       <MarkupAnimation
         ref={markupRef}
@@ -180,6 +170,7 @@ export const Home = ({
         itemGeometry={itemGeometry}
         itemData={itemData}
       />
+
       <PhotographyAnimation
         ref={photographyRef}
         config={config}
@@ -188,7 +179,9 @@ export const Home = ({
         itemData={itemData}
         zPos={zPos}
         targetDepth={targetDepth}
+        setReady={setReady}
       />
+
       <BlogAnimation
         ref={blogRef}
         config={config}
@@ -210,7 +203,6 @@ export const Home = ({
       <Environment preset='city' environmentIntensity={0.9} />
       <ambientLight intensity={0.7} />
       <Effects renderPriority={renderPriority} />
-      {/* <OrbitControls /> */}
-    </>
+    </Suspense>
   )
 }

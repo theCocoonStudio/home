@@ -166,38 +166,36 @@ export const NavItems = ({
         style={photographyStyle}
         onClick={targets.photography}
       >
-        <>
-          <svg
-            viewBox='0,0,48,48'
-            xmlns='http://www.w3.org/2000/svg'
-            width={36}
-            height={36}
+        <svg
+          viewBox='0,0,48,48'
+          xmlns='http://www.w3.org/2000/svg'
+          width={36}
+          height={36}
+          strokeWidth={3}
+          transform='rotate(0) matrix(1 0 0 1 0 0)'
+        >
+          <g
+            fill='none'
+            stroke={`${black}`}
+            strokeLinejoin='round'
             strokeWidth={3}
-            transform='rotate(0) matrix(1 0 0 1 0 0)'
           >
-            <g
-              fill='none'
-              stroke={`${black}`}
-              strokeLinejoin='round'
-              strokeWidth={3}
-            >
-              <path
-                strokeLinecap='round'
-                d='M5 10C5 8.89543 5.89543 8 7 8L41 8C42.1046 8 43 8.89543 43 10V38C43 39.1046 42.1046 40 41 40H7C5.89543 40 5 39.1046 5 38V10Z'
-                clipRule='evenodd'
-              />
-              <path
-                strokeLinecap='round'
-                d='M14.5 18C15.3284 18 16 17.3284 16 16.5C16 15.6716 15.3284 15 14.5 15C13.6716 15 13 15.6716 13 16.5C13 17.3284 13.6716 18 14.5 18Z'
-                clipRule='evenodd'
-              />
-              <path
-                fill={photographyStyle.color}
-                d='M15 24L20 28L26 21L43 34V38C43 39.1046 42.1046 40 41 40H7C5.89543 40 5 39.1046 5 38V34L15 24Z'
-              />
-            </g>
-          </svg>
-        </>
+            <path
+              strokeLinecap='round'
+              d='M5 10C5 8.89543 5.89543 8 7 8L41 8C42.1046 8 43 8.89543 43 10V38C43 39.1046 42.1046 40 41 40H7C5.89543 40 5 39.1046 5 38V10Z'
+              clipRule='evenodd'
+            />
+            <path
+              strokeLinecap='round'
+              d='M14.5 18C15.3284 18 16 17.3284 16 16.5C16 15.6716 15.3284 15 14.5 15C13.6716 15 13 15.6716 13 16.5C13 17.3284 13.6716 18 14.5 18Z'
+              clipRule='evenodd'
+            />
+            <path
+              fill={photographyStyle.color}
+              d='M15 24L20 28L26 21L43 34V38C43 39.1046 42.1046 40 41 40H7C5.89543 40 5 39.1046 5 38V34L15 24Z'
+            />
+          </g>
+        </svg>
 
         {currentRangeKey === 'photography' && (
           <div style={charcoalStyle} className={styles.active} />
@@ -227,32 +225,30 @@ export const NavItems = ({
         style={blogStyle}
         onClick={targets.blog}
       >
-        <>
-          <svg
-            viewBox='0,0,48,48'
-            xmlns='http://www.w3.org/2000/svg'
-            width={36}
-            height={36}
-            strokeWidth={3}
-            transform='rotate(0) matrix(1 0 0 1 0 0)'
-          >
-            <g fill='none' strokeLinejoin='round' strokeWidth={3}>
-              <path
-                fill={blogStyle.color}
-                stroke={`${black}`}
-                d='M42 8H6C4.89543 8 4 8.89543 4 10V38C4 39.1046 4.89543 40 6 40H42C43.1046 40 44 39.1046 44 38V10C44 8.89543 43.1046 8 42 8Z'
-              />
-              <path
-                fill={blogStyle.color}
-                stroke={`${white}`}
-                d='M36 16H28V24H36V16Z'
-              />
-              <path stroke={`${white}`} strokeLinecap='round' d='M12 32H36' />
-              <path stroke={`${white}`} strokeLinecap='round' d='M12 16H18' />
-              <path stroke={`${white}`} strokeLinecap='round' d='M12 24H18' />
-            </g>
-          </svg>
-        </>
+        <svg
+          viewBox='0,0,48,48'
+          xmlns='http://www.w3.org/2000/svg'
+          width={36}
+          height={36}
+          strokeWidth={3}
+          transform='rotate(0) matrix(1 0 0 1 0 0)'
+        >
+          <g fill='none' strokeLinejoin='round' strokeWidth={3}>
+            <path
+              fill={blogStyle.color}
+              stroke={`${black}`}
+              d='M42 8H6C4.89543 8 4 8.89543 4 10V38C4 39.1046 4.89543 40 6 40H42C43.1046 40 44 39.1046 44 38V10C44 8.89543 43.1046 8 42 8Z'
+            />
+            <path
+              fill={blogStyle.color}
+              stroke={`${white}`}
+              d='M36 16H28V24H36V16Z'
+            />
+            <path stroke={`${white}`} strokeLinecap='round' d='M12 32H36' />
+            <path stroke={`${white}`} strokeLinecap='round' d='M12 16H18' />
+            <path stroke={`${white}`} strokeLinecap='round' d='M12 24H18' />
+          </g>
+        </svg>
 
         {currentRangeKey === 'blog' && (
           <div style={purpleStyle} className={styles.active} />

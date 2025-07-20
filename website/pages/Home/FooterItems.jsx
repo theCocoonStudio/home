@@ -11,7 +11,7 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 export const FooterItems = ({
   config: {
     footer: {
-      markupIds: { scrollContainer, fpsContainer },
+      markupIds: { scrollContainer, fpsContainer, progressContainer },
     },
     content: {
       itemCount,
@@ -155,7 +155,9 @@ export const FooterItems = ({
       </div>
       {!ready && (
         <div className={`${styles.progress}`}>
-          <div className={instructionClass}>loading GPU resources...</div>
+          <div id={progressContainer} className={instructionClass}>
+            loading GPU resources...
+          </div>
           <CircularProgress disableShrink color='common.black' size={50} />
         </div>
       )}
