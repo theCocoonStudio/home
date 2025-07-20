@@ -50,7 +50,7 @@ export const useBoundPathForce = (backgroundRef) => {
   // implement forceCallback
   const elapsed = useRef(0.0)
   const applyingForce = useRef(false)
-  const randomLength = useRef(clamp(Math.random() * 4.0, 1.3, 3.8))
+  const randomLength = useRef(0.001)
   const force = useRef(new Vector2())
   const center = useRef(new Vector2())
   const prevCenter = useRef(new Vector2())
