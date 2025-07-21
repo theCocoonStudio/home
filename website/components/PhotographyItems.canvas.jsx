@@ -50,23 +50,52 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
 
   const textures = useTexture([...urls])
   const materialTextures = useTexture([metal, norm, rough])
+
+  const canvasTextures = useMemo(() => {
+    if (textures.length > 0 && materialTextures.length > 0) {
+      return textures.map(() => {
+        const [metalnessMap, normalMap, roughnessMap] = materialTextures
+        return {
+          metalnessMaps: [
+            metalnessMap.clone(),
+            metalnessMap.clone(),
+            metalnessMap.clone(),
+          ],
+          normalMaps: [normalMap.clone(), normalMap.clone(), normalMap.clone()],
+          roughnessMaps: [
+            roughnessMap.clone(),
+            roughnessMap.clone(),
+            roughnessMap.clone(),
+          ],
+        }
+      })
+    }
+  }, [materialTextures, textures])
+
   useEffect(() => {
     textures.forEach((texture) => {
       texture.colorSpace = SRGBColorSpace
       texture.needsUpdate = true
     })
-  }, [textures])
-  useEffect(
-    () => () => {
+    return () => {
       textures.forEach((texture) => texture.dispose())
-    },
-    [textures],
-  )
+    }
+  }, [textures])
   useEffect(
     () => () => {
       materialTextures.forEach((texture) => texture.dispose())
     },
-    [materialTextures, textures],
+    [materialTextures],
+  )
+  useEffect(
+    () => () => {
+      canvasTextures.forEach(({ metalnessMaps, normalMaps, roughnessMaps }) => {
+        metalnessMaps.forEach((texture) => texture.dispose())
+        normalMaps.forEach((texture) => texture.dispose())
+        roughnessMaps.forEach((texture) => texture.dispose())
+      })
+    },
+    [canvasTextures],
   )
   const photoSizesPx = useRef([])
   const photoData = useMemo(() => {
@@ -152,8 +181,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
   }, [setPhotographyItemsGroup])
 
   const photographyItems = useMemo(() => {
-    if (photoData?.initialScale) {
-      const [metalnessMap, normalMap, roughnessMap] = materialTextures
+    if (photoData?.initialScale && canvasTextures) {
       return items.map(({ index, range }, i) => {
         const repeat = [
           1.7 * photoData.initialScale[i].x,
@@ -171,9 +199,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial
               attach='material-0'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[0]}
+              normalMap={canvasTextures[i].normalMaps[0]}
+              roughnessMap={canvasTextures[i].roughnessMaps[0]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -189,9 +217,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             />
             <meshStandardMaterial
               attach='material-1'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[0]}
+              normalMap={canvasTextures[i].normalMaps[0]}
+              roughnessMap={canvasTextures[i].roughnessMaps[0]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -207,9 +235,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             />
             <meshStandardMaterial
               attach='material-2'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[1]}
+              normalMap={canvasTextures[i].normalMaps[1]}
+              roughnessMap={canvasTextures[i].roughnessMaps[1]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -225,9 +253,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             />
             <meshStandardMaterial
               attach='material-3'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[1]}
+              normalMap={canvasTextures[i].normalMaps[1]}
+              roughnessMap={canvasTextures[i].roughnessMaps[1]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -244,9 +272,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             <meshStandardMaterial
               map={textures[i]}
               attach='material-4'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[2]}
+              normalMap={canvasTextures[i].normalMaps[2]}
+              roughnessMap={canvasTextures[i].roughnessMaps[2]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -262,9 +290,9 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             />
             <meshStandardMaterial
               attach='material-5'
-              metalnessMap={metalnessMap}
-              normalMap={normalMap}
-              roughnessMap={roughnessMap}
+              metalnessMap={canvasTextures[i].metalnessMaps[2]}
+              normalMap={canvasTextures[i].normalMaps[2]}
+              roughnessMap={canvasTextures[i].roughnessMaps[2]}
               normalMap-wrapS={RepeatWrapping}
               normalMap-wrapT={RepeatWrapping}
               metalnessMap-wrapS={RepeatWrapping}
@@ -282,7 +310,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         )
       })
     }
-  }, [items, materialTextures, photoData?.initialScale, textures])
+  }, [canvasTextures, items, photoData?.initialScale, textures])
 
   const damper = useMemo(() => {
     if (group.current?.children && itemData) {
