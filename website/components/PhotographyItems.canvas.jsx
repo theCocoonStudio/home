@@ -21,6 +21,7 @@ import norm from 'website/assets/canvas/norm.png'
 import rough from 'website/assets/canvas/rough.png'
 import { compileSceneAsync } from '../utils/gl'
 import { useThree } from '@react-three/fiber'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const PhotographyItems = forwardRef(function PhotographyItems(
   {
@@ -150,7 +151,7 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     setPhotographyItemsGroup(group.current)
   }, [setPhotographyItemsGroup])
 
-  const softwareItems = useMemo(() => {
+  const photographyItems = useMemo(() => {
     if (photoData?.initialScale) {
       const [metalnessMap, normalMap, roughnessMap] = materialTextures
       return items.map(({ index, range }, i) => {
@@ -369,15 +370,17 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
       })
     }
   })
+  const postScroll = useScrollEvent('postScroll')
   return (
     <>
       <group
+        visible={!postScroll}
         ref={group}
         onPointerDown={() => {
           console.log(group.current)
         }}
       >
-        {softwareItems}
+        {photographyItems}
       </group>
     </>
   )

@@ -9,6 +9,7 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const BlogItems = forwardRef(function BlogItems(
   { range, itemGeometry, items, itemData, focusFactor, setBlogItemsGroup },
@@ -34,7 +35,7 @@ export const BlogItems = forwardRef(function BlogItems(
     },
     [activeMaterial, inactiveMaterial],
   )
-  const softwareItems = useMemo(
+  const blogItems = useMemo(
     () =>
       items.map(({ index, range }) => (
         <mesh
@@ -123,15 +124,18 @@ export const BlogItems = forwardRef(function BlogItems(
   useEffect(() => {
     setBlogItemsGroup(group.current)
   }, [setBlogItemsGroup])
+
+  const postScroll = useScrollEvent('postScroll')
   return (
     <>
       <group
+        visible={!postScroll}
         ref={group}
         onPointerDown={() => {
-          console.log('hi')
+          group.current.visible = true
         }}
       >
-        {softwareItems}
+        {blogItems}
       </group>
     </>
   )

@@ -1,13 +1,11 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
 import { BlogItems } from './BlogItems.canvas'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
 import { useSettings } from 'website/pages/Home/useSettings'
 
 const _Blog = function BlogAnimation(
@@ -44,13 +42,6 @@ const _Blog = function BlogAnimation(
     }),
     [blogItemsGroup, resizeCallback, scrollCallback],
   )
-
-  const postScroll = useScrollEvent('postScroll')
-  useEffect(() => {
-    if (blogItemsGroup) {
-      blogItemsGroup.visible = postScroll ? false : true
-    }
-  }, [postScroll, blogItemsGroup])
 
   return (
     <BlogItems

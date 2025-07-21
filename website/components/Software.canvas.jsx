@@ -1,13 +1,11 @@
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
 import { SoftwareItems } from './SoftwareItems.canvas'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
 import { useSettings } from 'website/pages/Home/useSettings'
 
 const _Software = function SoftwareAnimation(
@@ -43,13 +41,6 @@ const _Software = function SoftwareAnimation(
     }),
     [resizeCallback, scrollCallback, softwareItemsGroup],
   )
-
-  const postScroll = useScrollEvent('postScroll')
-  useEffect(() => {
-    if (softwareItemsGroup) {
-      softwareItemsGroup.visible = postScroll ? false : true
-    }
-  }, [postScroll, softwareItemsGroup])
 
   return (
     <SoftwareItems

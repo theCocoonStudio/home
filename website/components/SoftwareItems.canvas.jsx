@@ -10,6 +10,7 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
+import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
   { range, itemGeometry, items, itemData, focusFactor, setSoftwareItemsGroup },
@@ -124,9 +125,13 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   useEffect(() => {
     setSoftwareItemsGroup(group.current)
   }, [setSoftwareItemsGroup])
+
+  const postScroll = useScrollEvent('postScroll')
+
   return (
     <>
       <group
+        visible={!postScroll}
         ref={group}
         onPointerDown={() => {
           console.log('hi')
