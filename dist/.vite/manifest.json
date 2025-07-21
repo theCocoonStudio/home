@@ -1,0 +1,75 @@
+{
+  "_mui-CHdw4NoT.js": {
+    "file": "assets/mui-CHdw4NoT.js",
+    "name": "mui"
+  },
+  "_three-C55YgfyD.js": {
+    "file": "assets/three-C55YgfyD.js",
+    "name": "three"
+  },
+  "index.html": {
+    "file": "assets/index-CRJgFNOv.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_mui-CHdw4NoT.js",
+      "_three-C55YgfyD.js"
+    ],
+    "css": [
+      "assets/index-CNgvZxK0.css"
+    ],
+    "assets": [
+      "assets/normal-48uy-TVR.jpg",
+      "assets/roughness-Cxye7Wui.jpg",
+      "assets/metal-ELil_QjW.png",
+      "assets/norm-7X2bSwWS.png",
+      "assets/rough-DrOEbWVg.png",
+      "assets/test-CwNiKBEh.jpg",
+      "assets/test2-iha7Qo5B.jpg",
+      "assets/test3-Dv9Nv0vA.jpg",
+      "assets/test4-xim3aEix.jpg",
+      "assets/test5-CydiYgKy.jpg"
+    ]
+  },
+  "website/assets/canvas/metal.png": {
+    "file": "assets/metal-ELil_QjW.png",
+    "src": "website/assets/canvas/metal.png"
+  },
+  "website/assets/canvas/norm.png": {
+    "file": "assets/norm-7X2bSwWS.png",
+    "src": "website/assets/canvas/norm.png"
+  },
+  "website/assets/canvas/rough.png": {
+    "file": "assets/rough-DrOEbWVg.png",
+    "src": "website/assets/canvas/rough.png"
+  },
+  "website/assets/photography/test.jpg": {
+    "file": "assets/test-CwNiKBEh.jpg",
+    "src": "website/assets/photography/test.jpg"
+  },
+  "website/assets/photography/test2.jpg": {
+    "file": "assets/test2-iha7Qo5B.jpg",
+    "src": "website/assets/photography/test2.jpg"
+  },
+  "website/assets/photography/test3.jpg": {
+    "file": "assets/test3-Dv9Nv0vA.jpg",
+    "src": "website/assets/photography/test3.jpg"
+  },
+  "website/assets/photography/test4.jpg": {
+    "file": "assets/test4-xim3aEix.jpg",
+    "src": "website/assets/photography/test4.jpg"
+  },
+  "website/assets/photography/test5.jpg": {
+    "file": "assets/test5-CydiYgKy.jpg",
+    "src": "website/assets/photography/test5.jpg"
+  },
+  "website/assets/wall/normal.jpg": {
+    "file": "assets/normal-48uy-TVR.jpg",
+    "src": "website/assets/wall/normal.jpg"
+  },
+  "website/assets/wall/roughness.jpg": {
+    "file": "assets/roughness-Cxye7Wui.jpg",
+    "src": "website/assets/wall/roughness.jpg"
+  }
+}
