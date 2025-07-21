@@ -9,12 +9,7 @@ import {
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { useTexture } from '@react-three/drei'
-import {
-  MeshBasicMaterial,
-  RepeatWrapping,
-  SRGBColorSpace,
-  Vector3,
-} from 'three'
+import { RepeatWrapping, SRGBColorSpace, Vector3 } from 'three'
 import { setImageScale } from '../utils/bounds'
 import metal from 'website/assets/canvas/metal.png'
 import norm from 'website/assets/canvas/norm.png'
@@ -171,11 +166,6 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     zPos,
   ])
 
-  const inactiveMaterial = useMemo(
-    () => new MeshBasicMaterial({ color: colors.charcoal }),
-    [colors.charcoal],
-  )
-
   useEffect(() => {
     setPhotographyItemsGroup(group.current)
   }, [setPhotographyItemsGroup])
@@ -196,6 +186,10 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
             /* material={[]} */
             castShadow
           >
+            <mesh castShadow={false} scale={1.01}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshBasicMaterial color={colors.charcoal} />
+            </mesh>
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial
               attach='material-0'
@@ -310,7 +304,13 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         )
       })
     }
-  }, [canvasTextures, items, photoData?.initialScale, textures])
+  }, [
+    canvasTextures,
+    colors?.charcoal,
+    items,
+    photoData?.initialScale,
+    textures,
+  ])
 
   const damper = useMemo(() => {
     if (group.current?.children && itemData) {
@@ -356,7 +356,16 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
     if (group.current) {
       group.current.children.forEach((child) => {
         if (child === ref) {
+          if (child.children[0].visible) {
+            child.castShadow = true
+            child.children[0].visible = false
+          }
           //
+        } else {
+          if (!child.children[0].visible) {
+            child.castShadow = false
+            child.children[0].visible = true
+          }
         }
       })
     }
@@ -368,6 +377,15 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
         if (photographyButtonVisible.current) {
           photographyButtonVisible.current = false
           activeItemIndex.current = undefined
+        }
+        if (
+          group.current?.children?.length > 1 &&
+          !group.current.children[group.current.children.length - 1].children[0]
+            .visible
+        ) {
+          group.current.children[
+            group.current.children.length - 1
+          ].children[0].visible = true
         }
       }
       if (damper) {
