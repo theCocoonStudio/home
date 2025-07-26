@@ -5,6 +5,7 @@ import { useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 import { useLightbox } from '../hooks/useLightbox'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
+import { useTheme } from '../hooks/useTheme'
 
 export const Logo = function Logo({ size }) {
   const ref = useRef()
@@ -59,8 +60,11 @@ export const Logo = function Logo({ size }) {
     frame(frameCallback)
   }, [frame, frameCallback, showLightbox])
 
-  const postScroll = useScrollEvent('postScroll')
+  const section = useScrollEvent()
 
+  const {
+    colors: { slate, charcoal, purple, white },
+  } = useTheme()
   return (
     <>
       <group
@@ -76,7 +80,15 @@ export const Logo = function Logo({ size }) {
           {/* <CarbonMaterial repeat={[0.6, 0.6]} /> */}
           <meshStandardMaterial
             ref={material}
-            color={postScroll ? '#fff' : '#111'}
+            color={
+              {
+                preScroll: '#111',
+                software: slate,
+                photography: charcoal,
+                blog: purple,
+                postScroll: white,
+              }[section]
+            }
             roughness={0.1}
             transparent
             opacity={1}
