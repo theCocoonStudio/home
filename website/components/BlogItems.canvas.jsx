@@ -41,7 +41,7 @@ export const BlogItems = forwardRef(function BlogItems(
         <mesh
           key={`blogItems${index}`}
           geometry={itemGeometry}
-          position-x={2}
+          position-x={-10}
           userData={{ index, range }}
           material={inactiveMaterial}
         />

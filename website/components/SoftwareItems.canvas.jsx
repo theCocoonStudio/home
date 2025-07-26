@@ -42,7 +42,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
         <mesh
           key={`softwareItems${index}`}
           geometry={itemGeometry}
-          position-x={2}
+          position-x={-10}
           userData={{ index, range }}
           material={inactiveMaterial}
         />
