@@ -416,14 +416,14 @@ export const PhotographyItems = forwardRef(function PhotographyItems(
       })
     }
   })
-  const postScroll = useScrollEvent('postScroll')
+  const section = useScrollEvent()
   return (
     <>
       <group
-        visible={!postScroll}
+        visible={section !== 'postScroll' && section !== 'preScroll'}
         ref={group}
         onPointerDown={() => {
-          console.log(group.current)
+          console.log('photography')
         }}
       >
         {photographyItems}
