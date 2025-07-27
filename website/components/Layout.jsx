@@ -13,7 +13,13 @@ import { EventLayerOn } from './EventLayerOn.canvas'
 import { LightBox } from './Lightbox'
 import { LightboxProvider } from 'website/context/LightboxProvider'
 import { Menu } from './Menu'
-import { DndContext } from '@dnd-kit/core'
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { MenuProvider } from 'website/context/MenuProvider'
 import {
   createTheme,
@@ -102,12 +108,21 @@ function _Layout() {
     }
   }, [])
 
+  const mouseSensor = useSensor(MouseSensor)
+  const touchSensor = useSensor(TouchSensor, {
+    // Press delay of 250ms, with tolerance of 5px of movement
+    activationConstraint: {
+      delay: 50,
+      tolerance: 5,
+    },
+  })
+  const sensors = useSensors(mouseSensor, touchSensor)
   return (
     <ThemeProvider theme={theme}>
       <ResizeEventProvider>
         <LightboxProvider>
           <MenuProvider>
-            <DndContext>
+            <DndContext sensors={sensors}>
               <MuiThemeProvider theme={muiTheme}>
                 {typeof config === 'undefined' ? (
                   <WrongWay />
