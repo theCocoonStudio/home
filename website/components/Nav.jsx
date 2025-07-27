@@ -9,7 +9,12 @@ import { useLightbox } from '../hooks/useLightbox'
 
 export const Nav = ({ config, scrollContainer }) => {
   const {
-    nav: { NavItemsComponent, logoRenderPriority },
+    nav: {
+      NavItemsComponent,
+      logoRenderPriority,
+      LogoComponent,
+      initialLogoColor,
+    },
   } = config
   const {
     lengths: { navHeight, atomicPadding },
@@ -46,7 +51,13 @@ export const Nav = ({ config, scrollContainer }) => {
     <div className={`${styles.nav}`} style={navStyles}>
       <div className={`${styles.logo}`} onClick={scrollHome}>
         <View index={logoRenderPriority} frames={1}>
-          <Logo size={30} showLightbox={showLightbox} />
+          <LogoComponent initialLogoColor={initialLogoColor}>
+            <Logo
+              size={30}
+              showLightbox={showLightbox}
+              initialLogoColor={initialLogoColor}
+            />
+          </LogoComponent>
         </View>
       </div>
       <div className={`${styles.pages}`} style={pagesStyles}>

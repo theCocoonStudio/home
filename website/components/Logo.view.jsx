@@ -1,15 +1,23 @@
-import { useCallback, useEffect, useRef } from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 import { useLightbox } from '../hooks/useLightbox'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
-import { useTheme } from '../hooks/useTheme'
 
-export const Logo = function Logo({ size }) {
+export const Logo = forwardRef(function Logo(
+  { size, initialLogoColor },
+  forwardedRef,
+) {
   const ref = useRef()
-
+  const material = useRef()
+  const mesh = useRef()
   const {
     camera,
     viewport,
@@ -39,7 +47,6 @@ export const Logo = function Logo({ size }) {
     get().setEvents({ enabled: false })
   }, [get])
 
-  const material = useRef()
   const frameCallback = useCallback(
     (state, delta) => {
       if (material.current) {
@@ -60,11 +67,15 @@ export const Logo = function Logo({ size }) {
     frame(frameCallback)
   }, [frame, frameCallback, showLightbox])
 
-  const section = useScrollEvent()
-
-  const {
-    colors: { slate, charcoal, purple, white },
-  } = useTheme()
+  useImperativeHandle(
+    forwardedRef,
+    () => ({
+      group: ref.current,
+      mesh: mesh.current,
+      material: material.current,
+    }),
+    [],
+  )
   return (
     <>
       <group
@@ -75,20 +86,12 @@ export const Logo = function Logo({ size }) {
         position-z={0.5}
       >
         {/* <primitive object={iLogo} ref={iMesh} /> */}
-        <mesh>
+        <mesh ref={mesh}>
           <boxGeometry />
           {/* <CarbonMaterial repeat={[0.6, 0.6]} /> */}
           <meshStandardMaterial
             ref={material}
-            color={
-              {
-                preScroll: '#111',
-                software: slate,
-                photography: charcoal,
-                blog: purple,
-                postScroll: white,
-              }[section]
-            }
+            color={initialLogoColor}
             roughness={0.1}
             transparent
             opacity={1}
@@ -100,4 +103,4 @@ export const Logo = function Logo({ size }) {
       <PerspectiveCamera makeDefault position-z={1} fov={10} />
     </>
   )
-}
+})
