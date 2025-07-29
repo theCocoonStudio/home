@@ -104,6 +104,9 @@ textarea:not([rows]) {
   --slate: #426b69;
   --midnight: #405c5d;
   --black: #122629;
+  --navHeight: 120px;
+  --footerHeight: 120px;
+  --atomicPadding: 8px;
 }
 * {
   box-sizing: border-box;

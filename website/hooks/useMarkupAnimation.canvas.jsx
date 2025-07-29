@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useTheme } from './useTheme'
 import { damp } from 'maath/easing'
 import { Color, MathUtils } from 'three'
+import { useThree } from '@react-three/fiber'
 
 export const useMarkupAnimation = ({
   softwareItems,
@@ -20,6 +21,8 @@ export const useMarkupAnimation = ({
   subtitleSizeFinal = 9.8,
   titleSizeInitial = 8,
   titleSizeFinal = 3,
+  titleSizeFinalMobileMd = 2.4,
+  titleSizeFinalMobileSmall = 2.0,
   showLightbox,
 }) => {
   const {
@@ -45,10 +48,17 @@ export const useMarkupAnimation = ({
     }
   }, [photographyButtonElement, showLightbox])
 
+  const { width } = useThree(({ size }) => size)
+
   const setTitlePositions = useCallback(
     (rect, rect2, preScroll = true) => {
       const titleLeftInitial = `(50% - ${rect.width / 2}px)`
-      const titleLeftFinal = `(50px + (11 * ${atomicPadding}px))`
+      const titleLeftFinal =
+        width > 768
+          ? `(50px + (10 * ${atomicPadding}px))`
+          : width > 450
+            ? `(50px + (5 * ${atomicPadding}px))`
+            : `(50px + (2 * ${atomicPadding}px))`
 
       const titleTopInitial = `(50% - ${rect.height}px)`
       const titleTopFinal = `(${navHeight / 2}px - ${rect.height / 2}px)`
@@ -76,9 +86,9 @@ export const useMarkupAnimation = ({
       subtitleElement.style.left = leftTarget2
       subtitleElement.style.top = topTarget2
     },
-    [atomicPadding, navHeight, subtitleElement, titleElement],
+    [atomicPadding, navHeight, subtitleElement, titleElement, width],
   )
-
+  // runs once on first render
   useEffect(() => {
     if (scrollData.offset < scrollData.eps && !titleInitialized.current) {
       titleInitialized.current = true
@@ -87,7 +97,13 @@ export const useMarkupAnimation = ({
       subtitleElement.style.transform = 'none'
       /* titles */
       // font size
-      titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
+      const titleFinalSize =
+        width > 768
+          ? titleSizeFinal
+          : width > 450
+            ? titleSizeFinalMobileMd
+            : titleSizeFinalMobileSmall
+      titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleFinalSize - titleSizeInitial)}rem`
       subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
       // set positions
       const titleDOMRect = titleElement.getBoundingClientRect()
@@ -116,11 +132,14 @@ export const useMarkupAnimation = ({
     subtitleSizeInitial,
     titleElement,
     titleSizeFinal,
+    titleSizeFinalMobileMd,
+    titleSizeFinalMobileSmall,
+    width,
     titleSizeInitial,
   ])
 
   const scrollCallback = useCallback(
-    (state, delta, scrollData, scrollRanges) => {
+    (state, delta, scrollData, scrollRanges, tailFrames, isResize) => {
       /* itemDescription */
       // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
@@ -199,10 +218,18 @@ export const useMarkupAnimation = ({
           subtitle = 'La fin.'
         }
 
-        const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
+        const toDamp =
+          damp(dampedOffset, 'current', offset, 0.0, delta) ||
+          (isResize && !(offset2 > 0))
         if (toDamp) {
           // font size
-          titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleSizeFinal - titleSizeInitial)}rem`
+          const titleFinalSize =
+            width > 768
+              ? titleSizeFinal
+              : width > 450
+                ? titleSizeFinalMobileMd
+                : titleSizeFinalMobileSmall
+          titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleFinalSize - titleSizeInitial)}rem`
           subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
@@ -246,7 +273,9 @@ export const useMarkupAnimation = ({
           )
         }
 
-        const toDamp2 = damp(dampedOffset2, 'current', offset2, 0.0, delta)
+        const toDamp2 =
+          damp(dampedOffset2, 'current', offset2, 0.0, delta) ||
+          (isResize && offset2 > 0)
         // colors
         if (toDamp2) {
           color.current.lerpColors(
@@ -260,7 +289,13 @@ export const useMarkupAnimation = ({
         }
         if (toDamp2 && !(scrollRanges.postScrollOffset > 0)) {
           // font size
-          titleElement.style.fontSize = `${titleSizeFinal + offset2 * (titleSizeInitial - titleSizeFinal)}rem`
+          const titleFinalSize =
+            width > 768
+              ? titleSizeFinal
+              : width > 450
+                ? titleSizeFinalMobileMd
+                : titleSizeFinalMobileSmall
+          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleSizeInitial - titleFinalSize)}rem`
           subtitleElement.style.fontSize = `${subtitleSizeFinal + offset2 * (subtitleSizeInitial - subtitleSizeFinal)}rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
@@ -291,7 +326,13 @@ export const useMarkupAnimation = ({
           // and scroll ends here
 
           // font size
-          titleElement.style.fontSize = `${titleSizeFinal + offset2 * (titleSizeInitial - titleSizeFinal)}rem`
+          const titleFinalSize =
+            width > 768
+              ? titleSizeFinal
+              : width > 450
+                ? titleSizeFinalMobileMd
+                : titleSizeFinalMobileSmall
+          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleSizeInitial - titleFinalSize)}rem`
           subtitleElement.style.fontSize = `${subtitleSizeFinal + offset2 * (subtitleSizeInitial - subtitleSizeFinal)}rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
@@ -318,9 +359,8 @@ export const useMarkupAnimation = ({
       blogItems,
       blogRef,
       descriptionElement,
-      itemDescriptionElement.children,
-      itemDescriptionElement.style,
-      photographyButtonElement.style,
+      itemDescriptionElement,
+      photographyButtonElement,
       photographyRef,
       setTitlePositions,
       softwareItems,
@@ -331,7 +371,10 @@ export const useMarkupAnimation = ({
       subtitleTextElement,
       titleElement,
       titleSizeFinal,
+      titleSizeFinalMobileMd,
+      titleSizeFinalMobileSmall,
       titleSizeInitial,
+      width,
     ],
   )
   return scrollCallback

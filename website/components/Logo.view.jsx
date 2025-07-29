@@ -10,9 +10,10 @@ import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 import { useLightbox } from '../hooks/useLightbox'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Logo = forwardRef(function Logo(
-  { size, initialLogoColor },
+  { initialLogoColor },
   forwardedRef,
 ) {
   const ref = useRef()
@@ -22,30 +23,37 @@ export const Logo = forwardRef(function Logo(
     camera,
     viewport,
     size: cSize,
-  } = useThree(({ viewport, camera, size }) => ({
+    get,
+    canvas,
+  } = useThree(({ viewport, camera, size, gl, get }) => ({
     camera,
     viewport,
     size,
-  }))
-
-  const { showLightbox } = useLightbox()
-
-  useEffect(() => {
-    const { factor } = viewport.getCurrentViewport(
-      camera,
-      ref.current.position.clone(),
-      cSize,
-    )
-    ref.current.scale.set(size / factor, size / factor, size / factor)
-  }, [cSize, camera, size, viewport])
-
-  const { get } = useThree(({ get }) => ({
     get,
+    canvas: gl.domElement,
   }))
 
   useEffect(() => {
     get().setEvents({ enabled: false })
   }, [get])
+
+  const { showLightbox } = useLightbox()
+
+  const scale = useCallback(() => {
+    if (ref.current) {
+      const size =
+        canvas.clientWidth > 768 ? 30 : canvas.clientWidth > 450 ? 25 : 20
+
+      const { factor } = viewport.getCurrentViewport(
+        camera,
+        ref.current.position.clone(),
+        cSize,
+      )
+      ref.current.scale.set(size / factor, size / factor, size / factor)
+    }
+  }, [cSize, camera, canvas.clientWidth, viewport])
+
+  useResizeEvent(canvas, scale)
 
   const frameCallback = useCallback(
     (state, delta) => {

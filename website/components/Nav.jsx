@@ -17,7 +17,7 @@ export const Nav = ({ config, scrollContainer }) => {
     },
   } = config
   const {
-    lengths: { navHeight, atomicPadding },
+    lengths: { navHeight },
   } = useTheme()
 
   const { showLightbox } = useLightbox()
@@ -30,21 +30,18 @@ export const Nav = ({ config, scrollContainer }) => {
   const navStyles = useMemo(
     () => ({
       height: `${navHeight}px`,
-      right: `calc(8 * ${atomicPadding}px)`,
-      left: `calc(8 * ${atomicPadding}px)`,
     }),
-    [atomicPadding, navHeight],
+    [navHeight],
   )
 
   const pagesStyles = useMemo(
     () => ({
-      columnGap: `calc(2.5 * ${atomicPadding}px)`,
       opacity:
         section === 'preScroll' || section === 'postScroll' || showLightbox
           ? 0
           : 1,
     }),
-    [atomicPadding, section, showLightbox],
+    [section, showLightbox],
   )
 
   return (
@@ -53,7 +50,6 @@ export const Nav = ({ config, scrollContainer }) => {
         <View index={logoRenderPriority} frames={1}>
           <LogoComponent initialLogoColor={initialLogoColor}>
             <Logo
-              size={30}
               showLightbox={showLightbox}
               initialLogoColor={initialLogoColor}
             />

@@ -68,7 +68,8 @@ export const useScrollAnimation = (config, animationTargets) => {
   )
 
   const scrollCallback = useCallback(
-    (state, delta) => {
+    (state, delta, elapsed) => {
+      const isResize = typeof elapsed !== 'undefined'
       const scrollRanges = getActiveRanges(scroll)
       Object.keys(animationTargets.refs).forEach(
         (key) =>
@@ -79,6 +80,7 @@ export const useScrollAnimation = (config, animationTargets) => {
             scroll,
             scrollRanges,
             tailFrames,
+            isResize,
           ),
       )
     },
