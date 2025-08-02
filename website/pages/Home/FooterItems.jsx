@@ -30,8 +30,6 @@ export const FooterItems = ({
   const section = useScrollEvent()
 
   const {
-    colors: { white, black },
-    lengths: { atomicPadding },
     utilReturn: { className, style },
   } = useTheme(
     'raleway',
@@ -66,13 +64,12 @@ export const FooterItems = ({
 
   const settingsStyles = useMemo(
     () => ({
-      columnGap: `calc(2 * ${atomicPadding}px)`,
       opacity:
         section === 'preScroll' || section === 'postScroll' || showLightbox
           ? '0'
           : '1',
     }),
-    [atomicPadding, section, showLightbox],
+    [section, showLightbox],
   )
 
   const { setShowMenu, showMenu } = useMenu()

@@ -12,7 +12,7 @@ export const Footer = ({ config, scrollContainer, ready, openContact }) => {
     footer: { FooterItemsComponent },
   } = config
   const {
-    lengths: { footerHeight, atomicPadding },
+    lengths: { footerHeight },
   } = useTheme()
 
   const section = useScrollEvent()
@@ -22,21 +22,18 @@ export const Footer = ({ config, scrollContainer, ready, openContact }) => {
   const footerStyles = useMemo(
     () => ({
       height: `${footerHeight}px`,
-      right: `calc(8 * ${atomicPadding}px)`,
-      left: `calc(8 * ${atomicPadding}px)`,
     }),
-    [atomicPadding, footerHeight],
+    [footerHeight],
   )
 
   const socialStyles = useMemo(
     () => ({
-      columnGap: `calc(2 * ${atomicPadding}px)`,
       opacity:
         section === 'preScroll' || section === 'postScroll' || showLightbox
           ? '0'
           : '1',
     }),
-    [atomicPadding, section, showLightbox],
+    [section, showLightbox],
   )
 
   const iconStyles = useMemo(
