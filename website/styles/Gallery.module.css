@@ -5,6 +5,8 @@
   right: 0;
   bottom: 0;
   overflow: hidden;
+  margin-left: calc(8 * var(--atomicPadding));
+  margin-right: calc(8 * var(--atomicPadding));
 }
 .photoContainer {
   position: absolute;
@@ -43,9 +45,12 @@
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
+  padding-left: calc(8 * var(--atomicPadding));
+  padding-right: calc(8 * var(--atomicPadding));
 }
 
 .control {
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
   color: var(--white);
@@ -63,8 +68,30 @@
 .description {
   font-size: 1.8rem;
   line-height: 1.4em;
-  padding: 0;
+  padding: 0 calc(2 * var(--atomicPadding));
   margin-top: 0;
-  padding-left: 16px;
   font-weight: 400;
+  flex-shrink: 1;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-left: calc(4 * var(--atomicPadding));
+    margin-right: calc(4 * var(--atomicPadding));
+  }
+  .controlsDescriptionContainer {
+    padding-left: calc(4 * var(--atomicPadding));
+    padding-right: calc(4 * var(--atomicPadding));
+  }
+
+  .control {
+    width: 30px;
+    height: 30px;
+  }
+  .control svg {
+    font-size: 30px;
+  }
+  .description {
+    font-size: 1.4rem;
+  }
 }

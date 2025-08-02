@@ -24,7 +24,7 @@ export const Gallery = ({
   },
 }) => {
   const {
-    colors: { black, white },
+    colors: { white },
     lengths: { atomicPadding, navHeight, footerHeight },
   } = useTheme()
 
@@ -33,12 +33,10 @@ export const Gallery = ({
 
   const containerStyle = useMemo(
     () => ({
-      marginRight: `calc(8 * ${atomicPadding}px)`,
-      marginLeft: `calc(8 * ${atomicPadding}px)`,
       marginTop: `${navHeight}px`,
       marginBottom: `${footerHeight}px`,
     }),
-    [atomicPadding, footerHeight, navHeight],
+    [footerHeight, navHeight],
   )
 
   const photoContainer = useRef()
@@ -94,8 +92,6 @@ export const Gallery = ({
   const controlsDescriptionContainerStyle = useMemo(
     () => ({
       height: `${footerHeight}px`,
-      paddingRight: `calc(8 * ${atomicPadding}px)`,
-      paddingLeft: `calc(8 * ${atomicPadding}px)`,
       paddingTop: `calc(4 * ${atomicPadding}px)`,
       paddingBottom: `calc(4 * ${atomicPadding}px)`,
     }),

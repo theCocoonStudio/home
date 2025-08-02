@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 export const LightBox = ({ children }) => {
   const {
     colors: { white },
-    lengths: { atomicPadding, navHeight },
+    lengths: { navHeight },
   } = useTheme()
 
   const { showLightbox, onLightboxExitClick } = useLightbox()
@@ -22,10 +22,9 @@ export const LightBox = ({ children }) => {
   )
   const exitStyle = useMemo(
     () => ({
-      right: `calc(8 * ${atomicPadding}px)`,
       top: `${navHeight / 2}px`,
     }),
-    [atomicPadding, navHeight],
+    [navHeight],
   )
 
   const onEscapeKeyDown = useCallback(
