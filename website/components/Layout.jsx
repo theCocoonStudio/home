@@ -83,12 +83,7 @@ function _Layout() {
   }, [])
 
   const { style: contactStyle, className: contactClass } = useMemo(
-    () =>
-      changaOne(
-        false,
-        { padding: `${4 * theme.lengths.atomicPadding}px` },
-        'contact-dialog',
-      ),
+    () => changaOne(false, undefined, 'contact-dialog'),
     [],
   )
   const { style: emailStyle, className: emailClass } = useMemo(
