@@ -1,5 +1,5 @@
 import { Droppable } from './Droppable'
-import { useCallback, useContext, useEffect, useRef } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
@@ -9,7 +9,12 @@ import { useTheme } from '../hooks/useTheme'
 import { ResizeEventContext } from '../../src/context/ResizeEventContext'
 import { useLightbox } from '../hooks/useLightbox'
 
-export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
+export const Menu = ({
+  config,
+  MenuComponent,
+  setScrollDistanceFactor,
+  scrollContainer,
+}) => {
   const {
     lengths: { footerHeight, atomicPadding },
   } = useTheme()
@@ -20,33 +25,53 @@ export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
   const offset = useRef({ x: 0, y: 0 })
   const base = useRef({ x: 0, y: 0 })
 
+  const { showMenu, setShowMenu } = useMenu()
+
+  const { padding, droppableWidth, droppableHeight } = useMemo(() => {
+    if (showMenu) {
+      const width = scrollContainer.clientWidth
+      const padding =
+        width > 768
+          ? 8 * atomicPadding
+          : width > 450
+            ? 4 * atomicPadding
+            : 2 * atomicPadding
+      return {
+        droppableWidth: width,
+        padding,
+        droppableHeight: scrollContainer.clientHeight,
+      }
+    }
+    return {}
+  }, [atomicPadding, scrollContainer, showMenu])
+
   const onMenuDragEnd = useCallback(
     (height) => {
-      base.current = {
-        x: clamp(
-          base.current.x + offset.current.x,
-          -8 * atomicPadding,
-          droppable.current.clientWidth -
-            draggable.current.container.clientWidth -
-            8 * atomicPadding,
-        ),
-        y: clamp(
-          base.current.y + offset.current.y,
-          -1 *
-            (droppable.current.clientHeight -
-              (typeof height === 'number'
-                ? height
-                : draggable.current.container.clientHeight) -
-              footerHeight),
-          footerHeight,
-        ),
-      }
-      offset.current = { x: 0, y: 0 }
+      if (droppableWidth && padding) {
+        base.current = {
+          x: clamp(
+            base.current.x + offset.current.x,
+            -padding,
+            droppableWidth - draggable.current.container.clientWidth - padding,
+          ),
+          y: clamp(
+            base.current.y + offset.current.y,
+            -1 *
+              (droppable.current.clientHeight -
+                (typeof height === 'number'
+                  ? height
+                  : draggable.current.container.clientHeight) -
+                footerHeight),
+            footerHeight,
+          ),
+        }
+        offset.current = { x: 0, y: 0 }
 
-      draggable.current.container.style.transition = 'transform .2s'
-      draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
+        draggable.current.container.style.transition = 'transform .2s'
+        draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
+      }
     },
-    [atomicPadding, footerHeight],
+    [droppableWidth, footerHeight, padding],
   )
 
   const onMenuDragMove = useCallback(
@@ -67,7 +92,6 @@ export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
     onDragStart: onMenuDragStart,
   })
 
-  const { showMenu, setShowMenu } = useMenu()
   const { showLightbox } = useLightbox()
 
   const { entries } = useContext(ResizeEventContext)
@@ -97,6 +121,9 @@ export const Menu = ({ config, MenuComponent, setScrollDistanceFactor }) => {
         ref={draggable}
         setShowMenu={setShowMenu}
         onBeforeMaximize={onMenuDragEnd}
+        padding={padding}
+        droppableWidth={droppableWidth}
+        droppableHeight={droppableHeight}
       >
         <MenuComponent
           config={config}

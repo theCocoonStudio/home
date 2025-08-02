@@ -54,7 +54,6 @@
   transition: all 0.35s;
 }
 .content {
-  overflow: hidden;
   transition: max-height 0.35s;
 }
 
@@ -80,5 +79,11 @@
   &:hover {
     cursor: pointer;
     backdrop-filter: invert(100%) opacity(0.1);
+  }
+}
+
+@media (max-width: 450px) {
+  .draggable {
+    max-width: calc(100% - 4 * var(--atomicPadding));
   }
 }

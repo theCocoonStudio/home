@@ -12,7 +12,7 @@ import { useTheme } from '../hooks/useTheme'
 import { raleway } from '../utils/styles'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
-  { children, styles, setShowMenu, onBeforeMaximize },
+  { children, styles, setShowMenu, onBeforeMaximize, padding, droppableHeight },
   forwardedRef,
 ) {
   const container = useRef()
@@ -30,7 +30,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const {
     colors: { black },
-    lengths: { atomicPadding, footerHeight },
+    lengths: { footerHeight },
   } = useTheme()
 
   const [minimized, setMinimized] = useState(false)
@@ -45,10 +45,10 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const draggableStyle = useMemo(
     () => ({
-      left: `${8 * atomicPadding}px`,
+      left: `${padding || 0}px`,
       bottom: `${footerHeight}px`,
     }),
-    [atomicPadding, footerHeight],
+    [footerHeight, padding],
   )
 
   const minimizeStyle = useMemo(
@@ -76,12 +76,20 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
       400,
       false,
       markupHeights && {
-        maxHeight: minimized ? '0' : `${markupHeights.content}px`,
+        overflowY:
+          !minimized &&
+          droppableHeight - footerHeight - markupHeights.panel <
+            markupHeights.content
+            ? 'auto'
+            : 'hidden',
+        maxHeight: minimized
+          ? '0'
+          : `${droppableHeight - footerHeight - markupHeights.panel}px`,
       },
       undefined,
       styles.content,
     )
-  }, [markupHeights, minimized, styles.content])
+  }, [droppableHeight, footerHeight, markupHeights, minimized, styles.content])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
@@ -89,10 +97,23 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const toggleMinimized = useCallback(() => {
     if (minimized) {
-      onBeforeMaximize(markupHeights.content + markupHeights.panel)
+      const isScroll =
+        droppableHeight - footerHeight - markupHeights.panel <
+        markupHeights.content
+      onBeforeMaximize(
+        isScroll
+          ? droppableHeight - footerHeight
+          : markupHeights.content + markupHeights.panel,
+      )
     }
     setMinimized((prev) => !prev)
-  }, [markupHeights, minimized, onBeforeMaximize])
+  }, [
+    droppableHeight,
+    footerHeight,
+    markupHeights,
+    minimized,
+    onBeforeMaximize,
+  ])
 
   return (
     <div className={styles.draggable} ref={container} style={draggableStyle}>
