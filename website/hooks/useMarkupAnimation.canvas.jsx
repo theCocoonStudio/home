@@ -229,14 +229,28 @@ export const useMarkupAnimation = ({
               : width > 450
                 ? titleSizeFinalMobileMd
                 : titleSizeFinalMobileSmall
+
           titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleFinalSize - titleSizeInitial)}rem`
-          subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
+          subtitleElement.style.fontSize = `${
+            subtitleSizeInitial +
+            MathUtils.inverseLerp(
+              0.5,
+              1.0,
+              MathUtils.clamp(dampedOffset.current, 0.5, 1.0),
+            ) *
+              (subtitleSizeFinal - subtitleSizeInitial)
+          }rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
           setTitlePositions(titleDOMRect, subtitleDOMRect)
           // opacities and font families
           if (dampedOffset.current < 0.5 + scrollData.eps) {
+            subtitleElement.style.opacity = MathUtils.inverseLerp(
+              0.4,
+              0,
+              MathUtils.clamp(dampedOffset.current, 0.0, 0.4),
+            )
             if (
               subtitleElement.classList.contains('changa-one-regular-italic')
             ) {
@@ -245,31 +259,24 @@ export const useMarkupAnimation = ({
                 'raleway',
               )
             }
-
-            subtitleElement.style.opacity = MathUtils.inverseLerp(
-              0.1,
-              0,
-              dampedOffset.current,
-            )
           } else {
+            subtitleElement.style.opacity = MathUtils.inverseLerp(
+              0.6,
+              1,
+              MathUtils.clamp(dampedOffset.current, 0.6, 1.0),
+            )
             if (subtitleElement.classList.contains('raleway')) {
               subtitleElement.classList.replace(
                 'raleway',
                 'changa-one-regular-italic',
               )
             }
-
-            subtitleElement.style.opacity = MathUtils.inverseLerp(
-              0.6,
-              1,
-              dampedOffset.current,
-            )
           }
 
           descriptionElement.style.opacity = MathUtils.inverseLerp(
             0.6,
             1,
-            dampedOffset.current,
+            MathUtils.clamp(dampedOffset.current, 0.6, 1.0),
           )
         }
 
