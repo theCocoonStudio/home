@@ -237,8 +237,8 @@
   animation: reveal 3s ease-in-out infinite;
   pointer-events: none;
   bottom: 25vh;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -359,10 +359,9 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   width: 250px;
   text-align: center;
-  padding-top: 16px;
 }
 
 @media (max-width: 1000px) {
@@ -397,6 +396,10 @@
     padding: 4px 0;
     padding-left: 12px;
   }
+  .down {
+    width: 36px;
+    height: 36px;
+  }
 }
 @media (max-width: 450px) {
   .title {
@@ -409,5 +412,12 @@
   .description {
     font-size: 1.7rem;
     padding-left: 10px;
+  }
+  .down {
+    width: 30px;
+    height: 30px;
+  }
+  .instruction {
+    font-size: 1.2rem;
   }
 }
