@@ -89,12 +89,11 @@ export const Main = function Main({
         400,
         false,
         {
-          width: `calc(50% - ${2 * sidePaddingFactor * atomicPadding}px)`,
           opacity: showLightbox ? 0 : 1,
         },
         styles.subtitleContainer,
       ),
-    [atomicPadding, showLightbox, sidePaddingFactor],
+    [showLightbox],
   )
 
   const { style: descStyle, className: descClass } = useMemo(

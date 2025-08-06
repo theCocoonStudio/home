@@ -31,10 +31,12 @@
   position: absolute;
   display: inline-block;
   font-size: 2.8rem;
+  margin-right: calc(8 * var(--atomicPadding));
 }
 
 .subtitle {
   font-weight: inherit !important;
+  line-height: 1.17em;
 }
 
 .description {
@@ -42,9 +44,8 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 3.2rem;
+  font-size: 2.8rem;
   line-height: 1.1em;
-  padding: 8px 4px;
   padding-left: 16px;
   width: 100%;
   opacity: 0;
@@ -383,5 +384,30 @@
   }
   .settings {
     column-gap: calc(1 * var(--atomicPadding));
+  }
+  .title {
+    font-size: 6.5rem;
+  }
+  .subtitleContainer {
+    margin-right: calc(4 * var(--atomicPadding));
+    font-size: 2.4rem;
+  }
+  .description {
+    font-size: 2rem;
+    padding: 4px 0;
+    padding-left: 12px;
+  }
+}
+@media (max-width: 450px) {
+  .title {
+    font-size: 5rem;
+  }
+  .subtitleContainer {
+    margin-right: calc(2 * var(--atomicPadding));
+    font-size: 2rem;
+  }
+  .description {
+    font-size: 1.7rem;
+    padding-left: 10px;
   }
 }

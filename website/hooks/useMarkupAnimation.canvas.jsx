@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTheme } from './useTheme'
 import { damp } from 'maath/easing'
 import { Color, MathUtils } from 'three'
@@ -18,11 +18,17 @@ export const useMarkupAnimation = ({
   blogRef,
   scrollData,
   subtitleSizeInitial = 2.8,
-  subtitleSizeFinal = 9.8,
+  subtitleSizeInitialMd = 2.4,
+  subtitleSizeInitialSm = 2,
+  subtitleSizeFinal = 9,
+  subtitleSizeFinalMd = 5.5,
+  subtitleSizeFinalSm = 4,
   titleSizeInitial = 8,
+  titleSizeInitialMd = 6.5,
+  titleSizeInitialSm = 5,
   titleSizeFinal = 3,
   titleSizeFinalMobileMd = 2.4,
-  titleSizeFinalMobileSmall = 2.0,
+  titleSizeFinalMobileSm = 2.0,
   showLightbox,
 }) => {
   const {
@@ -49,22 +55,83 @@ export const useMarkupAnimation = ({
   }, [photographyButtonElement, showLightbox])
 
   const { width } = useThree(({ size }) => size)
+  const {
+    titleLeftFinal,
+    titleFinalSize,
+    titleInitialSize,
+    subtitleInitialSize,
+    subtitleLeftFinal,
+    subtitleFinalSize,
+  } = useMemo(() => {
+    const titleLeftFinal =
+      width > 768
+        ? `(50px + (10 * ${atomicPadding}px))`
+        : width > 450
+          ? `(50px + (5 * ${atomicPadding}px))`
+          : `(50px + (2 * ${atomicPadding}px))`
+    const titleFinalSize =
+      width > 768
+        ? titleSizeFinal
+        : width > 450
+          ? titleSizeFinalMobileMd
+          : titleSizeFinalMobileSm
+    const titleInitialSize =
+      width > 768
+        ? titleSizeInitial
+        : width > 450
+          ? titleSizeInitialMd
+          : titleSizeInitialSm
+    const subtitleInitialSize =
+      width > 768
+        ? subtitleSizeInitial
+        : width > 450
+          ? subtitleSizeInitialMd
+          : subtitleSizeInitialSm
+    const subtitleLeftFinal =
+      width > 768
+        ? `(8 * ${atomicPadding}px)`
+        : width > 450
+          ? `(4 * ${atomicPadding}px)`
+          : `(2 * ${atomicPadding}px)`
+    const subtitleFinalSize =
+      width > 768
+        ? subtitleSizeFinal
+        : width > 450
+          ? subtitleSizeFinalMd
+          : subtitleSizeFinalSm
+    return {
+      titleLeftFinal,
+      titleFinalSize,
+      titleInitialSize,
+      subtitleInitialSize,
+      subtitleLeftFinal,
+      subtitleFinalSize,
+    }
+  }, [
+    atomicPadding,
+    subtitleSizeFinal,
+    subtitleSizeFinalMd,
+    subtitleSizeFinalSm,
+    subtitleSizeInitial,
+    subtitleSizeInitialMd,
+    subtitleSizeInitialSm,
+    titleSizeFinal,
+    titleSizeFinalMobileMd,
+    titleSizeFinalMobileSm,
+    titleSizeInitial,
+    titleSizeInitialMd,
+    titleSizeInitialSm,
+    width,
+  ])
 
   const setTitlePositions = useCallback(
     (rect, rect2, preScroll = true) => {
       const titleLeftInitial = `(50% - ${rect.width / 2}px)`
-      const titleLeftFinal =
-        width > 768
-          ? `(50px + (10 * ${atomicPadding}px))`
-          : width > 450
-            ? `(50px + (5 * ${atomicPadding}px))`
-            : `(50px + (2 * ${atomicPadding}px))`
 
       const titleTopInitial = `(50% - ${rect.height}px)`
       const titleTopFinal = `(${navHeight / 2}px - ${rect.height / 2}px)`
 
       const subtitleLeftInitial = `50%`
-      const subtitleLeftFinal = `(8 * ${atomicPadding}px)`
 
       const subtitleTopInitial = `50%`
       const subtitleTopFinal = `  ${navHeight}px`
@@ -86,7 +153,13 @@ export const useMarkupAnimation = ({
       subtitleElement.style.left = leftTarget2
       subtitleElement.style.top = topTarget2
     },
-    [atomicPadding, navHeight, subtitleElement, titleElement, width],
+    [
+      navHeight,
+      subtitleElement,
+      subtitleLeftFinal,
+      titleElement,
+      titleLeftFinal,
+    ],
   )
   // runs once on first render
   useEffect(() => {
@@ -97,14 +170,8 @@ export const useMarkupAnimation = ({
       subtitleElement.style.transform = 'none'
       /* titles */
       // font size
-      const titleFinalSize =
-        width > 768
-          ? titleSizeFinal
-          : width > 450
-            ? titleSizeFinalMobileMd
-            : titleSizeFinalMobileSmall
-      titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleFinalSize - titleSizeInitial)}rem`
-      subtitleElement.style.fontSize = `${subtitleSizeInitial + dampedOffset.current * (subtitleSizeFinal - subtitleSizeInitial)}rem`
+      titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
+      subtitleElement.style.fontSize = `${subtitleInitialSize + dampedOffset.current * (subtitleFinalSize - subtitleInitialSize)}rem`
       // set positions
       const titleDOMRect = titleElement.getBoundingClientRect()
       const subtitleDOMRect = subtitleElement.getBoundingClientRect()
@@ -129,13 +196,15 @@ export const useMarkupAnimation = ({
     setTitlePositions,
     subtitleElement,
     subtitleSizeFinal,
-    subtitleSizeInitial,
+    subtitleInitialSize,
     titleElement,
     titleSizeFinal,
     titleSizeFinalMobileMd,
-    titleSizeFinalMobileSmall,
+    titleSizeFinalMobileSm,
     width,
-    titleSizeInitial,
+    titleInitialSize,
+    titleFinalSize,
+    subtitleFinalSize,
   ])
 
   const scrollCallback = useCallback(
@@ -223,22 +292,15 @@ export const useMarkupAnimation = ({
           (isResize && !(offset2 > 0))
         if (toDamp) {
           // font size
-          const titleFinalSize =
-            width > 768
-              ? titleSizeFinal
-              : width > 450
-                ? titleSizeFinalMobileMd
-                : titleSizeFinalMobileSmall
-
-          titleElement.style.fontSize = `${titleSizeInitial + dampedOffset.current * (titleFinalSize - titleSizeInitial)}rem`
+          titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
           subtitleElement.style.fontSize = `${
-            subtitleSizeInitial +
+            subtitleInitialSize +
             MathUtils.inverseLerp(
               0.5,
               1.0,
               MathUtils.clamp(dampedOffset.current, 0.5, 1.0),
             ) *
-              (subtitleSizeFinal - subtitleSizeInitial)
+              (subtitleFinalSize - subtitleInitialSize)
           }rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
@@ -296,14 +358,8 @@ export const useMarkupAnimation = ({
         }
         if (toDamp2 && !(scrollRanges.postScrollOffset > 0)) {
           // font size
-          const titleFinalSize =
-            width > 768
-              ? titleSizeFinal
-              : width > 450
-                ? titleSizeFinalMobileMd
-                : titleSizeFinalMobileSmall
-          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleSizeInitial - titleFinalSize)}rem`
-          subtitleElement.style.fontSize = `${subtitleSizeFinal + offset2 * (subtitleSizeInitial - subtitleSizeFinal)}rem`
+          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
+          subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
@@ -333,14 +389,8 @@ export const useMarkupAnimation = ({
           // and scroll ends here
 
           // font size
-          const titleFinalSize =
-            width > 768
-              ? titleSizeFinal
-              : width > 450
-                ? titleSizeFinalMobileMd
-                : titleSizeFinalMobileSmall
-          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleSizeInitial - titleFinalSize)}rem`
-          subtitleElement.style.fontSize = `${subtitleSizeFinal + offset2 * (subtitleSizeInitial - subtitleSizeFinal)}rem`
+          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
+          subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
           // positions
           const titleDOMRect = titleElement.getBoundingClientRect()
           const subtitleDOMRect = subtitleElement.getBoundingClientRect()
@@ -373,15 +423,12 @@ export const useMarkupAnimation = ({
       softwareItems,
       softwareRef,
       subtitleElement,
-      subtitleSizeFinal,
-      subtitleSizeInitial,
+      subtitleFinalSize,
+      subtitleInitialSize,
       subtitleTextElement,
       titleElement,
-      titleSizeFinal,
-      titleSizeFinalMobileMd,
-      titleSizeFinalMobileSmall,
-      titleSizeInitial,
-      width,
+      titleFinalSize,
+      titleInitialSize,
     ],
   )
   return scrollCallback
