@@ -262,6 +262,10 @@
   pointer-events: none;
   bottom: 25vh;
   filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
+  > span {
+    width: 45px !important;
+    height: 45px !important;
+  }
 }
 
 .scroll {
@@ -362,9 +366,10 @@
   font-size: 1.4rem;
   width: 250px;
   text-align: center;
+  padding-top: 8px;
 }
 
-@media (max-width: 1000px) {
+@media screen and (max-width: 1000px) {
   .scroll {
     position: fixed;
     left: 0;
@@ -377,7 +382,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .icon {
     transform: scale(0.85);
   }
@@ -400,8 +405,12 @@
     width: 36px;
     height: 36px;
   }
+  .progress > span {
+    width: 36px !important;
+    height: 36px !important;
+  }
 }
-@media (max-width: 450px) {
+@media screen and (max-width: 450px) {
   .title {
     font-size: 5rem;
   }
@@ -416,6 +425,10 @@
   .down {
     width: 30px;
     height: 30px;
+  }
+  .progress > span {
+    width: 30px !important;
+    height: 30px !important;
   }
   .instruction {
     font-size: 1.2rem;

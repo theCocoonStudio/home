@@ -83,7 +83,7 @@ export const FooterItems = ({
   )
 
   const { style: instructionStyle, className: instructionClass } = useMemo(
-    () => raleway(400, false, undefined, styles.instruction),
+    () => raleway(400, false, { paddingTop: 0 }, styles.instruction),
     [],
   )
   const scrollTo = useScroll(scrollElement)
