@@ -82,7 +82,7 @@
   }
 }
 
-@media (max-width: 450px) {
+@media screen and (max-width: 450px) {
   .draggable {
     max-width: calc(100% - 4 * var(--atomicPadding));
   }

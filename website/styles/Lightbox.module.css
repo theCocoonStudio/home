@@ -31,7 +31,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .exit {
     right: calc(4 * var(--atomicPadding));
     width: 36px;

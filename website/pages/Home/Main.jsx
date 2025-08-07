@@ -120,8 +120,6 @@ export const Main = function Main({
     [],
   )
 
-  const itemDescStyle = useMemo(() => ({}), [])
-
   const itemDescContainerStyle = useMemo(
     () => ({
       top: `calc(${navHeight + titleHeight + 2 * sidePaddingFactor * atomicPadding}px)`,
@@ -173,7 +171,7 @@ export const Main = function Main({
         style={itemDescContainerStyle}
         id={itemDescription}
       >
-        <div style={itemDescStyle} className={`${styles.itemDescription}`}>
+        <div className={`${styles.itemDescription}`}>
           <h1 className='changa-one-regular'></h1>
           <h3 className='raleway'></h3>
           <div className='raleway'>

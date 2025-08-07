@@ -74,7 +74,7 @@
   flex-shrink: 1;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .container {
     margin-left: calc(4 * var(--atomicPadding));
     margin-right: calc(4 * var(--atomicPadding));

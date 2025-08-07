@@ -58,7 +58,7 @@
   opacity: 0;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .footer {
     left: calc(4 * var(--atomicPadding));
     right: calc(4 * var(--atomicPadding));
@@ -78,7 +78,7 @@
   }
 }
 
-@media (max-width: 450px) {
+@media screen and (max-width: 450px) {
   .footer {
     left: calc(2 * var(--atomicPadding));
     right: calc(2 * var(--atomicPadding));
