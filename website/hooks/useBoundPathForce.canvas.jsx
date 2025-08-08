@@ -13,12 +13,12 @@ export const useBoundPathForce = (backgroundRef) => {
 
   const { size, viewport, camera } = useThree(stateCallback)
   const {
-    lengths: { footerHeight, atomicPadding, navHeight },
+    lengths: { footerHeight, sidePadding, navHeight },
   } = useTheme()
   // initialize forceCallback data
   const uvSpaceClamps = useRef(
     new Vector2(
-      (8 * 2 * atomicPadding) / size.width,
+      (2 * sidePadding) / size.width,
       (footerHeight - navHeight) / size.height,
     ),
   )
@@ -32,17 +32,17 @@ export const useBoundPathForce = (backgroundRef) => {
       size,
     )
     uvSpaceClamps.current.set(
-      (8 * 2 * atomicPadding) / factor / width,
+      (2 * sidePadding) / factor / width,
       (footerHeight / factor + navHeight / factor) / height,
     )
     path.updatePadding(uvSpaceClamps.current)
   }, [
-    atomicPadding,
     backgroundRef,
     camera,
     footerHeight,
     navHeight,
     path,
+    sidePadding,
     size,
     viewport,
   ])

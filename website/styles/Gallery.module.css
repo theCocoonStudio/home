@@ -5,8 +5,8 @@
   right: 0;
   bottom: 0;
   overflow: hidden;
-  margin-left: calc(8 * var(--atomicPadding));
-  margin-right: calc(8 * var(--atomicPadding));
+  margin-left: var(--sidePadding);
+  margin-right: var(--sidePadding);
 }
 .photoContainer {
   position: absolute;
@@ -45,8 +45,8 @@
   flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  padding-left: calc(8 * var(--atomicPadding));
-  padding-right: calc(8 * var(--atomicPadding));
+  padding-left: var(--sidePadding);
+  padding-right: var(--sidePadding);
 }
 
 .control {

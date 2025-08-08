@@ -12,7 +12,7 @@
 
 .exit {
   position: absolute;
-  right: calc(8 * var(--atomicPadding));
+  right: var(--sidePadding);
   transform: translateY(-50%);
   width: 45px;
   height: 45px;

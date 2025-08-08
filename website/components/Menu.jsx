@@ -16,7 +16,7 @@ export const Menu = ({
   scrollContainer,
 }) => {
   const {
-    lengths: { footerHeight, atomicPadding },
+    lengths: { footerHeight, sidePadding },
   } = useTheme()
 
   const draggable = useRef()
@@ -27,32 +27,29 @@ export const Menu = ({
 
   const { showMenu, setShowMenu } = useMenu()
 
-  const { padding, droppableWidth, droppableHeight } = useMemo(() => {
+  const { droppableWidth, droppableHeight } = useMemo(() => {
     if (showMenu) {
       const width = scrollContainer.clientWidth
-      const padding =
-        width > 768
-          ? 8 * atomicPadding
-          : width > 450
-            ? 4 * atomicPadding
-            : 2 * atomicPadding
+
       return {
         droppableWidth: width,
-        padding,
+
         droppableHeight: scrollContainer.clientHeight,
       }
     }
     return {}
-  }, [atomicPadding, scrollContainer, showMenu])
+  }, [scrollContainer, showMenu])
 
   const onMenuDragEnd = useCallback(
     (height) => {
-      if (droppableWidth && padding) {
+      if (droppableWidth && sidePadding) {
         base.current = {
           x: clamp(
             base.current.x + offset.current.x,
-            -padding,
-            droppableWidth - draggable.current.container.clientWidth - padding,
+            -sidePadding,
+            droppableWidth -
+              draggable.current.container.clientWidth -
+              sidePadding,
           ),
           y: clamp(
             base.current.y + offset.current.y,
@@ -71,7 +68,7 @@ export const Menu = ({
         draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
       }
     },
-    [droppableWidth, footerHeight, padding],
+    [droppableWidth, footerHeight, sidePadding],
   )
 
   const onMenuDragMove = useCallback(
@@ -121,7 +118,7 @@ export const Menu = ({
         ref={draggable}
         setShowMenu={setShowMenu}
         onBeforeMaximize={onMenuDragEnd}
-        padding={padding}
+        padding={sidePadding}
         droppableWidth={droppableWidth}
         droppableHeight={droppableHeight}
       >

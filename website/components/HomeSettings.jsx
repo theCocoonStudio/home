@@ -12,7 +12,7 @@ import { useSettings } from 'website/pages/Home/useSettings'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const HomeSettings = ({
-  config,
+  /* config, */
   setScrollDistanceFactor,
   setShowMenu,
 }) => {

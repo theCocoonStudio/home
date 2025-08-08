@@ -5,8 +5,8 @@
   padding: 0;
   z-index: 300;
   pointer-events: none;
-  left: calc(8 * var(--atomicPadding));
-  right: calc(8 * var(--atomicPadding));
+  left: var(--sidePadding);
+  right: var(--sidePadding);
   > * {
     pointer-events: auto;
   }
@@ -52,10 +52,6 @@
 }
 
 @media screen and (max-width: 768px) {
-  .nav {
-    left: calc(4 * var(--atomicPadding));
-    right: calc(4 * var(--atomicPadding));
-  }
   .pages {
     column-gap: calc(2 * var(--atomicPadding));
   }
@@ -69,12 +65,7 @@
     }
   }
 }
-@media screen and (max-width: 450px) {
-  .nav {
-    left: calc(2 * var(--atomicPadding));
-    right: calc(2 * var(--atomicPadding));
-  }
-}
+
 @media screen and (max-width: 360px) {
   .pages {
     column-gap: calc(1 * var(--atomicPadding));

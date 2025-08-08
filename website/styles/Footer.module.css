@@ -1,7 +1,7 @@
 .footer {
   position: absolute;
-  left: calc(8 * var(--atomicPadding));
-  right: calc(8 * var(--atomicPadding));
+  left: var(--sidePadding);
+  right: var(--sidePadding);
   bottom: 0;
   margin: 0;
   padding: 0;
@@ -60,8 +60,6 @@
 
 @media screen and (max-width: 768px) {
   .footer {
-    left: calc(4 * var(--atomicPadding));
-    right: calc(4 * var(--atomicPadding));
     column-gap: normal;
   }
   .linkedin svg {
@@ -75,12 +73,5 @@
   }
   .socials {
     column-gap: calc(1 * var(--atomicPadding));
-  }
-}
-
-@media screen and (max-width: 450px) {
-  .footer {
-    left: calc(2 * var(--atomicPadding));
-    right: calc(2 * var(--atomicPadding));
   }
 }

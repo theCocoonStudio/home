@@ -32,7 +32,7 @@ export const useMarkupAnimation = ({
   showLightbox,
 }) => {
   const {
-    lengths: { navHeight, atomicPadding },
+    lengths: { navHeight, sidePadding, atomicPadding },
     colors,
   } = useTheme()
 
@@ -68,7 +68,7 @@ export const useMarkupAnimation = ({
         ? `(50px + (10 * ${atomicPadding}px))`
         : width > 450
           ? `(50px + (5 * ${atomicPadding}px))`
-          : `(50px + (2 * ${atomicPadding}px))`
+          : `(50px + (2.25 * ${atomicPadding}px))`
     const titleFinalSize =
       width > 768
         ? titleSizeFinal
@@ -87,12 +87,7 @@ export const useMarkupAnimation = ({
         : width > 450
           ? subtitleSizeInitialMd
           : subtitleSizeInitialSm
-    const subtitleLeftFinal =
-      width > 768
-        ? `(8 * ${atomicPadding}px)`
-        : width > 450
-          ? `(4 * ${atomicPadding}px)`
-          : `(2 * ${atomicPadding}px)`
+    const subtitleLeftFinal = `(${sidePadding}px)`
     const subtitleFinalSize =
       width > 768
         ? subtitleSizeFinal
@@ -109,6 +104,7 @@ export const useMarkupAnimation = ({
     }
   }, [
     atomicPadding,
+    sidePadding,
     subtitleSizeFinal,
     subtitleSizeFinalMd,
     subtitleSizeFinalSm,
@@ -189,22 +185,15 @@ export const useMarkupAnimation = ({
       )
     }
   }, [
-    atomicPadding,
     descriptionElement,
-    navHeight,
     scrollData,
     setTitlePositions,
     subtitleElement,
-    subtitleSizeFinal,
+    subtitleFinalSize,
     subtitleInitialSize,
     titleElement,
-    titleSizeFinal,
-    titleSizeFinalMobileMd,
-    titleSizeFinalMobileSm,
-    width,
-    titleInitialSize,
     titleFinalSize,
-    subtitleFinalSize,
+    titleInitialSize,
   ])
 
   const scrollCallback = useCallback(
