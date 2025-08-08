@@ -45,10 +45,9 @@ export const Home = ({
       footerHeight,
     },
   } = useTheme()
-  const { canvas, get, screenWidth } = useThree(({ gl, get, size }) => ({
+  const { canvas, get } = useThree(({ gl, get }) => ({
     canvas: gl.domElement,
     get,
-    screenWidth: size.width,
   }))
 
   const { showLightbox } = useLightbox()
@@ -85,8 +84,7 @@ export const Home = ({
     setItemData(
       getItemData({
         scrollContainerId: scrollContainer,
-        scrollContainerBorderSize:
-          screenWidth > 1000 ? scrollContainerBorderSize : 0,
+        scrollContainerBorderSize,
         state: get(),
         target: new Vector3(0, 0, zPos),
         zPos,
@@ -140,7 +138,6 @@ export const Home = ({
     initialDepth,
     itemCount,
     navHeight,
-    screenWidth,
     scrollContainer,
     scrollContainerBorderSize,
     sidePaddingFactor,

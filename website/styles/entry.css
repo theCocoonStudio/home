@@ -107,7 +107,15 @@ textarea:not([rows]) {
   --navHeight: 120px;
   --footerHeight: 120px;
   --atomicPadding: 8px;
+  --scrollContainerBorderSize: 2px;
 }
+
+@media screen and (max-height: 1000px) {
+  :root {
+    --scrollContainerBorderSize: 0px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -270,7 +278,7 @@ html {
 .home-404 {
   position: absolute;
   right: 64px;
-  top: 60px;
+  top: calc(var(--navHeight) / 2);
   transform: translateY(-50%);
 }
 
@@ -283,7 +291,7 @@ html {
   filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
 }
 
-@media (max-width: 450px) {
+@media screen and (max-width: 450px) {
   .contact-dialog {
     padding: calc(4 * var(--atomicPadding)) calc(2 * var(--atomicPadding));
   }

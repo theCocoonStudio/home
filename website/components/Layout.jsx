@@ -46,6 +46,12 @@ const theme = {
     atomicPadding: 8,
     scrollContainerBorderSize: 2,
   },
+  responsiveLengths: ({ width, height }, lengths) => {
+    if (width <= 1000) {
+      return { ...lengths, scrollContainerBorderSize: 0 }
+    }
+    return lengths
+  },
 }
 
 function _Layout() {
@@ -113,8 +119,8 @@ function _Layout() {
   })
   const sensors = useSensors(mouseSensor, touchSensor)
   return (
-    <ThemeProvider theme={theme}>
-      <ResizeEventProvider>
+    <ResizeEventProvider>
+      <ThemeProvider theme={theme} container={scrollContainer}>
         <LightboxProvider>
           <MenuProvider>
             <DndContext sensors={sensors}>
@@ -211,8 +217,8 @@ function _Layout() {
             </DndContext>
           </MenuProvider>
         </LightboxProvider>
-      </ResizeEventProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ResizeEventProvider>
   )
 }
 
