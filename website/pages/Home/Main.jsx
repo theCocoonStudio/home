@@ -21,11 +21,11 @@ export const Main = function Main({
         photographyButton,
       },
     },
-    style: { sidePaddingFactor, titleHeight },
+    style: { titleHeight },
   },
 }) {
   const {
-    lengths: { atomicPadding, footerHeight, navHeight },
+    lengths: { footerHeight, navHeight, sidePadding },
     colors: { black, white },
   } = useTheme()
   const section = useScrollEvent()
@@ -122,12 +122,12 @@ export const Main = function Main({
 
   const itemDescContainerStyle = useMemo(
     () => ({
-      top: `calc(${navHeight + titleHeight + 2 * sidePaddingFactor * atomicPadding}px)`,
-      bottom: `${footerHeight + 2 * sidePaddingFactor * atomicPadding}px`,
+      top: `calc(${navHeight + titleHeight + 2 * sidePadding}px)`,
+      bottom: `${footerHeight + 2 * sidePadding}px`,
       left: `calc(100% - 61.8%)`,
       right: `0`,
     }),
-    [atomicPadding, footerHeight, navHeight, sidePaddingFactor, titleHeight],
+    [footerHeight, navHeight, sidePadding, titleHeight],
   )
 
   const separatorClass = useMemo(

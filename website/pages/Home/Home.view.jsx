@@ -33,16 +33,16 @@ export const Home = ({
 
     main: { EventDispatcherComponent },
     content: { itemCount },
-    style: { sidePaddingFactor, titleHeight },
+    style: { titleHeight },
   } = config
   // reactive data
   const {
     colors,
     lengths: {
       scrollContainerBorderSize,
-      atomicPadding,
       navHeight,
       footerHeight,
+      sidePadding,
     },
   } = useTheme()
   const { canvas, get } = useThree(({ gl, get }) => ({
@@ -94,13 +94,12 @@ export const Home = ({
         count: itemCount,
         getInitialScale: ({ viewportSize, ppwu }) => {
           const sideLength = Math.min(
-            viewportSize.x * (1.0 - 0.618) -
-              (3 * sidePaddingFactor * atomicPadding) / ppwu,
+            viewportSize.x * (1.0 - 0.618) - (3 * sidePadding) / ppwu,
             viewportSize.y -
               navHeight / ppwu -
               footerHeight / ppwu -
               titleHeight / ppwu -
-              (4 * sidePaddingFactor * atomicPadding) / ppwu,
+              (4 * sidePadding) / ppwu,
           )
           return [sideLength, sideLength]
         },
@@ -111,12 +110,11 @@ export const Home = ({
           return [0, initialPosition.y]
         },
         getFocusPosition: ({ viewportSize, intermediatePosition, ppwu }) => {
-          const leftBound =
-            -viewportSize.x / 2 + (sidePaddingFactor * atomicPadding) / ppwu
+          const leftBound = -viewportSize.x / 2 + sidePadding / ppwu
           const rightBound =
             viewportSize.x / 2 -
             viewportSize.x * 0.618 -
-            (2 * (sidePaddingFactor * atomicPadding)) / ppwu
+            (2 * sidePadding) / ppwu
           return [
             leftBound + (rightBound - leftBound) / 2,
             intermediatePosition.y,
@@ -131,7 +129,6 @@ export const Home = ({
     blogRef?.current?.resizeCallback()
     frame()
   }, [
-    atomicPadding,
     footerHeight,
     frame,
     get,
@@ -140,7 +137,7 @@ export const Home = ({
     navHeight,
     scrollContainer,
     scrollContainerBorderSize,
-    sidePaddingFactor,
+    sidePadding,
     targetDepth,
     titleHeight,
     zPos,

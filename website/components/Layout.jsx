@@ -44,13 +44,29 @@ const theme = {
     navHeight: 120,
     footerHeight: 120,
     atomicPadding: 8,
+    sidePaddingFactor: 8,
+    sidePadding: 8 * 8,
     scrollContainerBorderSize: 2,
   },
   responsiveLengths: ({ width, height }, lengths) => {
-    if (width <= 1000) {
+    if (width <= 450) {
+      return {
+        ...lengths,
+        sidePaddingFactor: 2,
+        scrollContainerBorderSize: 0,
+        sidePadding: 2 * 8,
+      }
+    } else if (width <= 768) {
+      return {
+        ...lengths,
+        sidePaddingFactor: 4,
+        scrollContainerBorderSize: 0,
+        sidePadding: 4 * 8,
+      }
+    } else if (width <= 1000) {
       return { ...lengths, scrollContainerBorderSize: 0 }
     }
-    return lengths
+    return { ...lengths }
   },
 }
 

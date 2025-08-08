@@ -186,7 +186,7 @@ export const config = {
       photographyButton: 'main-photography-button-container',
     },
   },
-  style: { sidePaddingFactor: 8, titleHeight: 157, focusFactor: 0.46 },
+  style: { titleHeight: 157, focusFactor: 0.46 },
   content: {
     get itemCount() {
       return Object.keys(sections).reduce(

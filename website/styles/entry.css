@@ -107,12 +107,26 @@ textarea:not([rows]) {
   --navHeight: 120px;
   --footerHeight: 120px;
   --atomicPadding: 8px;
+  --sidePaddingFactor: 8;
+  --sidePadding: calc(8 * 8px);
   --scrollContainerBorderSize: 2px;
 }
 
-@media screen and (max-height: 1000px) {
+@media screen and (max-width: 1000px) {
   :root {
     --scrollContainerBorderSize: 0px;
+  }
+}
+@media screen and (max-width: 768px) {
+  :root {
+    --sidePaddingFactor: 4;
+    --sidePadding: calc(var(--sidePaddingFactor) * var(--atomicPadding));
+  }
+}
+@media screen and (max-width: 450px) {
+  :root {
+    --sidePaddingFactor: 2;
+    --sidePadding: calc(var(--sidePaddingFactor) * var(--atomicPadding));
   }
 }
 
