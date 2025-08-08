@@ -121,7 +121,9 @@ export const useMarkupAnimation = ({
   ])
 
   const setTitlePositions = useCallback(
-    (rect, rect2, preScroll = true) => {
+    (preScroll = true) => {
+      const rect = titleElement.getBoundingClientRect()
+
       const titleLeftInitial = `(50% - ${rect.width / 2}px)`
 
       const titleTopInitial = `(50% - ${rect.height}px)`
@@ -157,6 +159,18 @@ export const useMarkupAnimation = ({
       titleLeftFinal,
     ],
   )
+
+  const setTitleSizes = useCallback(() => {
+    titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
+    subtitleElement.style.fontSize = `${subtitleInitialSize + dampedOffset.current * (subtitleFinalSize - subtitleInitialSize)}rem`
+  }, [
+    subtitleElement,
+    subtitleFinalSize,
+    subtitleInitialSize,
+    titleElement,
+    titleFinalSize,
+    titleInitialSize,
+  ])
   // runs once on first render
   useEffect(() => {
     if (scrollData.offset < scrollData.eps && !titleInitialized.current) {
@@ -166,17 +180,12 @@ export const useMarkupAnimation = ({
       subtitleElement.style.transform = 'none'
       /* titles */
       // font size
-      titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
-      subtitleElement.style.fontSize = `${subtitleInitialSize + dampedOffset.current * (subtitleFinalSize - subtitleInitialSize)}rem`
+      setTitleSizes()
       // set positions
-      const titleDOMRect = titleElement.getBoundingClientRect()
-      const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-      setTitlePositions(titleDOMRect, subtitleDOMRect)
-
+      setTitlePositions()
       // reveal
       titleElement.style.opacity = 1
       subtitleElement.style.opacity = 1
-
       /* description */
       descriptionElement.style.opacity = MathUtils.inverseLerp(
         0.6,
@@ -188,6 +197,7 @@ export const useMarkupAnimation = ({
     descriptionElement,
     scrollData,
     setTitlePositions,
+    setTitleSizes,
     subtitleElement,
     subtitleFinalSize,
     subtitleInitialSize,
@@ -292,9 +302,7 @@ export const useMarkupAnimation = ({
               (subtitleFinalSize - subtitleInitialSize)
           }rem`
           // positions
-          const titleDOMRect = titleElement.getBoundingClientRect()
-          const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-          setTitlePositions(titleDOMRect, subtitleDOMRect)
+          setTitlePositions()
           // opacities and font families
           if (dampedOffset.current < 0.5 + scrollData.eps) {
             subtitleElement.style.opacity = MathUtils.inverseLerp(
@@ -354,9 +362,7 @@ export const useMarkupAnimation = ({
           titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
           subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
           // positions
-          const titleDOMRect = titleElement.getBoundingClientRect()
-          const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-          setTitlePositions(titleDOMRect, subtitleDOMRect, false)
+          setTitlePositions(false)
           // opacities and font families
 
           if (subtitleElement.classList.contains('raleway')) {
@@ -387,9 +393,7 @@ export const useMarkupAnimation = ({
           titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
           subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
           // positions
-          const titleDOMRect = titleElement.getBoundingClientRect()
-          const subtitleDOMRect = subtitleElement.getBoundingClientRect()
-          setTitlePositions(titleDOMRect, subtitleDOMRect, false)
+          setTitlePositions(false)
 
           if (subtitleElement.classList.contains('changa-one-regular-italic')) {
             subtitleElement.classList.replace(
