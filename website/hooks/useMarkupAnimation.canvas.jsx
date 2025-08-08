@@ -160,17 +160,33 @@ export const useMarkupAnimation = ({
     ],
   )
 
-  const setTitleSizes = useCallback(() => {
-    titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
-    subtitleElement.style.fontSize = `${subtitleInitialSize + dampedOffset.current * (subtitleFinalSize - subtitleInitialSize)}rem`
-  }, [
-    subtitleElement,
-    subtitleFinalSize,
-    subtitleInitialSize,
-    titleElement,
-    titleFinalSize,
-    titleInitialSize,
-  ])
+  const setTitleSizes = useCallback(
+    (preScroll = true) => {
+      if (preScroll) {
+        titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
+        subtitleElement.style.fontSize = `${
+          subtitleInitialSize +
+          MathUtils.inverseLerp(
+            0.5,
+            1.0,
+            MathUtils.clamp(dampedOffset.current, 0.5, 1.0),
+          ) *
+            (subtitleFinalSize - subtitleInitialSize)
+        }rem`
+      } else {
+        titleElement.style.fontSize = `${titleFinalSize + dampedOffset2.current * (titleInitialSize - titleFinalSize)}rem`
+        subtitleElement.style.fontSize = `${subtitleFinalSize + dampedOffset2.current * (subtitleInitialSize - subtitleFinalSize)}rem`
+      }
+    },
+    [
+      subtitleElement,
+      subtitleFinalSize,
+      subtitleInitialSize,
+      titleElement,
+      titleFinalSize,
+      titleInitialSize,
+    ],
+  )
   // runs once on first render
   useEffect(() => {
     if (scrollData.offset < scrollData.eps && !titleInitialized.current) {
@@ -291,16 +307,7 @@ export const useMarkupAnimation = ({
           (isResize && !(offset2 > 0))
         if (toDamp) {
           // font size
-          titleElement.style.fontSize = `${titleInitialSize + dampedOffset.current * (titleFinalSize - titleInitialSize)}rem`
-          subtitleElement.style.fontSize = `${
-            subtitleInitialSize +
-            MathUtils.inverseLerp(
-              0.5,
-              1.0,
-              MathUtils.clamp(dampedOffset.current, 0.5, 1.0),
-            ) *
-              (subtitleFinalSize - subtitleInitialSize)
-          }rem`
+          setTitleSizes()
           // positions
           setTitlePositions()
           // opacities and font families
@@ -359,8 +366,7 @@ export const useMarkupAnimation = ({
         }
         if (toDamp2 && !(scrollRanges.postScrollOffset > 0)) {
           // font size
-          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
-          subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
+          setTitleSizes(false)
           // positions
           setTitlePositions(false)
           // opacities and font families
@@ -390,8 +396,7 @@ export const useMarkupAnimation = ({
           // and scroll ends here
 
           // font size
-          titleElement.style.fontSize = `${titleFinalSize + offset2 * (titleInitialSize - titleFinalSize)}rem`
-          subtitleElement.style.fontSize = `${subtitleFinalSize + offset2 * (subtitleInitialSize - subtitleFinalSize)}rem`
+          setTitleSizes(false)
           // positions
           setTitlePositions(false)
 
@@ -421,15 +426,12 @@ export const useMarkupAnimation = ({
       photographyButtonElement,
       photographyRef,
       setTitlePositions,
+      setTitleSizes,
       softwareItems,
       softwareRef,
       subtitleElement,
-      subtitleFinalSize,
-      subtitleInitialSize,
       subtitleTextElement,
       titleElement,
-      titleFinalSize,
-      titleInitialSize,
     ],
   )
   return scrollCallback
