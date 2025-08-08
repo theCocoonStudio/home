@@ -321,6 +321,7 @@ export const useMarkupAnimation = ({
                 'raleway',
               )
               subtitleElement.style.lineHeight = '1.17em'
+              subtitleElement.style.paddingBottom = '0em'
             }
           } else {
             subtitleElement.style.opacity = MathUtils.inverseLerp(
@@ -334,6 +335,7 @@ export const useMarkupAnimation = ({
                 'changa-one-regular-italic',
               )
               subtitleElement.style.lineHeight = '0.9em'
+              subtitleElement.style.paddingBottom = '0.1em'
             }
           }
 
@@ -374,6 +376,7 @@ export const useMarkupAnimation = ({
               'changa-one-regular-italic',
             )
             subtitleElement.style.lineHeight = '0.9em'
+            subtitleElement.style.paddingBottom = '0.1em'
           }
           subtitleElement.style.opacity = MathUtils.inverseLerp(
             0.1,
@@ -405,6 +408,7 @@ export const useMarkupAnimation = ({
               'raleway',
             )
             subtitleElement.style.lineHeight = '1.17em'
+            subtitleElement.style.paddingBottom = '0em'
           }
 
           subtitleElement.style.opacity = 1
