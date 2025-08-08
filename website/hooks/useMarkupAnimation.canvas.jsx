@@ -320,6 +320,7 @@ export const useMarkupAnimation = ({
                 'changa-one-regular-italic',
                 'raleway',
               )
+              subtitleElement.style.lineHeight = '1.17em'
             }
           } else {
             subtitleElement.style.opacity = MathUtils.inverseLerp(
@@ -332,6 +333,7 @@ export const useMarkupAnimation = ({
                 'raleway',
                 'changa-one-regular-italic',
               )
+              subtitleElement.style.lineHeight = '0.9em'
             }
           }
 
@@ -371,6 +373,7 @@ export const useMarkupAnimation = ({
               'raleway',
               'changa-one-regular-italic',
             )
+            subtitleElement.style.lineHeight = '0.9em'
           }
           subtitleElement.style.opacity = MathUtils.inverseLerp(
             0.1,
@@ -401,6 +404,7 @@ export const useMarkupAnimation = ({
               'changa-one-regular-italic',
               'raleway',
             )
+            subtitleElement.style.lineHeight = '1.17em'
           }
 
           subtitleElement.style.opacity = 1
