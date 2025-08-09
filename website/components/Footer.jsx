@@ -1,5 +1,4 @@
 import styles from 'website/styles/Footer.module.css'
-import { useTheme } from 'website/hooks/useTheme'
 import { useMemo } from 'react'
 import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
 import { useLightbox } from '../hooks/useLightbox'
@@ -11,20 +10,10 @@ export const Footer = ({ config, scrollContainer, ready, openContact }) => {
   const {
     footer: { FooterItemsComponent },
   } = config
-  const {
-    lengths: { footerHeight },
-  } = useTheme()
 
   const section = useScrollEvent()
 
   const { showLightbox } = useLightbox()
-
-  const footerStyles = useMemo(
-    () => ({
-      height: `${footerHeight}px`,
-    }),
-    [footerHeight],
-  )
 
   const socialStyles = useMemo(
     () => ({
@@ -45,7 +34,7 @@ export const Footer = ({ config, scrollContainer, ready, openContact }) => {
   )
 
   return (
-    <div className={`${styles.footer}`} style={footerStyles}>
+    <div className={`${styles.footer}`}>
       <FooterItemsComponent
         config={config}
         scrollContainer={scrollContainer}

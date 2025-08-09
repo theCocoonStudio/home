@@ -120,16 +120,6 @@ export const Main = function Main({
     [],
   )
 
-  const itemDescContainerStyle = useMemo(
-    () => ({
-      top: `calc(${navHeight + titleHeight + 2 * sidePadding}px)`,
-      bottom: `${footerHeight + 2 * sidePadding}px`,
-      left: `calc(100% - 61.8%)`,
-      right: `0`,
-    }),
-    [footerHeight, navHeight, sidePadding, titleHeight],
-  )
-
   const separatorClass = useMemo(
     () =>
       `${styles.separator} ${{ photography: styles.charcoalBackground, blog: styles.purpleBackground }[section] || styles.slateBackground}`,
@@ -168,7 +158,6 @@ export const Main = function Main({
       </div>
       <div
         className={`${styles.itemDescriptionContainer}`}
-        style={itemDescContainerStyle}
         id={itemDescription}
       >
         <div className={`${styles.itemDescription}`}>
@@ -185,7 +174,6 @@ export const Main = function Main({
             read more
           </button>
         </div>
-        <div className={styles.itemDescriptionBackground} />
       </div>
       <button
         className={photoButtonClass}

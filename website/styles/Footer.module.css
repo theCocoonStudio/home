@@ -1,5 +1,6 @@
 .footer {
   position: absolute;
+  height: var(--footerHeight);
   left: var(--sidePadding);
   right: var(--sidePadding);
   bottom: 0;

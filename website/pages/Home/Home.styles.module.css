@@ -66,6 +66,9 @@
   box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+  bottom: var(--footerHeight);
+  left: calc(100% - 61.8%);
+  right: 0;
 }
 .itemDescription {
   padding: 32px 64px;

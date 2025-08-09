@@ -1,5 +1,4 @@
 import styles from 'website/styles/Nav.module.css'
-import { useTheme } from 'website/hooks/useTheme'
 import { useCallback, useMemo } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
@@ -16,9 +15,6 @@ export const Nav = ({ config, scrollContainer }) => {
       initialLogoColor,
     },
   } = config
-  const {
-    lengths: { navHeight },
-  } = useTheme()
 
   const { showLightbox } = useLightbox()
 
@@ -27,12 +23,6 @@ export const Nav = ({ config, scrollContainer }) => {
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
-  const navStyles = useMemo(
-    () => ({
-      height: `${navHeight}px`,
-    }),
-    [navHeight],
-  )
 
   const pagesStyles = useMemo(
     () => ({
@@ -45,7 +35,7 @@ export const Nav = ({ config, scrollContainer }) => {
   )
 
   return (
-    <div className={`${styles.nav}`} style={navStyles}>
+    <div className={`${styles.nav}`}>
       <div className={`${styles.logo}`} onClick={scrollHome}>
         <View index={logoRenderPriority} frames={1}>
           <LogoComponent initialLogoColor={initialLogoColor}>

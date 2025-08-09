@@ -227,6 +227,11 @@ export const useMarkupAnimation = ({
       /* itemDescription */
       // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
+        if (isResize) {
+          const descriptionHeight = descriptionElement.offsetHeight
+          const subtitleHeight = subtitleElement.offsetHeight
+          itemDescriptionElement.style.top = `${navHeight + descriptionHeight + subtitleHeight}px`
+        }
         if (!itemDescriptionVisible.current) {
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
@@ -239,6 +244,11 @@ export const useMarkupAnimation = ({
           itemDescriptionVisible.current = true
         }
       } else if (blogRef.current.itemDescriptionVisibleRef.current) {
+        if (isResize) {
+          const descriptionHeight = descriptionElement.offsetHeight
+          const subtitleHeight = subtitleElement.offsetHeight
+          itemDescriptionElement.style.top = `${navHeight + descriptionHeight + subtitleHeight}px`
+        }
         if (!itemDescriptionVisible.current) {
           const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
@@ -338,7 +348,7 @@ export const useMarkupAnimation = ({
                 'raleway',
                 'changa-one-regular-italic',
               )
-              subtitleElement.style.lineHeight = '0.9em'
+              subtitleElement.style.lineHeight = '0.8em'
               subtitleElement.style.paddingBottom = '0.1em'
             }
           }
@@ -376,7 +386,7 @@ export const useMarkupAnimation = ({
               'raleway',
               'changa-one-regular-italic',
             )
-            subtitleElement.style.lineHeight = '0.9em'
+            subtitleElement.style.lineHeight = '0.8em'
             subtitleElement.style.paddingBottom = '0.1em'
           }
           subtitleElement.style.opacity = MathUtils.inverseLerp(
@@ -423,6 +433,7 @@ export const useMarkupAnimation = ({
       blogRef,
       descriptionElement,
       itemDescriptionElement,
+      navHeight,
       photographyButtonElement,
       photographyRef,
       setTitlePositions,
