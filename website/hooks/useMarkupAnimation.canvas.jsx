@@ -54,7 +54,7 @@ export const useMarkupAnimation = ({
     }
   }, [photographyButtonElement, showLightbox])
 
-  const { width } = useThree(({ size }) => size)
+  const { width, height } = useThree(({ size }) => size)
   const {
     titleLeftFinal,
     titleFinalSize,
@@ -62,38 +62,41 @@ export const useMarkupAnimation = ({
     subtitleInitialSize,
     subtitleLeftFinal,
     subtitleFinalSize,
+    subtitleTop,
   } = useMemo(() => {
-    const titleLeftFinal =
-      width > 768
-        ? `(50px + (10 * ${atomicPadding}px))`
-        : width > 450
-          ? `(50px + (5 * ${atomicPadding}px))`
-          : `(50px + (2.25 * ${atomicPadding}px))`
-    const titleFinalSize =
-      width > 768
-        ? titleSizeFinal
-        : width > 450
-          ? titleSizeFinalMobileMd
-          : titleSizeFinalMobileSm
-    const titleInitialSize =
-      width > 768
-        ? titleSizeInitial
-        : width > 450
-          ? titleSizeInitialMd
-          : titleSizeInitialSm
-    const subtitleInitialSize =
-      width > 768
-        ? subtitleSizeInitial
-        : width > 450
-          ? subtitleSizeInitialMd
-          : subtitleSizeInitialSm
-    const subtitleLeftFinal = `(${sidePadding}px)`
-    const subtitleFinalSize =
-      width > 768
-        ? subtitleSizeFinal
-        : width > 450
-          ? subtitleSizeFinalMd
-          : subtitleSizeFinalSm
+    const descriptionHeight = descriptionElement.offsetHeight
+    const subtitleHeight = subtitleElement.offsetHeight
+    let subtitleTop =
+      height <= 600
+        ? `${navHeight}px`
+        : `${navHeight + descriptionHeight + subtitleHeight}px`
+    let titleLeftFinal = `(50px + (10 * ${atomicPadding}px))`
+    let titleFinalSize = titleSizeFinal
+    let titleInitialSize = titleSizeInitial
+    let subtitleInitialSize = subtitleSizeInitial
+    let subtitleFinalSize =
+      height <= 800
+        ? height <= 600
+          ? subtitleSizeFinalSm
+          : subtitleSizeFinalMd
+        : subtitleSizeFinal
+    let subtitleLeftFinal = `(${sidePadding}px)`
+    if (width <= 768) {
+      titleLeftFinal = `(50px + (5 * ${atomicPadding}px))`
+      titleFinalSize = titleSizeFinalMobileMd
+      titleInitialSize = titleSizeInitialMd
+      subtitleInitialSize = subtitleSizeInitialMd
+      subtitleFinalSize =
+        height <= 600 ? subtitleSizeFinalSm : subtitleSizeFinalMd
+    }
+    if (width <= 450) {
+      titleLeftFinal = `(50px + (2.25 * ${atomicPadding}px))`
+      titleFinalSize = titleSizeFinalMobileSm
+      titleInitialSize = titleSizeInitialSm
+      subtitleInitialSize = subtitleSizeInitialSm
+      subtitleFinalSize = subtitleSizeFinalSm
+    }
+
     return {
       titleLeftFinal,
       titleFinalSize,
@@ -101,10 +104,15 @@ export const useMarkupAnimation = ({
       subtitleInitialSize,
       subtitleLeftFinal,
       subtitleFinalSize,
+      subtitleTop,
     }
   }, [
     atomicPadding,
+    descriptionElement,
+    height,
+    navHeight,
     sidePadding,
+    subtitleElement,
     subtitleSizeFinal,
     subtitleSizeFinalMd,
     subtitleSizeFinalSm,
@@ -228,11 +236,12 @@ export const useMarkupAnimation = ({
       // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          const descriptionHeight = descriptionElement.offsetHeight
-          const subtitleHeight = subtitleElement.offsetHeight
-          itemDescriptionElement.style.top = `${navHeight + descriptionHeight + subtitleHeight}px`
+          itemDescriptionElement.style.top = subtitleTop
         }
         if (!itemDescriptionVisible.current) {
+          if (!isResize) {
+            itemDescriptionElement.style.top = subtitleTop
+          }
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
@@ -245,11 +254,12 @@ export const useMarkupAnimation = ({
         }
       } else if (blogRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          const descriptionHeight = descriptionElement.offsetHeight
-          const subtitleHeight = subtitleElement.offsetHeight
-          itemDescriptionElement.style.top = `${navHeight + descriptionHeight + subtitleHeight}px`
+          itemDescriptionElement.style.top = subtitleTop
         }
         if (!itemDescriptionVisible.current) {
+          if (!isResize) {
+            itemDescriptionElement.style.top = subtitleTop
+          }
           const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
           itemDescriptionElement.children[0].children[1].innerText = item.date
@@ -433,7 +443,6 @@ export const useMarkupAnimation = ({
       blogRef,
       descriptionElement,
       itemDescriptionElement,
-      navHeight,
       photographyButtonElement,
       photographyRef,
       setTitlePositions,
@@ -442,6 +451,7 @@ export const useMarkupAnimation = ({
       softwareRef,
       subtitleElement,
       subtitleTextElement,
+      subtitleTop,
       titleElement,
     ],
   )

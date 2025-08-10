@@ -49,24 +49,28 @@ const theme = {
     scrollContainerBorderSize: 2,
   },
   responsiveLengths: ({ width, height }, lengths) => {
+    const current = { ...lengths }
+    /* widths */
     if (width <= 450) {
-      return {
-        ...lengths,
-        sidePaddingFactor: 2,
-        scrollContainerBorderSize: 0,
-        sidePadding: 2 * 8,
-      }
+      current.sidePaddingFactor = 2
+      current.scrollContainerBorderSize = 0
     } else if (width <= 768) {
-      return {
-        ...lengths,
-        sidePaddingFactor: 4,
-        scrollContainerBorderSize: 0,
-        sidePadding: 4 * 8,
-      }
+      current.sidePaddingFactor = 4
+      current.scrollContainerBorderSize = 0
     } else if (width <= 1000) {
-      return { ...lengths, scrollContainerBorderSize: 0 }
+      current.scrollContainerBorderSize = 0
     }
-    return { ...lengths }
+    /* heights */
+    if (height <= 800) {
+      current.navHeight = 80
+      current.footerHeight = 80
+    }
+    if (height <= 600) {
+      current.navHeight = 60
+      current.footerHeight = 60
+    }
+    current.sidePadding = current.sidePaddingFactor * current.atomicPadding
+    return current
   },
 }
 
