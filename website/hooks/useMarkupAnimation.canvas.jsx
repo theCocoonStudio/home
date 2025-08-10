@@ -66,12 +66,23 @@ export const useMarkupAnimation = ({
   } = useMemo(() => {
     const descriptionHeight = descriptionElement.offsetHeight
     const subtitleHeight = subtitleElement.offsetHeight
+    /* width > 768px */
     let subtitleTop =
       height <= 600
         ? `${navHeight}px`
         : `${navHeight + descriptionHeight + subtitleHeight}px`
-    let titleLeftFinal = `(50px + (10 * ${atomicPadding}px))`
-    let titleFinalSize = titleSizeFinal
+    let titleLeftFinal =
+      height <= 800
+        ? height <= 600
+          ? `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
+          : `(50px + (${atomicPadding}px) + ${sidePadding}px)`
+        : `(50px + (2 * ${atomicPadding}px) + ${sidePadding}px)`
+    let titleFinalSize =
+      height <= 800
+        ? height <= 600
+          ? titleSizeFinalMobileSm
+          : titleSizeFinalMobileMd
+        : titleSizeFinal
     let titleInitialSize = titleSizeInitial
     let subtitleInitialSize = subtitleSizeInitial
     let subtitleFinalSize =
@@ -81,20 +92,23 @@ export const useMarkupAnimation = ({
           : subtitleSizeFinalMd
         : subtitleSizeFinal
     let subtitleLeftFinal = `(${sidePadding}px)`
-    if (width <= 768) {
-      titleLeftFinal = `(50px + (5 * ${atomicPadding}px))`
-      titleFinalSize = titleSizeFinalMobileMd
-      titleInitialSize = titleSizeInitialMd
-      subtitleInitialSize = subtitleSizeInitialMd
-      subtitleFinalSize =
-        height <= 600 ? subtitleSizeFinalSm : subtitleSizeFinalMd
-    }
     if (width <= 450) {
-      titleLeftFinal = `(50px + (2.25 * ${atomicPadding}px))`
+      titleLeftFinal = `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
       titleFinalSize = titleSizeFinalMobileSm
       titleInitialSize = titleSizeInitialSm
       subtitleInitialSize = subtitleSizeInitialSm
       subtitleFinalSize = subtitleSizeFinalSm
+    } else if (width <= 768) {
+      titleLeftFinal =
+        height <= 600
+          ? `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
+          : `(50px + (${atomicPadding}px) + ${sidePadding}px)`
+      titleFinalSize =
+        height <= 600 ? titleSizeFinalMobileSm : titleSizeFinalMobileMd
+      titleInitialSize = titleSizeInitialMd
+      subtitleInitialSize = subtitleSizeInitialMd
+      subtitleFinalSize =
+        height <= 600 ? subtitleSizeFinalSm : subtitleSizeFinalMd
     }
 
     return {

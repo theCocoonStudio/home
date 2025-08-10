@@ -41,8 +41,14 @@ export const Logo = forwardRef(function Logo(
 
   const scale = useCallback(() => {
     if (ref.current) {
-      const size =
-        canvas.clientWidth > 768 ? 30 : canvas.clientWidth > 450 ? 25 : 20
+      const width = canvas.clientWidth
+      const height = canvas.clientHeight
+      let size = 30
+      if (width <= 450 || height <= 600) {
+        size = 20
+      } else if (width <= 768 || height <= 800) {
+        size = 25
+      }
 
       const { factor } = viewport.getCurrentViewport(
         camera,
@@ -51,7 +57,7 @@ export const Logo = forwardRef(function Logo(
       )
       ref.current.scale.set(size / factor, size / factor, size / factor)
     }
-  }, [cSize, camera, canvas.clientWidth, viewport])
+  }, [cSize, camera, canvas, viewport])
 
   useResizeEvent(canvas, scale)
 

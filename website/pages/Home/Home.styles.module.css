@@ -417,9 +417,14 @@
       margin-top: 16px;
     }
   }
-  @media (max-height: 350px) {
+  @media (max-height: 360px) {
     .itemDescription {
       padding: 22px var(--sidePadding);
+    }
+    .active {
+      width: 4px;
+      height: 4px;
+      top: calc(100% + 4px);
     }
   }
   @media (max-width: 1000px) {
@@ -485,6 +490,13 @@
     }
     .instruction {
       font-size: 1.2rem;
+    }
+  }
+  @media (max-width: 360px) {
+    .active {
+      width: 4px;
+      height: 4px;
+      top: calc(100% + 4px);
     }
   }
 }
