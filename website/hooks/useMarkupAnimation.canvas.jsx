@@ -62,15 +62,8 @@ export const useMarkupAnimation = ({
     subtitleInitialSize,
     subtitleLeftFinal,
     subtitleFinalSize,
-    subtitleTop,
   } = useMemo(() => {
-    const descriptionHeight = descriptionElement.offsetHeight
-    const subtitleHeight = subtitleElement.offsetHeight
     /* width > 768px */
-    let subtitleTop =
-      height <= 600
-        ? `${navHeight}px`
-        : `${navHeight + descriptionHeight + subtitleHeight}px`
     let titleLeftFinal =
       height <= 800
         ? height <= 600
@@ -118,15 +111,11 @@ export const useMarkupAnimation = ({
       subtitleInitialSize,
       subtitleLeftFinal,
       subtitleFinalSize,
-      subtitleTop,
     }
   }, [
     atomicPadding,
-    descriptionElement,
     height,
-    navHeight,
     sidePadding,
-    subtitleElement,
     subtitleSizeFinal,
     subtitleSizeFinalMd,
     subtitleSizeFinalSm,
@@ -141,6 +130,14 @@ export const useMarkupAnimation = ({
     titleSizeInitialSm,
     width,
   ])
+
+  const getItemDescriptionTop = useCallback(() => {
+    const descriptionHeight = descriptionElement.offsetHeight
+    const subtitleHeight = subtitleElement.offsetHeight
+    return height <= 600
+      ? `${navHeight}px`
+      : `${navHeight + descriptionHeight + subtitleHeight}px`
+  }, [descriptionElement, height, navHeight, subtitleElement])
 
   const setTitlePositions = useCallback(
     (preScroll = true) => {
@@ -250,11 +247,11 @@ export const useMarkupAnimation = ({
       // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          itemDescriptionElement.style.top = subtitleTop
+          itemDescriptionElement.style.top = getItemDescriptionTop()
         }
         if (!itemDescriptionVisible.current) {
           if (!isResize) {
-            itemDescriptionElement.style.top = subtitleTop
+            itemDescriptionElement.style.top = getItemDescriptionTop()
           }
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
@@ -268,11 +265,11 @@ export const useMarkupAnimation = ({
         }
       } else if (blogRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          itemDescriptionElement.style.top = subtitleTop
+          itemDescriptionElement.style.top = getItemDescriptionTop()
         }
         if (!itemDescriptionVisible.current) {
           if (!isResize) {
-            itemDescriptionElement.style.top = subtitleTop
+            itemDescriptionElement.style.top = getItemDescriptionTop()
           }
           const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
@@ -465,8 +462,8 @@ export const useMarkupAnimation = ({
       softwareRef,
       subtitleElement,
       subtitleTextElement,
-      subtitleTop,
       titleElement,
+      getItemDescriptionTop,
     ],
   )
   return scrollCallback
