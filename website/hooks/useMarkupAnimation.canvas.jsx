@@ -141,25 +141,24 @@ export const useMarkupAnimation = ({
 
   const setTitlePositions = useCallback(
     (preScroll = true) => {
-      const rect = titleElement.getBoundingClientRect()
-
-      const titleLeftInitial = `(50% - ${rect.width / 2}px)`
-
-      const titleTopInitial = `(50% - ${rect.height}px)`
-      const titleTopFinal = `(${navHeight / 2}px - ${rect.height / 2}px)`
-
+      const titleWidth = titleElement.offsetWidth
+      const titleHeight = titleElement.offsetHeight
+      const titleLeftInitial = `(50% - ${titleWidth / 2}px)`
+      const titleTopFinal = `(${navHeight / 2}px - ${titleHeight / 2}px)`
       const subtitleLeftInitial = `50%`
-
-      const subtitleTopInitial = `50%`
       const subtitleTopFinal = `  ${navHeight}px`
 
       let leftTarget, leftTarget2, topTarget, topTarget2
       if (preScroll) {
+        const titleTopInitial = `(50% - ${titleHeight}px)`
+        const subtitleTopInitial = `50%`
         leftTarget = `calc(${titleLeftInitial} + ${dampedOffset.current} * (${titleLeftFinal} - ${titleLeftInitial}) )`
         topTarget = `calc( ${titleTopInitial} + ${dampedOffset.current} * (${titleTopFinal} - ${titleTopInitial}) )`
         leftTarget2 = `calc(${subtitleLeftInitial} + ${dampedOffset.current} * (${subtitleLeftFinal} - ${subtitleLeftInitial}) )`
         topTarget2 = `calc( ${subtitleTopInitial} + ${dampedOffset.current} * (${subtitleTopFinal} - ${subtitleTopInitial}) )`
       } else {
+        const titleTopInitial = `(50% - ${titleHeight / 2}px)`
+        const subtitleTopInitial = `(50% + ${titleHeight / 2}px)`
         leftTarget = `calc(${titleLeftFinal} + ${dampedOffset2.current} * (${titleLeftInitial} - ${titleLeftFinal}) )`
         topTarget = `calc( ${titleTopFinal} + ${dampedOffset2.current} * (${titleTopInitial} - ${titleTopFinal}) )`
         leftTarget2 = `calc(${subtitleLeftFinal} + ${dampedOffset2.current} * (${subtitleLeftInitial} - ${subtitleLeftFinal}) )`
