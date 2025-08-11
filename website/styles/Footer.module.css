@@ -29,8 +29,6 @@
     cursor: pointer;
   }
   svg {
-    /* width: 36px;
-    height: 36px; */
     filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
   }
 }
@@ -40,8 +38,8 @@
   height: 33px;
 }
 .github svg {
-  width: 29px;
-  height: 29px;
+  width: 28px;
+  height: 28px;
 }
 .contact svg {
   width: 30px;
@@ -59,18 +57,72 @@
   opacity: 0;
 }
 
+@media screen and (max-height: 800px) {
+  .linkedin svg {
+    width: 27px;
+    height: 27px;
+  }
+  .github svg {
+    width: 23px;
+    height: 23px;
+  }
+  .contact svg {
+    width: 25px;
+    height: 25px;
+  }
+  .socials {
+    column-gap: calc(1.5 * var(--atomicPadding));
+  }
+}
 @media screen and (max-width: 768px) {
   .footer {
     column-gap: normal;
   }
   .linkedin svg {
-    transform: scale(0.85);
+    width: 27px;
+    height: 27px;
   }
   .github svg {
-    transform: scale(0.85);
+    width: 23px;
+    height: 23px;
   }
   .contact svg {
-    transform: scale(0.85);
+    width: 25px;
+    height: 25px;
+  }
+  .socials {
+    column-gap: calc(1.5 * var(--atomicPadding));
+  }
+}
+@media screen and (max-height: 360px) {
+  .linkedin svg {
+    width: 23px;
+    height: 23px;
+  }
+  .github svg {
+    width: 19px;
+    height: 19px;
+  }
+  .contact svg {
+    width: 21px;
+    height: 21px;
+  }
+  .socials {
+    column-gap: calc(1 * var(--atomicPadding));
+  }
+}
+@media screen and (max-width: 360px) {
+  .linkedin svg {
+    width: 23px;
+    height: 23px;
+  }
+  .github svg {
+    width: 19px;
+    height: 19px;
+  }
+  .contact svg {
+    width: 21px;
+    height: 21px;
   }
   .socials {
     column-gap: calc(1 * var(--atomicPadding));

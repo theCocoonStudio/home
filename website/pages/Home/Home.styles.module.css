@@ -387,6 +387,17 @@
     .itemDescription {
       margin: 16px 0;
     }
+    .icon {
+      width: 31px;
+      height: 31px;
+      > div svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
+    .settings {
+      column-gap: calc(1 * var(--atomicPadding));
+    }
   }
   @media (max-height: 600px) {
     .description {
@@ -426,6 +437,17 @@
       height: 4px;
       top: calc(100% + 4px);
     }
+    .icon {
+      width: 27px;
+      height: 27px;
+      > div svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .settings {
+      column-gap: calc(1 * var(--atomicPadding));
+    }
   }
   @media (max-width: 1000px) {
     .scroll {
@@ -441,11 +463,18 @@
   }
 
   @media (max-width: 768px) {
-    .icon {
-      transform: scale(0.85);
-    }
-    .settings {
-      column-gap: calc(1 * var(--atomicPadding));
+    @media (min-height: 361px) {
+      .icon {
+        width: 31px;
+        height: 31px;
+        > div svg {
+          width: 28px;
+          height: 28px;
+        }
+      }
+      .settings {
+        column-gap: calc(1 * var(--atomicPadding));
+      }
     }
     .title {
       font-size: 6.5rem;
@@ -497,6 +526,17 @@
       width: 4px;
       height: 4px;
       top: calc(100% + 4px);
+    }
+    .icon {
+      width: 27px;
+      height: 27px;
+      > div svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .settings {
+      column-gap: calc(1 * var(--atomicPadding));
     }
   }
 }
