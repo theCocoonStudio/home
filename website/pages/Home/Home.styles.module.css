@@ -402,6 +402,10 @@
       width: 36px;
       height: 36px;
     }
+    .scroll {
+      height: 20px;
+      border-radius: 3px;
+    }
   }
   @media (max-height: 600px) {
     .description {
@@ -459,6 +463,10 @@
     .instruction {
       font-size: 1.2rem;
     }
+    .scroll {
+      height: 16px;
+      border-radius: 3px;
+    }
   }
   @media (max-width: 1000px) {
     .scroll {
@@ -470,6 +478,16 @@
       height: 8px;
       border: none;
       box-shadow: none;
+    }
+    @media (max-height: 800px) {
+      .scroll {
+        height: 6px;
+      }
+    }
+    @media (max-height: 600px) {
+      .scroll {
+        height: 4px;
+      }
     }
   }
 
