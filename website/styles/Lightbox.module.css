@@ -43,3 +43,15 @@
     }
   }
 }
+@media screen and (max-height: 600px) {
+  .exit {
+    right: calc(4 * var(--atomicPadding));
+    width: 36px;
+    height: 36px;
+  }
+  .exit svg {
+    svg {
+      font-size: 36px;
+    }
+  }
+}

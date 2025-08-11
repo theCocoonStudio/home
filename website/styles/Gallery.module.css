@@ -95,3 +95,24 @@
     font-size: 1.4rem;
   }
 }
+@media screen and (max-height: 600px) {
+  .container {
+    margin-left: calc(4 * var(--atomicPadding));
+    margin-right: calc(4 * var(--atomicPadding));
+  }
+  .controlsDescriptionContainer {
+    padding-left: calc(4 * var(--atomicPadding));
+    padding-right: calc(4 * var(--atomicPadding));
+  }
+
+  .control {
+    width: 30px;
+    height: 30px;
+  }
+  .control svg {
+    font-size: 30px;
+  }
+  .description {
+    font-size: 1.4rem;
+  }
+}
