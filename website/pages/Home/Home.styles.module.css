@@ -398,6 +398,10 @@
     .settings {
       column-gap: calc(1 * var(--atomicPadding));
     }
+    .down {
+      width: 36px;
+      height: 36px;
+    }
   }
   @media (max-height: 600px) {
     .description {
@@ -448,6 +452,13 @@
     .settings {
       column-gap: calc(1 * var(--atomicPadding));
     }
+    .down {
+      width: 30px;
+      height: 30px;
+    }
+    .instruction {
+      font-size: 1.2rem;
+    }
   }
   @media (max-width: 1000px) {
     .scroll {
@@ -475,6 +486,10 @@
       .settings {
         column-gap: calc(1 * var(--atomicPadding));
       }
+      .down {
+        width: 36px;
+        height: 36px;
+      }
     }
     .title {
       font-size: 6.5rem;
@@ -487,10 +502,6 @@
       font-size: 2rem;
       padding: 4px 0;
       padding-left: 12px;
-    }
-    .down {
-      width: 36px;
-      height: 36px;
     }
     .progress > span {
       width: 36px !important;
