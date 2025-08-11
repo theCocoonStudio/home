@@ -127,7 +127,7 @@ export const FooterItems = ({
         >
           <div>
             <SettingsApplicationsIcon />
-            {showMenu && <div className={styles.active} />}
+            {showMenu && <div className={styles.activeFooter} />}
           </div>
         </div>
         <div className={`${className}`} style={style}>

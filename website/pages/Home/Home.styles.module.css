@@ -202,7 +202,8 @@
   }
 }
 
-.active {
+.active,
+.activeFooter {
   background-color: var(--black);
   width: 5px;
   height: 5px;
@@ -395,6 +396,11 @@
         height: 28px;
       }
     }
+    .activeFooter {
+      width: 4px;
+      height: 4px;
+      top: calc(100% + 1px);
+    }
     .settings {
       column-gap: calc(1 * var(--atomicPadding));
     }
@@ -453,6 +459,11 @@
         height: 24px;
       }
     }
+    .activeFooter {
+      width: 4px;
+      height: 4px;
+      top: calc(100% + 1px);
+    }
     .settings {
       column-gap: calc(1 * var(--atomicPadding));
     }
@@ -500,6 +511,11 @@
           width: 28px;
           height: 28px;
         }
+      }
+      .activeFooter {
+        width: 4px;
+        height: 4px;
+        top: calc(100% + 1px);
       }
       .settings {
         column-gap: calc(1 * var(--atomicPadding));
@@ -563,6 +579,11 @@
         width: 24px;
         height: 24px;
       }
+    }
+    .activeFooter {
+      width: 4px;
+      height: 4px;
+      top: calc(100% + 1px);
     }
     .settings {
       column-gap: calc(1 * var(--atomicPadding));
