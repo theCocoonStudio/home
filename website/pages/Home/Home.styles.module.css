@@ -31,7 +31,7 @@
   position: absolute;
   display: inline-block;
   font-size: 2.8rem;
-  margin-right: calc(8 * var(--atomicPadding));
+  margin-right: calc(var(--sidePadding));
   line-height: 1.17em;
 }
 
@@ -370,6 +370,7 @@
 @media screen {
   @media (max-height: 800px) {
     .itemDescription {
+      margin: 16px 0;
       h1 {
         font-size: 2.2rem;
       }
@@ -385,9 +386,7 @@
       padding: 4px 0;
       padding-left: 12px;
     }
-    .itemDescription {
-      margin: 16px 0;
-    }
+
     .icon {
       width: 31px;
       height: 31px;
@@ -425,11 +424,13 @@
   }
   @media (max-height: 425px) {
     .itemDescription {
+      padding: 24px var(--sidePadding) 24px calc(var(--sidePadding) / 2);
       h1 {
         font-size: 1.8rem;
       }
       p {
         font-size: 1.4rem;
+        margin-top: 12px;
       }
       h3 {
         font-size: 1.2rem;
@@ -443,9 +444,6 @@
     }
   }
   @media (max-height: 360px) {
-    .itemDescription {
-      padding: 22px var(--sidePadding);
-    }
     .active {
       width: 4px;
       height: 4px;
@@ -529,7 +527,6 @@
       font-size: 6.5rem;
     }
     .subtitleContainer {
-      margin-right: calc(4 * var(--atomicPadding));
       font-size: 2.4rem;
     }
     .description {
@@ -547,7 +544,6 @@
       font-size: 5rem;
     }
     .subtitleContainer {
-      margin-right: calc(2 * var(--atomicPadding));
       font-size: 2rem;
     }
     .description {
