@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import styles from './Home.styles.module.css'
-import { raleway, changaOne } from '../../utils/styles'
+import { raleway } from '../../utils/styles'
 import { useScrollEvent } from './useScrollEvent'
 import { useTheme } from '../../hooks/useTheme'
-import { useScroll } from 'src/hooks'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
+import { ItemDescription } from './ItemDescription'
+import { Titles } from './Titles'
 
 export const Main = function Main({
   scrollContainer,
@@ -21,19 +22,12 @@ export const Main = function Main({
         photographyButton,
       },
     },
-    style: { titleHeight },
   },
 }) {
   const {
-    lengths: { footerHeight, navHeight, sidePadding },
     colors: { black, white },
   } = useTheme()
   const section = useScrollEvent()
-  const scrollTo = useScroll(scrollContainer)
-
-  const scrollHome = useCallback(() => {
-    scrollTo(0.0)
-  }, [scrollTo])
 
   const targetItems = useTargetItems()
 
@@ -70,60 +64,9 @@ export const Main = function Main({
     setOnLightboxExitClick(closeLightbox)
   }, [closeLightbox, setOnLightboxExitClick])
 
-  const { style, className } = useMemo(
-    () =>
-      changaOne(
-        false,
-        {
-          cursor: section === 'preScroll' ? 'auto' : 'pointer',
-          opacity: showLightbox ? 0 : 1,
-        },
-        styles.title,
-      ),
-    [section, showLightbox],
-  )
-
-  const { style: subContainerStyle, className: subContainerClass } = useMemo(
-    () =>
-      raleway(
-        400,
-        false,
-        {
-          opacity: showLightbox ? 0 : 1,
-        },
-        styles.subtitleContainer,
-      ),
-    [showLightbox],
-  )
-
-  const { style: descStyle, className: descClass } = useMemo(
-    () => raleway(400, false, undefined, styles.description),
-    [],
-  )
-
-  const { style: buttonStyle, className: buttonClass } = useMemo(
-    () =>
-      raleway(
-        350,
-        false,
-        undefined,
-        styles.button,
-        section === 'blog'
-          ? styles.purpleBackgroundOnHover
-          : styles.slateBackgroundOnHover,
-      ),
-    [section],
-  )
-
   const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
     () => raleway(350, false, undefined, styles.photoButton),
     [],
-  )
-
-  const separatorClass = useMemo(
-    () =>
-      `${styles.separator} ${{ photography: styles.charcoalBackground, blog: styles.purpleBackground }[section] || styles.slateBackground}`,
-    [section],
   )
 
   const bgStyles = useMemo(
@@ -136,45 +79,16 @@ export const Main = function Main({
   return (
     <div className={styles.main}>
       <div className={styles.bg} style={bgStyles} />
-      <h1
-        style={style}
-        className={className}
-        id={title}
-        onClick={section === 'preScroll' ? undefined : scrollHome}
-      >
-        Izzy&nbsp;Erlich
-      </h1>
-      <br />
-      <div
-        className={subContainerClass}
-        style={subContainerStyle}
-        id={subtitle}
-      >
-        <h2 className={styles.subtitle}>software and stuff</h2>
-        <p id={descriptionId} className={descClass} style={descStyle}>
-          {sections[section] ? sections[section].description : ''}
-          <span className={separatorClass} />
-        </p>
-      </div>
-      <div
-        className={`${styles.itemDescriptionContainer}`}
-        id={itemDescription}
-      >
-        <div className={`${styles.itemDescription}`}>
-          <h1 className='changa-one-regular'></h1>
-          <h3 className='raleway'></h3>
-          <div className='raleway'>
-            <p></p>
-            <div
-              className={`${styles.accent} ${section === 'blog' ? styles.purpleBackground : styles.slateBackground}`}
-            />
-          </div>
-
-          <button className={buttonClass} style={buttonStyle}>
-            read more
-          </button>
-        </div>
-      </div>
+      <Titles
+        titleId={title}
+        subtitleId={subtitle}
+        descriptionId={descriptionId}
+        section={section}
+        sections={sections}
+        scrollContainer={scrollContainer}
+        showLightbox={showLightbox}
+      />
+      <ItemDescription id={itemDescription} section={section} />
       <button
         className={photoButtonClass}
         style={photoButtonStyle}

@@ -14,155 +14,6 @@
   z-index: -1;
 }
 
-.title {
-  left: -100%;
-  line-height: 1em;
-  font-size: 8rem;
-  display: inline-block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-}
-
-.subtitleContainer {
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  display: inline-block;
-  font-size: 2.8rem;
-  margin-right: calc(var(--sidePadding));
-  line-height: 1.17em;
-}
-
-.subtitle {
-  font-weight: inherit !important;
-  line-height: inherit;
-}
-
-.description {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 2.8rem;
-  line-height: 1.1em;
-  padding-left: 16px;
-  width: 100%;
-  opacity: 0;
-}
-
-.itemDescriptionContainer {
-  position: absolute;
-  transition: opacity 0.1s ease-in;
-  opacity: 0;
-  pointer-events: none;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  bottom: var(--footerHeight);
-  left: calc(100% - 61.8%);
-  right: 0;
-}
-.itemDescription {
-  margin: 32px 0;
-  padding: 48px var(--sidePadding); /* todo */
-  backdrop-filter: blur(60px);
-  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  overflow: hidden;
-  > div {
-    position: relative;
-  }
-  > * {
-    max-width: 600px;
-  }
-
-  h1 {
-    font-size: 2.8rem;
-    line-height: 1.1em;
-  }
-  h3 {
-    font-size: 1.4rem;
-    line-height: 1em;
-    font-weight: 300;
-    padding-top: 10px;
-    text-transform: capitalize;
-  }
-  p {
-    font-size: 1.8rem;
-    line-height: 1.4em;
-    margin-top: 16px;
-    padding-left: 16px;
-    font-weight: 400;
-  }
-}
-.button {
-  font-size: 1.8rem;
-  line-height: 1.5em;
-  padding: 6px;
-  width: 100%;
-  margin-top: 24px;
-  font-variation-settings: 'wdth' 100;
-  text-transform: uppercase;
-  border-radius: 4px;
-
-  background-color: transparent;
-  border: 1px solid var(--black);
-  color: var(--black);
-  transition: all 0.1s ease-out;
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  &:hover {
-    cursor: pointer;
-    border: 1px solid transparent;
-    background-color: var(--black);
-    color: var(--white);
-  }
-}
-
-.accent {
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  border-radius: 4px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: var(--slate);
-}
-
-.separator {
-  position: absolute;
-  width: 2px;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  background-color: var(--slate);
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  border-radius: 4px;
-}
-
-.slateBackground {
-  background-color: var(--slate);
-}
-.charcoalBackground {
-  background-color: var(--charcoal);
-}
-.purpleBackground {
-  background-color: var(--purple);
-}
-
-.slateBackgroundOnHover:hover {
-  background-color: var(--slate);
-}
-
-.purpleBackgroundOnHover:hover {
-  background-color: var(--purple);
-}
-
 .photoButton {
   position: absolute;
   top: 50%;
@@ -369,24 +220,6 @@
 
 @media screen {
   @media (max-height: 800px) {
-    .itemDescription {
-      margin: 16px 0;
-      h1 {
-        font-size: 2.2rem;
-      }
-      p {
-        font-size: 1.6rem;
-      }
-    }
-    .button {
-      font-size: 1.4rem;
-    }
-    .description {
-      font-size: 2rem;
-      padding: 4px 0;
-      padding-left: 12px;
-    }
-
     .icon {
       width: 31px;
       height: 31px;
@@ -412,37 +245,7 @@
       border-radius: 3px;
     }
   }
-  @media (max-height: 600px) {
-    .description {
-      font-size: 1.7rem;
-      padding-left: 10px;
-    }
-    .itemDescription {
-      padding: 32px var(--sidePadding);
-      margin: 0;
-    }
-  }
-  @media (max-height: 425px) {
-    .itemDescription {
-      padding: 24px var(--sidePadding) 24px calc(var(--sidePadding) / 2);
-      h1 {
-        font-size: 1.8rem;
-      }
-      p {
-        font-size: 1.4rem;
-        margin-top: 12px;
-      }
-      h3 {
-        font-size: 1.2rem;
-        padding-top: 4px;
-      }
-    }
-    .button {
-      font-size: 1.2rem;
-      padding: 4px;
-      margin-top: 16px;
-    }
-  }
+
   @media (max-height: 360px) {
     .active {
       width: 4px;
@@ -523,33 +326,13 @@
         height: 36px;
       }
     }
-    .title {
-      font-size: 6.5rem;
-    }
-    .subtitleContainer {
-      font-size: 2.4rem;
-    }
-    .description {
-      font-size: 2rem;
-      padding: 4px 0;
-      padding-left: 12px;
-    }
+
     .progress > span {
       width: 36px !important;
       height: 36px !important;
     }
   }
   @media (max-width: 450px) {
-    .title {
-      font-size: 5rem;
-    }
-    .subtitleContainer {
-      font-size: 2rem;
-    }
-    .description {
-      font-size: 1.7rem;
-      padding-left: 10px;
-    }
     .down {
       width: 30px;
       height: 30px;
