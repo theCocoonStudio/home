@@ -112,7 +112,7 @@ textarea:not([rows]) {
   --scrollContainerBorderSize: 2px;
 }
 
-@media screen and (max-height: 800px) {
+@media screen and (max-height: 800px), screen and (max-width: 450px) {
   :root {
     --navHeight: 80px;
     --footerHeight: 80px;
@@ -120,8 +120,8 @@ textarea:not([rows]) {
 }
 @media screen and (max-height: 600px) {
   :root {
-    --navHeight: 60px;
-    --footerHeight: 60px;
+    --navHeight: 72px;
+    --footerHeight: 72px;
   }
 }
 @media screen and (max-width: 1000px) {

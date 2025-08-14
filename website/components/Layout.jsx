@@ -61,13 +61,13 @@ const theme = {
       current.scrollContainerBorderSize = 0
     }
     /* heights */
-    if (height <= 800) {
+    if (height <= 800 || width <= 450) {
       current.navHeight = 80
       current.footerHeight = 80
     }
     if (height <= 600) {
-      current.navHeight = 60
-      current.footerHeight = 60
+      current.navHeight = 72
+      current.footerHeight = 72
     }
     current.sidePadding = current.sidePaddingFactor * current.atomicPadding
     return current
