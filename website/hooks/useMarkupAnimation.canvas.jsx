@@ -28,7 +28,7 @@ export const useMarkupAnimation = ({
   titleSizeInitialSm = 5,
   titleSizeFinal = 3,
   titleSizeFinalMobileMd = 2.4,
-  titleSizeFinalMobileSm = 2.0,
+  titleSizeFinalMobileSm = 1.8,
   showLightbox,
 }) => {
   const {
@@ -135,7 +135,7 @@ export const useMarkupAnimation = ({
     const descriptionHeight = descriptionElement.offsetHeight
     const subtitleHeight = subtitleElement.offsetHeight
     return height <= 600
-      ? `${navHeight}px`
+      ? `${navHeight + subtitleHeight}px`
       : `${navHeight + descriptionHeight + subtitleHeight}px`
   }, [descriptionElement, height, navHeight, subtitleElement])
 
@@ -347,6 +347,9 @@ export const useMarkupAnimation = ({
               0,
               MathUtils.clamp(dampedOffset.current, 0.0, 0.4),
             )
+            if (isResize) {
+              subtitleElement.style.lineHeight = '1.17em'
+            }
             if (
               subtitleElement.classList.contains('changa-one-regular-italic')
             ) {
@@ -354,8 +357,9 @@ export const useMarkupAnimation = ({
                 'changa-one-regular-italic',
                 'raleway',
               )
-              subtitleElement.style.lineHeight = '1.17em'
-              subtitleElement.style.paddingBottom = '0em'
+              if (!isResize) {
+                subtitleElement.style.lineHeight = '1.17em'
+              }
             }
           } else {
             subtitleElement.style.opacity = MathUtils.inverseLerp(
@@ -363,13 +367,17 @@ export const useMarkupAnimation = ({
               1,
               MathUtils.clamp(dampedOffset.current, 0.6, 1.0),
             )
+            if (isResize) {
+              subtitleElement.style.lineHeight = '0.8em'
+            }
             if (subtitleElement.classList.contains('raleway')) {
               subtitleElement.classList.replace(
                 'raleway',
                 'changa-one-regular-italic',
               )
-              subtitleElement.style.lineHeight = '0.8em'
-              subtitleElement.style.paddingBottom = '0.1em'
+              if (!isResize) {
+                subtitleElement.style.lineHeight = '0.8em'
+              }
             }
           }
 
@@ -400,14 +408,17 @@ export const useMarkupAnimation = ({
           // positions
           setTitlePositions(false)
           // opacities and font families
-
+          if (isResize) {
+            subtitleElement.style.lineHeight = '0.8em'
+          }
           if (subtitleElement.classList.contains('raleway')) {
             subtitleElement.classList.replace(
               'raleway',
               'changa-one-regular-italic',
             )
-            subtitleElement.style.lineHeight = '0.8em'
-            subtitleElement.style.paddingBottom = '0.1em'
+            if (!isResize) {
+              subtitleElement.style.lineHeight = '0.8em'
+            }
           }
           subtitleElement.style.opacity = MathUtils.inverseLerp(
             0.1,
@@ -429,14 +440,18 @@ export const useMarkupAnimation = ({
           setTitleSizes(false)
           // positions
           setTitlePositions(false)
-
+          if (isResize) {
+            subtitleElement.style.lineHeight = '1.17em'
+            /* subtitleElement.style.paddingBottom = '0em' */
+          }
           if (subtitleElement.classList.contains('changa-one-regular-italic')) {
             subtitleElement.classList.replace(
               'changa-one-regular-italic',
               'raleway',
             )
-            subtitleElement.style.lineHeight = '1.17em'
-            subtitleElement.style.paddingBottom = '0em'
+            if (!isResize) {
+              subtitleElement.style.lineHeight = '1.17em'
+            }
           }
 
           subtitleElement.style.opacity = 1
@@ -449,20 +464,20 @@ export const useMarkupAnimation = ({
       }
     },
     [
-      blogItems,
+      softwareRef,
       blogRef,
+      photographyRef,
+      titleElement,
+      subtitleElement,
       descriptionElement,
       itemDescriptionElement,
-      photographyButtonElement,
-      photographyRef,
-      setTitlePositions,
-      setTitleSizes,
-      softwareItems,
-      softwareRef,
-      subtitleElement,
-      subtitleTextElement,
-      titleElement,
       getItemDescriptionTop,
+      softwareItems,
+      blogItems,
+      photographyButtonElement,
+      setTitleSizes,
+      setTitlePositions,
+      subtitleTextElement,
     ],
   )
   return scrollCallback
