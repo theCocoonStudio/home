@@ -51,7 +51,7 @@ export const useMarkupAnimation = ({
       titleSizeInitialSm: titleSm,
       titleSizeFinal: 3,
       titleSizeFinalMobileMd: 2.4,
-      titleSizeFinalMobileSm: 1.8,
+      titleSizeFinalMobileSm: 2,
       subtitleSizeInitial: subtitleLg,
       subtitleSizeInitialMd: subtitleMd,
       subtitleSizeInitialSm: subtitleSm,
@@ -93,9 +93,9 @@ export const useMarkupAnimation = ({
     let titleLeftFinal =
       height <= 800
         ? height <= 600
-          ? `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
-          : `(50px + (${atomicPadding}px) + ${sidePadding}px)`
-        : `(50px + (2 * ${atomicPadding}px) + ${sidePadding}px)`
+          ? `(50px + ${sidePadding}px)`
+          : `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
+        : `(50px + (${atomicPadding}px) + ${sidePadding}px)`
     let titleFinalSize =
       height <= 800
         ? height <= 600
@@ -112,7 +112,7 @@ export const useMarkupAnimation = ({
         : subtitleSizeFinal
     let subtitleLeftFinal = `(${sidePadding}px)`
     if (width <= 450) {
-      titleLeftFinal = `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
+      titleLeftFinal = `(50px + ${sidePadding}px)`
       titleFinalSize = titleSizeFinalMobileSm
       titleInitialSize = titleSizeInitialSm
       subtitleInitialSize = subtitleSizeInitialSm
@@ -120,8 +120,8 @@ export const useMarkupAnimation = ({
     } else if (width <= 768) {
       titleLeftFinal =
         height <= 600
-          ? `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
-          : `(50px + (${atomicPadding}px) + ${sidePadding}px)`
+          ? `(50px + ${sidePadding}px)`
+          : `(50px + (0.25 * ${atomicPadding}px) + ${sidePadding}px)`
       titleFinalSize =
         height <= 600 ? titleSizeFinalMobileSm : titleSizeFinalMobileMd
       titleInitialSize = titleSizeInitialMd

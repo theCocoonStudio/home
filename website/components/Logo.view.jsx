@@ -43,11 +43,11 @@ export const Logo = forwardRef(function Logo(
     if (ref.current) {
       const width = canvas.clientWidth
       const height = canvas.clientHeight
-      let size = 30
+      let size = 25
       if (width <= 450 || height <= 600) {
-        size = 20
+        size = 18
       } else if (width <= 768 || height <= 800) {
-        size = 25
+        size = 20
       }
 
       const { factor } = viewport.getCurrentViewport(
