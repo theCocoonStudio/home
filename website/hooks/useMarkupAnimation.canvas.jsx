@@ -17,24 +17,50 @@ export const useMarkupAnimation = ({
   photographyRef,
   blogRef,
   scrollData,
-  subtitleSizeInitial = 2.8,
-  subtitleSizeInitialMd = 2.4,
-  subtitleSizeInitialSm = 2,
-  subtitleSizeFinal = 9,
-  subtitleSizeFinalMd = 5.5,
-  subtitleSizeFinalSm = 4,
-  titleSizeInitial = 8,
-  titleSizeInitialMd = 6.5,
-  titleSizeInitialSm = 5,
-  titleSizeFinal = 3,
-  titleSizeFinalMobileMd = 2.4,
-  titleSizeFinalMobileSm = 1.8,
   showLightbox,
 }) => {
   const {
     lengths: { navHeight, sidePadding, atomicPadding },
     colors,
+    typography: {
+      fontSizesRem: {
+        lg: { title: titleLg, subtitle: subtitleLg },
+        md: { title: titleMd, subtitle: subtitleMd },
+        sm: { title: titleSm, subtitle: subtitleSm },
+      },
+    },
   } = useTheme()
+
+  const {
+    titleSizeInitial,
+    titleSizeInitialMd,
+    titleSizeInitialSm,
+    titleSizeFinal,
+    titleSizeFinalMobileMd,
+    titleSizeFinalMobileSm,
+    subtitleSizeInitial,
+    subtitleSizeInitialMd,
+    subtitleSizeInitialSm,
+    subtitleSizeFinal,
+    subtitleSizeFinalMd,
+    subtitleSizeFinalSm,
+  } = useMemo(
+    () => ({
+      titleSizeInitial: titleLg,
+      titleSizeInitialMd: titleMd,
+      titleSizeInitialSm: titleSm,
+      titleSizeFinal: 3,
+      titleSizeFinalMobileMd: 2.4,
+      titleSizeFinalMobileSm: 1.8,
+      subtitleSizeInitial: subtitleLg,
+      subtitleSizeInitialMd: subtitleMd,
+      subtitleSizeInitialSm: subtitleSm,
+      subtitleSizeFinal: titleLg,
+      subtitleSizeFinalMd: titleMd,
+      subtitleSizeFinalSm: titleSm,
+    }),
+    [subtitleLg, subtitleMd, subtitleSm, titleLg, titleMd, titleSm],
+  )
 
   const titleInitialized = useRef(false)
   const itemDescriptionVisible = useRef(false)
@@ -442,7 +468,6 @@ export const useMarkupAnimation = ({
           setTitlePositions(false)
           if (isResize) {
             subtitleElement.style.lineHeight = '1.17em'
-            /* subtitleElement.style.paddingBottom = '0em' */
           }
           if (subtitleElement.classList.contains('changa-one-regular-italic')) {
             subtitleElement.classList.replace(
