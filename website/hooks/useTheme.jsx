@@ -2,16 +2,17 @@ import { useContext, useMemo } from 'react'
 import { ThemeContext } from 'website/context/ThemeContext'
 
 export const useTheme = (util = 'compose', ...utilArgs) => {
-  const { colors, lengths, utils, markupIds } = useContext(ThemeContext)
+  const { colors, lengths, utils, markupIds, typography } =
+    useContext(ThemeContext)
 
   const args = useMemo(
     () =>
       utilArgs.map((arg) =>
         typeof arg === 'function'
-          ? arg({ colors, lengths, utils, markupIds })
+          ? arg({ colors, lengths, utils, markupIds, typography })
           : arg,
       ),
-    [colors, lengths, utilArgs, utils, markupIds],
+    [utilArgs, colors, lengths, utils, markupIds, typography],
   )
 
   const utilReturn = useMemo(
@@ -20,8 +21,8 @@ export const useTheme = (util = 'compose', ...utilArgs) => {
   )
 
   const value = useMemo(
-    () => ({ colors, lengths, utils, markupIds, ...utilReturn }),
-    [colors, lengths, markupIds, utilReturn, utils],
+    () => ({ colors, lengths, utils, markupIds, typography, ...utilReturn }),
+    [colors, lengths, markupIds, typography, utilReturn, utils],
   )
 
   return value

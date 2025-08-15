@@ -4,7 +4,7 @@ import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const ThemeProvider = ({
   children,
-  theme: { colors, lengths, utils, markupIds, responsiveLengths },
+  theme: { colors, lengths, utils, markupIds, responsiveLengths, typography },
   container,
 }) => {
   const [size, setSize] = useState()
@@ -15,8 +15,9 @@ export const ThemeProvider = ({
       lengths: size ? responsiveLengths(size, lengths) : lengths,
       utils,
       markupIds,
+      typography,
     }
-  }, [colors, responsiveLengths, size, lengths, utils, markupIds])
+  }, [colors, size, responsiveLengths, lengths, utils, markupIds, typography])
 
   const getSize = useCallback(() => {
     if (container) {

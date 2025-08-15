@@ -72,6 +72,30 @@ const theme = {
     current.sidePadding = current.sidePaddingFactor * current.atomicPadding
     return current
   },
+  typography: {
+    fontSizesRem: {
+      lg: {
+        title: 8,
+        subtitle: 2.2,
+        text: 1.8,
+      },
+      md: {
+        title: 5.4,
+        subtitle: 1.8,
+        text: 1.6,
+      },
+      sm: {
+        title: 3.6,
+        subtitle: 1.6,
+        text: 1.4,
+      },
+      xs: {
+        title: 3.2,
+        subtitle: 1.4,
+        text: 1.2,
+      },
+    },
+  },
 }
 
 function _Layout() {

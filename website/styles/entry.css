@@ -97,7 +97,6 @@ textarea:not([rows]) {
 /* END css reset */
 
 :root {
-  /* colors */
   --white: #eaeaea;
   --purple: #403b4e;
   --charcoal: #3d4f60;
@@ -110,6 +109,18 @@ textarea:not([rows]) {
   --sidePaddingFactor: 8;
   --sidePadding: calc(8 * 8px);
   --scrollContainerBorderSize: 2px;
+  --fontSizeLgTitle: 8rem;
+  --fontSizeLgSubtitle: 2.2rem;
+  --fontSizeLgText: 1.8rem;
+  --fontSizeMdTitle: 5.4rem;
+  --fontSizeMdSubtitle: 1.8rem;
+  --fontSizeMdText: 1.6rem;
+  --fontSizeSmTitle: 3.6rem;
+  --fontSizeSmSubtitle: 1.6rem;
+  --fontSizeSmText: 1.4rem;
+  --fontSizeXsTitle: 3.2rem;
+  --fontSizeXsSubtitle: 1.4rem;
+  --fontSizeXsText: 1.2rem;
 }
 
 @media screen and (max-height: 800px), screen and (max-width: 450px) {
