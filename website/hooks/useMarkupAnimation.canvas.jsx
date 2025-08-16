@@ -157,13 +157,33 @@ export const useMarkupAnimation = ({
     width,
   ])
 
-  const getItemDescriptionTop = useCallback(() => {
-    const descriptionHeight = descriptionElement.offsetHeight
-    const subtitleHeight = subtitleElement.offsetHeight
-    return height <= 600
-      ? `${navHeight + subtitleHeight}px`
-      : `${navHeight + descriptionHeight + subtitleHeight}px`
-  }, [descriptionElement, height, navHeight, subtitleElement])
+  const { getItemDescriptionTop, subtitleTopSpacing } = useMemo(() => {
+    let subtitleTopSpacing = 0
+    let isAlternativeLayout = false
+    if (width > 1000) {
+      if (height <= 600) {
+        isAlternativeLayout = true
+        if (height > 450) {
+          subtitleTopSpacing = atomicPadding
+        }
+      }
+    }
+    const getItemDescriptionTop = () => {
+      const descriptionHeight = descriptionElement.offsetHeight
+      const subtitleHeight = subtitleElement.offsetHeight
+      return isAlternativeLayout
+        ? `${navHeight + subtitleHeight + subtitleTopSpacing}px`
+        : `${navHeight + descriptionHeight + subtitleHeight + subtitleTopSpacing}px`
+    }
+    return { subtitleTopSpacing, getItemDescriptionTop }
+  }, [
+    atomicPadding,
+    descriptionElement,
+    height,
+    navHeight,
+    subtitleElement,
+    width,
+  ])
 
   const setTitlePositions = useCallback(
     (preScroll = true) => {
@@ -172,7 +192,7 @@ export const useMarkupAnimation = ({
       const titleLeftInitial = `(50% - ${titleWidth / 2}px)`
       const titleTopFinal = `(${navHeight / 2}px - ${titleHeight / 2}px)`
       const subtitleLeftInitial = `50%`
-      const subtitleTopFinal = `  ${navHeight}px`
+      const subtitleTopFinal = `${navHeight + subtitleTopSpacing}px`
 
       let leftTarget, leftTarget2, topTarget, topTarget2
       if (preScroll) {
@@ -199,6 +219,7 @@ export const useMarkupAnimation = ({
       navHeight,
       subtitleElement,
       subtitleLeftFinal,
+      subtitleTopSpacing,
       titleElement,
       titleLeftFinal,
     ],
