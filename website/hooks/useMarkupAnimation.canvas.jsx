@@ -167,6 +167,20 @@ export const useMarkupAnimation = ({
           subtitleTopSpacing = atomicPadding
         }
       }
+    } else if (width > 768) {
+      if (height <= 600) {
+        isAlternativeLayout = true
+        if (height > 450) {
+          subtitleTopSpacing = atomicPadding
+        }
+      }
+    } else if (width > 500) {
+      if (height <= 600) {
+        isAlternativeLayout = true
+        if (height > 450) {
+          subtitleTopSpacing = atomicPadding
+        }
+      }
     }
     const getItemDescriptionTop = () => {
       const descriptionHeight = descriptionElement.offsetHeight

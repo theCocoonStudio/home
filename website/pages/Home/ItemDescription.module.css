@@ -84,7 +84,16 @@
 }
 /* responsive */
 .itemDescriptionContainer {
-  @media (min-width: 1001px) {
+  @media (min-width: 769px) and (max-width: 1000px) {
+    @media (max-height: 600px) {
+      left: calc(100% - 65%);
+    }
+  }
+  @media (max-width: 768px) and (min-width: 501px) {
+    @media (max-height: 600px) and (min-height: 501px) {
+      left: var(--sidePadding);
+      justify-content: flex-end;
+    }
   }
 }
 .itemDescription {
@@ -131,6 +140,117 @@
       padding: 16px var(--sidePadding) 16px calc(var(--sidePadding) / 2);
     }
   }
+  @media (max-width: 1000px) and (min-width: 769px) {
+    margin: 16px 0;
+    padding: 48px var(--sidePadding);
+    h1 {
+      font-size: var(--fontSizeLgSubtitle);
+    }
+    h3 {
+      font-size: var(--fontSizeXsSubtitle);
+      padding-top: 10px;
+    }
+    p {
+      font-size: var(--fontSizeMdText);
+      margin-top: 16px;
+      padding-left: 12px;
+    }
+    @media (max-height: 800px) {
+      h1 {
+        font-size: var(--fontSizeMdSubtitle);
+      }
+      h3 {
+        font-size: var(--fontSizeXsText);
+        padding-top: 6px;
+      }
+      p {
+        font-size: var(--fontSizeSmText);
+        margin-top: 12px;
+        padding-left: 12px;
+      }
+    }
+    @media (max-height: 600px) {
+      margin: 0;
+      margin-top: 16px;
+      padding: 32px var(--sidePadding) 32px calc(var(--sidePadding) / 2);
+    }
+    @media (max-height: 450px) {
+      margin: 0;
+      margin-top: 8px;
+      p {
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+      }
+    }
+    @media (max-height: 360px) {
+      padding: 16px var(--sidePadding) 16px calc(var(--sidePadding) / 2);
+    }
+  }
+  @media (max-width: 768px) and (min-width: 501px) {
+    margin: 0;
+    margin-top: 32px;
+    padding: var(--sidePadding);
+    h1 {
+      font-size: var(--fontSizeMdSubtitle);
+    }
+    h3 {
+      font-size: var(--fontSizeXsText);
+      padding-top: 6px;
+    }
+    p {
+      font-size: var(--fontSizeSmText);
+      margin-top: 12px;
+      padding-left: 12px;
+    }
+    @media (max-height: 600px) {
+      margin: 0;
+    }
+    @media (max-height: 550px) {
+      margin-top: 8px;
+      p {
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+      }
+    }
+    @media (max-height: 360px) {
+      padding: 16px var(--sidePadding) 16px calc(var(--sidePadding) / 2);
+    }
+  }
+  @media (max-width: 500px) and (min-width: 451px) {
+    margin: 16px 0;
+    padding: var(--sidePadding);
+    h1 {
+      font-size: var(--fontSizeMdSubtitle);
+    }
+    h3 {
+      font-size: var(--fontSizeXsText);
+      padding-top: 6px;
+    }
+    p {
+      font-size: var(--fontSizeSmText);
+      margin-top: 12px;
+      padding-left: 12px;
+    }
+    @media (max-height: 900px) {
+      margin: 0;
+    }
+    @media (max-height: 800px) {
+      border-radius: 0;
+      margin: 16px 0;
+    }
+    @media (max-height: 700px) {
+      margin: 0;
+    }
+    @media (max-height: 600px) {
+      p {
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 .button {
@@ -141,6 +261,24 @@
       font-size: var(--fontSizeXsText);
       margin-top: 16px;
     }
+    @media (max-height: 360px) {
+      line-height: 1.5em;
+    }
+  }
+  @media (max-width: 1000px) and (min-width: 769px) {
+    font-size: var(--fontSizeSmText);
+    margin-top: 24px;
+    @media (max-height: 800px) {
+      font-size: var(--fontSizeXsText);
+      margin-top: 16px;
+    }
+    @media (max-height: 360px) {
+      line-height: 1.5em;
+    }
+  }
+  @media (max-width: 768px) and (min-width: 501px) {
+    font-size: var(--fontSizeXsText);
+    margin-top: 16px;
     @media (max-height: 360px) {
       line-height: 1.5em;
     }
