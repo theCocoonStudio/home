@@ -27,6 +27,7 @@ export const useMarkupAnimation = ({
         lg: { title: titleLg, subtitle: subtitleLg },
         md: { title: titleMd, subtitle: subtitleMd },
         sm: { title: titleSm, subtitle: subtitleSm },
+        xs: { title: titleXs },
       },
     },
   } = useTheme()
@@ -44,6 +45,7 @@ export const useMarkupAnimation = ({
     subtitleSizeFinal,
     subtitleSizeFinalMd,
     subtitleSizeFinalSm,
+    subtitleSizeFinalXs,
   } = useMemo(
     () => ({
       titleSizeInitial: titleLg,
@@ -58,8 +60,9 @@ export const useMarkupAnimation = ({
       subtitleSizeFinal: titleLg,
       subtitleSizeFinalMd: titleMd,
       subtitleSizeFinalSm: titleSm,
+      subtitleSizeFinalXs: titleXs,
     }),
-    [subtitleLg, subtitleMd, subtitleSm, titleLg, titleMd, titleSm],
+    [subtitleLg, subtitleMd, subtitleSm, titleLg, titleMd, titleSm, titleXs],
   )
 
   const titleInitialized = useRef(false)
@@ -107,7 +110,9 @@ export const useMarkupAnimation = ({
     let subtitleFinalSize =
       height <= 800
         ? height <= 600
-          ? subtitleSizeFinalSm
+          ? height <= 450
+            ? subtitleSizeFinalXs
+            : subtitleSizeFinalSm
           : subtitleSizeFinalMd
         : subtitleSizeFinal
     let subtitleLeftFinal = `(${sidePadding}px)`
@@ -116,7 +121,8 @@ export const useMarkupAnimation = ({
       titleFinalSize = titleSizeFinalMobileSm
       titleInitialSize = titleSizeInitialSm
       subtitleInitialSize = subtitleSizeInitialSm
-      subtitleFinalSize = subtitleSizeFinalSm
+      subtitleFinalSize =
+        height < 600 ? subtitleSizeFinalXs : subtitleSizeFinalSm
     } else if (width <= 768) {
       titleLeftFinal =
         height <= 600
@@ -127,7 +133,11 @@ export const useMarkupAnimation = ({
       titleInitialSize = titleSizeInitialMd
       subtitleInitialSize = subtitleSizeInitialMd
       subtitleFinalSize =
-        height <= 600 ? subtitleSizeFinalSm : subtitleSizeFinalMd
+        height <= 600
+          ? height <= 450
+            ? subtitleSizeFinalXs
+            : subtitleSizeFinalSm
+          : subtitleSizeFinalMd
     }
 
     return {
@@ -145,6 +155,7 @@ export const useMarkupAnimation = ({
     subtitleSizeFinal,
     subtitleSizeFinalMd,
     subtitleSizeFinalSm,
+    subtitleSizeFinalXs,
     subtitleSizeInitial,
     subtitleSizeInitialMd,
     subtitleSizeInitialSm,
@@ -174,7 +185,7 @@ export const useMarkupAnimation = ({
           subtitleTopSpacing = atomicPadding
         }
       }
-    } else if (width > 500) {
+    } else if (width > 450) {
       if (height <= 600) {
         isAlternativeLayout = true
         if (height > 450) {

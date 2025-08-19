@@ -90,7 +90,7 @@ const theme = {
         text: 1.4,
       },
       xs: {
-        title: 3.2,
+        title: 2.6,
         subtitle: 1.4,
         text: 1.2,
       },

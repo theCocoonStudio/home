@@ -77,7 +77,7 @@
       }
     }
   }
-  @media (max-width: 768px) {
+  @media (max-width: 768px) and (min-width: 451px) {
     .title {
       font-size: var(--fontSizeMdTitle);
     }
@@ -118,6 +118,11 @@
       font-size: var(--fontSizeSmSubtitle);
       padding-left: 10px;
       width: calc(100vw - 2 * var(--sidePadding));
+    }
+    @media (max-height: 600px) {
+      .description {
+        font-size: var(--fontSizeXsSubtitle);
+      }
     }
   }
 }
