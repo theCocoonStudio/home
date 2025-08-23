@@ -6,7 +6,6 @@ import {
   useMemo,
   useRef,
 } from 'react'
-
 import { useTheme } from '../hooks/useTheme'
 import { ScrollDamper } from '../utils/damping'
 import { MeshBasicMaterial, MeshStandardMaterial } from 'three'

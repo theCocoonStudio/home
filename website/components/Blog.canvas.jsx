@@ -18,7 +18,10 @@ const _Blog = function BlogAnimation(
       },
     },
     itemGeometry,
-    itemData,
+    bounds,
+    animationTargets: {
+      refs: { markupRef },
+    },
   },
   forwardedRef,
 ) {
@@ -49,9 +52,10 @@ const _Blog = function BlogAnimation(
       range={range}
       itemGeometry={itemGeometry}
       items={items}
-      itemData={itemData}
+      bounds={bounds}
       focusFactor={focusFactor}
       setBlogItemsGroup={setBlogItemsGroup}
+      markupRef={markupRef}
     />
   )
 }

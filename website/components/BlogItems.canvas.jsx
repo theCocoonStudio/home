@@ -12,7 +12,20 @@ import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const BlogItems = forwardRef(function BlogItems(
-  { range, itemGeometry, items, itemData, focusFactor, setBlogItemsGroup },
+  {
+    itemGeometry,
+    items,
+    focusFactor,
+    setBlogItemsGroup,
+    bounds: {
+      defaultInitial,
+      defaultIntermediate,
+      defaultFocus,
+      target,
+      computeDefaultBounds,
+    },
+    markupRef,
+  },
   forwardedRef,
 ) {
   const group = useRef()
@@ -50,28 +63,47 @@ export const BlogItems = forwardRef(function BlogItems(
   )
 
   const damper = useMemo(() => {
-    if (group.current?.children && itemData) {
+    if (group.current?.children && defaultFocus) {
       const itemsArr = group.current?.children.map((child, index) => ({
         ref: child,
         ...items[index],
       }))
-      return scrollDamper.current.setData(itemsArr, itemData, {
+      const positionScaleData = {
+        initialScale: defaultInitial.scale,
+        initialPosition: defaultInitial.position,
+        intermediatePosition: defaultIntermediate.position,
+        focusPosition: defaultFocus.position,
+        targetScale: target[0].scale,
+        targetPositions: target.map(({ position }) => position),
+      }
+
+      return scrollDamper.current.setData(itemsArr, positionScaleData, {
         focusFactor,
       })
     }
-  }, [focusFactor, itemData, items])
+  }, [
+    defaultFocus,
+    defaultInitial,
+    defaultIntermediate,
+    focusFactor,
+    items,
+    target,
+  ])
 
   const materialSet = useRef(false)
   const itemDescriptionVisible = useRef(false)
   const activeItemIndex = useRef(null)
+  const computedBoundsIndex = useRef(null)
+  const computedBounds = useRef(null)
   const frameCallback = useCallback(
     ({ targetIndex, index, item: { ref } }) => {
+      if (activeItemIndex.current !== index) {
+        activeItemIndex.current = index
+      }
       if (targetIndex === 3) {
         itemDescriptionVisible.current = true
-        activeItemIndex.current = index
       } else {
         itemDescriptionVisible.current = false
-        activeItemIndex.current = undefined
       }
       group.current.children.forEach((child) => {
         if (child === ref) {
@@ -91,9 +123,13 @@ export const BlogItems = forwardRef(function BlogItems(
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
       if (!scrollRanges.blogVisible) {
+        if (typeof activeItemIndex.current !== 'undefined') {
+          activeItemIndex.current = undefined
+          computedBoundsIndex.current = undefined
+          computedBounds.current = undefined
+        }
         if (itemDescriptionVisible.current) {
           itemDescriptionVisible.current = false
-          activeItemIndex.current = undefined
         }
         if (materialSet.current === false) {
           group.current.children.forEach(
@@ -103,12 +139,40 @@ export const BlogItems = forwardRef(function BlogItems(
         }
       } else {
         materialSet.current = false
+        if (
+          typeof activeItemIndex.current === 'number' &&
+          markupRef.current?.activeItemDescriptionIndexRef.current ===
+            activeItemIndex.current &&
+          markupRef.current?.activeItemSectionRef.current === 'blog'
+        ) {
+          if (computedBoundsIndex.current !== activeItemIndex.current) {
+            computedBounds.current = computeDefaultBounds()
+            computedBoundsIndex.current = activeItemIndex.current
+          }
+        }
       }
       if (damper) {
-        damper.frame(delta, scrollData, frameCallback)
+        if (!markupRef.current?.isAlternativeLayout) {
+          damper.frame(delta, scrollData, frameCallback)
+        } else {
+          if (
+            computedBoundsIndex.current === activeItemIndex.current &&
+            computedBounds.current
+          ) {
+            damper.frame(delta, scrollData, frameCallback, {
+              initialScale: computedBounds.current.defaultInitial.scale,
+              initialPosition: computedBounds.current.defaultInitial.position,
+              intermediatePosition:
+                computedBounds.current.defaultIntermediate.position,
+              focusPosition: computedBounds.current.defaultFocus.position,
+            })
+          } else {
+            damper.frame(delta, scrollData, frameCallback)
+          }
+        }
       }
     },
-    [damper, frameCallback, inactiveMaterial],
+    [computeDefaultBounds, damper, frameCallback, inactiveMaterial, markupRef],
   )
 
   useImperativeHandle(

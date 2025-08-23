@@ -183,7 +183,6 @@ export const Home = ({
         config={config}
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
-        itemData={itemData}
         bounds={bounds}
       />
 
@@ -203,7 +202,7 @@ export const Home = ({
         config={config}
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
-        itemData={itemData}
+        bounds={bounds}
       />
       <DirectionalLightAnimation
         ref={lightRef}

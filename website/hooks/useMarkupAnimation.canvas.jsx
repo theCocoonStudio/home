@@ -343,6 +343,25 @@ export const useMarkupAnimation = ({
             softwareRef.current.activeItemIndexRef.current
           activeItemSection.current = 'software'
         }
+      } else if (
+        typeof blogRef.current.activeItemIndexRef.current === 'number'
+      ) {
+        if (
+          activeItemSection.current !== 'blog' ||
+          activeItemDescriptionIndex.current !==
+            blogRef.current.activeItemIndexRef.current ||
+          isResize
+        ) {
+          setItemDescriptionTop()
+          const item = blogItems[blogRef.current.activeItemIndexRef.current]
+          itemDescriptionElement.children[0].children[0].innerText = item.title
+          itemDescriptionElement.children[0].children[1].innerText = item.date
+          itemDescriptionElement.children[0].children[2].children[0].innerText =
+            item.description
+          activeItemDescriptionIndex.current =
+            blogRef.current.activeItemIndexRef.current
+          activeItemSection.current = 'blog'
+        }
       } else {
         activeItemSection.current = null
         activeItemDescriptionIndex.current = null
@@ -355,18 +374,7 @@ export const useMarkupAnimation = ({
           itemDescriptionVisible.current = true
         }
       } else if (blogRef.current.itemDescriptionVisibleRef.current) {
-        if (isResize) {
-          setItemDescriptionTop()
-        }
         if (!itemDescriptionVisible.current) {
-          if (!isResize) {
-            setItemDescriptionTop()
-          }
-          const item = blogItems[blogRef.current.activeItemIndexRef.current]
-          itemDescriptionElement.children[0].children[0].innerText = item.title
-          itemDescriptionElement.children[0].children[1].innerText = item.date
-          itemDescriptionElement.children[0].children[2].children[0].innerText =
-            item.description
           itemDescriptionElement.style.opacity = 1
           itemDescriptionElement.style.pointerEvents = 'auto'
           itemDescriptionVisible.current = true
