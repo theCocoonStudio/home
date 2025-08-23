@@ -1,3 +1,42 @@
+.focus {
+  position: absolute;
+  pointer-events: none;
+  left: calc(-1 * (100vw - 100% - var(--sidePadding)));
+  right: 100%;
+  top: 0;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--atomicPadding) * 2) calc(var(--sidePadding) * 2);
+  padding-left: 0;
+  /* opacity: 0; */
+  pointer-events: none;
+
+  > div {
+    /* background: red; */
+    opacity: 0.2;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+  }
+}
+.intermediate {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 50vw;
+}
+.initial {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 100vw;
+}
 /* static */
 .accent {
   box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
@@ -44,6 +83,8 @@
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   overflow: hidden;
+  flex-shrink: 0;
+  order: 1;
   > div {
     position: relative;
   }
@@ -83,6 +124,29 @@
   }
 }
 /* responsive */
+.focus {
+  @media (max-width: 768px) and (min-width: 501px) {
+    @media (max-height: 600px) and (min-height: 501px) {
+      position: static;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
+  @media (max-width: 500px) and (min-width: 451px) {
+    @media (min-height: 501px) {
+      position: static;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
+  @media (max-width: 450px) {
+    @media (min-height: 451px) {
+      position: static;
+      height: 100%;
+      max-height: 100%;
+    }
+  }
+}
 .itemDescriptionContainer {
   @media (min-width: 1001px) {
     @media (max-height: 450px) {
@@ -157,8 +221,8 @@
       }
     }
     @media (max-height: 450px) {
-      margin: 0;
-      margin-top: 8px;
+      margin: 8px 0;
+
       p {
         text-overflow: ellipsis;
         text-wrap: nowrap;
@@ -199,13 +263,11 @@
       }
     }
     @media (max-height: 600px) {
-      margin: 0;
-      margin-top: 16px;
+      margin: 16px 0;
       padding: 32px var(--sidePadding) 32px calc(var(--sidePadding) / 2);
     }
     @media (max-height: 450px) {
-      margin: 0;
-      margin-top: 8px;
+      margin: 8px 0;
       p {
         text-overflow: ellipsis;
         text-wrap: nowrap;
@@ -218,7 +280,6 @@
   }
   @media (max-width: 768px) and (min-width: 501px) {
     margin: 0;
-    margin-top: 32px;
     padding: var(--sidePadding);
     h1 {
       font-size: var(--fontSizeMdSubtitle);
@@ -236,7 +297,7 @@
       margin: 0;
     }
     @media (max-height: 550px) {
-      margin-top: 8px;
+      margin: 8px 0;
       p {
         text-overflow: ellipsis;
         text-wrap: nowrap;
@@ -268,7 +329,7 @@
       padding-left: 12px;
     }
     @media (max-height: 550px) {
-      margin-top: 8px;
+      margin: 8px 0;
       p {
         text-overflow: ellipsis;
         text-wrap: nowrap;
@@ -304,7 +365,6 @@
       margin: 0;
     }
     @media (max-height: 650px) {
-      margin-top: 8px;
       padding: 16px;
       p {
         text-overflow: ellipsis;
@@ -313,6 +373,7 @@
       }
     }
     @media (max-height: 450px) {
+      margin: 8px 0;
       p {
         display: none;
       }

@@ -2,7 +2,13 @@ import { useMemo } from 'react'
 import { raleway } from '../../utils/styles'
 import styles from './ItemDescription.module.css'
 
-export const ItemDescription = ({ id, section }) => {
+export const ItemDescription = ({
+  id,
+  section,
+  animationTargetInitialId,
+  animationTargetIntermediateId,
+  animationTargetFocusId,
+}) => {
   const { style: buttonStyle, className: buttonClass } = useMemo(
     () =>
       raleway(
@@ -16,22 +22,34 @@ export const ItemDescription = ({ id, section }) => {
       ),
     [section],
   )
-  return (
-    <div className={`${styles.itemDescriptionContainer}`} id={id}>
-      <div className={`${styles.itemDescription}`}>
-        <h1 className='changa-one-regular'></h1>
-        <h3 className='raleway'></h3>
-        <div className='raleway'>
-          <p></p>
-          <div
-            className={`${styles.accent} ${section === 'blog' ? styles.purpleBackground : styles.slateBackground}`}
-          />
-        </div>
 
-        <button className={buttonClass} style={buttonStyle}>
-          read more
-        </button>
+  return (
+    <>
+      <div className={`${styles.itemDescriptionContainer}`} id={id}>
+        <div className={`${styles.itemDescription}`}>
+          <h1 className='changa-one-regular'></h1>
+          <h3 className='raleway'></h3>
+          <div className='raleway'>
+            <p></p>
+            <div
+              className={`${styles.accent} ${section === 'blog' ? styles.purpleBackground : styles.slateBackground}`}
+            />
+          </div>
+
+          <button className={buttonClass} style={buttonStyle}>
+            read more
+          </button>
+        </div>
+        <div className={styles.focus}>
+          <div id={animationTargetFocusId}>
+            <div
+              className={styles.intermediate}
+              id={animationTargetIntermediateId}
+            />
+            <div className={styles.initial} id={animationTargetInitialId} />
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

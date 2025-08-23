@@ -14,6 +14,8 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
           description,
           itemDescription,
           photographyButton,
+          dummySubtitle,
+          dummyDescription,
         },
       },
       content: {
@@ -39,12 +41,13 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   const descriptionElement = useMarkupId(description)
   const itemDescriptionElement = useMarkupId(itemDescription)
   const photographyButtonElement = useMarkupId(photographyButton)
+  const dummySubtitleElement = useMarkupId(dummySubtitle)
+  const dummyDescriptionElement = useMarkupId(dummyDescription)
 
   // callback
-  const scrollCallback = useMarkupAnimation({
+  const { scrollCallback, setItemDescriptionTop } = useMarkupAnimation({
     softwareItems,
     blogItems,
-
     itemDescriptionElement,
     titleElement,
     subtitleElement,
@@ -68,12 +71,18 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       descriptionElement,
       itemDescriptionElement,
       photographyButtonElement,
+      dummySubtitleElement,
+      dummyDescriptionElement,
+      setItemDescriptionTop,
     }),
     [
       descriptionElement,
+      dummyDescriptionElement,
+      dummySubtitleElement,
       itemDescriptionElement,
       photographyButtonElement,
       scrollCallback,
+      setItemDescriptionTop,
       subtitleElement,
       subtitleTextElement,
       titleElement,

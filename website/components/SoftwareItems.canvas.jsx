@@ -13,7 +13,19 @@ import { MeshBasicMaterial, MeshStandardMaterial } from 'three'
 import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const SoftwareItems = forwardRef(function SoftwareItems(
-  { range, itemGeometry, items, itemData, focusFactor, setSoftwareItemsGroup },
+  {
+    itemGeometry,
+    items,
+    focusFactor,
+    setSoftwareItemsGroup,
+    bounds: {
+      defaultInitial,
+      defaultIntermediate,
+      defaultFocus,
+      target,
+      computeDefaultBounds,
+    },
+  },
   forwardedRef,
 ) {
   const group = useRef()
@@ -51,16 +63,32 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   )
 
   const damper = useMemo(() => {
-    if (group.current?.children && itemData) {
+    if (group.current?.children && defaultFocus) {
       const itemsArr = group.current?.children.map((child, index) => ({
         ref: child,
         ...items[index],
       }))
-      return scrollDamper.current.setData(itemsArr, itemData, {
+      const positionScaleData = {
+        initialScale: defaultInitial.scale,
+        initialPosition: defaultInitial.position,
+        intermediatePosition: defaultIntermediate.position,
+        focusPosition: defaultFocus.position,
+        targetScale: target[0].scale,
+        targetPositions: target.map(({ position }) => position),
+      }
+
+      return scrollDamper.current.setData(itemsArr, positionScaleData, {
         focusFactor,
       })
     }
-  }, [focusFactor, itemData, items])
+  }, [
+    defaultFocus,
+    defaultInitial,
+    defaultIntermediate,
+    focusFactor,
+    items,
+    target,
+  ])
 
   const materialSet = useRef(false)
   const itemDescriptionVisible = useRef(false)

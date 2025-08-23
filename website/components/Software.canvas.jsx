@@ -19,6 +19,7 @@ const _Software = function SoftwareAnimation(
     },
     itemGeometry,
     itemData,
+    bounds,
   },
   forwardedRef,
 ) {
@@ -49,6 +50,7 @@ const _Software = function SoftwareAnimation(
       itemGeometry={itemGeometry}
       items={items}
       itemData={itemData}
+      bounds={bounds}
       focusFactor={focusFactor}
       setSoftwareItemsGroup={setSoftwareItemsGroup}
     />

@@ -168,7 +168,7 @@ export const useMarkupAnimation = ({
     width,
   ])
 
-  const { getItemDescriptionTop, subtitleTopSpacing } = useMemo(() => {
+  const { setItemDescriptionTop, subtitleTopSpacing } = useMemo(() => {
     let subtitleTopSpacing = 0
     let isAlternativeLayout = false
     if (width > 1000) {
@@ -193,18 +193,23 @@ export const useMarkupAnimation = ({
         }
       }
     }
-    const getItemDescriptionTop = () => {
-      const descriptionHeight = descriptionElement.offsetHeight
-      const subtitleHeight = subtitleElement.offsetHeight
-      return isAlternativeLayout
+    const setItemDescriptionTop = (
+      subtitleEl = subtitleElement,
+      descriptionEl = descriptionElement,
+    ) => {
+      const descriptionHeight = descriptionEl.offsetHeight
+      const subtitleHeight = subtitleEl.offsetHeight
+      const final = isAlternativeLayout
         ? `${navHeight + subtitleHeight + subtitleTopSpacing}px`
         : `${navHeight + descriptionHeight + subtitleHeight + subtitleTopSpacing}px`
+      itemDescriptionElement.style.top = final
     }
-    return { subtitleTopSpacing, getItemDescriptionTop }
+    return { subtitleTopSpacing, setItemDescriptionTop }
   }, [
     atomicPadding,
     descriptionElement,
     height,
+    itemDescriptionElement,
     navHeight,
     subtitleElement,
     width,
@@ -318,11 +323,11 @@ export const useMarkupAnimation = ({
       // if in software or blog item focus range, show itemDescription
       if (softwareRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          itemDescriptionElement.style.top = getItemDescriptionTop()
+          setItemDescriptionTop()
         }
         if (!itemDescriptionVisible.current) {
           if (!isResize) {
-            itemDescriptionElement.style.top = getItemDescriptionTop()
+            setItemDescriptionTop()
           }
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
@@ -336,11 +341,11 @@ export const useMarkupAnimation = ({
         }
       } else if (blogRef.current.itemDescriptionVisibleRef.current) {
         if (isResize) {
-          itemDescriptionElement.style.top = getItemDescriptionTop()
+          setItemDescriptionTop()
         }
         if (!itemDescriptionVisible.current) {
           if (!isResize) {
-            itemDescriptionElement.style.top = getItemDescriptionTop()
+            setItemDescriptionTop()
           }
           const item = blogItems[blogRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
@@ -542,7 +547,7 @@ export const useMarkupAnimation = ({
       subtitleElement,
       descriptionElement,
       itemDescriptionElement,
-      getItemDescriptionTop,
+      setItemDescriptionTop,
       softwareItems,
       blogItems,
       photographyButtonElement,
@@ -551,5 +556,5 @@ export const useMarkupAnimation = ({
       subtitleTextElement,
     ],
   )
-  return scrollCallback
+  return { scrollCallback, setItemDescriptionTop }
 }

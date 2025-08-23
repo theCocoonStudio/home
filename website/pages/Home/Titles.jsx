@@ -11,6 +11,8 @@ export const Titles = ({
   sections,
   scrollContainer,
   showLightbox,
+  dummyDescriptionId,
+  dummySubtitleId,
 }) => {
   const scrollTo = useScroll(scrollContainer)
 
@@ -44,7 +46,14 @@ export const Titles = ({
     [showLightbox],
   )
 
+  const { style: dummySubtitleStyle, className: dummySubtitleClassname } =
+    useMemo(() => changaOne(true, undefined, styles.dummySubtitle), [])
+
   const { style: descStyle, className: descClass } = useMemo(
+    () => raleway(400, false, undefined, styles.description),
+    [],
+  )
+  const { style: dummyDescStyle, className: dummyDescClass } = useMemo(
     () => raleway(400, false, undefined, styles.description),
     [],
   )
@@ -53,6 +62,7 @@ export const Titles = ({
       `${styles.separator} ${{ photography: styles.charcoalBackground, blog: styles.purpleBackground }[section] || styles.slateBackground}`,
     [section],
   )
+
   return (
     <>
       <h1
@@ -72,6 +82,21 @@ export const Titles = ({
         <h2 className={styles.subtitle}>software and stuff</h2>
         <p id={descriptionId} className={descClass} style={descStyle}>
           {sections[section] ? sections[section].description : ''}
+          <span className={separatorClass} />
+        </p>
+      </div>
+      <div
+        id={dummySubtitleId}
+        className={dummySubtitleClassname}
+        style={dummySubtitleStyle}
+      >
+        <h2 className={styles.subtitle}>SOFTWARE</h2>
+        <p
+          id={dummyDescriptionId}
+          className={dummyDescClass}
+          style={dummyDescStyle}
+        >
+          {sections.software.description}
           <span className={separatorClass} />
         </p>
       </div>

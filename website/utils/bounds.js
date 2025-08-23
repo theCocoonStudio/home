@@ -23,40 +23,93 @@ export const getMarkupBoundsFromBounds = (
 }
 
 export const getMarkupBounds = ({
-  id,
-  marginPx = [0, 0, 0, 0] /* left, top, right, bottom */,
+  id /* array of length N or string */,
+  /* left, top, right, bottom */
+  marginPx = [
+    0, 0, 0, 0,
+  ] /* array of arrays (length N matching id) or singleton array */,
   state,
-  target,
+  target /* array of length M or vector3 or object3d */,
 }) => {
-  const data = {
-    min: new Vector2(),
-    max: new Vector2(),
-    viewportSize: new Vector2(),
-    ppwu: undefined,
+  let clientRects = [],
+    viewports = []
+
+  /* client rects converted to array */
+  if (Array.isArray(id)) {
+    clientRects = id.map((_id) =>
+      document.getElementById(_id).getBoundingClientRect(),
+    )
+  } else {
+    clientRects[0] = document.getElementById(id).getBoundingClientRect()
   }
-  const { left, right, top, bottom } = document
-    .getElementById(id)
-    .getBoundingClientRect()
+  /* viewports converted to array */
+  if (Array.isArray(target)) {
+    viewports = target.map((_target) => {
+      const vpTarget =
+        _target instanceof Vector3 ? _target : _target.position.clone()
+      const { viewport, size, camera } = state
+      return viewport.getCurrentViewport(camera, vpTarget, size)
+    })
+  } else {
+    const vpTarget =
+      target instanceof Vector3 ? target : target.position.clone()
+    const { viewport, size, camera } = state
+    viewports[0] = viewport.getCurrentViewport(camera, vpTarget, size)
+  }
 
-  const vpTarget = target instanceof Vector3 ? target : target.position.clone()
-  const { viewport, size, camera } = state
+  /* bounds calculation */
+  const getBoundsData = (_viewport, _clientRect, _marginPx) => {
+    const data = {
+      min: new Vector2(),
+      max: new Vector2(),
+      viewportSize: new Vector2(),
+      ppwu: undefined,
+    }
+    const { left, right, top, bottom } = _clientRect
+    const { width, height, factor } = _viewport
 
-  const { width, height, factor } = viewport.getCurrentViewport(
-    camera,
-    vpTarget,
-    size,
-  )
-  data.min.set(
-    -width / 2 + (left + marginPx[0]) / factor,
-    height / 2 - (bottom - marginPx[3]) / factor,
-  )
-  data.max.set(
-    -width / 2 + (right - marginPx[2]) / factor,
-    height / 2 - (top + marginPx[1]) / factor,
-  )
-  data.ppwu = factor
-  data.viewportSize.set(width, height)
-  return data
+    data.min.set(
+      -width / 2 + (left + _marginPx[0]) / factor,
+      height / 2 - (bottom - _marginPx[3]) / factor,
+    )
+    data.max.set(
+      -width / 2 + (right - _marginPx[2]) / factor,
+      height / 2 - (top + _marginPx[1]) / factor,
+    )
+    data.ppwu = factor
+    data.viewportSize.set(width, height)
+    return data
+  }
+  /* return data */
+  if (clientRects.length === 1 && viewports.length === 1) {
+    /* no array args */
+    return getBoundsData(viewports[0], clientRects[0], marginPx)
+  } else if (viewports.length === 1) {
+    /* id array arg and singleton target arg */
+    return clientRects.map((_clientRect, index) => {
+      if (Array.isArray(marginPx[0])) {
+        return getBoundsData(viewports[0], _clientRect, marginPx[index])
+      } else {
+        return getBoundsData(viewports[0], _clientRect, marginPx)
+      }
+    })
+  } else if (clientRects.length === 1) {
+    /* id singleton arg and target array arg */
+    return viewports.map((_viewport) =>
+      getBoundsData(_viewport, clientRects[0], marginPx),
+    )
+  } else {
+    /* id and target array args */
+    return viewports.map((_viewport) =>
+      clientRects.map((_clientRect, index) => {
+        if (Array.isArray(marginPx[0])) {
+          return getBoundsData(_viewport, _clientRect, marginPx[index])
+        } else {
+          return getBoundsData(_viewport, _clientRect, marginPx)
+        }
+      }),
+    )
+  }
 }
 
 export const getItemData = ({

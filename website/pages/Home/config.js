@@ -13,6 +13,7 @@ import dragonfly5 from 'assets/photography/test5.jpg'
 import { Gallery } from '../../components/Gallery'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
+import { Vector3 } from 'three'
 
 const ranges = {
   preScroll: [0.0, 0.00001] /* 0.00001 = default ScrollControls eps */,
@@ -184,9 +185,70 @@ export const config = {
       description: 'main-description-container',
       itemDescription: 'main-item-description-container',
       photographyButton: 'main-photography-button-container',
+      animationTargetInitial: 'main-animation-target-initial',
+      animationTargetIntermediate: 'main-animation-target-intermediate',
+      animationTargetFocus: 'main-animation-target-focus',
+      dummySubtitle: 'dummy-subtitle',
+      dummyDescription: 'dummy-description',
     },
   },
-  style: { titleHeight: 157, focusFactor: 0.46 },
+  style: {
+    titleHeight: 157,
+    focusFactor: 0.46,
+    animation: {
+      default: {
+        initialDepth: 0.05,
+        targetDepth: 0.0005,
+        itemZpos: 0.1,
+        initialMarkupId: 'main-animation-target-initial',
+        intermediateMarkupId: 'main-animation-target-intermediate',
+        focusMarkupId: 'main-animation-target-focus',
+        getItemDataFromBounds: (
+          { min, max, viewportSize, ppwu },
+          { itemZpos, depth, geometryDepth, log },
+        ) => {
+          const minDimension = Math.min(max.x - min.x, max.y - min.y)
+
+          const scale = new Vector3(
+            minDimension,
+            minDimension,
+            depth / geometryDepth,
+          )
+          const position = new Vector3(
+            min.x + (max.x - min.x) / 2,
+            min.y + (max.y - min.y) / 2,
+            itemZpos - depth / 2,
+          )
+          return { scale, position, min, max, viewportSize, ppwu }
+        },
+        getTargetDataFromBounds: (
+          { min, max, viewportSize, ppwu },
+          { itemZpos, depth, geometryDepth },
+        ) => {
+          const scale = new Vector3(
+            max.x - min.x,
+            max.y - min.y,
+            depth / geometryDepth,
+          )
+          const position = new Vector3(
+            min.x + (max.x - min.x) / 2,
+            min.y + (max.y - min.y) / 2,
+            itemZpos - depth / 2,
+          )
+          return { scale, position, min, max, viewportSize, ppwu }
+        },
+      },
+      photography: {
+        initialDepth: 0.05,
+        targetDepth: 0.0005,
+        itemZpos: 0.1,
+        initialMarkupId: 'main-title-container',
+        intermediateMarkupId: 'main-subtitle-container',
+        focusMarkupId: 'main-description-container',
+        getItemDataFromBounds: () => {},
+      },
+    },
+  },
   content: {
     get itemCount() {
       return Object.keys(sections).reduce(

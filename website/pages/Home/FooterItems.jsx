@@ -99,6 +99,7 @@ export const FooterItems = ({
         i * (scrollItemsRange[1] / itemCount)
       items[i] = (
         <div
+          id={`${scrollContainer}-${i}`}
           key={`scrollItem-${i}`}
           style={scrollItemStyles}
           onClick={() => {
@@ -108,7 +109,7 @@ export const FooterItems = ({
       )
     }
     return items
-  }, [itemCount, scrollItemStyles, scrollItemsRange, scrollTo])
+  }, [itemCount, scrollContainer, scrollItemStyles, scrollItemsRange, scrollTo])
 
   const scrollDown = useCallback(() => {
     scrollTo(items[0].range[0] + items[0].range[1] / 2)

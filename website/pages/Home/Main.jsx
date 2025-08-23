@@ -20,6 +20,11 @@ export const Main = function Main({
         description: descriptionId,
         itemDescription,
         photographyButton,
+        animationTargetInitial,
+        animationTargetIntermediate,
+        animationTargetFocus,
+        dummySubtitle,
+        dummyDescription,
       },
     },
   },
@@ -87,8 +92,16 @@ export const Main = function Main({
         sections={sections}
         scrollContainer={scrollContainer}
         showLightbox={showLightbox}
+        dummySubtitleId={dummySubtitle}
+        dummyDescriptionId={dummyDescription}
       />
-      <ItemDescription id={itemDescription} section={section} />
+      <ItemDescription
+        id={itemDescription}
+        section={section}
+        animationTargetInitialId={animationTargetInitial}
+        animationTargetIntermediateId={animationTargetIntermediate}
+        animationTargetFocusId={animationTargetFocus}
+      />
       <button
         className={photoButtonClass}
         style={photoButtonStyle}

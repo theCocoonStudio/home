@@ -17,6 +17,7 @@ import { BlogAnimation } from '../../components/Blog.canvas'
 import { useScrollAnimation } from '../../hooks/useScrollAnimation.canvas'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
+import { useDampingTargets } from '../../hooks/useDampingTargets'
 
 export const Home = ({
   config,
@@ -33,9 +34,16 @@ export const Home = ({
 
     main: { EventDispatcherComponent },
     content: { itemCount },
-    style: { titleHeight },
+    style: {
+      titleHeight,
+      animation: {
+        default: defaultAnimation,
+        photography: photographyAnimation,
+      },
+    },
   } = config
-  // reactive data
+
+  // reactive independent data
   const {
     colors,
     lengths: {
@@ -143,7 +151,17 @@ export const Home = ({
     zPos,
   ])
   useResizeEvent(canvas, resizeCallback)
+  // reactive dependent data
   const itemGeometry = useItemGeometry(initialDepth)
+  const bounds = useDampingTargets({
+    default: defaultAnimation,
+    photography: photographyAnimation,
+    scrollContainerId: scrollContainer,
+    itemCount,
+    setItemDescriptionTop: markupRef?.current?.setItemDescriptionTop,
+    dummySubtitleElement: markupRef?.current?.dummySubtitleElement,
+    dummyDescriptionElement: markupRef?.current?.dummyDescriptionElement,
+  })
 
   return (
     <Suspense>
@@ -166,6 +184,7 @@ export const Home = ({
         animationTargets={animationTargets}
         itemGeometry={itemGeometry}
         itemData={itemData}
+        bounds={bounds}
       />
 
       <PhotographyAnimation
