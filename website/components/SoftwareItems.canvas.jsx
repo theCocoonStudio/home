@@ -25,6 +25,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
       target,
       computeDefaultBounds,
     },
+    markupRef,
   },
   forwardedRef,
 ) {
@@ -93,14 +94,17 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const materialSet = useRef(false)
   const itemDescriptionVisible = useRef(false)
   const activeItemIndex = useRef(null)
+  const computedBoundsIndex = useRef(null)
+  const computedBounds = useRef(null)
   const frameCallback = useCallback(
     ({ targetIndex, index, item: { ref } }) => {
+      if (activeItemIndex.current !== index) {
+        activeItemIndex.current = index
+      }
       if (targetIndex === 3) {
         itemDescriptionVisible.current = true
-        activeItemIndex.current = index
       } else {
         itemDescriptionVisible.current = false
-        activeItemIndex.current = undefined
       }
       group.current.children.forEach((child) => {
         if (child === ref) {
@@ -120,9 +124,13 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges) => {
       if (!scrollRanges.softwareVisible) {
+        if (typeof activeItemIndex.current !== 'undefined') {
+          activeItemIndex.current = undefined
+          computedBoundsIndex.current = undefined
+          computedBounds.current = undefined
+        }
         if (itemDescriptionVisible.current) {
           itemDescriptionVisible.current = false
-          activeItemIndex.current = undefined
         }
         if (materialSet.current === false) {
           group.current.children.forEach(
@@ -132,12 +140,40 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
         }
       } else {
         materialSet.current = false
+        if (
+          typeof activeItemIndex.current === 'number' &&
+          markupRef.current?.activeItemDescriptionIndexRef.current ===
+            activeItemIndex.current &&
+          markupRef.current?.activeItemSectionRef.current === 'software'
+        ) {
+          if (computedBoundsIndex.current !== activeItemIndex.current) {
+            computedBounds.current = computeDefaultBounds()
+            computedBoundsIndex.current = activeItemIndex.current
+          }
+        }
       }
       if (damper) {
-        damper.frame(delta, scrollData, frameCallback)
+        if (!markupRef.current?.isAlternativeLayout) {
+          damper.frame(delta, scrollData, frameCallback)
+        } else {
+          if (
+            computedBoundsIndex.current === activeItemIndex.current &&
+            computedBounds.current
+          ) {
+            damper.frame(delta, scrollData, frameCallback, {
+              initialScale: computedBounds.current.defaultInitial.scale,
+              initialPosition: computedBounds.current.defaultInitial.position,
+              intermediatePosition:
+                computedBounds.current.defaultIntermediate.position,
+              focusPosition: computedBounds.current.defaultFocus.position,
+            })
+          } else {
+            damper.frame(delta, scrollData, frameCallback)
+          }
+        }
       }
     },
-    [damper, frameCallback, inactiveMaterial],
+    [computeDefaultBounds, damper, frameCallback, inactiveMaterial, markupRef],
   )
 
   useImperativeHandle(

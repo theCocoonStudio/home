@@ -45,7 +45,13 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
   const dummyDescriptionElement = useMarkupId(dummyDescription)
 
   // callback
-  const { scrollCallback, setItemDescriptionTop } = useMarkupAnimation({
+  const {
+    scrollCallback,
+    setItemDescriptionTop,
+    activeItemDescriptionIndex,
+    activeItemSection,
+    isAlternativeLayout,
+  } = useMarkupAnimation({
     softwareItems,
     blogItems,
     itemDescriptionElement,
@@ -59,6 +65,8 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     blogRef,
     scrollData,
     showLightbox,
+    dummySubtitleElement,
+    dummyDescriptionElement,
   })
 
   useImperativeHandle(
@@ -74,11 +82,17 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       dummySubtitleElement,
       dummyDescriptionElement,
       setItemDescriptionTop,
+      activeItemSectionRef: activeItemSection,
+      activeItemDescriptionIndexRef: activeItemDescriptionIndex,
+      isAlternativeLayout,
     }),
     [
+      activeItemDescriptionIndex,
+      activeItemSection,
       descriptionElement,
       dummyDescriptionElement,
       dummySubtitleElement,
+      isAlternativeLayout,
       itemDescriptionElement,
       photographyButtonElement,
       scrollCallback,

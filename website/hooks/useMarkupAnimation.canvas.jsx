@@ -18,6 +18,8 @@ export const useMarkupAnimation = ({
   blogRef,
   scrollData,
   showLightbox,
+  dummySubtitleElement,
+  dummyDescriptionElement,
 }) => {
   const {
     lengths: { navHeight, sidePadding, atomicPadding },
@@ -168,52 +170,53 @@ export const useMarkupAnimation = ({
     width,
   ])
 
-  const { setItemDescriptionTop, subtitleTopSpacing } = useMemo(() => {
-    let subtitleTopSpacing = 0
-    let isAlternativeLayout = false
-    if (width > 1000) {
-      if (height <= 600) {
-        isAlternativeLayout = true
-        if (height > 450) {
-          subtitleTopSpacing = atomicPadding
+  const { setItemDescriptionTop, subtitleTopSpacing, isAlternativeLayout } =
+    useMemo(() => {
+      let subtitleTopSpacing = 0
+      let isAlternativeLayout = false
+      if (width > 1000) {
+        if (height <= 600) {
+          isAlternativeLayout = true
+          if (height > 450) {
+            subtitleTopSpacing = atomicPadding
+          }
+        }
+      } else if (width > 768) {
+        if (height <= 600) {
+          isAlternativeLayout = true
+          if (height > 450) {
+            subtitleTopSpacing = atomicPadding
+          }
+        }
+      } else if (width > 450) {
+        if (height <= 600) {
+          isAlternativeLayout = true
+          if (height > 450) {
+            subtitleTopSpacing = atomicPadding
+          }
         }
       }
-    } else if (width > 768) {
-      if (height <= 600) {
-        isAlternativeLayout = true
-        if (height > 450) {
-          subtitleTopSpacing = atomicPadding
-        }
+      const setItemDescriptionTop = (
+        subtitleEl = subtitleElement,
+        descriptionEl = descriptionElement,
+      ) => {
+        const descriptionHeight = descriptionEl.offsetHeight
+        const subtitleHeight = subtitleEl.offsetHeight
+        const final = isAlternativeLayout
+          ? `${navHeight + subtitleHeight + subtitleTopSpacing}px`
+          : `${navHeight + descriptionHeight + subtitleHeight + subtitleTopSpacing}px`
+        itemDescriptionElement.style.top = final
       }
-    } else if (width > 450) {
-      if (height <= 600) {
-        isAlternativeLayout = true
-        if (height > 450) {
-          subtitleTopSpacing = atomicPadding
-        }
-      }
-    }
-    const setItemDescriptionTop = (
-      subtitleEl = subtitleElement,
-      descriptionEl = descriptionElement,
-    ) => {
-      const descriptionHeight = descriptionEl.offsetHeight
-      const subtitleHeight = subtitleEl.offsetHeight
-      const final = isAlternativeLayout
-        ? `${navHeight + subtitleHeight + subtitleTopSpacing}px`
-        : `${navHeight + descriptionHeight + subtitleHeight + subtitleTopSpacing}px`
-      itemDescriptionElement.style.top = final
-    }
-    return { subtitleTopSpacing, setItemDescriptionTop }
-  }, [
-    atomicPadding,
-    descriptionElement,
-    height,
-    itemDescriptionElement,
-    navHeight,
-    subtitleElement,
-    width,
-  ])
+      return { subtitleTopSpacing, setItemDescriptionTop, isAlternativeLayout }
+    }, [
+      atomicPadding,
+      descriptionElement,
+      height,
+      itemDescriptionElement,
+      navHeight,
+      subtitleElement,
+      width,
+    ])
 
   const setTitlePositions = useCallback(
     (preScroll = true) => {
@@ -317,24 +320,36 @@ export const useMarkupAnimation = ({
     titleInitialSize,
   ])
 
+  const activeItemSection = useRef(null)
+  const activeItemDescriptionIndex = useRef(null)
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges, tailFrames, isResize) => {
       /* itemDescription */
-      // if in software or blog item focus range, show itemDescription
-      if (softwareRef.current.itemDescriptionVisibleRef.current) {
-        if (isResize) {
-          setItemDescriptionTop()
-        }
-        if (!itemDescriptionVisible.current) {
-          if (!isResize) {
-            setItemDescriptionTop()
-          }
+      if (typeof softwareRef.current.activeItemIndexRef.current === 'number') {
+        if (
+          activeItemSection.current !== 'software' ||
+          activeItemDescriptionIndex.current !==
+            softwareRef.current.activeItemIndexRef.current ||
+          isResize
+        ) {
+          setItemDescriptionTop(dummySubtitleElement, dummyDescriptionElement) // args only required for software due to startSoftwareRange
           const item =
             softwareItems[softwareRef.current.activeItemIndexRef.current]
           itemDescriptionElement.children[0].children[0].innerText = item.title
           itemDescriptionElement.children[0].children[1].innerText = item.date
           itemDescriptionElement.children[0].children[2].children[0].innerText =
             item.description
+          activeItemDescriptionIndex.current =
+            softwareRef.current.activeItemIndexRef.current
+          activeItemSection.current = 'software'
+        }
+      } else {
+        activeItemSection.current = null
+        activeItemDescriptionIndex.current = null
+      }
+      // if in software or blog item focus range, show itemDescription
+      if (softwareRef.current.itemDescriptionVisibleRef.current) {
+        if (!itemDescriptionVisible.current) {
           itemDescriptionElement.style.opacity = 1
           itemDescriptionElement.style.pointerEvents = 'auto'
           itemDescriptionVisible.current = true
@@ -546,9 +561,11 @@ export const useMarkupAnimation = ({
       titleElement,
       subtitleElement,
       descriptionElement,
-      itemDescriptionElement,
       setItemDescriptionTop,
+      dummySubtitleElement,
+      dummyDescriptionElement,
       softwareItems,
+      itemDescriptionElement,
       blogItems,
       photographyButtonElement,
       setTitleSizes,
@@ -556,5 +573,11 @@ export const useMarkupAnimation = ({
       subtitleTextElement,
     ],
   )
-  return { scrollCallback, setItemDescriptionTop }
+  return {
+    scrollCallback,
+    setItemDescriptionTop,
+    activeItemDescriptionIndex,
+    activeItemSection,
+    isAlternativeLayout,
+  }
 }
