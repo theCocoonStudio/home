@@ -14,6 +14,30 @@ export class ScrollDamper {
   #type
   #rotate
 
+  #overrideTargets({
+    initialScale = this.#initialScale,
+    initialPosition = this.#initialPosition,
+    intermediatePosition = this.#intermediatePosition,
+    focusPosition = this.#focusPosition,
+    targetScale = this.#targetScale,
+  }) {
+    return [
+      {
+        position: { from: initialPosition, to: intermediatePosition },
+        scale: { to: initialScale },
+      },
+      {
+        position: { from: intermediatePosition, to: focusPosition },
+        scale: { to: initialScale },
+      },
+      { position: { to: focusPosition }, scale: { to: initialScale } },
+      {
+        position: { from: focusPosition, to: undefined },
+        scale: { from: initialScale, to: targetScale },
+      },
+    ]
+  }
+
   #fromTo(fromVector, toVector, factor) {
     const from = fromVector.clone()
     const difference = toVector.clone().sub(from)
@@ -96,7 +120,7 @@ export class ScrollDamper {
     return this
   }
 
-  #presetFrame(delta, scrollData, callback) {
+  #presetFrame(delta, scrollData, callback, targets) {
     this.#items.forEach((item, index) => {
       const { ref, range, targetPosition } = item
       const rangeOffset = scrollData.range(...range)
@@ -109,7 +133,7 @@ export class ScrollDamper {
           to: toPositionArray = targetPosition.clone(),
         },
         scale: { from: fromScaleArray, to: toScaleArray },
-      } = this.#targets[targetIndex - 1]
+      } = targets[targetIndex - 1]
       const fromPosition = Array.isArray(fromPositionArray)
         ? fromPositionArray[index]
         : fromPositionArray
@@ -165,9 +189,16 @@ export class ScrollDamper {
     })
   }
 
-  frame(delta, scrollData, callback) {
+  frame(delta, scrollData, callback, overrideTargets) {
     if (this.#type !== 'custom') {
-      this.#presetFrame(delta, scrollData, callback)
+      this.#presetFrame(
+        delta,
+        scrollData,
+        callback,
+        overrideTargets
+          ? this.#overrideTargets(overrideTargets)
+          : this.#targets,
+      )
     }
     return this
   }
