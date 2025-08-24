@@ -50,7 +50,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
     setItemDescriptionTop,
     activeItemDescriptionIndex,
     activeItemSection,
-    isAlternativeLayout,
+    isAlternateLayout,
   } = useMarkupAnimation({
     softwareItems,
     blogItems,
@@ -84,7 +84,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       setItemDescriptionTop,
       activeItemSectionRef: activeItemSection,
       activeItemDescriptionIndexRef: activeItemDescriptionIndex,
-      isAlternativeLayout,
+      isAlternateLayout,
     }),
     [
       activeItemDescriptionIndex,
@@ -92,7 +92,7 @@ export const MarkupAnimation = forwardRef(function MarkupAnimation(
       descriptionElement,
       dummyDescriptionElement,
       dummySubtitleElement,
-      isAlternativeLayout,
+      isAlternateLayout,
       itemDescriptionElement,
       photographyButtonElement,
       scrollCallback,

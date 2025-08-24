@@ -125,11 +125,20 @@
 }
 /* responsive */
 .focus {
+  @media (max-width: 1000px) and (min-width: 769px) {
+    padding: calc(var(--atomicPadding) * 2) calc(var(--sidePadding));
+    padding-left: 0;
+  }
   @media (max-width: 768px) and (min-width: 501px) {
     @media (max-height: 600px) and (min-height: 501px) {
       position: static;
       height: 100%;
       max-height: 100%;
+      padding: calc(var(--atomicPadding) * 2) calc(var(--sidePadding));
+      justify-content: flex-start;
+      > div {
+        max-width: 600px;
+      }
     }
   }
   @media (max-width: 500px) and (min-width: 451px) {
@@ -137,6 +146,10 @@
       position: static;
       height: 100%;
       max-height: 100%;
+      padding: calc(var(--atomicPadding) * 4) calc(var(--sidePadding));
+      @media (max-height: 650px) {
+        padding: calc(var(--atomicPadding) * 2) calc(var(--sidePadding));
+      }
     }
   }
   @media (max-width: 450px) {
@@ -144,6 +157,10 @@
       position: static;
       height: 100%;
       max-height: 100%;
+      padding: calc(var(--atomicPadding) * 4) calc(var(--sidePadding));
+      @media (max-height: 500px) {
+        padding: calc(var(--atomicPadding) * 2) calc(var(--sidePadding));
+      }
     }
   }
 }

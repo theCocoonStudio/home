@@ -152,7 +152,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
         }
       }
       if (damper) {
-        if (!markupRef.current?.isAlternativeLayout) {
+        if (!markupRef.current?.isAlternateLayout) {
           damper.frame(delta, scrollData, frameCallback)
         } else {
           if (

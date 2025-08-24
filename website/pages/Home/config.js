@@ -205,7 +205,7 @@ export const config = {
         focusMarkupId: 'main-animation-target-focus',
         getItemDataFromBounds: (
           { min, max, viewportSize, ppwu },
-          { itemZpos, depth, geometryDepth, log },
+          { itemZpos, depth, geometryDepth },
         ) => {
           const minDimension = Math.min(max.x - min.x, max.y - min.y)
 

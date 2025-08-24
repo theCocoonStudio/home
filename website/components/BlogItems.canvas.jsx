@@ -152,7 +152,7 @@ export const BlogItems = forwardRef(function BlogItems(
         }
       }
       if (damper) {
-        if (!markupRef.current?.isAlternativeLayout) {
+        if (!markupRef.current?.isAlternateLayout) {
           damper.frame(delta, scrollData, frameCallback)
         } else {
           if (

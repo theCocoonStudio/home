@@ -170,27 +170,27 @@ export const useMarkupAnimation = ({
     width,
   ])
 
-  const { setItemDescriptionTop, subtitleTopSpacing, isAlternativeLayout } =
+  const { setItemDescriptionTop, subtitleTopSpacing, isAlternateLayout } =
     useMemo(() => {
       let subtitleTopSpacing = 0
-      let isAlternativeLayout = false
+      let isAlternateTitleLayout = false
       if (width > 1000) {
         if (height <= 600) {
-          isAlternativeLayout = true
+          isAlternateTitleLayout = true
           if (height > 450) {
             subtitleTopSpacing = atomicPadding
           }
         }
       } else if (width > 768) {
         if (height <= 600) {
-          isAlternativeLayout = true
+          isAlternateTitleLayout = true
           if (height > 450) {
             subtitleTopSpacing = atomicPadding
           }
         }
       } else if (width > 450) {
         if (height <= 600) {
-          isAlternativeLayout = true
+          isAlternateTitleLayout = true
           if (height > 450) {
             subtitleTopSpacing = atomicPadding
           }
@@ -202,12 +202,19 @@ export const useMarkupAnimation = ({
       ) => {
         const descriptionHeight = descriptionEl.offsetHeight
         const subtitleHeight = subtitleEl.offsetHeight
-        const final = isAlternativeLayout
+        const final = isAlternateTitleLayout
           ? `${navHeight + subtitleHeight + subtitleTopSpacing}px`
           : `${navHeight + descriptionHeight + subtitleHeight + subtitleTopSpacing}px`
         itemDescriptionElement.style.top = final
       }
-      return { subtitleTopSpacing, setItemDescriptionTop, isAlternativeLayout }
+      return {
+        subtitleTopSpacing,
+        setItemDescriptionTop,
+        isAlternateLayout:
+          (width > 500 && width <= 768 && height > 500 && height <= 600) ||
+          (width > 450 && width <= 500 && height > 500) ||
+          (width <= 450 && height > 450),
+      }
     }, [
       atomicPadding,
       descriptionElement,
@@ -586,6 +593,6 @@ export const useMarkupAnimation = ({
     setItemDescriptionTop,
     activeItemDescriptionIndex,
     activeItemSection,
-    isAlternativeLayout,
+    isAlternateLayout,
   }
 }
