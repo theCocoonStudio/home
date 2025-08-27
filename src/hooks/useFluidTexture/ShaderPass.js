@@ -35,7 +35,7 @@ export class ShaderPass {
   }) {
     if (material) {
       this.material = typeof material === 'function' ? material() : material
-    } else {
+    } else if (material !== null) {
       this.#uniforms = uniforms
       this.material = raw
         ? new RawShaderMaterial({
@@ -53,7 +53,7 @@ export class ShaderPass {
     }
     if (geometry) {
       this.geometry = typeof geometry === 'function' ? geometry() : geometry
-    } else {
+    } else if (geometry !== null) {
       this.geometry = new PlaneGeometry(2.0, 2.0)
     }
 
@@ -61,7 +61,7 @@ export class ShaderPass {
 
     if (camera) {
       this.camera = typeof camera === 'function' ? camera() : camera
-    } else {
+    } else if (camera !== null) {
       this.camera = new Camera()
     }
 

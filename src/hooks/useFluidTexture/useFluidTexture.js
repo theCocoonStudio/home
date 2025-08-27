@@ -4,6 +4,7 @@ import { Camera, HalfFloatType, PlaneGeometry, RGFormat, Vector2 } from 'three'
 import { useFBO } from '@react-three/drei'
 import { advectionPassConfig } from './AdvectionPass.canvas'
 import { forcePassConfig } from './ForcePass.canvas'
+import { meshForcePassConfig } from './MeshForcePass.canvas'
 import { viscousPassConfig } from './ViscousPass.canvas'
 import { divergencePassConfig } from './DivergencePass.canvas'
 import { poissonPassConfig } from './PoissonPass.canvas'
@@ -31,6 +32,8 @@ export const useFluidTexture = ({
   isViscous = true,
   BFECC = true,
   forceCallbackRef,
+  forceMesh,
+  customCamera,
   /* fbo options */
   fboWidth,
   fboHeight,
@@ -56,7 +59,10 @@ export const useFluidTexture = ({
   }, [])
 
   const { width, height } = useThree(sizeCallback, sizeEqFn)
-  const gl = useThree(({ gl }) => gl)
+  const { gl, camera: defaultCamera } = useThree(({ gl, camera }) => ({
+    gl,
+    camera,
+  }))
 
   // shared object refs
   const camera = useRef(new Camera())
@@ -65,6 +71,8 @@ export const useFluidTexture = ({
   // intermediate value refs
   const pointerDiff = useRef(new Vector2(0, 0))
   const oldPointer = useRef(new Vector2(0, 0))
+  const oldForceMeshPosition = useRef(new Vector2(0, 0))
+  const viewportSize = useRef(new Vector2(0, 0))
 
   // fboReferences
   const vel0 = useFBO(width, height, {
@@ -106,6 +114,7 @@ export const useFluidTexture = ({
     cellScale: new Vector2(),
     fboSize: new Vector2(),
     force: new Vector2(),
+    meshForce: new Vector2(),
     center: new Vector2(),
     scale: new Vector2(forceSize, forceSize),
     dt,
@@ -182,6 +191,31 @@ export const useFluidTexture = ({
       })
       .setFBO(vel1),
   )
+
+  const meshForcePass = useRef(
+    new ShaderPass({
+      ...meshForcePassConfig,
+      camera: null,
+      geometry: forceMesh ? forceMesh.geometry : null,
+    })
+      .updateUniforms({
+        force: {
+          value: uniforms.current.meshForce,
+        },
+      })
+      .setFBO(vel1),
+  )
+
+  useEffect(() => {
+    if (forceMesh) {
+      meshForcePass.current.geometry = forceMesh.geometry
+      meshForcePass.current.mesh.geometry = meshForcePass.current.geometry
+      meshForcePass.current.camera = customCamera || defaultCamera
+      oldPointer.current.set(0, 0)
+    } else {
+      oldForceMeshPosition.current.set(0, 0)
+    }
+  }, [customCamera, defaultCamera, forceMesh])
 
   const viscousPass = useRef(
     new ShaderPass({
@@ -306,35 +340,62 @@ export const useFluidTexture = ({
       advectionPass.current.render(gl)
 
       // external force pass
-      const fc =
-        typeof forceCallbackRef.current === 'function'
-          ? forceCallbackRef.current
-          : defaultForceCallback
+      if (!forceMesh) {
+        const fc =
+          typeof forceCallbackRef.current === 'function'
+            ? forceCallbackRef.current
+            : defaultForceCallback
 
-      const { clock, pointer } = state || {}
+        const { clock, pointer } = state || {}
 
-      if (pointer) {
-        pointerDiff.current.subVectors(pointer, oldPointer.current)
-        oldPointer.current.copy(pointer)
+        if (pointer) {
+          pointerDiff.current.subVectors(pointer, oldPointer.current)
+          oldPointer.current.copy(pointer)
+        }
+
+        const {
+          force,
+          center,
+          radius = forceSize,
+        } = fc(
+          delta,
+          clock && clock.getElapsedTime(),
+          pointer && pointer.clone(),
+          pointer && pointerDiff.current.clone(),
+        )
+
+        uniforms.current.force.set(force.x * forceValue, force.y * forceValue)
+        uniforms.current.center.set(center.x, center.y)
+        uniforms.current.scale.set(radius, radius)
+        forcePass.current.render(gl)
+      } else {
+        meshForcePass.current.mesh.position.copy(forceMesh.position)
+        meshForcePass.current.mesh.scale
+          .copy(forceMesh.scale)
+          .multiplyScalar(0.99)
+        meshForcePass.current.mesh.rotation.copy(forceMesh.rotation)
+        meshForcePass.current.mesh.matrixWorldNeedsUpdate = true
+        const activeCamera = customCamera || defaultCamera
+        activeCamera.getViewSize(
+          activeCamera.position.z - forceMesh.position.z,
+          viewportSize.current,
+        )
+
+        uniforms.current.meshForce
+          .set(
+            (forceMesh.position.x - oldForceMeshPosition.current.x) /
+              viewportSize.current.x,
+            (forceMesh.position.y - oldForceMeshPosition.current.y) /
+              viewportSize.current.y,
+          )
+          .multiplyScalar(forceValue / 20)
+
+        oldForceMeshPosition.current.set(
+          forceMesh.position.x,
+          forceMesh.position.y,
+        )
+        meshForcePass.current.render(gl)
       }
-
-      const {
-        force,
-        center,
-        radius = forceSize,
-      } = fc(
-        delta,
-        clock && clock.getElapsedTime(),
-        pointer && pointer.clone(),
-        pointer && pointerDiff.current.clone(),
-      )
-
-      uniforms.current.force.set(force.x * forceValue, force.y * forceValue)
-      uniforms.current.center.set(center.x, center.y)
-      uniforms.current.scale.set(radius, radius)
-
-      forcePass.current.render(gl)
-
       // viscosity pass
       let vel = vel1
       if (isViscous) {
@@ -401,11 +462,14 @@ export const useFluidTexture = ({
     [
       isBounce,
       gl,
+      forceMesh,
+      vel1,
+      isViscous,
       forceCallbackRef,
       forceSize,
       forceValue,
-      vel1,
-      isViscous,
+      customCamera,
+      defaultCamera,
       viscousIterations,
       visc0,
       visc1,
@@ -435,6 +499,7 @@ export const useFluidTexture = ({
       // dispose internal values
       advectionPass.current.dispose(true, false, false, true)
       forcePass.current.dispose(true, false, false, true)
+      meshForcePass.current.dispose(true, false, false, true)
       viscousPass.current.dispose(true, false, false, true)
       divergencePass.current.dispose(true, false, false, true)
       poissonPass.current.dispose(true, false, false, true)
