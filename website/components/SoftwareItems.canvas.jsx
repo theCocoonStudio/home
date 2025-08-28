@@ -25,6 +25,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
       computeDefaultBounds,
     },
     markupRef,
+    bgRef,
   },
   forwardedRef,
 ) {
@@ -95,10 +96,15 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   const activeItemIndex = useRef(null)
   const computedBoundsIndex = useRef(null)
   const computedBounds = useRef(null)
+  const forceMeshIndex = useRef(null)
   const frameCallback = useCallback(
     ({ targetIndex, index, item: { ref } }) => {
       if (activeItemIndex.current !== index) {
         activeItemIndex.current = index
+      }
+      if (forceMeshIndex.current !== index) {
+        bgRef.current.setForceMesh(ref)
+        forceMeshIndex.current = index
       }
       if (targetIndex === 3) {
         itemDescriptionVisible.current = true
@@ -117,7 +123,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
         }
       })
     },
-    [activeMaterial, inactiveMaterial],
+    [activeMaterial, bgRef, inactiveMaterial],
   )
 
   const scrollCallback = useCallback(
@@ -127,6 +133,8 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
           activeItemIndex.current = undefined
           computedBoundsIndex.current = undefined
           computedBounds.current = undefined
+          bgRef.current.setForceMesh(undefined)
+          forceMeshIndex.current = undefined
         }
         if (itemDescriptionVisible.current) {
           itemDescriptionVisible.current = false
@@ -172,7 +180,14 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
         }
       }
     },
-    [computeDefaultBounds, damper, frameCallback, inactiveMaterial, markupRef],
+    [
+      bgRef,
+      computeDefaultBounds,
+      damper,
+      frameCallback,
+      inactiveMaterial,
+      markupRef,
+    ],
   )
 
   useImperativeHandle(

@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { useThree } from '@react-three/fiber'
@@ -12,6 +13,8 @@ import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
 import { useTheme } from '../hooks/useTheme'
 import { useFluidBackgroundAnimation } from '../hooks/useFluidBackgroundAnimation.canvas'
 import { useSettings } from 'website/pages/Home/useSettings'
+import Video from 'assets/colors3.mp4'
+import { VideoTexture } from './VideoTexture.canvas'
 
 const _opts = {
   poissonIterations: 32,
@@ -28,19 +31,7 @@ const _opts = {
 }
 
 const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
-  {
-    config: {
-      content: {
-        sections: {
-          software: { items: softwareItems },
-          photography: { items: photographyItems, range: photographyRange },
-        },
-      },
-    },
-    animationTargets,
-    showLightbox,
-    ...props
-  },
+  { showLightbox, ...props },
   forwardedRef,
 ) {
   // refs
@@ -51,26 +42,27 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   const pauseRef = useRef(false)
   const manualRef = useRef(false)
 
-  // simulation options
-  const { resolution, frames: runEvery } = useSettings()
-
-  const options = useMemo(() => {
-    return {
-      ..._opts,
-      resolution,
-      runEvery,
-      forceCallbackRef: forceCallback,
-      pauseRef,
-      manualRef,
-    }
-  }, [resolution, runEvery])
-
   // reactive data
   const { colors } = useTheme()
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
   const { size, viewport, camera } = useThree(stateCallback)
+  const [forceMesh, setForceMesh] = useState()
+
+  // simulation options
+  const { resolution, frames: runEvery } = useSettings()
+  const options = useMemo(() => {
+    return {
+      ..._opts,
+      resolution,
+      runEvery,
+      forceCallbackRef: forceCallback,
+      forceMesh,
+      pauseRef,
+      manualRef,
+    }
+  }, [forceMesh, resolution, runEvery])
 
   // animation data
   const setForceCallback = useCallback((fcb) => {
@@ -88,9 +80,13 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       mesh?.current &&
       viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
 
-    const { width, height } = current || {}
+    const { width, height, factor } = current || {}
     current?.width &&
-      mesh.current.scale.set(width, height, mesh.current.scale.z)
+      mesh.current.scale.set(
+        width + 20 / factor,
+        height + 20 / factor,
+        mesh.current.scale.z,
+      )
 
     const curentBacking =
       backing?.current &&
@@ -105,22 +101,19 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [boundPathForceResizeCallback, camera, size, viewport])
   // simulation texture
+
   const { texture, render } = useFluidTexture(options)
   const scrollCallback = useFluidBackgroundAnimation({
     boundPathForceCallback,
     setForceCallback,
     colors,
-    softwareItems,
     backingMaterialRef: backingMaterial,
     meshRef: mesh,
-    pauseRef,
     manualRef,
-    animationTargets,
-    photographyRange,
-    photographyItems,
     render,
     showLightbox,
   })
+  // imperative handle
   useImperativeHandle(
     forwardedRef,
     () => ({
@@ -128,39 +121,40 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       scrollCallback,
       backingMaterialRef: backingMaterial,
       backgroundRef: mesh,
+      forceMesh,
+      setForceMesh,
       pauseRef,
       manualRef,
       options,
       texture,
       render,
     }),
-    [options, render, resizeCallback, scrollCallback, texture],
+    [forceMesh, options, render, resizeCallback, scrollCallback, texture],
   )
 
   return (
     <>
       <mesh ref={mesh} {...props}>
         <planeGeometry args={[1, 1]} />
-        <meshStandardMaterial
+        <meshPhysicalMaterial
           transparent
           alphaMap={texture}
-          /* bumpMap={texture}
-          bumpScale={15} */
-          /* roughness={0.2}
-          metalness={0.3} */
-          /* precision={'highp'} */
+          bumpMap={texture}
+          bumpScale={800}
+          precision={'highp'}
+          clearcoat={1}
+          clearcoatRoughness={0}
+          roughness={0.1}
+          metalness={0.2}
           color={colors.white}
-          /* dithering */
+          dithering
         />
       </mesh>
       <mesh ref={backing} position-z={-0.5}>
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial
-          ref={backingMaterial}
-          metalness={0.2}
-          roughness={0.1}
-          color={colors.black}
-        ></meshBasicMaterial>
+        <meshBasicMaterial ref={backingMaterial} color={colors.black}>
+          <VideoTexture video={Video} />
+        </meshBasicMaterial>
       </mesh>
     </>
   )

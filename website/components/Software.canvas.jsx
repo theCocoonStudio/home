@@ -20,7 +20,7 @@ const _Software = function SoftwareAnimation(
     itemGeometry,
     bounds,
     animationTargets: {
-      refs: { markupRef },
+      refs: { markupRef, bgRef },
     },
   },
   forwardedRef,
@@ -55,6 +55,7 @@ const _Software = function SoftwareAnimation(
       focusFactor={focusFactor}
       setSoftwareItemsGroup={setSoftwareItemsGroup}
       markupRef={markupRef}
+      bgRef={bgRef}
     />
   )
 }
