@@ -207,8 +207,12 @@ export const config = {
           { min, max, viewportSize, ppwu },
           { itemZpos, depth, geometryDepth },
         ) => {
-          const minDimension = Math.min(max.x - min.x, max.y - min.y)
-
+          const minX = Math.min(max.x - min.x, viewportSize.x * 0.3819660112) // golden ratio
+          const minY = Math.min(
+            max.y - min.y,
+            viewportSize.y * (1 - 0.3819660112),
+          ) // golden ratio
+          const minDimension = Math.min(minX, minY)
           const scale = new Vector3(
             minDimension,
             minDimension,
