@@ -134,11 +134,10 @@ export const HomeSettings = ({
               }}
             >
               <p style={popoverStyle} className={popoverClassName}>
-                This page relies on the CPU and GPU to carry out graphics
-                calculations each frame. Your device&#39;s hardware capability
-                and/or battery level may result in reduced frame rates. These
-                settings can degrade the graphics quality to improve frame rates
-                or enhance it for greater visual aesthetic. <br />
+                Graphics quality and frame rate (fps) have an inverse
+                relationship. If your battery is low or your screen resolution
+                is very high may, you may need to compromise on graphics or on
+                frame rate. <br />
                 <br />
                 <i>Auto-throttle</i> will automatically degrade/boost graphics
                 to reach an ideal frame rate and UX.

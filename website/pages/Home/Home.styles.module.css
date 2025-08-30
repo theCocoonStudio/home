@@ -21,7 +21,7 @@
   bottom: -1px;
   border: 9px solid var(--slate);
   pointer-events: none;
-  transition: all 0.2s ease-in;
+  transition: all 0.1s linear;
 }
 
 .photoButton {
