@@ -9,8 +9,10 @@ import {
   dampM,
   dampQ,
   dampS,
+  dampC,
 } from 'maath/easing'
 import {
+  Color,
   Euler,
   MathUtils,
   Matrix4,
@@ -402,6 +404,28 @@ export class Scrub {
         return fromVector.add(toVector.sub(fromVector).multiplyScalar(offset))
       },
     },
+    // must be last due to string option
+    color: { value: dampC },
+    test: (val) =>
+      val instanceof Color ||
+      (Array.isArray(val) && val.length === 3) ||
+      typeof val === 'string' ||
+      typeof val === 'number',
+    interpolate: (from, to, offset) => {
+      const fromColor =
+        from instanceof Color
+          ? from
+          : Array.isArray(from)
+            ? new Color(...from)
+            : new Color(from)
+      const toColor =
+        to instanceof Color
+          ? to
+          : Array.isArray(to)
+            ? new Color(...to)
+            : new Color(to)
+      return new Color().lerpColors(fromColor, toColor, offset)
+    },
   }
   constructor({ eps, model, targets, thresholds = [0.0, 1.0] }) {
     this.#set({ eps, model, thresholds, targets })
@@ -512,7 +536,11 @@ export class Scrub {
     }
     if (dampingFunction === dampQ) {
       return {
-        target: this.#DAMPING_FUNCTIONS.matrix4.interpolate(from, to, offset),
+        target: this.#DAMPING_FUNCTIONS.quaternion.interpolate(
+          from,
+          to,
+          offset,
+        ),
         dampingFunction,
       }
     }
@@ -531,6 +559,12 @@ export class Scrub {
     if (dampingFunction === dampLookAt) {
       return {
         target: this.#DAMPING_FUNCTIONS.lookAt.interpolate(from, to, offset),
+        dampingFunction,
+      }
+    }
+    if (dampingFunction === dampC) {
+      return {
+        target: this.#DAMPING_FUNCTIONS.color.interpolate(from, to, offset),
         dampingFunction,
       }
     }
