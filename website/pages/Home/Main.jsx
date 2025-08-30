@@ -30,12 +30,23 @@ export const Main = function Main({
   },
 }) {
   const {
-    colors: { black, white },
+    colors: { black, white, slate, purple, charcoal },
   } = useTheme()
   const section = useScrollEvent()
 
   const targetItems = useTargetItems()
 
+  const borderStyle = useMemo(() => {
+    return {
+      borderColor: {
+        preScroll: black,
+        software: slate,
+        photography: charcoal,
+        blog: purple,
+        postScroll: white,
+      }[section],
+    }
+  }, [black, charcoal, purple, section, slate, white])
   const { showLightbox, setShowLightbox, setOnLightboxExitClick } =
     useLightbox()
 
@@ -110,6 +121,7 @@ export const Main = function Main({
       >
         view image
       </button>
+      <div className={styles.border} style={borderStyle} />
     </div>
   )
 }
