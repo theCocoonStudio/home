@@ -119,10 +119,8 @@ const _Photography = function PhotographyAnimation(
           normalMap-wrapS={RepeatWrapping}
           normalMap-wrapT={RepeatWrapping}
           normalMap-repeat={[
-            /* repeatFactor * viewport.width,
-            repeatFactor * viewport.height, */
-            repeatFactor,
-            repeatFactor,
+            repeatFactor * viewport.width,
+            repeatFactor * viewport.height,
           ]}
           normalScale={40}
           roughnessMap={roughnessMap}
