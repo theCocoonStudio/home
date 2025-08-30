@@ -22,7 +22,7 @@ void main(){
 
     // return vertex position
     vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( min(position.xy, vec2(0.99, 0.99)), position.z, 1.0 );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position.xy, position.z, 1.0 );
     // gl_Position = vertexPos;
     
      

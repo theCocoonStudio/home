@@ -388,7 +388,7 @@ export const useFluidTexture = ({
             (forceMesh.position.y - oldForceMeshPosition.current.y) /
               viewportSize.current.y,
           )
-          .multiplyScalar(forceValue / 20)
+          .multiplyScalar(2)
 
         oldForceMeshPosition.current.set(
           forceMesh.position.x,
