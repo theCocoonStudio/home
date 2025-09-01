@@ -1,6 +1,6 @@
 import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
 import { useSettings } from 'website/pages/Home/useSettings'
 
@@ -11,49 +11,41 @@ export const useScrollAnimation = (config, animationTargets) => {
   const tailFrames = useRef(0)
   const offsetCache = useRef(0.0)
 
-  const getActiveRanges = useCallback(
-    (scrollData) => {
-      const {
-        content: {
-          sections: {
-            software: { items: softwareItems, range: softwareRange },
-            photography: { items: photographyItems, range: photographyRange },
-            blog: { items: blogItems, range: blogRange },
-          },
+  const ranges = useMemo(() => {
+    const {
+      content: {
+        sections: {
+          software: { items: softwareItems, range: softwareRange },
+          photography: { items: photographyItems, range: photographyRange },
+          blog: { items: blogItems, range: blogRange },
         },
+      },
 
-        scroll: {
-          ranges: { preScroll: presScrollRange, postScroll: postScrollRange },
-        },
-      } = config
-      const ranges = {}
-      // sections visible
-      ranges.softwareVisible = scrollData.visible(...softwareRange)
-      ranges.photographyVisible = scrollData.visible(...photographyRange)
-      ranges.blogVisible = scrollData.visible(...blogRange)
-      // subsections visible
-      ranges.photographyDurationVisible = scrollData.visible(
+      scroll: {
+        ranges: { preScroll: presScrollRange, postScroll: postScrollRange },
+      },
+    } = config
+    const ranges = {
+      softwareRange,
+      photographyRange,
+      blogRange,
+      presScrollRange,
+      postScrollRange,
+      photographyDurationRange: [
         photographyItems[0].range[0] + photographyItems[0].range[1] / 2,
         photographyRange[1] - photographyItems[0].range[1] / 2,
-      )
-      // section offsets
-      ranges.photographyOffset = scrollData.range(...photographyRange)
-      ranges.postScrollOffset = scrollData.range(...postScrollRange)
-      // subsection offsets
-      ranges.startSoftwareOffset = scrollData.range(
+      ],
+      startSoftwareRange: [
         0,
         softwareItems[0].range[0] +
           (softwareItems[0].range[1] * (1 - focusFactor)) / 2,
-      )
-      ranges.startPhotographyOffset = scrollData.range(
+      ],
+      startPhotographyRange: [
         photographyItems[0].range[0],
         photographyItems[0].range[1] / 2,
-      )
-      ranges.startBlogOffset = scrollData.range(
-        blogItems[0].range[0],
-        blogItems[0].range[1] / 2,
-      )
-      ranges.postScrollAnimationOffset = scrollData.range(
+      ],
+      startBlogRange: [blogItems[0].range[0], blogItems[0].range[1] / 2],
+      postScrollAnimationRange: [
         blogItems[blogItems.length - 1].range[0] +
           (blogItems[blogItems.length - 1].range[1] * (1 - focusFactor)) / 2 +
           blogItems[blogItems.length - 1].range[1] * focusFactor,
@@ -61,16 +53,47 @@ export const useScrollAnimation = (config, animationTargets) => {
           (blogItems[blogItems.length - 1].range[0] +
             (blogItems[blogItems.length - 1].range[1] * (1 - focusFactor)) / 2 +
             blogItems[blogItems.length - 1].range[1] * focusFactor),
+      ],
+    }
+    return ranges
+  }, [config, focusFactor])
+
+  const getActiveRanges = useCallback(
+    (scrollData) => {
+      // sections visible
+      const _ranges = {}
+      _ranges.softwareVisible = scrollData.visible(...ranges.softwareRange)
+      _ranges.photographyVisible = scrollData.visible(
+        ...ranges.photographyRange,
       )
-      return ranges
+      _ranges.blogVisible = scrollData.visible(...ranges.blogRange)
+      // subsections visible
+      _ranges.photographyDurationVisible = scrollData.visible(
+        ...ranges.photographyDurationRange,
+      )
+      // section offsets
+      _ranges.photographyOffset = scrollData.range(...ranges.photographyRange)
+      _ranges.postScrollOffset = scrollData.range(...ranges.postScrollRange)
+      // subsection offsets
+      _ranges.startSoftwareOffset = scrollData.range(
+        ...ranges.startSoftwareRange,
+      )
+      _ranges.startPhotographyOffset = scrollData.range(
+        ...ranges.startPhotographyRange,
+      )
+      _ranges.startBlogOffset = scrollData.range(...ranges.startBlogRange)
+      _ranges.postScrollAnimationOffset = scrollData.range(
+        ...ranges.postScrollAnimationRange,
+      )
+      return _ranges
     },
-    [config, focusFactor],
+    [ranges],
   )
 
   const scrollCallback = useCallback(
     (state, delta, elapsed) => {
       const isResize = typeof elapsed !== 'undefined'
-      const scrollRanges = getActiveRanges(scroll)
+      const scrollRanges = { ...ranges, ...getActiveRanges(scroll) }
       Object.keys(animationTargets.refs).forEach(
         (key) =>
           animationTargets.refs[key].current?.scrollCallback &&
@@ -84,7 +107,7 @@ export const useScrollAnimation = (config, animationTargets) => {
           ),
       )
     },
-    [animationTargets, getActiveRanges, scroll],
+    [animationTargets, getActiveRanges, ranges, scroll],
   )
 
   const frame = useFrameCallback(scrollCallback)
@@ -102,5 +125,5 @@ export const useScrollAnimation = (config, animationTargets) => {
     }
   })
 
-  return frame
+  return { frame, ranges }
 }

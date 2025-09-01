@@ -85,7 +85,7 @@ export const Home = ({
   )
   useTargetItems(animationTargets)
   //scroll callbacks
-  const frame = useScrollAnimation(config, animationTargets)
+  const { frame, ranges } = useScrollAnimation(config, animationTargets)
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // compute item data
@@ -177,6 +177,7 @@ export const Home = ({
         config={config}
         animationTargets={animationTargets}
         showLightbox={showLightbox}
+        ranges={ranges}
       />
       <SoftwareAnimation
         ref={softwareRef}
