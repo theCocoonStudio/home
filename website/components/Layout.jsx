@@ -46,19 +46,14 @@ const theme = {
     atomicPadding: 8,
     sidePaddingFactor: 8,
     sidePadding: 8 * 8,
-    scrollContainerBorderSize: 2,
   },
   responsiveLengths: ({ width, height }, lengths) => {
     const current = { ...lengths }
     /* widths */
     if (width <= 450) {
       current.sidePaddingFactor = 2
-      current.scrollContainerBorderSize = 0
     } else if (width <= 768) {
       current.sidePaddingFactor = 4
-      current.scrollContainerBorderSize = 0
-    } else if (width <= 1000) {
-      current.scrollContainerBorderSize = 0
     }
     /* heights */
     if (height <= 800 || width <= 450) {

@@ -209,6 +209,7 @@ export const SoftwareItems = forwardRef(function SoftwareItems(
   return (
     <>
       <group
+        position-z={-1}
         visible={!postScroll}
         ref={group}
         onPointerDown={() => {

@@ -189,7 +189,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   )
 
   return (
-    <>
+    <group position-z={-1}>
       <mesh ref={mesh} {...props}>
         <planeGeometry args={[1, 1]} />
         <meshPhysicalMaterial
@@ -209,7 +209,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
           <VideoTexture video={Video} speed={4.5} />
         </meshBasicMaterial>
       </mesh>
-    </>
+    </group>
   )
 })
 export const FluidBackgroundAnimation = memo(_FluidBackground)

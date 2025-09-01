@@ -53,8 +53,6 @@ export const Main = function Main({
   const openLightbox = useCallback(() => {
     setShowLightbox(true)
 
-    targetItems.refs.photographyRef.current.photographyBackgroundRef.current.visible = false
-    targetItems.refs.photographyRef.current.photographyItemsGroup.visible = false
     targetItems.refs.softwareRef.current.softwareItemsGroup.visible = false
     targetItems.refs.bgRef.current.manualRef.current = false
 
@@ -69,8 +67,6 @@ export const Main = function Main({
       white,
     )
     targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(black)
-    targetItems.refs.photographyRef.current.photographyBackgroundRef.current.visible = true
-    targetItems.refs.photographyRef.current.photographyItemsGroup.visible = true
     targetItems.refs.softwareRef.current.softwareItemsGroup.visible = true
     targetItems.refs.bgRef.current.manualRef.current = true
     setShowLightbox(false)

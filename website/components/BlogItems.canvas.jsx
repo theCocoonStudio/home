@@ -193,6 +193,7 @@ export const BlogItems = forwardRef(function BlogItems(
   return (
     <>
       <group
+        position-z={-1}
         visible={!postScroll}
         ref={group}
         onPointerDown={() => {
