@@ -14,6 +14,9 @@ import { useTheme } from '../hooks/useTheme'
 import { useFluidBackgroundAnimation } from '../hooks/useFluidBackgroundAnimation.canvas'
 import { useSettings } from 'website/pages/Home/useSettings'
 import Video from 'assets/colors3.mp4'
+/* import Video2 from 'assets/colors2.mp4'
+import Video3 from 'assets/colors.mp4'
+import Video4 from 'assets/software.mp4' */
 import { VideoTexture } from './VideoTexture.canvas'
 
 const _opts = {
@@ -31,7 +34,7 @@ const _opts = {
 }
 
 const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
-  { showLightbox, ...props },
+  { showLightbox, ranges, ...props },
   forwardedRef,
 ) {
   // refs
@@ -80,13 +83,9 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       mesh?.current &&
       viewport.getCurrentViewport(camera, mesh?.current.position.clone(), size)
 
-    const { width, height, factor } = current || {}
+    const { width, height } = current || {}
     current?.width &&
-      mesh.current.scale.set(
-        width + 20 / factor,
-        height + 20 / factor,
-        mesh.current.scale.z,
-      )
+      mesh.current.scale.set(width, height, mesh.current.scale.z)
 
     const curentBacking =
       backing?.current &&
@@ -100,8 +99,62 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     curentBacking?.width &&
       backing.current.scale.set(bWidth, bHeight, backing.current.scale.z)
   }, [boundPathForceResizeCallback, camera, size, viewport])
-  // simulation texture
 
+  // material props
+  const materialProps = useMemo(() => {
+    const props = {
+      preScroll: {
+        clearcoat: 10,
+        roughness: 0.2,
+        metalness: 0.13,
+        color: colors.white,
+        opacity: 1.9,
+        sheen: 1,
+        sheenColor: colors.slate,
+        sheenRoughness: 0.1,
+        iridescence: 0.8,
+        iridescenceIOR: 0,
+        ior: 0.1,
+        thickness: 100,
+        reflectivity: 0.1,
+        emissive: colors.slate,
+        emissiveIntensity: 0.3,
+      },
+      postScroll: {
+        clearcoat: 1,
+        roughness: 0.1,
+        metalness: 0.2,
+        color: colors.black,
+        opacity: 1.2,
+        sheen: 0.0,
+        sheenColor: '#000',
+        sheenRoughness: 1.0,
+        iridescence: 0.0,
+        iridescenceIOR: 1.3,
+        ior: 1.5,
+        thickness: 0.0,
+        reflectivity: 0.5,
+        emissive: '#000',
+        emissiveIntensity: 1.0,
+      },
+    }
+    return {
+      preScroll: Object.fromEntries(
+        Object.keys(props.preScroll).map((key) => [
+          [key],
+          { value: props.preScroll[key] },
+        ]),
+      ),
+      postScroll: Object.fromEntries(
+        Object.keys(props.postScroll).map((key) => [
+          [key],
+          { value: props.postScroll[key] },
+        ]),
+      ),
+    }
+  }, [colors.black, colors.slate, colors.white])
+
+  // simulation texture
   const { texture, render } = useFluidTexture(options)
   const scrollCallback = useFluidBackgroundAnimation({
     boundPathForceCallback,
@@ -112,7 +165,10 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
     manualRef,
     render,
     showLightbox,
+    materialProps,
+    ranges,
   })
+
   // imperative handle
   useImperativeHandle(
     forwardedRef,
@@ -137,23 +193,20 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
       <mesh ref={mesh} {...props}>
         <planeGeometry args={[1, 1]} />
         <meshPhysicalMaterial
-          transparent
+          transparent={true}
           alphaMap={texture}
           bumpMap={texture}
-          bumpScale={800}
+          bumpScale={500}
           precision={'highp'}
-          clearcoat={1}
           clearcoatRoughness={0}
-          roughness={0.1}
-          metalness={0.2}
-          color={colors.white}
-          dithering
+          dithering={true}
+          {...materialProps.preScroll}
         />
       </mesh>
       <mesh ref={backing} position-z={-0.5}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial ref={backingMaterial} color={colors.black}>
-          <VideoTexture video={Video} />
+          <VideoTexture video={Video} speed={4.5} />
         </meshBasicMaterial>
       </mesh>
     </>

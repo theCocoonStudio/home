@@ -1,6 +1,6 @@
-import { damp } from 'maath/easing'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Color } from 'three'
+import { Scrub } from '../utils/damping'
 
 export const useFluidBackgroundAnimation = ({
   boundPathForceCallback,
@@ -11,69 +11,91 @@ export const useFluidBackgroundAnimation = ({
   manualRef,
   render,
   showLightbox,
+  materialProps,
+  ranges,
 }) => {
   const forceCallbackSet = useRef(false)
-  const dampedOffset = useRef(0.0)
-  const dampedOffset2 = useRef(0.0)
-  const dampedOffset3 = useRef(0.0)
-  const dampedOffset4 = useRef(0.0)
   const slate = useRef(new Color(colors.slate))
   const black = useRef(new Color(colors.black))
   const purple = useRef(new Color(colors.purple))
   const white = useRef(new Color(colors.white))
 
+  /* backing material scrubber */
+  const scrubber = useMemo(() => {
+    return new Scrub({
+      thresholds: [
+        ranges.startSoftwareRange[0], // 0
+        ranges.startSoftwareRange[0] + ranges.startSoftwareRange[1],
+        ranges.startPhotographyRange[0],
+        ranges.startPhotographyRange[0] + ranges.startPhotographyRange[1],
+        ranges.startBlogRange[0],
+        ranges.startBlogRange[0] + ranges.startBlogRange[1],
+        ranges.postScrollAnimationRange[0],
+        ranges.postScrollAnimationRange[0] + ranges.postScrollAnimationRange[1], // 1
+      ],
+      targets: [
+        { color: { value: black.current } },
+        { color: { value: slate.current } },
+        { color: { value: slate.current } },
+        { color: { value: black.current } },
+        { color: { value: black.current } },
+        { color: { value: purple.current } },
+        { color: { value: purple.current } },
+        { color: { value: white.current } },
+      ],
+    })
+  }, [ranges])
+
+  useEffect(() => {
+    if (backingMaterialRef.current && !scrubber.model) {
+      scrubber.set({ model: backingMaterialRef.current })
+    }
+  }, [backingMaterialRef, scrubber])
+
+  /* mesh material scrubber */
+  const meshScrubber = useMemo(() => {
+    return new Scrub({
+      thresholds: [
+        0,
+        ranges.postScrollAnimationRange[0],
+        ranges.postScrollAnimationRange[0] + ranges.postScrollAnimationRange[1], // 1
+      ],
+      targets: [
+        materialProps.preScroll,
+        materialProps.preScroll,
+        materialProps.postScroll,
+      ],
+    })
+  }, [
+    materialProps.postScroll,
+    materialProps.preScroll,
+    ranges.postScrollAnimationRange,
+  ])
+
+  useEffect(() => {
+    if (meshRef.current?.material && !meshScrubber.model) {
+      meshScrubber.set({ model: meshRef.current.material })
+    }
+  }, [meshRef, meshScrubber])
+
+  /* scroll callback */
   const scrollCallback = useCallback(
     (state, delta, scrollData, scrollRanges, tailFrames) => {
-      /* set forceCallback */
+      /* forceCallback */
       if (!forceCallbackSet.current) {
         setForceCallback(boundPathForceCallback)
         forceCallbackSet.current = true
       }
+      /* backing material */
+      if (scrubber.model) {
+        scrubber.scrub(scrollData.offset, delta)
+      }
 
-      /* colors */
-      const offset = scrollRanges.startSoftwareOffset
-      const offset2 = scrollRanges.startPhotographyOffset
-      const offset3 = scrollRanges.startBlogOffset
-      const offset4 = scrollRanges.postScrollAnimationOffset
-      const toDamp = damp(dampedOffset, 'current', offset, 0.0, delta)
-      const toDamp2 = damp(dampedOffset2, 'current', offset2, 0.0, delta)
-      const toDamp3 = damp(dampedOffset3, 'current', offset3, 0.0, delta)
-      const toDamp4 = damp(dampedOffset4, 'current', offset4, 0.0, delta)
-      // backing material color
-      if (toDamp && !(offset2 > 0)) {
-        backingMaterialRef.current.color.lerpColors(
-          black.current,
-          slate.current,
-          dampedOffset.current,
-        )
-      } else if (toDamp2 && !(offset3 > 0)) {
-        backingMaterialRef.current.color.lerpColors(
-          slate.current,
-          black.current,
-          dampedOffset2.current,
-        )
-      } else if (toDamp3 && !(offset4 > 0)) {
-        backingMaterialRef.current.color.lerpColors(
-          black.current,
-          purple.current,
-          dampedOffset3.current,
-        )
-      } else if (toDamp4) {
-        backingMaterialRef.current.color.lerpColors(
-          purple.current,
-          white.current,
-          dampedOffset4.current,
-        )
+      /* mesh material */
+      if (meshScrubber.model) {
+        meshScrubber.scrub(scrollData.offset, delta)
       }
-      // background mesh color
-      if (toDamp4) {
-        meshRef.current.material.color.lerpColors(
-          white.current,
-          black.current,
-          dampedOffset4.current,
-        )
-      }
-      /* pause */
+      /* manual mode */
       manualRef.current = showLightbox
         ? false
         : scrollRanges.photographyDurationVisible
@@ -83,11 +105,11 @@ export const useFluidBackgroundAnimation = ({
       }
     },
     [
-      backingMaterialRef,
       boundPathForceCallback,
       manualRef,
-      meshRef,
+      meshScrubber,
       render,
+      scrubber,
       setForceCallback,
       showLightbox,
     ],
