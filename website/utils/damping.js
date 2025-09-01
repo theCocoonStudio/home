@@ -231,19 +231,63 @@ export class Scrub {
   #eps = 0.00001
   #model
   #thresholds
+  #thresholdRanges
+  #interpolateKeys
+  #constantKeys
   #targets
   #targetFunctions
+  #cache = {
+    offset: 0.0,
+    frameTargets: {},
+    rangeIndex: undefined,
+    initialized: false,
+  }
 
+  get model() {
+    return this.#model
+  }
+  get eps() {
+    return this.#eps
+  }
+  get targets() {
+    return this.#targets
+  }
+  get thresholds() {
+    return this.#thresholds
+  }
   static #DAMPING_FUNCTIONS = {
     number: {
       value: damp,
-      test: (val) => typeof val === 'number',
+      equals: (fromValue, toValue, eps) => {
+        return Math.abs(fromValue - toValue) < eps
+      },
+      test: (val) => typeof val === 'number' || val === 'number',
       interpolate: (from, to, offset) => {
         return from + offset * (to - from)
       },
     },
     vector2: {
       value: damp2,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Vector2 ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Vector2 ? toValue.toArray() : toValue
+
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Vector2 ||
         (Array.isArray(val) && val.length === 2) ||
@@ -251,13 +295,34 @@ export class Scrub {
       interpolate: (from, to, offset) => {
         const fromVector = Array.isArray(from)
           ? new Vector2().fromArray(from)
-          : from
-        const toVector = Array.isArray(to) ? new Vector2().fromArray(to) : to
+          : from.clone()
+        const toVector = Array.isArray(to)
+          ? new Vector2().fromArray(to)
+          : to.clone()
         return fromVector.add(toVector.sub(fromVector).multiplyScalar(offset))
       },
     },
     vector3: {
       value: damp3,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Vector3 ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Vector3 ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Vector3 ||
         (Array.isArray(val) && val.length === 3) ||
@@ -265,13 +330,34 @@ export class Scrub {
       interpolate: (from, to, offset) => {
         const fromVector = Array.isArray(from)
           ? new Vector3().fromArray(from)
-          : from
-        const toVector = Array.isArray(to) ? new Vector3().fromArray(to) : to
+          : from.clone()
+        const toVector = Array.isArray(to)
+          ? new Vector3().fromArray(to)
+          : to.clone()
         return fromVector.add(toVector.sub(fromVector).multiplyScalar(offset))
       },
     },
     vector4: {
       value: damp4,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Vector4 ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Vector4 ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Vector4 ||
         (Array.isArray(val) && val.length === 4) ||
@@ -279,13 +365,34 @@ export class Scrub {
       interpolate: (from, to, offset) => {
         const fromVector = Array.isArray(from)
           ? new Vector4().fromArray(from)
-          : from
-        const toVector = Array.isArray(to) ? new Vector4().fromArray(to) : to
+          : from.clone()
+        const toVector = Array.isArray(to)
+          ? new Vector4().fromArray(to)
+          : to.clone()
         return fromVector.add(toVector.sub(fromVector).multiplyScalar(offset))
       },
     },
     euler: {
       value: dampE,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Euler ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Euler ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Euler ||
         (Array.isArray(val) && val.length === 3) ||
@@ -305,7 +412,29 @@ export class Scrub {
     },
     matrix4: {
       value: dampM,
-      test: (val) => val instanceof Matrix4 || val === 'matrix4',
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Matrix4 ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Matrix4 ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
+      test: (val) =>
+        val instanceof Matrix4 ||
+        (Array.isArray(val) && val.length === 16) ||
+        val === 'matrix4',
       interpolate: (from, to, offset) => {
         const fromPosition = new Vector3()
         const fromQuaternion = new Quaternion()
@@ -313,9 +442,12 @@ export class Scrub {
         const toPosition = new Vector3()
         const toQuaternion = new Quaternion()
         const toScale = new Vector3()
-
-        from.decompose(fromPosition, fromQuaternion, fromScale)
-        to.decompose(toPosition, toQuaternion, toScale)
+        const fromMatrix = Array.isArray(from)
+          ? new Matrix4().fromArray(from)
+          : from
+        const toMatrix = Array.isArray(to) ? new Matrix4().fromArray(to) : to
+        fromMatrix.decompose(fromPosition, fromQuaternion, fromScale)
+        toMatrix.decompose(toPosition, toQuaternion, toScale)
 
         const fromQuaternionVector = new Vector4(
           fromQuaternion.x,
@@ -350,6 +482,26 @@ export class Scrub {
     },
     quaternion: {
       value: dampQ,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Quaternion ? fromValue.toArray() : fromValue
+        const toArray =
+          toValue instanceof Quaternion ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Quaternion ||
         (Array.isArray(val) && val.length === 4) ||
@@ -369,7 +521,33 @@ export class Scrub {
     },
     spherical: {
       value: dampS,
-      test: (val) => val instanceof Spherical || val === 'spherical',
+      equals: (fromValue, toValue, eps) => {
+        const fromArray = Array.isArray(fromValue)
+          ? fromValue
+          : [fromValue.radius, fromValue.phi, fromValue.theta]
+        const toArray = Array.isArray(toValue)
+          ? toValue
+          : [toValue.radius, toValue.phi, toValue.theta]
+
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
+      test: (val) =>
+        val instanceof Spherical ||
+        (Array.isArray(val) && val.length === 3) ||
+        val === 'spherical',
       interpolate: (from, to, offset) => {
         const fromVector = Array.isArray(from)
           ? new Vector3(from[0], from[1], from[2])
@@ -385,6 +563,9 @@ export class Scrub {
     },
     angle: {
       value: dampAngle,
+      equals: (fromValue, toValue, eps) => {
+        return Math.abs(fromValue - toValue) < eps
+      },
       test: (val) => typeof val === 'number' || val === 'angle',
       interpolate: (from, to, offset) => {
         return from + offset * (to - from)
@@ -392,6 +573,25 @@ export class Scrub {
     },
     lookAt: {
       value: dampLookAt,
+      equals: (fromValue, toValue, eps) => {
+        const fromArray =
+          fromValue instanceof Vector3 ? fromValue.toArray() : fromValue
+        const toArray = toValue instanceof Vector3 ? toValue.toArray() : toValue
+        for (let i = 0; i < fromArray.length; i++) {
+          if (typeof fromArray[i] !== typeof toArray[i]) {
+            return false
+          }
+          if (
+            typeof fromArray[i] === 'number' &&
+            !(Math.abs(fromArray[i] - toArray[i]) < eps)
+          ) {
+            return false
+          } else if (fromArray[i] !== toArray[i]) {
+            return false
+          }
+        }
+        return true
+      },
       test: (val) =>
         val instanceof Vector3 ||
         (Array.isArray(val) && val.length === 3) ||
@@ -399,249 +599,246 @@ export class Scrub {
       interpolate: (from, to, offset) => {
         const fromVector = Array.isArray(from)
           ? new Vector3().fromArray(from)
-          : from
-        const toVector = Array.isArray(to) ? new Vector3().fromArray(to) : to
+          : from.clone()
+        const toVector = Array.isArray(to)
+          ? new Vector3().fromArray(to)
+          : to.clone()
         return fromVector.add(toVector.sub(fromVector).multiplyScalar(offset))
       },
     },
-    // must be last due to string option
-    color: { value: dampC },
-    test: (val) =>
-      val instanceof Color ||
-      (Array.isArray(val) && val.length === 3) ||
-      typeof val === 'string' ||
-      typeof val === 'number',
-    interpolate: (from, to, offset) => {
-      const fromColor =
-        from instanceof Color
-          ? from
-          : Array.isArray(from)
-            ? new Color(...from)
-            : new Color(from)
-      const toColor =
-        to instanceof Color
-          ? to
-          : Array.isArray(to)
-            ? new Color(...to)
-            : new Color(to)
-      return new Color().lerpColors(fromColor, toColor, offset)
+    // must be last due to string test option
+    color: {
+      value: dampC,
+      equals: (fromValue, toValue) => {
+        const fromColor =
+          fromValue instanceof Color
+            ? fromValue.clone()
+            : Array.isArray(fromValue)
+              ? new Color(...fromValue)
+              : new Color(fromValue)
+        const toColor =
+          toValue instanceof Color
+            ? toValue.clone()
+            : Array.isArray(toValue)
+              ? new Color(...toValue)
+              : new Color(toValue)
+        return fromColor.equals(toColor)
+      },
+      test: (val) =>
+        val instanceof Color ||
+        (Array.isArray(val) && val.length === 3) ||
+        typeof val === 'string' ||
+        typeof val === 'number' ||
+        val === 'color',
+      interpolate: (from, to, offset) => {
+        const fromColor =
+          from instanceof Color
+            ? from.clone()
+            : Array.isArray(from)
+              ? new Color(...from)
+              : new Color(from)
+        const toColor =
+          to instanceof Color
+            ? to.clone()
+            : Array.isArray(to)
+              ? new Color(...to)
+              : new Color(to)
+        return new Color().lerpColors(fromColor, toColor, offset)
+      },
     },
   }
   constructor({ eps, model, targets, thresholds = [0.0, 1.0] }) {
-    this.#set({ eps, model, thresholds, targets })
+    this.set({ eps, model, thresholds, targets })
   }
 
-  #set({ eps, model, thresholds, targets }) {
+  set({ eps, model, thresholds, targets }) {
     if (typeof eps === 'number') {
-      this.eps = eps
+      this.#eps = eps
     }
-    if (typeof targets === 'object') {
+    if (typeof model === 'object') {
       this.#model = model
     }
     if (Array.isArray(thresholds)) {
       this.#thresholds = thresholds
+
+      if (this.#thresholds[0] > 0.0) {
+        this.#thresholds.unshift(0.0)
+      }
+      if (this.#thresholds[this.#thresholds.length - 1] < 1.0) {
+        this.#thresholds.push(1.0)
+      }
+      this.#thresholdRanges = []
+      for (let i = 0; i < this.#thresholds.length - 1; i++) {
+        this.#thresholdRanges[i] = [
+          this.#thresholds[i],
+          this.#thresholds[i + 1],
+        ]
+      }
     }
     if (Array.isArray(targets)) {
       this.#targets = targets
+      const targetFunctions = {}
+      Object.keys(targets[0]).forEach((key) => {
+        const { type, value } = targets[0][key]
+        const dampingFunction = Scrub.getDampingFunction(type || value)
+        const interpolateKey = Object.keys(Scrub.#DAMPING_FUNCTIONS).find(
+          (key) => Scrub.#DAMPING_FUNCTIONS[key].value === dampingFunction,
+        )
+        const { interpolate, equals } = Scrub.#DAMPING_FUNCTIONS[interpolateKey]
+        targetFunctions[key] = {
+          interpolate,
+          equals,
+          dampingFunction,
+        }
+        this.#targetFunctions = targetFunctions
+      })
     }
-    const targetFunctions = {}
-    Object.keys(targets[0]).forEach((key) => {
-      const { type, value } = targets[0][key]
-      const dampingFunction = this.getDampingFunction(type || value)
-      const interpolateKey = Object.keys(Scrub.#DAMPING_FUNCTIONS).find(
-        (key) => Scrub.#DAMPING_FUNCTIONS[key].value === dampingFunction,
-      )
-      targetFunctions[key] = {
-        interpolate: Scrub.#DAMPING_FUNCTIONS[interpolateKey].interpolate,
-        dampingFunction,
-      }
-      this.#targetFunctions = targetFunctions
-    })
+    if (this.#targets && this.#thresholdRanges) {
+      this.#interpolateKeys = []
+      this.#constantKeys = []
+      this.#thresholdRanges.forEach((range, rangeIndex) => {
+        const interpolateKeys = []
+        const constantKeys = []
+        Object.keys(this.#targets[0]).forEach((key) => {
+          const fromValue = this.#targets[rangeIndex][key].value
+          const toValue = this.#targets[rangeIndex + 1][key].value
+          const equals = this.#targetFunctions[key].equals(
+            fromValue,
+            toValue,
+            this.#eps,
+          )
+          if (equals) {
+            constantKeys.push(key)
+          } else {
+            interpolateKeys.push(key)
+          }
+        })
+        this.#interpolateKeys.push(interpolateKeys)
+        this.#constantKeys.push(constantKeys)
+      })
+    }
+    this.#cache = {
+      offset: 0.0,
+      frameTargets: {},
+      rangeIndex: undefined,
+      initialized: false,
+    }
+
+    return this
   }
 
-  static #getFrameValues({ thresholds, offset, eps, targets }) {
-    const start = thresholds.findIndex((threshold) => offset + eps > threshold)
-    const end = Math.min(start + 1, thresholds.length - 1)
-    const startThreshold = thresholds[start]
-    const endThreshold = thresholds[end]
-    const fromTargets = targets[start]
-    const toTargets = targets[end]
+  #setRangeIndex() {
+    this.#cache.rangeIndex = this.#thresholdRanges.findIndex(
+      ([min, max]) => this.#cache.offset >= min && this.#cache.offset <= max,
+    )
+  }
 
-    const activeOffset =
-      start !== end &&
-      inverseLerp(
-        startThreshold,
-        endThreshold,
-        clamp(offset, startThreshold, endThreshold),
+  #setInterpolatedTargets() {
+    const interpolateKeys = this.#interpolateKeys[this.#cache.rangeIndex]
+    if (interpolateKeys.length > 0) {
+      const activeOffset = inverseLerp(
+        this.#thresholdRanges[this.#cache.rangeIndex][0],
+        this.#thresholdRanges[this.#cache.rangeIndex][1],
+        clamp(
+          this.#cache.offset,
+          this.#thresholdRanges[this.#cache.rangeIndex][0],
+          this.#thresholdRanges[this.#cache.rangeIndex][1],
+        ),
       )
-    return {
-      start,
-      end,
-      startThreshold,
-      endThreshold,
-      fromTargets,
-      toTargets,
-      activeOffset,
+      const fromTargets = this.#targets[this.#cache.rangeIndex]
+      const toTargets = this.#targets[this.#cache.rangeIndex + 1]
+      interpolateKeys.forEach((key) => {
+        const { interpolate } = this.#targetFunctions[key]
+        const from = fromTargets[key].value
+        const to = toTargets[key].value
+        this.#cache.frameTargets[key] = interpolate(from, to, activeOffset)
+      })
     }
+  }
+  #setConstantTargets() {
+    const keys = this.#constantKeys[this.#cache.rangeIndex]
+    if (keys.length > 0) {
+      const targets = this.#targets[this.#cache.rangeIndex]
+      keys.forEach((key) => {
+        this.#cache.frameTargets[key] = targets[key].value
+      })
+    }
+  }
+  #damp({ smoothTime, delta, maxSpeed, easing, dampEPS }) {
+    Object.keys(this.#cache.frameTargets).forEach((key) => {
+      const { dampingFunction } = this.#targetFunctions[key]
+      const target = this.#cache.frameTargets[key]
+      if (dampingFunction === damp) {
+        dampingFunction(
+          this.#model,
+          key,
+          target,
+          smoothTime,
+          delta,
+          maxSpeed,
+          easing,
+          dampEPS,
+        )
+      } else if (dampingFunction === dampLookAt) {
+        dampingFunction(
+          this.#model,
+          target,
+          smoothTime,
+          delta,
+          maxSpeed,
+          easing,
+          dampEPS,
+        )
+      } else {
+        dampingFunction(
+          this.#model[key],
+          target,
+          smoothTime,
+          delta,
+          maxSpeed,
+          easing,
+          dampEPS,
+        )
+      }
+    })
   }
 
   static get DAMPING_FUNCTIONS() {
-    return Object.freeze({ ...this.#DAMPING_FUNCTIONS })
+    return Object.freeze({ ...Scrub.#DAMPING_FUNCTIONS })
   }
   static getDampingFunction(target) {
-    const key = Object.keys(this.#DAMPING_FUNCTIONS).find(
-      (key) => key === target || this.#DAMPING_FUNCTIONS[key].test(target),
+    const key = Object.keys(Scrub.#DAMPING_FUNCTIONS).find(
+      (key) => key === target || Scrub.#DAMPING_FUNCTIONS[key].test(target),
     )
-    return key && this.#DAMPING_FUNCTIONS[key].value
-  }
-  static interpolate(from, to, offset, type) {
-    const dampingFunction = this.getDampingFunction(
-      typeof type === 'string' ? type : from,
-    )
-    if (dampingFunction === damp) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.number.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === damp2) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.vector2.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === damp3) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.vector3.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === damp4) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.vector4.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampE) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.euler.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampM) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.matrix4.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampQ) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.quaternion.interpolate(
-          from,
-          to,
-          offset,
-        ),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampS) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.spherical.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampAngle) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.angle.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampLookAt) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.lookAt.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
-    if (dampingFunction === dampC) {
-      return {
-        target: this.#DAMPING_FUNCTIONS.color.interpolate(from, to, offset),
-        dampingFunction,
-      }
-    }
+    return key && Scrub.#DAMPING_FUNCTIONS[key].value
   }
 
-  static scrub({
-    model,
-    thresholds = [0.0, 1.0],
-    targets,
-    offset,
-    eps = 0.00001,
-    delta,
-  }) {
-    const { fromTargets, toTargets, activeOffset } = this.#getFrameValues({
-      thresholds,
-      offset,
-      eps,
-      targets,
-    })
-    Object.keys(fromTargets).forEach((key) => {
-      const from = fromTargets[key].value
-      const type = fromTargets[key]?.type || toTargets[key]?.type
-      const to = toTargets[key].value
-      let target, dampingFunction
-      if (!activeOffset) {
-        dampingFunction = this.getDampingFunction(type || from)
-        target = from
-      } else {
-        const { target: resultTarget, dampingFunction: resultDampingFunction } =
-          this.interpolate(from, to, activeOffset, type)
-        target = resultTarget
-        dampingFunction = resultDampingFunction
-      }
-      if (dampingFunction === damp) {
-        dampingFunction(model, key, target, 0.0, delta)
-      } else if (dampingFunction === dampLookAt) {
-        dampingFunction(model, target, 0.0, delta)
-      } else {
-        dampingFunction(model[key], target, 0.0, delta)
-      }
-    })
-  }
+  scrub(offset, delta, { smoothTime = 0.0, maxSpeed, easing, dampEPS } = {}) {
+    if (this.#cache.initialized) {
+      const scrollChanged = !(Math.abs(this.#cache.offset - offset) < this.#eps)
 
-  scrub(offset, delta) {
-    const { fromTargets, toTargets, activeOffset } = Scrub.#getFrameValues({
-      thresholds: this.#thresholds,
-      targets: this.#targets,
-      eps: this.#eps,
-      offset,
-    })
-    Object.keys(this.#targetFunctions).forEach((key) => {
-      const from = fromTargets[key].value
-      const to = toTargets[key].value
-      const { interpolate, dampingFunction } = this.#targetFunctions[key]
-      const target = activeOffset ? interpolate(from, to, activeOffset) : from
+      if (scrollChanged) {
+        this.#cache.offset = offset
+        const rangeChanged =
+          offset > this.#thresholdRanges[this.#cache.rangeIndex][1] ||
+          offset < this.#thresholdRanges[this.#cache.rangeIndex][0]
 
-      if (dampingFunction === damp) {
-        dampingFunction(this.#model, key, target, 0.0, delta)
-      } else if (dampingFunction === dampLookAt) {
-        dampingFunction(this.#model, target, 0.0, delta)
-      } else {
-        dampingFunction(this.#model[key], target, 0.0, delta)
+        if (rangeChanged) {
+          this.#setRangeIndex()
+          this.#setConstantTargets()
+        }
+        this.#setInterpolatedTargets()
       }
-    })
+    } else {
+      this.#cache.initialized = true
+      this.#cache.offset = offset
+      this.#setRangeIndex()
+      this.#setConstantTargets()
+      this.#setInterpolatedTargets()
+    }
+    this.#damp({ smoothTime, maxSpeed, easing, dampEPS, delta })
+
+    // return instance
+    return this
   }
 }
-
-/* 
-[0 eps 1-eps 1]
-
-offset     start    end      activeOffset   value
-0          0        eps      0              val(0)
-eps/2      eps      1-eps    0              val(eps) 
-eps        eps      1-eps    0              val(eps)
-1-2*eps    eps      1-eps    ilerp(offset)  < val(1-eps)
-1-1.5*eps  1-eps    1        0              val(1-eps)
-1-eps      1-eps    1        0              val(1-eps)
-1-.5*eps   1        1        0              val(1)
-
- */
