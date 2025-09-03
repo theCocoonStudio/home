@@ -74,7 +74,7 @@ const _FluidBackground = forwardRef(function FluidBackgroundAnimation(
   const {
     forceCallback: boundPathForceCallback,
     resizeCallback: boundPathForceResizeCallback,
-  } = useBoundPathForce(mesh)
+  } = useBoundPathForce()
 
   // resize callback
   const resizeCallback = useCallback(() => {

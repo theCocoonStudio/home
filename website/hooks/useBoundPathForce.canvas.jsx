@@ -5,13 +5,13 @@ import { useTheme } from './useTheme'
 import { useThree } from '@react-three/fiber'
 import { clamp } from 'three/src/math/MathUtils.js'
 
-export const useBoundPathForce = (backgroundRef) => {
+export const useBoundPathForce = () => {
   // data
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
+  const stateCallback = useCallback(({ size }) => {
+    return { size }
   }, [])
 
-  const { size, viewport, camera } = useThree(stateCallback)
+  const { size } = useThree(stateCallback)
   const {
     lengths: { footerHeight, sidePadding, navHeight },
   } = useTheme()
@@ -25,27 +25,12 @@ export const useBoundPathForce = (backgroundRef) => {
   const path = useMemo(() => new BoundPathGenerator(uvSpaceClamps.current), [])
   // update forceCallback data
   const resizeCallback = useCallback(() => {
-    const target = backgroundRef.current
-    const { width, height, factor } = viewport.getCurrentViewport(
-      camera,
-      target.position.clone(),
-      size,
-    )
     uvSpaceClamps.current.set(
-      (2 * sidePadding) / factor / width,
-      (footerHeight / factor + navHeight / factor) / height,
+      (2 * sidePadding) / size.width,
+      (footerHeight - navHeight) / size.height,
     )
     path.updatePadding(uvSpaceClamps.current)
-  }, [
-    backgroundRef,
-    camera,
-    footerHeight,
-    navHeight,
-    path,
-    sidePadding,
-    size,
-    viewport,
-  ])
+  }, [footerHeight, navHeight, path, sidePadding, size])
 
   // implement forceCallback
   const elapsed = useRef(0.0)
