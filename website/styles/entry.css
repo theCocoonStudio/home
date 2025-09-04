@@ -96,58 +96,7 @@ textarea:not([rows]) {
 
 /* END css reset */
 
-:root {
-  --white: #eaeaea;
-  --purple: #403b4e;
-  --charcoal: #3d4f60;
-  --slate: #426b69;
-  --midnight: #405c5d;
-  --black: #122629;
-  --navHeight: 120px;
-  --footerHeight: 120px;
-  --atomicPadding: 8px;
-  --sidePaddingFactor: 8;
-  --sidePadding: calc(8 * 8px);
-  --fontSizeLgTitle: 8rem;
-  --fontSizeLgSubtitle: 2.2rem;
-  --fontSizeLgText: 1.8rem;
-  --fontSizeMdTitle: 5.4rem;
-  --fontSizeMdSubtitle: 1.8rem;
-  --fontSizeMdText: 1.6rem;
-  --fontSizeSmTitle: 3.6rem;
-  --fontSizeSmSubtitle: 1.6rem;
-  --fontSizeSmText: 1.4rem;
-  --fontSizeXsTitle: 2.6rem;
-  --fontSizeXsSubtitle: 1.4rem;
-  --fontSizeXsText: 1.2rem;
-}
-
-@media screen and (max-height: 800px), screen and (max-width: 450px) {
-  :root {
-    --navHeight: 80px;
-    --footerHeight: 80px;
-  }
-}
-@media screen and (max-height: 600px) {
-  :root {
-    --navHeight: 72px;
-    --footerHeight: 72px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  :root {
-    --sidePaddingFactor: 4;
-    --sidePadding: calc(var(--sidePaddingFactor) * var(--atomicPadding));
-  }
-}
-@media screen and (max-width: 450px) {
-  :root {
-    --sidePaddingFactor: 2;
-    --sidePadding: calc(var(--sidePaddingFactor) * var(--atomicPadding));
-  }
-}
-
+/* START global styles */
 * {
   box-sizing: border-box;
 }
@@ -341,3 +290,5 @@ html {
     padding: 0;
   }
 }
+
+/* END global styles */

@@ -6,7 +6,7 @@ import { useThree } from '@react-three/fiber'
 
 export const Performance = ({ fpsContainer }) => {
   // markup ref
-  const container = useMarkupId(fpsContainer)
+  /* const container = useMarkupId(fpsContainer) */
 
   // settings hook
   const {
@@ -76,7 +76,7 @@ export const Performance = ({ fpsContainer }) => {
   )
   const onChange = useCallback(
     ({ fps, factor /*refreshrate , frames, averages */ }) => {
-      container.innerHTML = `${fps}`
+      /* container.innerHTML = `${fps}` */
 
       // throttle or boost performance
       const index = Math.round(factor * 10)
@@ -90,7 +90,7 @@ export const Performance = ({ fpsContainer }) => {
         }
       }
     },
-    [auto, container, setAuto, setFrames, setMapsize, setResolution, targets],
+    [auto, setAuto, setFrames, setMapsize, setResolution, targets],
   )
   const bounds = useCallback((rr) => {
     return [Math.min(rr - 10, 50), Math.min(rr, 60)]

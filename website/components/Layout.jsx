@@ -31,7 +31,6 @@ import { useParams } from 'react-router'
 import { WrongWay } from './WrongWay'
 
 const theme = {
-  utils: { compose: composeClassNames, raleway, changaOne },
   colors: {
     white: '#EAEAEA',
     purple: '#403B4E',
@@ -46,50 +45,6 @@ const theme = {
     atomicPadding: 8,
     sidePaddingFactor: 8,
     sidePadding: 8 * 8,
-  },
-  responsiveLengths: ({ width, height }, lengths) => {
-    const current = { ...lengths }
-    /* widths */
-    if (width <= 450) {
-      current.sidePaddingFactor = 2
-    } else if (width <= 768) {
-      current.sidePaddingFactor = 4
-    }
-    /* heights */
-    if (height <= 800 || width <= 450) {
-      current.navHeight = 80
-      current.footerHeight = 80
-    }
-    if (height <= 600) {
-      current.navHeight = 72
-      current.footerHeight = 72
-    }
-    current.sidePadding = current.sidePaddingFactor * current.atomicPadding
-    return current
-  },
-  typography: {
-    fontSizesRem: {
-      lg: {
-        title: 8,
-        subtitle: 2.2,
-        text: 1.8,
-      },
-      md: {
-        title: 5.4,
-        subtitle: 1.8,
-        text: 1.6,
-      },
-      sm: {
-        title: 3.6,
-        subtitle: 1.6,
-        text: 1.4,
-      },
-      xs: {
-        title: 2.6,
-        subtitle: 1.4,
-        text: 1.2,
-      },
-    },
   },
 }
 
@@ -159,7 +114,7 @@ function _Layout() {
   const sensors = useSensors(mouseSensor, touchSensor)
   return (
     <ResizeEventProvider>
-      <ThemeProvider theme={theme} container={scrollContainer}>
+      <ThemeProvider theme={theme}>
         <LightboxProvider>
           <MenuProvider>
             <DndContext sensors={sensors}>
