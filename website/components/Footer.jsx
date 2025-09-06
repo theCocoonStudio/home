@@ -1,60 +1,19 @@
 import styles from 'website/styles/Footer.module.css'
-import { useMemo } from 'react'
-import { useScrollEvent } from 'website/pages/Home/useScrollEvent'
-import { useLightbox } from '../hooks/useLightbox'
-import GitHubIcon from '@mui/icons-material/GitHub'
-import LinkedInIcon from '@mui/icons-material/LinkedIn'
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 
 export const Footer = ({ config, scrollContainer, ready, openContact }) => {
   const {
-    footer: { FooterItemsComponent },
+    footer: { FooterComponent },
   } = config
-
-  const section = useScrollEvent()
-
-  const { showLightbox } = useLightbox()
-
-  const socialStyles = useMemo(
-    () => ({
-      opacity:
-        section === 'preScroll' || section === 'postScroll' || showLightbox
-          ? '0'
-          : '1',
-    }),
-    [section, showLightbox],
-  )
-
-  const iconStyles = useMemo(
-    () => ({
-      pointerEvents:
-        section === 'preScroll' || section === 'postScroll' ? 'none' : 'auto',
-    }),
-    [section],
-  )
 
   return (
     <div className={`${styles.footer}`}>
-      <FooterItemsComponent
-        config={config}
-        scrollContainer={scrollContainer}
-        showLightbox={showLightbox}
-        ready={ready}
-      />
-      <div className={styles.socials} style={socialStyles}>
-        <div className={styles.github} style={iconStyles}>
-          <GitHubIcon fontSize='36px' />
-        </div>
-        <div className={styles.linkedin} style={iconStyles}>
-          <LinkedInIcon />
-        </div>
-        <div
-          className={styles.contact}
-          style={iconStyles}
-          onClick={openContact}
-        >
-          <AlternateEmailIcon />
-        </div>
+      <div className={`${styles.inner}`}>
+        <FooterComponent
+          scrollContainer={scrollContainer}
+          ready={ready}
+          openContact={openContact}
+          config={config}
+        />
       </div>
     </div>
   )

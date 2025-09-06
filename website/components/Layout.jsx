@@ -4,7 +4,7 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import { composeClassNames, raleway, changaOne } from '../utils/styles'
+import { raleway, changaOne } from '../utils/styles'
 import { Footer } from './Footer'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
@@ -40,11 +40,12 @@ const theme = {
     black: '#122629',
   },
   lengths: {
-    navHeight: 120,
-    footerHeight: 120,
-    atomicPadding: 8,
-    sidePaddingFactor: 8,
-    sidePadding: 8 * 8,
+    navHeight: 48,
+    footerHeight: 48,
+    atomicPadding: 4,
+    sidePadding: 64,
+    topBottomPadding: 24,
+    maxWidth: 1280,
   },
 }
 

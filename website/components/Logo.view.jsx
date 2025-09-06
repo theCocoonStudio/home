@@ -12,10 +12,7 @@ import { damp } from 'maath/easing'
 import { useLightbox } from '../hooks/useLightbox'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
-export const Logo = forwardRef(function Logo(
-  { initialLogoColor },
-  forwardedRef,
-) {
+export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
   const ref = useRef()
   const material = useRef()
   const mesh = useRef()
@@ -43,12 +40,7 @@ export const Logo = forwardRef(function Logo(
     if (ref.current) {
       const width = canvas.clientWidth
       const height = canvas.clientHeight
-      let size = 25
-      if (width <= 450 || height <= 600) {
-        size = 18
-      } else if (width <= 768 || height <= 800) {
-        size = 20
-      }
+      const size = 18
 
       const { factor } = viewport.getCurrentViewport(
         camera,
@@ -93,19 +85,15 @@ export const Logo = forwardRef(function Logo(
   return (
     <>
       <group
-        /* rotation-x={0.35} // straight up view (x,y = 0) */
         rotation-y={Math.PI / 4}
         rotation-z={Math.PI / 4}
         ref={ref}
         position-z={0.5}
       >
-        {/* <primitive object={iLogo} ref={iMesh} /> */}
         <mesh ref={mesh}>
           <boxGeometry />
-          {/* <CarbonMaterial repeat={[0.6, 0.6]} /> */}
           <meshStandardMaterial
             ref={material}
-            color={initialLogoColor}
             roughness={0.1}
             transparent
             opacity={1}

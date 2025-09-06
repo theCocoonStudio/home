@@ -1,8 +1,6 @@
-import { Children, cloneElement, useEffect, useMemo, useRef } from 'react'
-import { useTheme } from '../hooks/useTheme'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
+import { Children, cloneElement, useMemo, useRef } from 'react'
 
-export const HomeLogo = function HomeLogo({ children, initialLogoColor }) {
+export const HomeLogo = function HomeLogo({ children }) {
   const logo = useRef()
   const child = useMemo(() => {
     try {
@@ -12,24 +10,6 @@ export const HomeLogo = function HomeLogo({ children, initialLogoColor }) {
     }
   }, [children])
 
-  const section = useScrollEvent()
-
-  const {
-    colors: { slate, charcoal, purple, white },
-  } = useTheme()
-
-  useEffect(() => {
-    if (logo.current.material) {
-      const color = {
-        preScroll: initialLogoColor,
-        software: slate,
-        photography: charcoal,
-        blog: purple,
-        postScroll: white,
-      }[section]
-      logo.current.material.color.set(color)
-    }
-  }, [charcoal, initialLogoColor, purple, section, slate, white])
   return (
     <>
       {cloneElement(child, {

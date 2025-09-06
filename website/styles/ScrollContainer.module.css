@@ -1,0 +1,21 @@
+.container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--theme-lengths-topBottomPadding);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  column-gap: 2px;
+}
+.item {
+  flex-grow: 1;
+  flex-shrink: 1;
+  &:hover {
+    cursor: pointer;
+    background-color: var(--theme-colors-white);
+    opacity: 0.3;
+  }
+}

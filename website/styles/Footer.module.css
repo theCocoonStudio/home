@@ -1,130 +1,25 @@
 .footer {
   position: absolute;
-  height: var(--footerHeight);
-  left: var(--sidePadding);
-  right: var(--sidePadding);
   bottom: 0;
-  margin: 0;
-  padding: 0;
+  left: 0;
+  right: 0;
   z-index: 300;
   pointer-events: none;
   display: flex;
-  flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-between;
-  column-gap: calc(12 * var(--atomicPadding));
-}
-
-.github,
-.linkedin,
-.youtube,
-.contact {
-  display: flex;
-  flex-wrap: nowrap;
   justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  flex-grow: 0;
-  &:hover {
-    cursor: pointer;
-  }
-  svg {
-    filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
-  }
-}
-
-.linkedin svg {
-  width: 33px;
-  height: 33px;
-}
-.github svg {
-  width: 28px;
-  height: 28px;
-}
-.contact svg {
-  width: 30px;
-  height: 30px;
-}
-
-.socials {
-  display: flex;
   flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  column-gap: calc(2 * var(--atomicPadding));
-  pointer-events: none;
-  transition: opacity 0.2s ease-in;
-  opacity: 0;
+  color: var(--theme-colors-white);
+  padding-bottom: var(--theme-lengths-topBottomPadding);
 }
 
-@media screen and (max-height: 800px) {
-  .linkedin svg {
-    width: 27px;
-    height: 27px;
-  }
-  .github svg {
-    width: 23px;
-    height: 23px;
-  }
-  .contact svg {
-    width: 25px;
-    height: 25px;
-  }
-  .socials {
-    column-gap: calc(1.5 * var(--atomicPadding));
-  }
-}
-@media screen and (max-width: 768px) {
-  .footer {
-    column-gap: normal;
-  }
-  .linkedin svg {
-    width: 27px;
-    height: 27px;
-  }
-  .github svg {
-    width: 23px;
-    height: 23px;
-  }
-  .contact svg {
-    width: 25px;
-    height: 25px;
-  }
-  .socials {
-    column-gap: calc(1.5 * var(--atomicPadding));
-  }
-}
-@media screen and (max-height: 360px) {
-  .linkedin svg {
-    width: 23px;
-    height: 23px;
-  }
-  .github svg {
-    width: 19px;
-    height: 19px;
-  }
-  .contact svg {
-    width: 21px;
-    height: 21px;
-  }
-  .socials {
-    column-gap: calc(1 * var(--atomicPadding));
-  }
-}
-@media screen and (max-width: 360px) {
-  .linkedin svg {
-    width: 23px;
-    height: 23px;
-  }
-  .github svg {
-    width: 19px;
-    height: 19px;
-  }
-  .contact svg {
-    width: 21px;
-    height: 21px;
-  }
-  .socials {
-    column-gap: calc(1 * var(--atomicPadding));
+.inner {
+  pointer-events: none;
+  width: 100%;
+  max-width: var(--theme-lengths-maxWidth);
+  height: var(--theme-lengths-footerHeight);
+  padding: 0 var(--theme-lengths-sidePadding);
+  > * {
+    pointer-events: auto;
   }
 }

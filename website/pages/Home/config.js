@@ -1,13 +1,11 @@
 import { Effects } from './Effects.canvas'
 import { Home } from './Home.view'
 import { Main } from './Main'
-import { NavItems } from './NavItems'
-import { FooterItems } from './FooterItems'
-import { ScrollEventDispatcher } from './ScrollEventDispatcher.view'
 import { HomeProvider } from './HomeProvider'
 import { Gallery } from '../../components/Gallery'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
+import { ScrollContainer } from '../../components/ScrollContainer'
 
 export const config = {
   context: { Provider: HomeProvider },
@@ -15,7 +13,6 @@ export const config = {
     /* Component: Main, */
     ViewComponent: Home,
     renderPriority: 1,
-    EventDispatcherComponent: ScrollEventDispatcher,
   },
   effects: {
     renderPriority: 2,
@@ -28,7 +25,13 @@ export const config = {
     Component: HomeSettings,
   },
   data: {
-    focusFactor: 0.46,
+    constants: {
+      focusFactor: 0.46,
+    },
+    markupIds: { scrollContainerId: 'home-scroll-container' },
+    content: {
+      items: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    },
   },
 
   scroll: {
@@ -42,11 +45,9 @@ export const config = {
   },
   nav: {
     logoRenderPriority: 3,
-    NavItemsComponent: () => {} /* NavItems */,
     LogoComponent: HomeLogo,
-    /*   initialLogoColor: '#111', */
   },
   footer: {
-    FooterItemsComponent: () => {} /* FooterItems */,
+    FooterComponent: ScrollContainer,
   },
 }
