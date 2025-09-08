@@ -7,7 +7,8 @@ import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
-import { MainScene } from '../../components/MainScene.canvas'
+import { Background } from '../../components/Background.canvas'
+import { Floor } from '../../components/Floor.canvas'
 
 export const Home = ({ config, setReady }) => {
   const {
@@ -26,11 +27,12 @@ export const Home = ({ config, setReady }) => {
   const { showLightbox } = useLightbox()
 
   // imperative component refs
-  const main = useRef()
+  const background = useRef()
+  const floor = useRef()
   // animation targets
   const animationTargets = useMemo(
     () => ({
-      refs: {},
+      refs: { background, floor },
     }),
     [],
   )
@@ -40,7 +42,8 @@ export const Home = ({ config, setReady }) => {
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // run child resize callbacks
-    main.current?.resizeCallback()
+    background.current?.resizeCallback()
+    floor.current?.resizeCallback()
   }, [])
   useResizeEvent(canvas, resizeCallback) /
     // reactive dependent data
@@ -59,7 +62,8 @@ export const Home = ({ config, setReady }) => {
       ></PerspectiveCamera>
       <Environment preset='city' environmentIntensity={0.9} />
       <ambientLight intensity={0.7} />
-      <MainScene ref={main} />
+      <Background positionZ0={-5} heightProportion0={0.5} ref={background} />
+      <Floor positionZ0={-5} heightProportion0={0.5} ref={floor} />
       <Effects renderPriority={renderPriority} />
     </Suspense>
   )
