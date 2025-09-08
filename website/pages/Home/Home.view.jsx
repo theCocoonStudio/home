@@ -1,12 +1,13 @@
 import { PerspectiveCamera } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useTheme } from 'website/hooks/useTheme'
-import { Suspense, useCallback, useEffect, useMemo } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
+import { MainScene } from '../../components/MainScene.canvas'
 
 export const Home = ({ config, setReady }) => {
   const {
@@ -25,7 +26,7 @@ export const Home = ({ config, setReady }) => {
   const { showLightbox } = useLightbox()
 
   // imperative component refs
-
+  const main = useRef()
   // animation targets
   const animationTargets = useMemo(
     () => ({
@@ -39,6 +40,7 @@ export const Home = ({ config, setReady }) => {
   // responsive callbacks
   const resizeCallback = useCallback(() => {
     // run child resize callbacks
+    main.current?.resizeCallback()
   }, [])
   useResizeEvent(canvas, resizeCallback) /
     // reactive dependent data
@@ -57,6 +59,7 @@ export const Home = ({ config, setReady }) => {
       ></PerspectiveCamera>
       <Environment preset='city' environmentIntensity={0.9} />
       <ambientLight intensity={0.7} />
+      <MainScene ref={main} />
       <Effects renderPriority={renderPriority} />
     </Suspense>
   )

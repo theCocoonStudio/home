@@ -14,7 +14,6 @@ export const ScrollContainer = ({
 }) => {
   const scrollItems = useMemo(() => {
     return items.map((item, index) => {
-      console.log('hi')
       return (
         <div
           id={`${scrollContainerId}-${index}`}
@@ -24,7 +23,7 @@ export const ScrollContainer = ({
       )
     })
   }, [items, scrollContainerId])
-  console.log(scrollItems)
+
   return (
     <div id={scrollContainerId} className={`${styles.container}`}>
       {scrollItems}
