@@ -2,12 +2,33 @@ import {
   forwardRef,
   memo,
   useCallback,
+  useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
 } from 'react'
 import { useThree } from '@react-three/fiber'
 import { useTheme } from '../hooks/useTheme'
 import { Vector2, Vector3 } from 'three'
+import { useSettings } from 'website/pages/Home/useSettings'
+import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
+import { useFluidTexture } from 'src/hooks/useFluidTexture'
+import { VideoTexture } from './VideoTexture.canvas'
+import Video from 'assets/colors3.mp4'
+
+const _opts = {
+  poissonIterations: 32,
+  viscousIterations: 32,
+  forceValue: 80,
+  resolution: 0.5,
+  runEvery: 1,
+  forceSize: 65,
+  viscosity: 30,
+  dt: 0.014,
+  isViscous: true,
+  BFECC: true,
+  isBounce: true,
+}
 
 const _Background = forwardRef(function Background(
   { positionZ0 = -5, heightProportion0 = 0.5 },
@@ -15,15 +36,39 @@ const _Background = forwardRef(function Background(
 ) {
   // refs
   const background = useRef()
+  const backing = useRef()
+  const forceCallbackRef = useRef()
   // theme
   const {
     lengths: { navHeight, topBottomPadding },
+    colors,
   } = useTheme()
   // reactive three app data
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
   }, [])
   const { size, viewport, camera } = useThree(stateCallback)
+
+  // simulation options and texture
+  const { resolution, frames: runEvery } = useSettings()
+  const padding = useRef(new Vector2(0.2, 0.2))
+  const boundPathForceCallback = useBoundPathForce(padding.current)
+  useEffect(() => {
+    if (boundPathForceCallback && !forceCallbackRef.current) {
+      forceCallbackRef.current = boundPathForceCallback
+    }
+  }, [boundPathForceCallback])
+  const options = useMemo(() => {
+    return {
+      ..._opts,
+      resolution,
+      runEvery,
+      forceCallbackRef,
+      fboWidth: Math.floor(size.width * resolution),
+      fboHeight: Math.floor(size.height * heightProportion0 * resolution),
+    }
+  }, [heightProportion0, resolution, runEvery, size.height, size.width])
+  const { texture } = useFluidTexture(options)
 
   // resize callback
   const resizeCallback = useCallback(() => {
@@ -50,8 +95,8 @@ const _Background = forwardRef(function Background(
       */
     const z0 = positionZ0
     const meshHeightProportion_Z0 = heightProportion0 // i.e mesh takes up 50% of screen vertical space
-    const meshHeightProportion_Z1 =
-      (size.height * 0.5 - navHeight - topBottomPadding * 2) / size.height //i.e., whatever 50% - (navHeight + padding) comes out to
+    const meshHeightProportion_Z1 = 0.15
+    /* (size.height * 0.5 - navHeight - topBottomPadding * 2) / size.height */ //i.e., whatever 50% - (navHeight + padding) comes out to
     const z1 =
       camera.position.z -
       ((camera.position.z - z0) * meshHeightProportion_Z0) /
@@ -119,15 +164,40 @@ const _Background = forwardRef(function Background(
     () => ({
       resizeCallback,
       background,
+      backing,
+      texture,
+      forceCallbackRef,
     }),
-    [resizeCallback],
+    [resizeCallback, texture],
   )
 
   return (
-    <mesh ref={background}>
-      <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial color='white' />
-    </mesh>
+    <>
+      <mesh ref={background}>
+        <planeGeometry args={[1, 1]} />
+        <meshStandardMaterial
+          color={colors.black}
+          roughness={0.15}
+          metalness={0.5}
+          transparent={true}
+          alphaMap={texture}
+          bumpMap={texture}
+          bumpScale={500}
+          precision={'highp'}
+          opacity={1}
+        />
+        <mesh ref={backing} position-z={-0.01} scale={0.999}>
+          <planeGeometry args={[1, 1]} />
+          <meshBasicMaterial color={'#656565'}>
+            <VideoTexture
+              video={Video}
+              speed={1}
+              fit={{ aspect: size.width / (size.height * heightProportion0) }}
+            />
+          </meshBasicMaterial>
+        </mesh>
+      </mesh>
+    </>
   )
 })
 export const Background = memo(_Background)

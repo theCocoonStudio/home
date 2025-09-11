@@ -14,7 +14,11 @@ export const VideoTexture = forwardRef(function VideoTexture(
     play = true,
     loop = true,
     speed = 1.0,
-    fit: { type = 'cover', videoAspect = 1920 / 1080 } = {},
+    fit: {
+      type = 'cover',
+      videoAspect = 1920 / 1080,
+      aspect: customAspect,
+    } = {},
     ...props
   },
   ref,
@@ -42,10 +46,16 @@ export const VideoTexture = forwardRef(function VideoTexture(
     }
   }, [play, video])
 
-  const aspect = useThree(({ viewport: { aspect } }) => aspect)
+  const viewportAspect = useThree(({ viewport: { aspect } }) => aspect)
 
   useEffect(() => {
-    if (texture.current && aspect && videoAspect && type === 'cover') {
+    if (
+      texture.current &&
+      (customAspect || viewportAspect) &&
+      videoAspect &&
+      type === 'cover'
+    ) {
+      const aspect = customAspect || viewportAspect
       const imageAspect = videoAspect
       if (imageAspect > aspect) {
         texture.current.repeat.x = aspect / imageAspect
@@ -61,7 +71,7 @@ export const VideoTexture = forwardRef(function VideoTexture(
         texture.current.offset.y = (1 - texture.current.repeat.y) / 2
       }
     }
-  }, [aspect, type, videoAspect, videoSrc]) // keep videoSrc to resize on src change
+  }, [customAspect, type, videoAspect, videoSrc, viewportAspect]) // keep videoSrc to resize on src change
 
   useEffect(
     () => () => {
