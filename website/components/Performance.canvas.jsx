@@ -76,10 +76,10 @@ export const Performance = ({ fpsContainer }) => {
   )
   const onChange = useCallback(
     ({ fps, factor /*refreshrate , frames, averages */ }) => {
+      console.log(fps)
       /* container.innerHTML = `${fps}` */
-
       // throttle or boost performance
-      const index = Math.round(factor * 10)
+      /* const index = Math.round(factor * 10)
       const toggleAuto = auto === false && index < 2
       if (auto || toggleAuto) {
         setResolution(targets.resolution[index])
@@ -88,9 +88,9 @@ export const Performance = ({ fpsContainer }) => {
         if (toggleAuto) {
           setAuto(true)
         }
-      }
+      } */
     },
-    [auto, setAuto, setFrames, setMapsize, setResolution, targets],
+    [],
   )
   const bounds = useCallback((rr) => {
     return [Math.min(rr - 10, 50), Math.min(rr, 60)]
