@@ -12,11 +12,11 @@ export const SettingsProvider = ({
       performance: {
         auto: { value: true, original: (val) => val === true },
         resolution: {
-          value: 0.5,
+          value: 1.0,
           min: 0.1,
-          max: 1.0,
+          max: 2.0,
           step: 0.1,
-          original: (val) => val > 0.4 && val < 0.6,
+          original: (val) => val > 0.9 && val < 1.1,
         },
         frames: {
           value: 1,
