@@ -1,36 +1,15 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { BoundPathGenerator } from '../utils/path'
 import { Vector2 } from 'three'
-import { useTheme } from './useTheme'
-import { useThree } from '@react-three/fiber'
 import { clamp } from 'three/src/math/MathUtils.js'
 
-export const useBoundPathForce = () => {
-  // data
-  const stateCallback = useCallback(({ size }) => {
-    return { size }
-  }, [])
-
-  const { size } = useThree(stateCallback)
-  const {
-    lengths: { footerHeight, sidePadding, navHeight },
-  } = useTheme()
+export const useBoundPathForce = (padding) => {
   // initialize forceCallback data
-  const uvSpaceClamps = useRef(
-    new Vector2(
-      (2 * sidePadding) / size.width,
-      (footerHeight - navHeight) / size.height,
-    ),
-  )
-  const path = useMemo(() => new BoundPathGenerator(uvSpaceClamps.current), [])
+  const path = useMemo(() => new BoundPathGenerator(padding), [])
   // update forceCallback data
-  const resizeCallback = useCallback(() => {
-    uvSpaceClamps.current.set(
-      (2 * sidePadding) / size.width,
-      (footerHeight - navHeight) / size.height,
-    )
-    path.updatePadding(uvSpaceClamps.current)
-  }, [footerHeight, navHeight, path, sidePadding, size])
+  useEffect(() => {
+    path.updatePadding(padding)
+  }, [padding, path])
 
   // implement forceCallback
   const elapsed = useRef(0.0)
@@ -76,5 +55,5 @@ export const useBoundPathForce = () => {
     },
     [path],
   )
-  return { forceCallback, resizeCallback }
+  return forceCallback
 }
