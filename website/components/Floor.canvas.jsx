@@ -2,12 +2,15 @@ import {
   forwardRef,
   memo,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
 import { useThree } from '@react-three/fiber'
 import { useTheme } from '../hooks/useTheme'
-import { DoubleSide, Vector3 } from 'three'
+import { RepeatWrapping, Vector3 } from 'three'
+import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
+import normal from 'website/assets/carbon/normal.png'
 
 const _Floor = forwardRef(function Floor(
   { positionZ0 = -5, heightProportion0 = 0.5 },
@@ -35,7 +38,8 @@ const _Floor = forwardRef(function Floor(
     floor.current.position.setY(
       height / 2 -
         height * heightProportion0 -
-        (navHeight + 2 * topBottomPadding) / factor,
+        (navHeight + 2 * topBottomPadding) / factor -
+        0.001,
     )
   }, [
     camera,
@@ -57,10 +61,38 @@ const _Floor = forwardRef(function Floor(
     [resizeCallback],
   )
 
+  // textures
+  const texture = useTexture(normal)
+
+  useEffect(() => {
+    const repeat = 70
+    texture.wrapS = RepeatWrapping
+    texture.wrapT = RepeatWrapping
+    texture.repeat.set(repeat, repeat)
+    return () => {
+      texture.dispose()
+    }
+  }, [texture])
+
   return (
     <mesh ref={floor} rotation-x={-Math.PI / 2} scale={100}>
       <planeGeometry args={[1, 1]} />
-      <meshStandardMaterial color='red' side={DoubleSide} />
+      <MeshReflectorMaterial
+        blur={[300, 200]}
+        resolution={1024}
+        mixBlur={0.9}
+        mixStrength={180}
+        roughness={0.99}
+        mirror={1}
+        depthScale={1.5}
+        /* depthToBlurRatioBias={0.3} */
+        minDepthThreshold={0.2}
+        maxDepthThreshold={10}
+        color={'#111'}
+        metalness={0.75}
+        normalMap={texture}
+        normalScale={4}
+      />
     </mesh>
   )
 })
