@@ -38,18 +38,15 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
 
   const scale = useCallback(() => {
     if (ref.current) {
-      const width = canvas.clientWidth
-      const height = canvas.clientHeight
-      const size = 18
-
-      const { factor } = viewport.getCurrentViewport(
+      const { width } = viewport.getCurrentViewport(
         camera,
-        ref.current.position.clone(),
+        ref.current.position.clone().setZ(Math.sqrt(2) / 2),
         cSize,
       )
-      ref.current.scale.set(size / factor, size / factor, size / factor)
+      const scale = width / (0.75 * Math.sqrt(2))
+      ref.current.scale.set(scale, scale, scale)
     }
-  }, [cSize, camera, canvas, viewport])
+  }, [cSize, camera, viewport])
 
   useResizeEvent(canvas, scale)
 

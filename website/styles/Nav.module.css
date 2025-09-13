@@ -32,12 +32,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  column-gap: calc(1 * var(--theme-lengths-atomicPadding));
+  column-gap: calc(2.5 * var(--theme-lengths-atomicPadding));
   flex-wrap: nowrap;
+  @media (max-width: 600px) {
+    column-gap: calc(1.5 * var(--theme-lengths-atomicPadding));
+  }
 }
 .logo {
-  height: 48px;
-  width: 48px;
+  height: 30px;
+  width: 30px;
   > * {
     width: 100%;
     height: 100%;
@@ -45,10 +48,20 @@
   &:hover {
     cursor: pointer;
   }
+  @media (max-width: 600px) {
+    height: 24px;
+    width: 24px;
+  }
 }
 .name {
   font-size: 2.2rem;
   letter-spacing: 0.03em;
+  &:hover {
+    cursor: pointer;
+  }
+  @media (max-width: 600px) {
+    font-size: 1.6rem;
+  }
 }
 
 .pages {
@@ -77,16 +90,31 @@
       transform: scale(calc(0.9));
     }
   }
+  @media (max-width: 600px) {
+    font-size: 20px;
+    column-gap: calc(5 * var(--theme-lengths-atomicPadding));
+    > * {
+      max-width: 15px;
+      max-height: 15px;
+    }
+  }
+  @media (max-width: 400px) {
+    column-gap: calc(3.5 * var(--theme-lengths-atomicPadding));
+  }
 }
 
 .divider {
   width: 1px;
   height: 20px;
   max-height: 20px;
-  margin: 0 calc(1 * var(--theme-lengths-atomicPadding));
   background-color: var(--theme-colors-white);
   opacity: 0.6;
+  pointer-events: none;
   &:hover {
     cursor: auto;
+  }
+  @media (max-width: 600px) {
+    height: 17px;
+    max-height: 17px;
   }
 }

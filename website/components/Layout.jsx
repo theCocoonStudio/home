@@ -43,7 +43,9 @@ const theme = {
     navHeight: 48,
     footerHeight: 48,
     atomicPadding: 4,
-    sidePadding: 64,
+    sidePadding: ({ width }) => {
+      return width > 768 ? 64 : width > 400 ? 32 : 24
+    },
     topBottomPadding: 24,
     maxWidth: 1280,
   },
