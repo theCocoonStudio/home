@@ -1,123 +1,26 @@
-import { useCallback, useEffect, useMemo } from 'react'
 import styles from './Home.styles.module.css'
-import { raleway } from '../../utils/styles'
-import { useScrollEvent } from './useScrollEvent'
-import { useTheme } from '../../hooks/useTheme'
-import { useTargetItems } from './useTargetItems'
-import { useLightbox } from '../../hooks/useLightbox'
-import { ItemDescription } from './ItemDescription'
-import { Titles } from './Titles'
 
-export const Main = function Main({
-  scrollContainer,
-  ready,
-  config: {
-    content: { sections },
-    main: {
-      markupIds: {
-        title,
-        subtitle,
-        description: descriptionId,
-        itemDescription,
-        photographyButton,
-        animationTargetInitial,
-        animationTargetIntermediate,
-        animationTargetFocus,
-        dummySubtitle,
-        dummyDescription,
-      },
-    },
-  },
-}) {
-  const {
-    colors: { black, white, slate, purple, charcoal },
-  } = useTheme()
-  const section = useScrollEvent()
-
-  const targetItems = useTargetItems()
-
-  const borderStyle = useMemo(() => {
-    return {
-      borderColor: {
-        preScroll: black,
-        software: slate,
-        photography: charcoal,
-        blog: purple,
-        postScroll: white,
-      }[section],
-    }
-  }, [black, charcoal, purple, section, slate, white])
-  const { showLightbox, setShowLightbox, setOnLightboxExitClick } =
-    useLightbox()
-
-  const openLightbox = useCallback(() => {
-    setShowLightbox(true)
-
-    targetItems.refs.softwareRef.current.softwareItemsGroup.visible = false
-    targetItems.refs.bgRef.current.manualRef.current = false
-
-    targetItems.refs.bgRef.current.backgroundRef.current.material.color.set(
-      black,
-    )
-    targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(white)
-  }, [black, setShowLightbox, targetItems, white])
-
-  const closeLightbox = useCallback(() => {
-    targetItems.refs.bgRef.current.backgroundRef.current.material.color.set(
-      white,
-    )
-    targetItems.refs.bgRef.current.backingMaterialRef.current.color.set(black)
-    targetItems.refs.softwareRef.current.softwareItemsGroup.visible = true
-    targetItems.refs.bgRef.current.manualRef.current = true
-    setShowLightbox(false)
-  }, [black, setShowLightbox, targetItems, white])
-
-  useEffect(() => {
-    setOnLightboxExitClick(closeLightbox)
-  }, [closeLightbox, setOnLightboxExitClick])
-
-  const { style: photoButtonStyle, className: photoButtonClass } = useMemo(
-    () => raleway(350, false, undefined, styles.photoButton),
-    [],
-  )
-
-  const bgStyles = useMemo(
-    () => ({
-      opacity: ready ? 0 : 1,
-    }),
-    [ready],
-  )
-
+export const Main = function Main({ scrollContainer, ready, config }) {
   return (
     <div className={styles.main}>
-      <div className={styles.bg} style={bgStyles} />
-      <Titles
-        titleId={title}
-        subtitleId={subtitle}
-        descriptionId={descriptionId}
-        section={section}
-        sections={sections}
-        scrollContainer={scrollContainer}
-        showLightbox={showLightbox}
-        dummySubtitleId={dummySubtitle}
-        dummyDescriptionId={dummyDescription}
-      />
-      <ItemDescription
-        id={itemDescription}
-        section={section}
-        animationTargetInitialId={animationTargetInitial}
-        animationTargetIntermediateId={animationTargetIntermediate}
-        animationTargetFocusId={animationTargetFocus}
-      />
-      <button
-        className={photoButtonClass}
-        style={photoButtonStyle}
-        id={photographyButton}
-        onClick={openLightbox}
-      >
-        view image
-      </button>
-      <div className={styles.border} style={borderStyle} />
+      <div className={styles.inner}>
+        <div className={`${styles.contentContainer}`}>
+          <div className={`${styles.itemContainer}`}></div>
+          <div className={`${styles.titleContainer}`}>
+            <h1 className={`${styles.title} changa-one-regular`}>
+              This is my title and it is the best. Made longer for testing.
+            </h1>
+            <h3 className={`${styles.date} raleway`}>September 1, 2025</h3>
+            <p className={`${styles.description} raleway`}>
+              It has survived not only five centuries, but also the leap into
+              electronic typesetting, remaining essentially unchanged. It was
+              popularised in the 1960s with the release of Letraset sheets
+              containing Lorem Ipsum passages.
+            </p>
+            <button className={`${styles.button} raleway`}>read more</button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

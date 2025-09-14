@@ -1,384 +1,89 @@
 .main {
   width: 100%;
   height: 100%;
-}
-
-.bg {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
-  background: linear-gradient(-45deg, var(--white), #899394);
-  transition: opacity 1s;
-  z-index: -1;
-}
-.border {
-  position: fixed;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border: 9px solid var(--slate);
-  pointer-events: none;
-  transition: all 0.1s linear;
-}
-
-.photoButton {
-  position: absolute;
-  top: 50%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.8rem;
-  line-height: 1.5em;
-  backdrop-filter: blur(30px);
-  padding: 6px;
-  font-variation-settings: 'wdth' 100;
-  text-transform: uppercase;
-  border-radius: 4px;
-  opacity: 0;
-  background-color: transparent;
-  border: 1px solid var(--black);
-  color: var(--black);
-  transition-property: opacity, border, background-color, color;
-  transition-duration: 0.2s, 0.1s, 0.1s, 0.1s;
-  transition-timing-function: ease-out;
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  pointer-events: none;
-  &:hover {
-    cursor: pointer;
-    border: 1px solid transparent;
-    background-color: var(--charcoal);
-    color: var(--white);
-  }
+  max-width: var(--theme-lengths-maxWidth);
+  padding: 0 var(--theme-lengths-sidePadding);
 }
 
-/* nav */
-.iconContainer {
-  transition: color 0.2s ease-in;
-  position: relative;
-  > svg {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.active,
-.activeFooter {
-  background-color: var(--black);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 6px);
-  transform: translate(-50%);
-}
-
-/* footer */
-@keyframes reveal {
-  0% {
-    margin-bottom: 0px;
-  }
-  50% {
-    margin-bottom: -20px;
-  }
-  100% {
-    margin-bottom: 0px;
-  }
-}
-
-.down {
-  z-index: -1;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  animation: reveal 3s ease-in-out infinite;
-  pointer-events: none;
-  bottom: 25vh;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.2s ease-in;
-  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
-  &:hover {
-    cursor: pointer;
-  }
-  svg {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.progress {
-  z-index: -1;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  pointer-events: none;
-  bottom: 25vh;
-  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
-  > span {
-    width: 45px !important;
-    height: 45px !important;
-  }
-}
-
-.scroll {
-  border-radius: 4px;
-  border: 2px solid var(--black);
-  height: 30px;
+.inner {
   width: 100%;
-  max-width: 600px;
-  justify-content: space-between;
-  align-items: center;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in;
-  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  column-gap: 2px;
-  align-items: stretch;
-  > * {
-    flex-grow: 1;
-    flex-shrink: 1;
-    opacity: 0;
-    &:hover {
-      cursor: pointer;
-      background-color: var(--black);
-      opacity: 0.3;
-    }
-  }
+  height: 100%;
+  position: relative;
 }
 
-.performance {
-  font-size: 1.4rem;
-}
-
-.fps {
-  text-align: left;
-  height: 30px;
-  width: 41px; /* content-based */
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  > * {
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-}
-
-.settings {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  column-gap: calc(2 * var(--atomicPadding));
-  align-items: center;
-  pointer-events: none;
-  transition: opacity 0.2s ease-in;
-}
-
-.icon {
-  filter: drop-shadow(2px 2px 2px rgb(0 0 0 / 0.3));
+.contentContainer {
+  position: absolute;
+  bottom: calc(3 * var(--theme-lengths-topBottomPadding));
+  top: calc(
+    4 * var(--theme-lengths-topBottomPadding) + var(--theme-lengths-navHeight)
+  );
+  width: 50%;
+  right: 0;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
-  position: relative;
+  justify-content: center;
+  row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
+  /* opacity: 0; */
+}
 
+.itemContainer {
+  aspect-ratio: 1/1;
+  flex-shrink: 1;
+  flex-grow: 1;
+  background-color: red;
+}
+.titleContainer {
+  color: var(--theme-colors-white);
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1em;
+}
+
+.date {
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1em;
+  margin-top: calc(2.5 * var(--theme-lengths-atomicPadding));
+}
+
+.description {
+  font-weight: 400;
+  font-size: 1.6rem;
+  margin-top: calc(4 * var(--theme-lengths-atomicPadding));
+  line-height: 1.2em;
+}
+
+.button {
+  font-weight: 350;
+  font-variation-settings: 'wdth' 100;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid var(--theme-colors-white);
+  color: var(--theme-colors-white);
+  font-size: 1.2rem;
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+  line-height: 1.75em;
+  margin-top: calc(5 * var(--theme-lengths-atomicPadding));
+  transition: all 0.1s ease-out;
   &:hover {
     cursor: pointer;
-  }
-  > div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    flex-grow: 0;
-    svg {
-      width: 33px;
-      height: 33px;
-    }
-  }
-}
-
-.instruction {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.4rem;
-  width: 250px;
-  text-align: center;
-  padding-top: 8px;
-}
-
-@media screen {
-  @media (max-height: 800px) {
-    .icon {
-      width: 31px;
-      height: 31px;
-      > div svg {
-        width: 28px;
-        height: 28px;
-      }
-    }
-    .activeFooter {
-      width: 4px;
-      height: 4px;
-      top: calc(100% + 1px);
-    }
-    .settings {
-      column-gap: calc(1 * var(--atomicPadding));
-    }
-    .down {
-      width: 36px;
-      height: 36px;
-    }
-    .scroll {
-      height: 20px;
-      border-radius: 3px;
-    }
-  }
-
-  @media (max-height: 360px) {
-    .active {
-      width: 4px;
-      height: 4px;
-      top: calc(100% + 4px);
-    }
-    .icon {
-      width: 27px;
-      height: 27px;
-      > div svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-    .activeFooter {
-      width: 4px;
-      height: 4px;
-      top: calc(100% + 1px);
-    }
-    .settings {
-      column-gap: calc(1 * var(--atomicPadding));
-    }
-    .down {
-      width: 30px;
-      height: 30px;
-    }
-    .instruction {
-      font-size: 1.2rem;
-    }
-    .scroll {
-      height: 16px;
-      border-radius: 3px;
-    }
-  }
-  @media (max-width: 1000px) {
-    .border {
-      border-width: 5px;
-    }
-    .scroll {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 4px;
-      max-width: none;
-      height: 8px;
-      border: none;
-      box-shadow: none;
-    }
-    @media (max-height: 800px) {
-      .scroll {
-        height: 6px;
-      }
-    }
-    @media (max-height: 600px) {
-      .scroll {
-        height: 4px;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    @media (min-height: 361px) {
-      .icon {
-        width: 31px;
-        height: 31px;
-        > div svg {
-          width: 28px;
-          height: 28px;
-        }
-      }
-      .activeFooter {
-        width: 4px;
-        height: 4px;
-        top: calc(100% + 1px);
-      }
-      .settings {
-        column-gap: calc(1 * var(--atomicPadding));
-      }
-      .down {
-        width: 36px;
-        height: 36px;
-      }
-    }
-
-    .progress > span {
-      width: 36px !important;
-      height: 36px !important;
-    }
-  }
-  @media (max-width: 450px) {
-    .down {
-      width: 30px;
-      height: 30px;
-    }
-    .progress > span {
-      width: 30px !important;
-      height: 30px !important;
-    }
-    .instruction {
-      font-size: 1.2rem;
-    }
-  }
-  @media (max-width: 360px) {
-    .active {
-      width: 4px;
-      height: 4px;
-      top: calc(100% + 4px);
-    }
-    .icon {
-      width: 27px;
-      height: 27px;
-      > div svg {
-        width: 24px;
-        height: 24px;
-      }
-    }
-    .activeFooter {
-      width: 4px;
-      height: 4px;
-      top: calc(100% + 1px);
-    }
-    .settings {
-      column-gap: calc(1 * var(--atomicPadding));
-    }
+    border: 1px solid var(--theme-colors-black);
+    background-color: var(--theme-colors-white);
+    color: var(--theme-colors-black);
   }
 }

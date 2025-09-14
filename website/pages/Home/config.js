@@ -2,7 +2,6 @@ import { Effects } from './Effects.canvas'
 import { Home } from './Home.view'
 import { Main } from './Main'
 import { HomeProvider } from './HomeProvider'
-import { Gallery } from '../../components/Gallery'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
 import { ScrollContainer } from '../../components/ScrollContainer'
@@ -10,7 +9,7 @@ import { ScrollContainer } from '../../components/ScrollContainer'
 export const config = {
   context: { Provider: HomeProvider },
   main: {
-    /* Component: Main, */
+    Component: Main,
     ViewComponent: Home,
     renderPriority: 1,
   },
