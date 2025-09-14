@@ -40,8 +40,9 @@ const theme = {
     black: '#122629',
   },
   lengths: {
-    navHeight: 48,
-    footerHeight: 48,
+    navHeight: ({ width }) => {
+      return width > 600 ? 30 : 24
+    },
     atomicPadding: 4,
     sidePadding: ({ width }) => {
       return width > 768 ? 64 : width > 400 ? 32 : 24
