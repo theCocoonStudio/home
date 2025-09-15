@@ -18,7 +18,7 @@
 
 .contentContainer {
   position: absolute;
-  bottom: calc(3 * var(--theme-lengths-topBottomPadding));
+  bottom: calc(4 * var(--theme-lengths-topBottomPadding));
   top: calc(
     4 * var(--theme-lengths-topBottomPadding) + var(--theme-lengths-navHeight)
   );
@@ -27,18 +27,18 @@
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
-  /* opacity: 0; */
+  opacity: 0;
 }
 
 .itemContainer {
-  aspect-ratio: 1/1;
-  flex-shrink: 1;
   flex-grow: 1;
+  flex-shrink: 1;
   background-color: red;
 }
+
 .titleContainer {
   color: var(--theme-colors-white);
   flex-grow: 0;
