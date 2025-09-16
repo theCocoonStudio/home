@@ -53,7 +53,8 @@ export const Models = forwardRef(function Models(
       .getSize(new Vector3())
     const contentWidthPx =
       (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
-    const targetWidth = 0.5 * (contentWidthPx / modelsFactor)
+    const targetWidthPx = 0.5 * contentWidthPx - 2 * sidePadding
+    const targetWidth = targetWidthPx / modelsFactor
     const targetScaleFactor = targetWidth / initialSize.x
     desk.current.scale.multiplyScalar(targetScaleFactor)
 
@@ -61,7 +62,8 @@ export const Models = forwardRef(function Models(
     const initialPosition = new Box3()
       .setFromObject(desk.current, true)
       .getCenter(new Vector3())
-    const targetX = (-contentWidthPx / 4) * (1 / modelsFactor)
+    const targetX =
+      (-contentWidthPx / 4) * (1 / modelsFactor) - targetWidth * 0.1 // last term empirically derived to avoid rotation
     const targetY =
       -0.5 * backgroundViewportHeight * heightProportion0 +
       (targetScaleFactor * initialSize.y) / 2
