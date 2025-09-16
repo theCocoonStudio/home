@@ -5,15 +5,14 @@ import {
   useCallback,
   useImperativeHandle,
   useRef,
-  useState,
 } from 'react'
 import { Desk } from 'website/components/Desk.canvas'
 import { Laptop } from 'website/components/Laptop.canvas'
-import { useTheme } from '../hooks/useTheme'
-import { Vector3 } from 'three'
+import { Box3, Vector3 } from 'three'
 import { Guitar } from './Guitar.canvas'
 import { Camera } from './Camera.canvas'
 import { Chair } from './Chair.canvas'
+import { useTheme } from '../hooks/useTheme'
 
 export const Models = forwardRef(function Models(
   { positionZ0, heightProportion0 },
@@ -31,33 +30,52 @@ export const Models = forwardRef(function Models(
 
   // theme
   const {
-    lengths: { navHeight, topBottomPadding },
+    lengths: { maxWidth, sidePadding },
   } = useTheme()
-
-  // state props
-  const [floorY, setFloorY] = useState()
 
   // resize callback
   const resizeCallback = useCallback(() => {
-    const { height, factor } = viewport.getCurrentViewport(
+    // viewport data
+    const modelsZ = positionZ0 + 1
+    const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
       camera,
       new Vector3(0, 0, positionZ0),
       size,
     )
-    setFloorY(
-      height / 2 -
-        height * heightProportion0 -
-        (navHeight + 2 * topBottomPadding) / factor -
-        0.001,
+    const { factor: modelsFactor } = viewport.getCurrentViewport(
+      camera,
+      new Vector3(0, 0, modelsZ),
+      size,
     )
-    desk.current?.resizeCallback()
+    // models scale
+    const initialSize = new Box3()
+      .setFromObject(desk.current, true)
+      .getSize(new Vector3())
+    const contentWidthPx =
+      (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
+    const targetWidth = 0.5 * (contentWidthPx / modelsFactor)
+    const targetScaleFactor = targetWidth / initialSize.x
+    desk.current.scale.multiplyScalar(targetScaleFactor)
+
+    // models position
+    const initialPosition = new Box3()
+      .setFromObject(desk.current, true)
+      .getCenter(new Vector3())
+    const targetX = (-contentWidthPx / 4) * (1 / modelsFactor)
+    const targetY =
+      -0.5 * backgroundViewportHeight * heightProportion0 +
+      (targetScaleFactor * initialSize.y) / 2
+    const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
+    desk.current.position.add(
+      new Vector3(targetX, targetY, targetZ).sub(initialPosition),
+    )
   }, [
     camera,
     heightProportion0,
-    navHeight,
+    maxWidth,
     positionZ0,
+    sidePadding,
     size,
-    topBottomPadding,
     viewport,
   ])
 
@@ -73,7 +91,7 @@ export const Models = forwardRef(function Models(
   )
   return (
     <Suspense>
-      <Desk ref={desk} yPos={floorY} positionZ0={positionZ0}>
+      <Desk ref={desk}>
         <Laptop ref={laptop} />
         <Guitar />
         <Camera />

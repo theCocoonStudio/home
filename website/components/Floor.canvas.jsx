@@ -7,7 +7,6 @@ import {
   useRef,
 } from 'react'
 import { useThree } from '@react-three/fiber'
-import { useTheme } from '../hooks/useTheme'
 import { RepeatWrapping, Vector3 } from 'three'
 import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
 import normal from 'website/assets/carbon/normal.png'
@@ -18,10 +17,7 @@ const _Floor = forwardRef(function Floor(
 ) {
   // refs
   const floor = useRef()
-  // theme
-  const {
-    lengths: { navHeight, topBottomPadding },
-  } = useTheme()
+
   // reactive three app data
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
@@ -30,26 +26,13 @@ const _Floor = forwardRef(function Floor(
 
   // resize callback
   const resizeCallback = useCallback(() => {
-    const { height, factor } = viewport.getCurrentViewport(
+    const { height } = viewport.getCurrentViewport(
       camera,
       new Vector3(0, 0, positionZ0),
       size,
     )
-    floor.current.position.setY(
-      height / 2 -
-        height * heightProportion0 -
-        (navHeight + 2 * topBottomPadding) / factor -
-        0.001,
-    )
-  }, [
-    camera,
-    heightProportion0,
-    navHeight,
-    positionZ0,
-    size,
-    topBottomPadding,
-    viewport,
-  ])
+    floor.current.position.setY(height * heightProportion0 * -0.5 - 0.001)
+  }, [camera, heightProportion0, positionZ0, size, viewport])
 
   // imperative handle
   useImperativeHandle(

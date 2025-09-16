@@ -31,7 +31,7 @@ const _opts = {
 }
 
 const _Background = forwardRef(function Background(
-  { positionZ0 = -5, heightProportion0 = 0.5 },
+  { positionZ0 = -5, heightProportion0, heightProportion1 },
   forwardedRef,
 ) {
   // refs
@@ -39,10 +39,7 @@ const _Background = forwardRef(function Background(
   const backing = useRef()
   const forceCallbackRef = useRef()
   // theme
-  const {
-    lengths: { navHeight, topBottomPadding },
-    colors,
-  } = useTheme()
+  const { colors } = useTheme()
   // reactive three app data
   const stateCallback = useCallback(({ size, viewport, camera }) => {
     return { size, viewport, camera }
@@ -94,20 +91,17 @@ const _Background = forwardRef(function Background(
       meshHeightProportion_Z0/meshHeightProportion_Z1: again, up to us
       */
     const z0 = positionZ0
-    const meshHeightProportion_Z0 = heightProportion0 // i.e mesh takes up 50% of screen vertical space
-    const meshHeightProportion_Z1 = 0.15
-    /* (size.height * 0.5 - navHeight - topBottomPadding * 2) / size.height */ //i.e., whatever 50% - (navHeight + padding) comes out to
+    const meshHeightProportion_Z0 = heightProportion0 // i.e mesh takes up heightProportion0 of screen vertical space
+    const meshHeightProportion_Z1 = heightProportion1
+
     const z1 =
       camera.position.z -
       ((camera.position.z - z0) * meshHeightProportion_Z0) /
         meshHeightProportion_Z1
 
-    // mesh position z, x
-    const {
-      width: viewportWidth0,
-      height: viewportHeight0,
-      factor: factor0,
-    } = viewport.getCurrentViewport(camera, new Vector3(0, 0, z0), size)
+    // mesh position
+    const { width: viewportWidth0, height: viewportHeight0 } =
+      viewport.getCurrentViewport(camera, new Vector3(0, 0, z0), size)
     const { width: viewportWidth1 } = viewport.getCurrentViewport(
       camera,
       new Vector3(0, 0, z1),
@@ -118,6 +112,7 @@ const _Background = forwardRef(function Background(
     const x1 = viewportWidth1 / 2
 
     const x = x0 + (x1 - x0) / 2
+    const y = 0
     const z = z0 + (z1 - z0) / 2
 
     // mesh scale x: meshWidth**2 = (X1 - X0)**2 + (Z0-Z1)**2
@@ -133,30 +128,11 @@ const _Background = forwardRef(function Background(
     // mesh rotation y: cos(meshAngle) = (X1-X0)/meshWidth
     const angle = Math.acos(Math.abs(x1 - x0) / meshWidth)
 
-    /* 
-      we want the mesh y-position of the mesh such that, at z0, the top of the mesh
-      is navHeight + 2 * topBottomPadding pixels from the top of the viewport. i.e.:
-      yPos + (meshHeight / 2) = viewportHeight_Z0 / 2 - (navHeight + 2 * topBottomPadding) / factor0
-      or, yPos = viewportHeight_Z0 / 2 - (navHeight + 2 * topBottomPadding) / factor0 - meshHeight / 2
-      */
-    const y =
-      viewportHeight0 / 2 -
-      (navHeight + 2 * topBottomPadding) / factor0 -
-      meshHeight / 2
-
     // apply target values
     background.current.position.set(x, y, z)
     background.current.rotation.set(0, angle, 0)
     background.current.scale.set(meshWidth, meshHeight, 1)
-  }, [
-    camera,
-    heightProportion0,
-    navHeight,
-    positionZ0,
-    size,
-    topBottomPadding,
-    viewport,
-  ])
+  }, [camera, heightProportion0, heightProportion1, positionZ0, size, viewport])
 
   // imperative handle
   useImperativeHandle(

@@ -7,34 +7,12 @@ Title: Desk
 */
 import Model from 'website/assets/Desk/Desk.glb'
 import { useGLTF } from '@react-three/drei'
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
-import { useThree } from '@react-three/fiber'
-import { useTheme } from '../hooks/useTheme'
-import { Vector3 } from 'three'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 
-export const Desk = forwardRef(function Desk(
-  { children, positionZ0, yPos },
-  forwardedRef,
-) {
+export const Desk = forwardRef(function Desk({ children }, forwardedRef) {
   // refs
   const desk = useRef()
   const anchor = useRef()
-  // reactive three app data
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
-  }, [])
-  const { size, viewport, camera } = useThree(stateCallback)
-
-  // theme
-  const {
-    lengths: { navHeight, topBottomPadding },
-  } = useTheme()
 
   // model
   const { nodes, materials } = useGLTF(Model)
@@ -49,38 +27,13 @@ export const Desk = forwardRef(function Desk(
     anchor.current.position.setX(0.15)
   }, [materials])
 
-  // resize callback
-  const resizeCallback = useCallback(() => {
-    const { height, width } = viewport.getCurrentViewport(
-      camera,
-      new Vector3(0, 0, positionZ0 + 1),
-      size,
-    )
-    // scale
-    const scale = height / 4
-    desk.current.scale.set(scale, scale, scale)
-
-    //  x-position
-    desk.current.position.setX(-width / 4)
-
-    const opposite = Math.abs(camera.position.x - desk.current.position.x)
-    const adjacent = Math.abs(camera.position.z - desk.current.position.z)
-    desk.current.rotation.y = Math.atan(opposite / adjacent)
-  }, [camera, positionZ0, size, viewport])
-
   // imperative handle
-  useImperativeHandle(
-    forwardedRef,
-    () => ({ desk: desk.current, resizeCallback }),
-    [resizeCallback],
-  )
+  useImperativeHandle(forwardedRef, () => desk.current, [])
 
   return (
     <>
       <group
         ref={desk}
-        position-y={yPos}
-        position-z={positionZ0 + 1}
         /* dispose={null} */
       >
         <group ref={anchor}>

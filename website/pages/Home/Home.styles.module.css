@@ -8,6 +8,7 @@
   transform: translateX(-50%);
   max-width: var(--theme-lengths-maxWidth);
   padding: 0 var(--theme-lengths-sidePadding);
+  pointer-events: none;
 }
 
 .inner {
@@ -30,7 +31,6 @@
   align-items: stretch;
   justify-content: center;
   row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
-  opacity: 0;
 }
 
 .itemContainer {
@@ -43,6 +43,7 @@
   color: var(--theme-colors-white);
   flex-grow: 0;
   flex-shrink: 0;
+  pointer-events: auto;
 }
 
 .title {
