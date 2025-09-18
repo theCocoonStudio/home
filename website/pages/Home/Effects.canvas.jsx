@@ -38,12 +38,12 @@ export const Effects = function Effects({
           <>
             <GodRays sun={sun} exposure={0.7} weight={2.4} density={0.8} blur />
             <Sepia
-              intensity={0.25} // sepia intensity
+              intensity={0.4} // sepia intensity
             />
-            <Noise opacity={0.09} premultiply={false} />
+            <Noise opacity={0.07} premultiply={false} />
             <Vignette
-              offset={0.11} // vignette offset
-              darkness={0.71} // vignette darkness
+              offset={0.14} // vignette offset
+              darkness={0.74} // vignette darkness
               eskil={false} // Eskil's vignette technique
             />
           </>

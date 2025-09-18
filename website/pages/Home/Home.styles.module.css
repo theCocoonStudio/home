@@ -31,6 +31,7 @@
   align-items: stretch;
   justify-content: center;
   row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
+  opacity: 0;
 }
 
 .itemContainer {

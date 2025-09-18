@@ -152,7 +152,7 @@ const _Background = forwardRef(function Background(
       <mesh ref={background}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
-          color={colors.black}
+          color={'#000'}
           roughness={0.15}
           metalness={0.5}
           transparent={true}

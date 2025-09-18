@@ -30,18 +30,42 @@ export const Models = forwardRef(function Models(
 
   // theme
   const {
-    lengths: { maxWidth, sidePadding },
+    lengths: { maxWidth, sidePadding, topBottomPadding },
   } = useTheme()
 
+  // calculate models z position
+  const getZpos = useCallback(
+    (floorY, topBottomPaddingPx, viewportHeightPx, camera) => {
+      // floorToBottomLength = Math.abs(floorY - (-visibleHeight/2))
+      // we want floorToBottomLength * (viewportHeightPx/visibleHeight) = 4 * topBottomPaddingPx
+      // visibleHeight = viewportHeightPx / (4 * topBottomPaddingPx) * floorY  / (1 - viewportHeightPx / (2 * 4 * topBottomPaddingPx))
+      const floorYProportion = viewportHeightPx / (4 * topBottomPaddingPx)
+      const visibleHeight =
+        (floorYProportion * floorY) / (1 - floorYProportion / 2)
+      // plugging in:
+      // visibleHeight = 2 * Math.tan(fov/2) * camDistanceZ
+      // camDistanceZ = visibleHeight / (2 * Math.tan(fov/2))
+      const fov = camera.fov * (Math.PI / 180)
+      const zPos = visibleHeight / (2 * Math.tan(fov / 2))
+      // return global value
+      return camera.position.z - Math.abs(zPos)
+    },
+    [],
+  )
   // resize callback
   const resizeCallback = useCallback(() => {
     // viewport data
-    const modelsZ = positionZ0 + 1
     const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
       camera,
       new Vector3(0, 0, positionZ0),
       size,
     )
+
+    // floor yPos
+    const floorY = -0.5 * backgroundViewportHeight * heightProportion0
+    // models zPos
+    const modelsZ = getZpos(floorY, topBottomPadding, size.height, camera)
+
     const { factor: modelsFactor } = viewport.getCurrentViewport(
       camera,
       new Vector3(0, 0, modelsZ),
@@ -64,20 +88,20 @@ export const Models = forwardRef(function Models(
       .getCenter(new Vector3())
     const targetX =
       (-contentWidthPx / 4) * (1 / modelsFactor) - targetWidth * 0.1 // last term empirically derived to avoid rotation
-    const targetY =
-      -0.5 * backgroundViewportHeight * heightProportion0 +
-      (targetScaleFactor * initialSize.y) / 2
+    const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
     const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
     desk.current.position.add(
       new Vector3(targetX, targetY, targetZ).sub(initialPosition),
     )
   }, [
     camera,
+    getZpos,
     heightProportion0,
     maxWidth,
     positionZ0,
     sidePadding,
     size,
+    topBottomPadding,
     viewport,
   ])
 

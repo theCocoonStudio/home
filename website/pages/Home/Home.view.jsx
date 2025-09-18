@@ -1,6 +1,5 @@
 import { PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { useTheme } from 'website/hooks/useTheme'
 import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useThree } from '@react-three/fiber'
@@ -46,11 +45,11 @@ export const Home = ({ config, setReady, ready }) => {
     floor.current?.resizeCallback()
     models.current?.resizeCallback()
   }, [])
-  useResizeEvent(canvas, resizeCallback) /
-    // reactive dependent data
-    useEffect(() => {
-      setReady(true)
-    }, [])
+  useResizeEvent(canvas, resizeCallback)
+  // reactive dependent data
+  useEffect(() => {
+    setReady(true)
+  }, [])
 
   return (
     <Suspense>
@@ -62,11 +61,16 @@ export const Home = ({ config, setReady, ready }) => {
         position-z={1}
         fov={30}
       ></PerspectiveCamera>
-      <Environment preset='city' environmentIntensity={1} />
+      <Environment preset='city' environmentIntensity={0.7} />
       <ambientLight intensity={0.7} />
-      <Background positionZ0={-5} heightProportion0={0.6} ref={background} />
-      <Floor positionZ0={-5} heightProportion0={0.6} ref={floor} />
-      <Models ref={models} positionZ0={-5} heightProportion0={0.6} />
+      <Background
+        positionZ0={-10}
+        heightProportion0={0.6}
+        heightProportion1={0.15}
+        ref={background}
+      />
+      <Floor positionZ0={-10} heightProportion0={0.6} ref={floor} />
+      <Models ref={models} positionZ0={-10} heightProportion0={0.6} />
       <Stars radius={50} depth={50} count={5000} factor={3} fade speed={1} />
       <Effects
         renderPriority={renderPriority}
