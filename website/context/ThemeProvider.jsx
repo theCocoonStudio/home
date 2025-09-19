@@ -1,23 +1,11 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { ThemeContext } from './ThemeContext'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
-export const ThemeProvider = ({ children, theme }) => {
-  /* size */
-  const container = useMemo(() => document.body, [])
-  const [size, setSize] = useState({
-    width: container.clientWidth,
-    height: container.clientHeight,
-  })
-  const updateSize = useCallback(() => {
-    const { clientWidth, clientHeight } = container
-    setSize({ width: clientWidth, height: clientHeight })
-  }, [container])
-
-  useResizeEvent(container, updateSize)
+export const ThemeProvider = ({ children, theme, pageTheme }) => {
+  const size = useResizeEvent()
 
   /* theme values */
-
   const contextValue = useMemo(() => {
     const contextObj = {}
     Object.keys(theme).forEach((key) => {
@@ -40,8 +28,28 @@ export const ThemeProvider = ({ children, theme }) => {
         )
       })
     })
-    return contextObj
-  }, [size, theme])
+    const pageContextObj = {}
+    if (pageTheme) {
+      Object.keys(pageTheme).forEach((key) => {
+        // get raw, page-theme object entry value
+        const rawEntry = pageTheme[key]
+        // get (optionaly size-based) context value
+        const sizedEntry =
+          typeof rawEntry === 'function' ? rawEntry(size, contextObj) : rawEntry
+        // convert to string for css variable if necessary
+        const cssEntry =
+          typeof sizedEntry === 'number' ? `${sizedEntry}px` : sizedEntry
+        // update context object
+        pageContextObj[key] = sizedEntry
+        // update css variable
+        document.documentElement.style.setProperty(
+          `--theme-page-${key}`,
+          cssEntry,
+        )
+      })
+    }
+    return { ...contextObj, page: pageContextObj }
+  }, [pageTheme, size, theme])
 
   return (
     <ThemeContext.Provider value={contextValue}>

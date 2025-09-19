@@ -49,4 +49,14 @@ export const config = {
   footer: {
     FooterComponent: ScrollContainer,
   },
+  theme: {
+    itemDescriptionTop: ({ width, height }, theme) =>
+      height > 600
+        ? 4 * theme.lengths.topBottomPadding + theme.lengths.navHeight
+        : 2 * theme.lengths.topBottomPadding + theme.lengths.navHeight,
+    itemDescriptionBottom: ({ width, height }, theme) =>
+      height > 600
+        ? 4 * theme.lengths.topBottomPadding
+        : 2 * theme.lengths.topBottomPadding,
+  },
 }

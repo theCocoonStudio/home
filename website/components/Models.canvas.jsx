@@ -31,16 +31,17 @@ export const Models = forwardRef(function Models(
 
   // theme
   const {
-    lengths: { maxWidth, sidePadding, topBottomPadding },
+    lengths: { maxWidth, sidePadding },
+    page: { itemDescriptionBottom },
   } = useTheme()
 
   // calculate models z position
   const getZpos = useCallback(
-    (floorY, topBottomPaddingPx, viewportHeightPx, camera) => {
+    (floorY, itemDescriptionBottom, viewportHeightPx, camera) => {
       // floorToBottomLength = Math.abs(floorY - (-visibleHeight/2))
-      // we want floorToBottomLength * (viewportHeightPx/visibleHeight) = 4 * topBottomPaddingPx
-      // visibleHeight = viewportHeightPx / (4 * topBottomPaddingPx) * floorY  / (1 - viewportHeightPx / (2 * 4 * topBottomPaddingPx))
-      const floorYProportion = viewportHeightPx / (4 * topBottomPaddingPx)
+      // we want floorToBottomLength/visibleHeight = itemDescriptionBottom / viewportHeightPx
+      // visibleHeight = viewportHeightPx / itemDescriptionBottom * floorY  / (1 - viewportHeightPx / (2 * itemDescriptionBottom)
+      const floorYProportion = viewportHeightPx / itemDescriptionBottom
       const visibleHeight =
         (floorYProportion * floorY) / (1 - floorYProportion / 2)
       // plugging in:
@@ -67,7 +68,12 @@ export const Models = forwardRef(function Models(
       // floor yPos
       const floorY = -0.5 * backgroundViewportHeight * heightProportion0
       // models zPos
-      const modelsZ = getZpos(floorY, topBottomPadding, size.height, camera)
+      const modelsZ = getZpos(
+        floorY,
+        itemDescriptionBottom,
+        size.height,
+        camera,
+      )
 
       const { factor: modelsFactor } = viewport.getCurrentViewport(
         camera,
@@ -83,7 +89,11 @@ export const Models = forwardRef(function Models(
         (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
       const targetWidthPx = 0.5 * contentWidthPx - 2 * sidePadding
       const targetWidth = targetWidthPx / modelsFactor
-      const targetScaleFactor = targetWidth / initialSize.x
+      const targetWidthScaleFactor = targetWidth / initialSize.x
+      const maxTargetDepth = Math.abs(modelsZ - positionZ0)
+
+      const maxDepthFactor = (maxTargetDepth - 0.001) / initialSize.z
+      const targetScaleFactor = Math.min(targetWidthScaleFactor, maxDepthFactor)
       desk.current.scale.multiplyScalar(targetScaleFactor)
 
       // models position
@@ -102,10 +112,10 @@ export const Models = forwardRef(function Models(
       get,
       getZpos,
       heightProportion0,
+      itemDescriptionBottom,
       maxWidth,
       positionZ0,
       sidePadding,
-      topBottomPadding,
     ],
   )
 

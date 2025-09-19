@@ -61,6 +61,7 @@ function _Layout() {
     scroll: { scrollControlsProps },
     lightbox: { Component: LightBoxComponent },
     menu: { Component: MenuComponent },
+    theme: pageTheme,
   } = config || { main: {}, context: {}, scroll: {}, lightbox: {}, menu: {} }
 
   const muiTheme = createTheme({
@@ -117,8 +118,8 @@ function _Layout() {
   })
   const sensors = useSensors(mouseSensor, touchSensor)
   return (
-    <ResizeEventProvider>
-      <ThemeProvider theme={theme}>
+    <ResizeEventProvider ready={ready}>
+      <ThemeProvider theme={theme} pageTheme={pageTheme}>
         <LightboxProvider>
           <MenuProvider>
             <DndContext sensors={sensors}>

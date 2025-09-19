@@ -19,10 +19,8 @@
 
 .contentContainer {
   position: absolute;
-  bottom: calc(4 * var(--theme-lengths-topBottomPadding));
-  top: calc(
-    4 * var(--theme-lengths-topBottomPadding) + var(--theme-lengths-navHeight)
-  );
+  bottom: var(--theme-page-itemDescriptionBottom);
+  top: var(--theme-page-itemDescriptionTop);
   width: 50%;
   right: 0;
   display: flex;
@@ -31,7 +29,7 @@
   align-items: stretch;
   justify-content: center;
   row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
-  opacity: 0;
+  /* opacity: 0; */
 }
 
 .itemContainer {
