@@ -1,56 +1,24 @@
 import { useContext, useEffect, useMemo } from 'react'
 import { ResizeEventContext } from '../context/ResizeEventContext'
+import { generateUUID } from 'three/src/math/MathUtils.js'
 
-export const useResizeEvent = (
-  element,
-  callback,
-  { resizeObserverOptions: { box } = {}, resizeDeps } = {},
-) => {
-  const { entries, subscribe, unsubscribe } = useContext(ResizeEventContext)
+export const useResizeEvent = (callback) => {
+  const id = useMemo(() => generateUUID(), [])
 
-  // get element
-  const elementRef = useMemo(
-    () =>
-      typeof element === 'string' ? document.getElementById(element) : element,
-    [element],
-  )
+  const { subscriptions, size } = useContext(ResizeEventContext)
 
-  // subscribe/unsubscribe element
+  // subscribe/unsubscribe callback
   useEffect(() => {
-    if (elementRef) {
-      subscribe(elementRef, box)
-    }
-    return () => {
-      if (elementRef) {
-        unsubscribe(elementRef)
-      }
-    }
-  }, [elementRef, box, subscribe, unsubscribe])
-
-  // subscribe/unsubscribe resize deps
-  useEffect(() => {
-    resizeDeps?.forEach((depRef) => {
-      subscribe(depRef, box)
-    })
-
-    return () => {
-      resizeDeps?.forEach((depRef) => {
-        unsubscribe(depRef)
-      })
-    }
-  }, [box, resizeDeps, subscribe, unsubscribe])
-
-  // run callback on element resize and dep resize
-  useEffect(() => {
-    if (entries.includes(elementRef)) {
-      callback(elementRef)
+    // subscribe callback if present
+    if (callback && typeof callback === 'function') {
+      subscriptions.current[id] = callback
+      // run callback once
+      callback(size)
     } else {
-      resizeDeps?.forEach((depRef) => {
-        if (entries.includes(depRef)) {
-          callback(elementRef)
-          return
-        }
-      })
+      // if no callback function, unsunbscribe
+      delete subscriptions.current[id]
     }
-  }, [callback, elementRef, entries, resizeDeps])
+  }, [callback, id, size, subscriptions])
+
+  return size
 }
