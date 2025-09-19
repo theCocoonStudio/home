@@ -16,19 +16,7 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
   const ref = useRef()
   const material = useRef()
   const mesh = useRef()
-  const {
-    camera,
-    viewport,
-    size: cSize,
-    get,
-    canvas,
-  } = useThree(({ viewport, camera, size, gl, get }) => ({
-    camera,
-    viewport,
-    size,
-    get,
-    canvas: gl.domElement,
-  }))
+  const get = useThree(({ get }) => get)
 
   useEffect(() => {
     get().setEvents({ enabled: false })
@@ -38,17 +26,18 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
 
   const scale = useCallback(() => {
     if (ref.current) {
+      const { viewport, size, camera } = get()
       const { width } = viewport.getCurrentViewport(
         camera,
         ref.current.position.clone().setZ(Math.sqrt(2) / 2),
-        cSize,
+        size,
       )
       const scale = width / (0.75 * Math.sqrt(2))
       ref.current.scale.set(scale, scale, scale)
     }
-  }, [cSize, camera, viewport])
+  }, [get])
 
-  useResizeEvent(canvas, scale)
+  useResizeEvent(scale)
 
   const frameCallback = useCallback(
     (state, delta) => {

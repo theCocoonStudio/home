@@ -1,9 +1,7 @@
 import { PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Performance } from '../../components/Performance.canvas'
-import { useThree } from '@react-three/fiber'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
 import { Background } from '../../components/Background.canvas'
@@ -16,11 +14,6 @@ export const Home = ({ config, setReady, ready }) => {
 
     main: { EventDispatcherComponent },
   } = config
-
-  // reactive independent data
-  const { canvas } = useThree(({ gl }) => ({
-    canvas: gl.domElement,
-  }))
 
   const { showLightbox } = useLightbox()
 
@@ -36,16 +29,7 @@ export const Home = ({ config, setReady, ready }) => {
     [],
   )
   useTargetItems(animationTargets)
-  //scroll callbacks
 
-  // responsive callbacks
-  const resizeCallback = useCallback(() => {
-    // run child resize callbacks
-    background.current?.resizeCallback()
-    floor.current?.resizeCallback()
-    models.current?.resizeCallback()
-  }, [])
-  useResizeEvent(canvas, resizeCallback)
   // reactive dependent data
   useEffect(() => {
     setReady(true)

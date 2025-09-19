@@ -10,6 +10,7 @@ import { useThree } from '@react-three/fiber'
 import { RepeatWrapping, Vector3 } from 'three'
 import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
 import normal from 'website/assets/carbon/normal.png'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 const _Floor = forwardRef(function Floor(
   { positionZ0 = -5, heightProportion0 = 0.5 },
@@ -19,21 +20,25 @@ const _Floor = forwardRef(function Floor(
   const floor = useRef()
 
   // reactive three app data
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
+  const stateCallback = useCallback(({ get }) => {
+    return get
   }, [])
-  const { size, viewport, camera } = useThree(stateCallback)
+  const get = useThree(stateCallback)
 
   // resize callback
-  const resizeCallback = useCallback(() => {
-    const { height } = viewport.getCurrentViewport(
-      camera,
-      new Vector3(0, 0, positionZ0),
-      size,
-    )
-    floor.current.position.setY(height * heightProportion0 * -0.5 - 0.001)
-  }, [camera, heightProportion0, positionZ0, size, viewport])
-
+  const resizeCallback = useCallback(
+    (size) => {
+      const { viewport, camera } = get()
+      const { height } = viewport.getCurrentViewport(
+        camera,
+        new Vector3(0, 0, positionZ0),
+        size,
+      )
+      floor.current.position.setY(height * heightProportion0 * -0.5 - 0.001)
+    },
+    [get, heightProportion0, positionZ0],
+  )
+  useResizeEvent(resizeCallback)
   // imperative handle
   useImperativeHandle(
     forwardedRef,

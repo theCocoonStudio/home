@@ -13,6 +13,7 @@ import { Guitar } from './Guitar.canvas'
 import { Camera } from './Camera.canvas'
 import { Chair } from './Chair.canvas'
 import { useTheme } from '../hooks/useTheme'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Models = forwardRef(function Models(
   { positionZ0, heightProportion0 },
@@ -23,10 +24,10 @@ export const Models = forwardRef(function Models(
   const laptop = useRef()
 
   // reactive three app data
-  const stateCallback = useCallback(({ size, viewport, camera }) => {
-    return { size, viewport, camera }
+  const stateCallback = useCallback(({ get }) => {
+    return get
   }, [])
-  const { size, viewport, camera } = useThree(stateCallback)
+  const get = useThree(stateCallback)
 
   // theme
   const {
@@ -53,67 +54,70 @@ export const Models = forwardRef(function Models(
     [],
   )
   // resize callback
-  const resizeCallback = useCallback(() => {
-    // viewport data
-    const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
-      camera,
-      new Vector3(0, 0, positionZ0),
-      size,
-    )
+  const resizeCallback = useCallback(
+    (size) => {
+      const { viewport, camera } = get()
+      // viewport data
+      const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
+        camera,
+        new Vector3(0, 0, positionZ0),
+        size,
+      )
 
-    // floor yPos
-    const floorY = -0.5 * backgroundViewportHeight * heightProportion0
-    // models zPos
-    const modelsZ = getZpos(floorY, topBottomPadding, size.height, camera)
+      // floor yPos
+      const floorY = -0.5 * backgroundViewportHeight * heightProportion0
+      // models zPos
+      const modelsZ = getZpos(floorY, topBottomPadding, size.height, camera)
 
-    const { factor: modelsFactor } = viewport.getCurrentViewport(
-      camera,
-      new Vector3(0, 0, modelsZ),
-      size,
-    )
-    // models scale
-    const initialSize = new Box3()
-      .setFromObject(desk.current, true)
-      .getSize(new Vector3())
-    const contentWidthPx =
-      (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
-    const targetWidthPx = 0.5 * contentWidthPx - 2 * sidePadding
-    const targetWidth = targetWidthPx / modelsFactor
-    const targetScaleFactor = targetWidth / initialSize.x
-    desk.current.scale.multiplyScalar(targetScaleFactor)
+      const { factor: modelsFactor } = viewport.getCurrentViewport(
+        camera,
+        new Vector3(0, 0, modelsZ),
+        size,
+      )
 
-    // models position
-    const initialPosition = new Box3()
-      .setFromObject(desk.current, true)
-      .getCenter(new Vector3())
-    const targetX =
-      (-contentWidthPx / 4) * (1 / modelsFactor) - targetWidth * 0.1 // last term empirically derived to avoid rotation
-    const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
-    const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
-    desk.current.position.add(
-      new Vector3(targetX, targetY, targetZ).sub(initialPosition),
-    )
-  }, [
-    camera,
-    getZpos,
-    heightProportion0,
-    maxWidth,
-    positionZ0,
-    sidePadding,
-    size,
-    topBottomPadding,
-    viewport,
-  ])
+      // models scale
+      const initialSize = new Box3()
+        .setFromObject(desk.current, true)
+        .getSize(new Vector3())
+      const contentWidthPx =
+        (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
+      const targetWidthPx = 0.5 * contentWidthPx - 2 * sidePadding
+      const targetWidth = targetWidthPx / modelsFactor
+      const targetScaleFactor = targetWidth / initialSize.x
+      desk.current.scale.multiplyScalar(targetScaleFactor)
 
+      // models position
+      const initialPosition = new Box3()
+        .setFromObject(desk.current, true)
+        .getCenter(new Vector3())
+      const targetX =
+        (-contentWidthPx / 4) * (1 / modelsFactor) - targetWidth * 0.1 // last term empirically derived to avoid rotation
+      const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
+      const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
+      desk.current.position.add(
+        new Vector3(targetX, targetY, targetZ).sub(initialPosition),
+      )
+    },
+    [
+      get,
+      getZpos,
+      heightProportion0,
+      maxWidth,
+      positionZ0,
+      sidePadding,
+      topBottomPadding,
+    ],
+  )
+
+  useResizeEvent(resizeCallback)
   // handle
   useImperativeHandle(
     forwardedRef,
     () => ({
-      resizeCallback,
       desk,
       laptop,
     }),
-    [resizeCallback],
+    [],
   )
   return (
     <Suspense>
