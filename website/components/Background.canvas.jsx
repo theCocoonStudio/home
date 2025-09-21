@@ -15,6 +15,7 @@ import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { VideoTexture } from './VideoTexture.canvas'
 import Video from 'assets/colors3.mp4'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useTheme } from '../hooks/useTheme'
 
 const _opts = {
   poissonIterations: 32,
@@ -39,8 +40,12 @@ const _Background = forwardRef(function Background(
   const backing = useRef()
   const forceCallbackRef = useRef()
 
-  // reactive three app data
+  // theme data
+  const {
+    lengths: { sidePadding, maxWidth },
+  } = useTheme()
 
+  // reactive three app data
   const stateCallback = useCallback(({ get }) => {
     return get
   }, [])
@@ -81,16 +86,18 @@ const _Background = forwardRef(function Background(
           meshHeightProportion_Z1
 
       // mesh position
-      const { width: viewportWidth0, height: viewportHeight0 } =
+      const { height: viewportHeight0, factor: factor0 } =
         viewport.getCurrentViewport(camera, new Vector3(0, 0, z0), size)
-      const { width: viewportWidth1 } = viewport.getCurrentViewport(
+      const { factor: factor1 } = viewport.getCurrentViewport(
         camera,
         new Vector3(0, 0, z1),
         size,
       )
 
-      const x0 = 0 - viewportWidth0 / 2
-      const x1 = viewportWidth1 / 2
+      const contentWidthPx =
+        (size.width > maxWidth ? maxWidth : size.width) - 2 * sidePadding
+      const x0 = (-0.5 * contentWidthPx) / factor0
+      const x1 = (0.5 * contentWidthPx) / factor1
 
       const x = x0 + (x1 - x0) / 2
       const y = 0
@@ -114,7 +121,14 @@ const _Background = forwardRef(function Background(
       background.current.rotation.set(0, angle, 0)
       background.current.scale.set(meshWidth, meshHeight, 1)
     },
-    [get, heightProportion0, heightProportion1, positionZ0],
+    [
+      get,
+      heightProportion0,
+      heightProportion1,
+      maxWidth,
+      positionZ0,
+      sidePadding,
+    ],
   )
 
   const size = useResizeEvent(resizeCallback)
@@ -133,10 +147,28 @@ const _Background = forwardRef(function Background(
       resolution,
       runEvery,
       forceCallbackRef,
-      fboWidth: Math.floor(size.width * resolution),
-      fboHeight: Math.floor(size.height * heightProportion0 * resolution),
+      fboWidth: Math.floor(
+        resolution *
+          (size.width > maxWidth
+            ? maxWidth - 2 * sidePadding
+            : size.width - 2 * sidePadding),
+      ),
+      fboHeight: Math.floor(
+        size.height *
+          Math.max(heightProportion0, heightProportion1) *
+          resolution,
+      ),
     }
-  }, [heightProportion0, resolution, runEvery, size.height, size.width])
+  }, [
+    heightProportion0,
+    heightProportion1,
+    maxWidth,
+    resolution,
+    runEvery,
+    sidePadding,
+    size.height,
+    size.width,
+  ])
   const { texture } = useFluidTexture(options)
 
   // imperative handle

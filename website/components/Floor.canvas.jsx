@@ -53,7 +53,7 @@ const _Floor = forwardRef(function Floor(
   const texture = useTexture(normal)
 
   useEffect(() => {
-    const repeat = 70
+    const repeat = 35
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
     texture.repeat.set(repeat, repeat)
@@ -63,13 +63,13 @@ const _Floor = forwardRef(function Floor(
   }, [texture])
 
   return (
-    <mesh ref={floor} rotation-x={-Math.PI / 2} scale={100}>
+    <mesh ref={floor} rotation-x={-Math.PI / 2} scale={200} position-z={-80}>
       <planeGeometry args={[1, 1]} />
       <MeshReflectorMaterial
         blur={[300, 200]}
         resolution={1024}
         mixBlur={0.9}
-        mixStrength={180}
+        mixStrength={400}
         roughness={0.99}
         mirror={1}
         depthScale={1.5}
@@ -79,7 +79,7 @@ const _Floor = forwardRef(function Floor(
         color={'#111'}
         metalness={0.75}
         normalMap={texture}
-        normalScale={4}
+        normalScale={8}
       />
     </mesh>
   )

@@ -39,23 +39,24 @@ export const Home = ({ config, setReady, ready }) => {
     <Suspense>
       {/* <EventDispatcherComponent config={config} /> */}
       <color attach='background' args={['#111']} />
+      <fog attach='fog' args={['#111', 82, 115]} />
       <Performance />
       <PerspectiveCamera
         makeDefault
         position-z={1}
-        fov={30}
+        fov={10}
       ></PerspectiveCamera>
       <Environment preset='city' environmentIntensity={0.7} />
       <ambientLight intensity={0.7} />
       <Background
-        positionZ0={-10}
+        positionZ0={-80}
         heightProportion0={0.6}
-        heightProportion1={0.15}
+        heightProportion1={0.6}
         ref={background}
       />
-      <Floor positionZ0={-10} heightProportion0={0.6} ref={floor} />
-      <Models ref={models} positionZ0={-10} heightProportion0={0.6} />
-      <Stars radius={50} depth={50} count={5000} factor={3} fade speed={1} />
+      <Floor positionZ0={-80} heightProportion0={0.6} ref={floor} />
+      <Models ref={models} positionZ0={-80} heightProportion0={0.6} />
+      <Stars radius={50} depth={50} count={10000} factor={7} fade speed={1} />
       <Effects
         renderPriority={renderPriority}
         animationTargets={animationTargets}
