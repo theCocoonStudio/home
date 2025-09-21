@@ -1,8 +1,7 @@
 import { PerformanceMonitor } from '@react-three/drei'
 import { useCallback, useMemo } from 'react'
-import { useMarkupId } from '../hooks/useMarkupId'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useSettings } from 'website/pages/Home/useSettings'
-import { useThree } from '@react-three/fiber'
 
 export const Performance = ({ fpsContainer }) => {
   // markup ref
@@ -18,7 +17,7 @@ export const Performance = ({ fpsContainer }) => {
     setMapsize,
   } = useSettings()
 
-  const { width, height } = useThree(({ size }) => size)
+  const { width, height } = useResizeEvent()
   // targets for auto-throttle/boost settings
   const targets = useMemo(
     () => ({
