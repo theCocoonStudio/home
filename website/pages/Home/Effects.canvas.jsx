@@ -42,7 +42,7 @@ export const Effects = function Effects({
             />
             <Noise opacity={0.07} premultiply={false} />
             <Vignette
-              offset={0.14} // vignette offset
+              offset={0.15} // vignette offset
               darkness={0.74} // vignette darkness
               eskil={false} // Eskil's vignette technique
             />
