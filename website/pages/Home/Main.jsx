@@ -4,9 +4,9 @@ export const Main = function Main({ scrollContainer, ready, config }) {
   return (
     <div className={styles.main}>
       <div className={styles.inner}>
-        <div className={`${styles.contentContainer}`}>
-          <div className={`${styles.itemContainer}`}></div>
-          <div className={`${styles.titleContainer}`}>
+        <div className={`${styles.itemContainer}`}></div>
+        <div className={`${styles.titleContainer}`}>
+          <div className={`${styles.titleContainerInner}`}>
             <h1 className={`${styles.title} changa-one-regular`}>
               This is my title and it is the best. Made longer for testing.
             </h1>
@@ -17,7 +17,6 @@ export const Main = function Main({ scrollContainer, ready, config }) {
               popularised in the 1960s with the release of Letraset sheets
               containing Lorem Ipsum passages.
             </p>
-            <button className={`${styles.button} raleway`}>read more</button>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: var(--theme-lengths-topBottomPadding);
+  height: calc(var(--theme-lengths-topBottomPadding) / 2);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -13,9 +13,11 @@
 .item {
   flex-grow: 1;
   flex-shrink: 1;
+  background-color: var(--theme-colors-white);
+  backdrop-filter: blur(60px);
+  opacity: 0;
   &:hover {
     cursor: pointer;
-    background-color: var(--theme-colors-white);
     opacity: 0.3;
   }
 }
