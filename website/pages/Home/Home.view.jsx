@@ -7,6 +7,7 @@ import { useLightbox } from '../../hooks/useLightbox'
 import { Background } from '../../components/Background.canvas'
 import { Floor } from '../../components/Floor.canvas'
 import { Models } from '../../components/Models.canvas'
+import { useTheme } from '../../hooks/useTheme'
 
 export const Home = ({ config, setReady, ready }) => {
   const {
@@ -17,6 +18,10 @@ export const Home = ({ config, setReady, ready }) => {
 
   const { showLightbox } = useLightbox()
 
+  // theme
+  const {
+    page: { backgroundHeightProportion },
+  } = useTheme()
   // imperative component refs
   const background = useRef()
   const floor = useRef()
@@ -43,19 +48,27 @@ export const Home = ({ config, setReady, ready }) => {
       <Performance />
       <PerspectiveCamera
         makeDefault
-        position-z={1}
+        position-z={5}
         fov={10}
       ></PerspectiveCamera>
       <Environment preset='city' environmentIntensity={0.7} />
       <ambientLight intensity={0.7} />
       <Background
         positionZ0={-80}
-        heightProportion0={0.6}
-        heightProportion1={0.6}
+        heightProportion0={backgroundHeightProportion}
+        heightProportion1={backgroundHeightProportion}
         ref={background}
       />
-      <Floor positionZ0={-80} heightProportion0={0.6} ref={floor} />
-      <Models ref={models} positionZ0={-80} heightProportion0={0.6} />
+      <Floor
+        positionZ0={-80}
+        heightProportion0={backgroundHeightProportion}
+        ref={floor}
+      />
+      <Models
+        ref={models}
+        positionZ0={-80}
+        heightProportion0={backgroundHeightProportion}
+      />
       <Stars radius={50} depth={50} count={10000} factor={7} fade speed={1} />
       <Effects
         renderPriority={renderPriority}

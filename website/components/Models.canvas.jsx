@@ -31,11 +31,15 @@ export const Models = forwardRef(function Models(
 
   // theme
   const {
-    lengths: { maxWidth, sidePadding },
-    page: { itemDescriptionBottom },
+    lengths: { maxWidth, sidePadding, topBottomPadding },
+    page: {
+      itemDescriptionBottom,
+      backgroundHeightProportion,
+      modelsLayoutBreakpoint,
+    },
   } = useTheme()
 
-  // calculate models z position
+  // calculates models z position
   const getZpos = useCallback(
     (floorY, itemDescriptionBottom, viewportHeightPx, camera) => {
       // floorToBottomLength = Math.abs(floorY - (-visibleHeight/2))
@@ -54,10 +58,83 @@ export const Models = forwardRef(function Models(
     },
     [],
   )
+
+  // calculates models scale
+  const getScale = useCallback(
+    ({
+      size,
+      modelsFactor,
+      modelsZ,
+      floorY,
+      modelsHeight,
+      backgroundHeightProportion,
+      maxWidth,
+      positionZ0,
+      sidePadding,
+      topBottomPadding,
+      isAlternativeLayout,
+    }) => {
+      const initialSize = new Box3()
+        .setFromObject(desk.current, true)
+        .getSize(new Vector3())
+
+      const contentWidthPx =
+        (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
+      const targetWidthPx = isAlternativeLayout
+        ? 0.7 * contentWidthPx - 2 * sidePadding
+        : 0.5 * contentWidthPx - 2 * sidePadding
+      const targetWidth = targetWidthPx / modelsFactor
+      const targetWidthScaleFactor = targetWidth / initialSize.x
+
+      const maxTargetDepth = Math.abs(modelsZ - positionZ0)
+      const maxDepthFactor = (maxTargetDepth - 0.001) / initialSize.z
+
+      const maxHeight =
+        Math.abs(floorY) -
+        modelsHeight * backgroundHeightProportion * 0.1 -
+        topBottomPadding / modelsFactor
+      const maxHeightFactor = maxHeight / initialSize.y
+
+      const targetScaleFactor = Math.min(
+        targetWidthScaleFactor,
+        maxDepthFactor,
+        maxHeightFactor,
+      )
+      return { targetScaleFactor, initialSize, targetWidth, contentWidthPx }
+    },
+    [],
+  )
+
+  // calculates models position
+  const getPositionDelta = useCallback(
+    ({
+      contentWidthPx,
+      modelsFactor,
+      initialSize,
+      targetScaleFactor,
+      modelsZ,
+      floorY,
+      isAlternativeLayout,
+    }) => {
+      const box = new Box3().setFromObject(desk.current, true)
+      const initialPosition = box.getCenter(new Vector3())
+      const scale = box.getSize(new Vector3())
+
+      const targetX = isAlternativeLayout
+        ? (-contentWidthPx / 2) * (1 / modelsFactor) + scale.x / 2
+        : (-contentWidthPx / 4) * (1 / modelsFactor) - scale.x * 0.09 // last term empirically derived to avoid rotation
+      const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
+      const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
+      return new Vector3(targetX, targetY, targetZ).sub(initialPosition)
+    },
+    [],
+  )
   // resize callback
   const resizeCallback = useCallback(
     (size) => {
+      const isAlternativeLayout = size.width <= modelsLayoutBreakpoint
       const { viewport, camera } = get()
+
       // viewport data
       const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
         camera,
@@ -75,47 +152,50 @@ export const Models = forwardRef(function Models(
         camera,
       )
 
-      const { factor: modelsFactor } = viewport.getCurrentViewport(
-        camera,
-        new Vector3(0, 0, modelsZ),
-        size,
-      )
+      const { factor: modelsFactor, height: modelsHeight } =
+        viewport.getCurrentViewport(camera, new Vector3(0, 0, modelsZ), size)
 
       // models scale
-      const initialSize = new Box3()
-        .setFromObject(desk.current, true)
-        .getSize(new Vector3())
-      const contentWidthPx =
-        (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
-      const targetWidthPx = 0.5 * contentWidthPx - 2 * sidePadding
-      const targetWidth = targetWidthPx / modelsFactor
-      const targetWidthScaleFactor = targetWidth / initialSize.x
-      const maxTargetDepth = Math.abs(modelsZ - positionZ0)
-
-      const maxDepthFactor = (maxTargetDepth - 0.001) / initialSize.z
-      const targetScaleFactor = Math.min(targetWidthScaleFactor, maxDepthFactor)
+      const { targetScaleFactor, initialSize, contentWidthPx } = getScale({
+        size,
+        modelsFactor,
+        modelsZ,
+        floorY,
+        modelsHeight,
+        backgroundHeightProportion,
+        maxWidth,
+        positionZ0,
+        sidePadding,
+        topBottomPadding,
+        isAlternativeLayout,
+      })
       desk.current.scale.multiplyScalar(targetScaleFactor)
 
       // models position
-      const initialPosition = new Box3()
-        .setFromObject(desk.current, true)
-        .getCenter(new Vector3())
-      const targetX =
-        (-contentWidthPx / 4) * (1 / modelsFactor) - targetWidth * 0.1 // last term empirically derived to avoid rotation
-      const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
-      const targetZ = modelsZ - (targetScaleFactor * initialSize.z) / 2
-      desk.current.position.add(
-        new Vector3(targetX, targetY, targetZ).sub(initialPosition),
-      )
+      const positionDelta = getPositionDelta({
+        contentWidthPx,
+        modelsFactor,
+        initialSize,
+        targetScaleFactor,
+        modelsZ,
+        floorY,
+        isAlternativeLayout,
+      })
+      desk.current.position.add(positionDelta)
     },
     [
+      backgroundHeightProportion,
       get,
+      getPositionDelta,
+      getScale,
       getZpos,
       heightProportion0,
       itemDescriptionBottom,
       maxWidth,
+      modelsLayoutBreakpoint,
       positionZ0,
       sidePadding,
+      topBottomPadding,
     ],
   )
 

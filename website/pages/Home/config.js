@@ -29,7 +29,43 @@ export const config = {
     },
     markupIds: { scrollContainerId: 'home-scroll-container' },
     content: {
-      items: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      items: [
+        {
+          title:
+            'This is my title and it is the best. Made longer for testing.',
+          description:
+            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+          date: 'September 1, 2025',
+        },
+        {
+          title:
+            'This is my title and it is the best. Made longer for testing.',
+          description:
+            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+          date: 'September 1, 2025',
+        },
+        {
+          title:
+            'This is my title and it is the best. Made longer for testing.',
+          description:
+            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+          date: 'September 1, 2025',
+        },
+        {
+          title:
+            'This is my title and it is the best. Made longer for testing.',
+          description:
+            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+          date: 'September 1, 2025',
+        },
+        {
+          title:
+            'This is my title and it is the best. Made longer for testing.',
+          description:
+            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+          date: 'September 1, 2025',
+        },
+      ],
     },
   },
 
@@ -50,13 +86,35 @@ export const config = {
     FooterComponent: ScrollContainer,
   },
   theme: {
-    itemDescriptionTop: ({ width, height }, theme) =>
-      height > 600
-        ? 4 * theme.lengths.topBottomPadding + theme.lengths.navHeight
-        : 2 * theme.lengths.topBottomPadding + theme.lengths.navHeight,
-    itemDescriptionBottom: ({ width, height }, theme) =>
-      height > 600
-        ? 4 * theme.lengths.topBottomPadding
-        : 2 * theme.lengths.topBottomPadding,
+    itemDescriptionBottom: ({ width, height }, theme) => {
+      let value
+      if (width > 600) {
+        if (height > 1800) {
+          value = 10 * theme.lengths.topBottomPadding
+        } else if (height > 1300) {
+          value = 6 * theme.lengths.topBottomPadding
+        } else if (height > 800) {
+          value = 4 * theme.lengths.topBottomPadding
+        } else if (height > 400) {
+          value = 2 * theme.lengths.topBottomPadding
+        } else {
+          value = theme.lengths.topBottomPadding
+        }
+      } else {
+        value = 2 * theme.lengths.topBottomPadding
+        if (height <= 500) {
+          value = theme.lengths.topBottomPadding
+        }
+      }
+
+      return value
+    },
+    modelsLayoutBreakpoint: 600,
+    backgroundHeightProportion: () => {
+      return 0.6
+    },
+    backgroundHeightProportionCss: () => {
+      return `60vh`
+    },
   },
 }
