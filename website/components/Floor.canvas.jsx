@@ -1,53 +1,15 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
-import { useThree } from '@react-three/fiber'
-import { RepeatWrapping, Vector3 } from 'three'
+import { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react'
+
+import { RepeatWrapping } from 'three'
 import { MeshReflectorMaterial, useTexture } from '@react-three/drei'
 import normal from 'website/assets/carbon/normal.png'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
-const _Floor = forwardRef(function Floor(
-  { positionZ0 = -5, heightProportion0 = 0.5 },
-  forwardedRef,
-) {
+const _Floor = forwardRef(function Floor({ floorY }, forwardedRef) {
   // refs
   const floor = useRef()
 
-  // reactive three app data
-  const stateCallback = useCallback(({ get }) => {
-    return get
-  }, [])
-  const get = useThree(stateCallback)
-
-  // resize callback
-  const resizeCallback = useCallback(
-    (size) => {
-      const { viewport, camera } = get()
-      const { height } = viewport.getCurrentViewport(
-        camera,
-        new Vector3(0, 0, positionZ0),
-        size,
-      )
-      floor.current.position.setY(height * heightProportion0 * -0.5 - 0.001)
-    },
-    [get, heightProportion0, positionZ0],
-  )
-  useResizeEvent(resizeCallback)
   // imperative handle
-  useImperativeHandle(
-    forwardedRef,
-    () => ({
-      resizeCallback,
-      floor,
-    }),
-    [resizeCallback],
-  )
+  useImperativeHandle(forwardedRef, () => floor.current, [])
 
   // textures
   const texture = useTexture(normal)
@@ -63,7 +25,14 @@ const _Floor = forwardRef(function Floor(
   }, [texture])
 
   return (
-    <mesh ref={floor} rotation-x={-Math.PI / 2} scale={200} position-z={-80}>
+    <mesh
+      visible={typeof floorY !== 'undefined'}
+      ref={floor}
+      rotation-x={-Math.PI / 2}
+      scale={200}
+      position-z={-80}
+      position-y={floorY && floorY - 0.001}
+    >
       <planeGeometry args={[1, 1]} />
       <MeshReflectorMaterial
         blur={[300, 200]}

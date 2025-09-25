@@ -23,13 +23,6 @@
   position: relative;
 }
 
-.itemContainer {
-  flex-grow: 1;
-  flex-shrink: 1;
-  background-color: red;
-  max-height: 500px;
-}
-
 .titleContainer {
   color: var(--theme-colors-white);
   position: absolute;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Shape, ExtrudeGeometry } from 'three'
 
 export const useItemGeometry = (depth = 0.05, borderRadius = 0.02) => {
@@ -42,5 +42,10 @@ export const useItemGeometry = (depth = 0.05, borderRadius = 0.02) => {
     },
     [geometry],
   )
-  return geometry
+
+  const getDepthScaleFactor = useCallback(
+    (targetDepth) => targetDepth / depth,
+    [depth],
+  )
+  return { geometry, getDepthScaleFactor, depth }
 }

@@ -1,8 +1,8 @@
-import { useThree } from '@react-three/fiber'
 import {
   forwardRef,
   Suspense,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
@@ -12,75 +12,52 @@ import { Box3, Vector3 } from 'three'
 import { Guitar } from './Guitar.canvas'
 import { Camera } from './Camera.canvas'
 import { Chair } from './Chair.canvas'
-import { useTheme } from '../hooks/useTheme'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Models = forwardRef(function Models(
-  { positionZ0, heightProportion0 },
+  {
+    setModelsSize,
+    positionZ0,
+    heightProportion0,
+    size,
+    get,
+    maxWidth,
+    sidePadding,
+    topBottomPadding,
+    itemDescriptionBottom,
+    backgroundHeightProportion,
+    modelsLayoutBreakpoint,
+    isMobileLayout,
+    floorY,
+    modelsViewportHeight,
+    modelsFactor,
+    modelsZ,
+    contentWidthPx,
+  },
   forwardedRef,
 ) {
   // refs
   const desk = useRef()
   const laptop = useRef()
 
-  // reactive three app data
-  const stateCallback = useCallback(({ get }) => {
-    return get
-  }, [])
-  const get = useThree(stateCallback)
-
-  // theme
-  const {
-    lengths: { maxWidth, sidePadding, topBottomPadding },
-    page: {
-      itemDescriptionBottom,
-      backgroundHeightProportion,
-      modelsLayoutBreakpoint,
-    },
-  } = useTheme()
-
-  // calculates models z position
-  const getZpos = useCallback(
-    (floorY, itemDescriptionBottom, viewportHeightPx, camera) => {
-      // floorToBottomLength = Math.abs(floorY - (-visibleHeight/2))
-      // we want floorToBottomLength/visibleHeight = itemDescriptionBottom / viewportHeightPx
-      // visibleHeight = viewportHeightPx / itemDescriptionBottom * floorY  / (1 - viewportHeightPx / (2 * itemDescriptionBottom)
-      const floorYProportion = viewportHeightPx / itemDescriptionBottom
-      const visibleHeight =
-        (floorYProportion * floorY) / (1 - floorYProportion / 2)
-      // plugging in:
-      // visibleHeight = 2 * Math.tan(fov/2) * camDistanceZ
-      // camDistanceZ = visibleHeight / (2 * Math.tan(fov/2))
-      const fov = camera.fov * (Math.PI / 180)
-      const zPos = visibleHeight / (2 * Math.tan(fov / 2))
-      // return global value
-      return camera.position.z - Math.abs(zPos)
-    },
-    [],
-  )
-
   // calculates models scale
   const getScale = useCallback(
     ({
-      size,
+      contentWidthPx,
       modelsFactor,
       modelsZ,
       floorY,
-      modelsHeight,
+      modelsViewportHeight,
       backgroundHeightProportion,
-      maxWidth,
       positionZ0,
       sidePadding,
       topBottomPadding,
-      isAlternativeLayout,
+      isMobileLayout,
     }) => {
       const initialSize = new Box3()
         .setFromObject(desk.current, true)
         .getSize(new Vector3())
 
-      const contentWidthPx =
-        (size.width > maxWidth ? maxWidth : size.width) - sidePadding * 2
-      const targetWidthPx = isAlternativeLayout
+      const targetWidthPx = isMobileLayout
         ? 0.7 * contentWidthPx - 2 * sidePadding
         : 0.5 * contentWidthPx - 2 * sidePadding
       const targetWidth = targetWidthPx / modelsFactor
@@ -91,7 +68,7 @@ export const Models = forwardRef(function Models(
 
       const maxHeight =
         Math.abs(floorY) -
-        modelsHeight * backgroundHeightProportion * 0.1 -
+        modelsViewportHeight * backgroundHeightProportion * 0.1 -
         topBottomPadding / modelsFactor
       const maxHeightFactor = maxHeight / initialSize.y
 
@@ -100,7 +77,15 @@ export const Models = forwardRef(function Models(
         maxDepthFactor,
         maxHeightFactor,
       )
-      return { targetScaleFactor, initialSize, targetWidth, contentWidthPx }
+
+      const modelsSize = initialSize.clone().multiplyScalar(targetScaleFactor)
+      return {
+        targetScaleFactor,
+        initialSize,
+        targetWidth,
+        contentWidthPx,
+        modelsSize,
+      }
     },
     [],
   )
@@ -114,13 +99,13 @@ export const Models = forwardRef(function Models(
       targetScaleFactor,
       modelsZ,
       floorY,
-      isAlternativeLayout,
+      isMobileLayout,
     }) => {
       const box = new Box3().setFromObject(desk.current, true)
       const initialPosition = box.getCenter(new Vector3())
       const scale = box.getSize(new Vector3())
 
-      const targetX = isAlternativeLayout
+      const targetX = isMobileLayout
         ? (-contentWidthPx / 2) * (1 / modelsFactor) + scale.x / 2
         : (-contentWidthPx / 4) * (1 / modelsFactor) - scale.x * 0.09 // last term empirically derived to avoid rotation
       const targetY = floorY + (targetScaleFactor * initialSize.y) / 2
@@ -130,44 +115,20 @@ export const Models = forwardRef(function Models(
     [],
   )
   // resize callback
-  const resizeCallback = useCallback(
-    (size) => {
-      const isAlternativeLayout = size.width <= modelsLayoutBreakpoint
-      const { viewport, camera } = get()
-
-      // viewport data
-      const { height: backgroundViewportHeight } = viewport.getCurrentViewport(
-        camera,
-        new Vector3(0, 0, positionZ0),
-        size,
-      )
-
-      // floor yPos
-      const floorY = -0.5 * backgroundViewportHeight * heightProportion0
-      // models zPos
-      const modelsZ = getZpos(
-        floorY,
-        itemDescriptionBottom,
-        size.height,
-        camera,
-      )
-
-      const { factor: modelsFactor, height: modelsHeight } =
-        viewport.getCurrentViewport(camera, new Vector3(0, 0, modelsZ), size)
-
+  useEffect(() => {
+    if (desk.current) {
       // models scale
-      const { targetScaleFactor, initialSize, contentWidthPx } = getScale({
-        size,
+      const { targetScaleFactor, initialSize, modelsSize } = getScale({
+        contentWidthPx,
         modelsFactor,
         modelsZ,
         floorY,
-        modelsHeight,
+        modelsViewportHeight,
         backgroundHeightProportion,
-        maxWidth,
         positionZ0,
         sidePadding,
         topBottomPadding,
-        isAlternativeLayout,
+        isMobileLayout,
       })
       desk.current.scale.multiplyScalar(targetScaleFactor)
 
@@ -179,27 +140,35 @@ export const Models = forwardRef(function Models(
         targetScaleFactor,
         modelsZ,
         floorY,
-        isAlternativeLayout,
+        isMobileLayout,
       })
       desk.current.position.add(positionDelta)
-    },
-    [
-      backgroundHeightProportion,
-      get,
-      getPositionDelta,
-      getScale,
-      getZpos,
-      heightProportion0,
-      itemDescriptionBottom,
-      maxWidth,
-      modelsLayoutBreakpoint,
-      positionZ0,
-      sidePadding,
-      topBottomPadding,
-    ],
-  )
 
-  useResizeEvent(resizeCallback)
+      // set scene data for sibling components
+      setModelsSize(modelsSize)
+    }
+  }, [
+    backgroundHeightProportion,
+    contentWidthPx,
+    floorY,
+    get,
+    getPositionDelta,
+    getScale,
+    heightProportion0,
+    isMobileLayout,
+    itemDescriptionBottom,
+    maxWidth,
+    modelsFactor,
+    modelsLayoutBreakpoint,
+    modelsViewportHeight,
+    modelsZ,
+    positionZ0,
+    setModelsSize,
+    sidePadding,
+    size,
+    topBottomPadding,
+  ])
+
   // handle
   useImperativeHandle(
     forwardedRef,
@@ -209,6 +178,7 @@ export const Models = forwardRef(function Models(
     }),
     [],
   )
+
   return (
     <Suspense>
       <Desk ref={desk}>

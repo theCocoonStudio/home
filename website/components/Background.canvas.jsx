@@ -1,21 +1,17 @@
 import {
   forwardRef,
   memo,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
 } from 'react'
-import { useThree } from '@react-three/fiber'
-import { Vector2, Vector3 } from 'three'
+import { Vector2 } from 'three'
 import { useSettings } from 'website/pages/Home/useSettings'
 import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { VideoTexture } from './VideoTexture.canvas'
 import Video from 'assets/colors3.mp4'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
-import { useTheme } from '../hooks/useTheme'
 
 const _opts = {
   poissonIterations: 32,
@@ -32,7 +28,18 @@ const _opts = {
 }
 
 const _Background = forwardRef(function Background(
-  { positionZ0 = -5, heightProportion0, heightProportion1 },
+  {
+    positionZ0,
+    heightProportion0,
+    heightProportion1,
+    size,
+    sidePadding,
+    maxWidth,
+    get,
+    backgroundViewportHeight,
+    backgroundFactor,
+    contentWidthPx,
+  },
   forwardedRef,
 ) {
   // refs
@@ -40,22 +47,10 @@ const _Background = forwardRef(function Background(
   const backing = useRef()
   const forceCallbackRef = useRef()
 
-  // theme data
-  const {
-    lengths: { sidePadding, maxWidth },
-  } = useTheme()
-
-  // reactive three app data
-  const stateCallback = useCallback(({ get }) => {
-    return get
-  }, [])
-  const get = useThree(stateCallback)
-
-  // resize callback
-  const resizeCallback = useCallback(
-    (size) => {
-      const { viewport, camera } = get()
-      /* 
+  // mesh props
+  const meshProps = useMemo(() => {
+    const { camera } = get()
+    /* 
       we want Z1. If you think about it a little, we can confidently say that the ratio:
       viewportHeight_Z1/viewportHeight_Z0 > 1, should be equal to this ratio:
       (meshPixelHeight_Z0/viewportHeight_Z0)/(meshPixelHeight_Z0/viewportHeight_Z0) > 1
@@ -76,62 +71,59 @@ const _Background = forwardRef(function Background(
       Z0: for us to choose based on scene requirements (i.e. space between mesh and camera)
       meshHeightProportion_Z0/meshHeightProportion_Z1: again, up to us
       */
-      const z0 = positionZ0
-      const meshHeightProportion_Z0 = heightProportion0 // i.e mesh takes up heightProportion0 of screen vertical space
-      const meshHeightProportion_Z1 = heightProportion1
+    const z0 = positionZ0
+    const meshHeightProportion_Z0 = heightProportion0 // i.e mesh takes up heightProportion0 of screen vertical space
+    const meshHeightProportion_Z1 = heightProportion1
 
-      const z1 =
-        camera.position.z -
-        ((camera.position.z - z0) * meshHeightProportion_Z0) /
-          meshHeightProportion_Z1
+    const z1 =
+      camera.position.z -
+      ((camera.position.z - z0) * meshHeightProportion_Z0) /
+        meshHeightProportion_Z1
 
-      // mesh position
-      const { height: viewportHeight0, factor: factor0 } =
-        viewport.getCurrentViewport(camera, new Vector3(0, 0, z0), size)
-      const { factor: factor1 } = viewport.getCurrentViewport(
-        camera,
-        new Vector3(0, 0, z1),
-        size,
-      )
+    // mesh position
+    const z1ViewportHeight = camera.getViewSize(
+      Math.abs(camera.position.z - z1),
+      new Vector2(),
+    ).y
+    const z1Factor = size.height / z1ViewportHeight
 
-      const contentWidthPx =
-        (size.width > maxWidth ? maxWidth : size.width) - 2 * sidePadding
-      const x0 = (-0.5 * contentWidthPx) / factor0
-      const x1 = (0.5 * contentWidthPx) / factor1
+    const x0 = (-0.5 * contentWidthPx) / backgroundFactor
+    const x1 = (0.5 * contentWidthPx) / z1Factor
 
-      const x = x0 + (x1 - x0) / 2
-      const y = 0
-      const z = z0 + (z1 - z0) / 2
+    const x = x0 + (x1 - x0) / 2
+    const y = 0
+    const z = z0 + (z1 - z0) / 2
 
-      // mesh scale x: meshWidth**2 = (X1 - X0)**2 + (Z0-Z1)**2
-      const meshWidth = new Vector2(x0, z0).distanceTo(new Vector2(x1, z1))
+    // mesh scale x: meshWidth**2 = (X1 - X0)**2 + (Z0-Z1)**2
+    const meshWidth = new Vector2(x0, z0).distanceTo(new Vector2(x1, z1))
 
-      /* 
+    /* 
       mesh scale y:
       to calculate the mesh height, we use: height / viewportHeight_Z0 = meshHeightProportion_Z0
       or height = meshHeightProportion_Z0 * viewportHeight_Z0
       */
-      const meshHeight = meshHeightProportion_Z0 * viewportHeight0
+    const meshHeight = meshHeightProportion_Z0 * backgroundViewportHeight
 
-      // mesh rotation y: cos(meshAngle) = (X1-X0)/meshWidth
-      const angle = Math.acos(Math.abs(x1 - x0) / meshWidth)
+    // mesh rotation y: cos(meshAngle) = (X1-X0)/meshWidth
+    const angle = Math.acos(Math.abs(x1 - x0) / meshWidth)
 
-      // apply target values
-      background.current.position.set(x, y, z)
-      background.current.rotation.set(0, angle, 0)
-      background.current.scale.set(meshWidth, meshHeight, 1)
-    },
-    [
-      get,
-      heightProportion0,
-      heightProportion1,
-      maxWidth,
-      positionZ0,
-      sidePadding,
-    ],
-  )
+    // apply target values
+    return {
+      position: [x, y, z],
+      rotation: [0, angle, 0],
+      scale: [meshWidth, meshHeight, 1],
+    }
+  }, [
+    backgroundFactor,
+    backgroundViewportHeight,
+    contentWidthPx,
+    get,
+    heightProportion0,
+    heightProportion1,
+    positionZ0,
+    size,
+  ])
 
-  const size = useResizeEvent(resizeCallback)
   // simulation options and texture
   const { resolution, frames: runEvery } = useSettings()
   const padding = useRef(new Vector2(0.2, 0.2))
@@ -185,7 +177,7 @@ const _Background = forwardRef(function Background(
 
   return (
     <>
-      <mesh ref={background}>
+      <mesh ref={background} {...meshProps}>
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
           color={'#000'}

@@ -7,6 +7,7 @@ export const Main = function Main({
   config: {
     data: {
       content: { items },
+      markupIds: { itemDescription },
     },
   },
 }) {
@@ -17,6 +18,7 @@ export const Main = function Main({
           <div
             key={`itemDescription-${index}`}
             className={`${styles.titleContainerInner}`}
+            id={`${itemDescription}-${index}`}
           >
             <div className={`${styles.itemDescription}`}>
               <h1 className={`${styles.title} changa-one-regular`}>{title}</h1>
@@ -26,13 +28,12 @@ export const Main = function Main({
           </div>
         )
       }),
-    [items],
+    [itemDescription, items],
   )
 
   return (
     <div className={styles.main}>
       <div className={styles.inner}>
-        <div className={`${styles.itemContainer}`}></div>
         <div className={`${styles.titleContainer}`}>{itemDescriptions}</div>
       </div>
     </div>

@@ -27,7 +27,10 @@ export const config = {
     constants: {
       focusFactor: 0.46,
     },
-    markupIds: { scrollContainerId: 'home-scroll-container' },
+    markupIds: {
+      scrollContainerId: 'home-scroll-container',
+      itemDescription: 'home-item-description',
+    },
     content: {
       items: [
         {
@@ -38,10 +41,9 @@ export const config = {
           date: 'September 1, 2025',
         },
         {
-          title:
-            'This is my title and it is the best. Made longer for testing.',
+          title: 'This is my title and it is the best',
           description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+            'It has survived not only five centuries, but also the leap into electronic typesetting.',
           date: 'September 1, 2025',
         },
         {

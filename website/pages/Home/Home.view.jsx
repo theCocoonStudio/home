@@ -1,6 +1,6 @@
 import { PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { Suspense, useEffect, useMemo, useRef } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'
@@ -8,12 +8,18 @@ import { Background } from '../../components/Background.canvas'
 import { Floor } from '../../components/Floor.canvas'
 import { Models } from '../../components/Models.canvas'
 import { useTheme } from '../../hooks/useTheme'
+import { HomeItems } from '../../components/HomeItems.canvas'
+import { useCommonSizeData } from '../../hooks/useCommonSizeData.canvas'
 
 export const Home = ({ config, setReady, ready }) => {
   const {
     effects: { renderPriority, Component: Effects },
 
     main: { EventDispatcherComponent },
+    data: {
+      content: { items: itemsConfig },
+      markupIds: { itemDescription },
+    },
   } = config
 
   const { showLightbox } = useLightbox()
@@ -22,19 +28,30 @@ export const Home = ({ config, setReady, ready }) => {
   const {
     page: { backgroundHeightProportion },
   } = useTheme()
+
   // imperative component refs
   const background = useRef()
   const floor = useRef()
   const models = useRef()
+  const items = useRef()
   // animation targets
   const animationTargets = useMemo(
     () => ({
-      refs: { background, floor, models },
+      refs: { background, floor, models, items },
     }),
     [],
   )
   useTargetItems(animationTargets)
 
+  // common child size data
+  const commonSizeDataProps = useCommonSizeData({
+    positionZ0: -80,
+    heightProportion0: backgroundHeightProportion,
+    heightProportion1: backgroundHeightProportion,
+  })
+
+  // child derived data
+  const [modelsSize, setModelsSize] = useState()
   // reactive dependent data
   useEffect(() => {
     setReady(true)
@@ -53,23 +70,21 @@ export const Home = ({ config, setReady, ready }) => {
       ></PerspectiveCamera>
       <Environment preset='city' environmentIntensity={0.7} />
       <ambientLight intensity={0.7} />
-      <Background
-        positionZ0={-80}
-        heightProportion0={backgroundHeightProportion}
-        heightProportion1={backgroundHeightProportion}
-        ref={background}
-      />
-      <Floor
-        positionZ0={-80}
-        heightProportion0={backgroundHeightProportion}
-        ref={floor}
-      />
+      <Background {...commonSizeDataProps} ref={background} />
       <Models
         ref={models}
-        positionZ0={-80}
-        heightProportion0={backgroundHeightProportion}
+        setModelsSize={setModelsSize}
+        {...commonSizeDataProps}
       />
-      <Stars radius={50} depth={50} count={10000} factor={7} fade speed={1} />
+      <Floor ref={floor} {...commonSizeDataProps} />
+      <HomeItems
+        ref={items}
+        modelsSize={modelsSize}
+        itemsConfig={itemsConfig}
+        itemDescriptionIdBase={itemDescription}
+        {...commonSizeDataProps}
+      />
+      <Stars radius={50} depth={50} count={15000} factor={7} fade speed={1} />
       <Effects
         renderPriority={renderPriority}
         animationTargets={animationTargets}
