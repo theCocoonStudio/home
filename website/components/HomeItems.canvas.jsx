@@ -17,6 +17,7 @@ export const HomeItems = forwardRef(function HomeItems(
     modelsViewportHeight,
     modelsFactor,
     contentWidthPx,
+    isMobileLayout,
   },
   forwardedRef,
 ) {
@@ -30,6 +31,7 @@ export const HomeItems = forwardRef(function HomeItems(
       const centerLayoutScales = []
       const modelsZScales = []
       const centerLayoutPositions = []
+      const mobileSidePositions = []
       const modelsZPositions = []
 
       // base data
@@ -46,12 +48,20 @@ export const HomeItems = forwardRef(function HomeItems(
       )
       const factorCenterLayout = size.height / viewportSizeCenterLayout.y
 
-      // models pixel height
-      const modelsHeightPx = modelsSize.y * modelsFactor
-
       // max width for center layout
       const maxWidthCenterLayout =
         (contentWidthPx - 2 * sidePadding) / factorCenterLayout
+
+      // height from bottom of center-layout item to top of models (overlap), in center layout units
+      const floorYCenterLayoutBottomPx =
+        factorCenterLayout * (floorY - -viewportSizeCenterLayout.y / 2)
+
+      const modelsTopBottomPx =
+        modelsFactor * (floorY + modelsSize.y - -modelsViewportHeight / 2)
+      const centerLayoutOverlapHeightPx =
+        modelsTopBottomPx > floorYCenterLayoutBottomPx
+          ? modelsTopBottomPx - floorYCenterLayoutBottomPx
+          : 0
 
       // max width for modelsZ layout
       const maxWidthModelsZ =
@@ -69,33 +79,36 @@ export const HomeItems = forwardRef(function HomeItems(
           .getElementById(`${itemDescriptionIdBase}-${i}`)
           .getBoundingClientRect().bottom
 
-        // item max height in modelsZ layout
-        const maxHeightModelsZ =
-          modelsViewportHeight / 2 -
-          bottomPx / modelsFactor -
-          floorY -
-          topBottomPadding / modelsFactor
+        // model layout calculations, only if not mobile
+        if (!isMobileLayout) {
+          // item max height in modelsZ layout
+          const maxHeightModelsZ =
+            modelsViewportHeight / 2 -
+            bottomPx / modelsFactor -
+            floorY -
+            topBottomPadding / modelsFactor
 
-        // item final scale in modelsZ layout
-        const scaleModelsZFactor = Math.min(maxWidthModelsZ, maxHeightModelsZ)
+          // item final scale in modelsZ layout
+          const scaleModelsZFactor = Math.min(maxWidthModelsZ, maxHeightModelsZ)
 
-        // add modelsZ item scale to corresponding array
-        modelsZScales[i] = new Vector3(
-          scaleModelsZFactor,
-          scaleModelsZFactor,
-          1,
-        )
+          // add modelsZ item scale to corresponding array
+          modelsZScales[i] = new Vector3(
+            scaleModelsZFactor,
+            scaleModelsZFactor,
+            1,
+          )
 
-        // add modelsZ item position to corresponding array
-        modelsZPositions[i] = new Vector3(
-          (0.25 * contentWidthPx) / modelsFactor,
-          floorY + scaleModelsZFactor / 2,
-          modelsZ - depth / 2,
-        )
+          // add modelsZ item position to corresponding array
+          modelsZPositions[i] = new Vector3(
+            (0.25 * contentWidthPx) / modelsFactor,
+            floorY + scaleModelsZFactor / 2,
+            modelsZ - depth / 2,
+          )
+        }
 
         // only while center layout still applies, calculate center-layout item scale as well
 
-        if (isCenterLayout) {
+        if (isCenterLayout || isMobileLayout) {
           // item max height in center layout
           const maxHeightCenterLayout =
             viewportSizeCenterLayout.y / 2 -
@@ -114,15 +127,13 @@ export const HomeItems = forwardRef(function HomeItems(
 
           // test if center layout still applies
           const supportsCenterLayout =
-            heightCenterLayoutPx >= 2 * modelsHeightPx
-          console.log(
-            'change this to calculate visible height as floor y in center layout will appear above floor y in models',
-          )
+            heightCenterLayoutPx >= 2 * centerLayoutOverlapHeightPx
+
           // set isCenterLayout for next iteration
           isCenterLayout = supportsCenterLayout
 
-          //if center layout still applies, add item's center-layout position and scale to output arrays
-          if (isCenterLayout) {
+          // if center-layout still applies (or isMobile), add item's center-layout (or mobile) position and scale to output arrays
+          if (isCenterLayout || isMobileLayout) {
             centerLayoutScales[i] = new Vector3(
               scaleCenterLayoutFactor,
               scaleCenterLayoutFactor,
@@ -134,16 +145,24 @@ export const HomeItems = forwardRef(function HomeItems(
               floorY + scaleCenterLayoutFactor / 2,
               centerLayoutZ - depth / 2,
             )
+            mobileSidePositions[i] = centerLayoutPositions[i]
+              .clone()
+              .setX(maxWidthCenterLayout / 2 - scaleCenterLayoutFactor / 2)
           }
         }
       }
 
       // return array corresponding to active layout and variable indicating active layout
+      const focusScales =
+        isCenterLayout || isMobileLayout ? centerLayoutScales : modelsZScales
+      const focusPositions = isCenterLayout
+        ? centerLayoutPositions
+        : isMobileLayout
+          ? mobileSidePositions
+          : modelsZPositions
       return {
-        focusScales: isCenterLayout ? centerLayoutScales : modelsZScales,
-        focusPositions: isCenterLayout
-          ? centerLayoutPositions
-          : modelsZPositions,
+        focusScales,
+        focusPositions,
       }
     }
     return {}
@@ -152,6 +171,7 @@ export const HomeItems = forwardRef(function HomeItems(
     depth,
     floorY,
     get,
+    isMobileLayout,
     itemDescriptionIdBase,
     itemsConfig,
     modelsFactor,
