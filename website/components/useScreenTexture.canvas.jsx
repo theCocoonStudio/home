@@ -142,7 +142,7 @@ export const useScreenTexture = ({
     const outputPass = new OutputPass()
     composer.addPass(outputPass)
 
-    composer.setSize(resolution, resolution)
+    composer.setSize(resolution / 2, resolution / 2)
     return {
       composer,
       passes: {
