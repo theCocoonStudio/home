@@ -17,8 +17,9 @@ import {
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
-import { contain } from 'website/utils/texture'
+import { cover } from 'website/utils/texture'
 import {
+  GlitchPass,
   HueSaturationShader,
   RGBShiftShader,
   ShaderPass,
@@ -26,7 +27,7 @@ import {
 
 export const useScreenTexture = ({
   aspect = 1,
-  resolution = 64,
+  resolution = 128,
   renderPriority = -1,
 }) => {
   // theme
@@ -40,7 +41,7 @@ export const useScreenTexture = ({
   // render target
   const fbo = useFBO(resolution, resolution)
   useEffect(() => {
-    contain(fbo.texture, aspect)
+    cover(fbo.texture, aspect)
   }, [aspect, fbo.texture])
 
   // three js objects
@@ -58,11 +59,12 @@ export const useScreenTexture = ({
     const material = new MeshStandardMaterial({
       color: colors.white,
     })
+
     const mesh = new Mesh(geometry, material)
     const group = new Group()
     group.rotation.set(0, Math.PI / 4, Math.PI / 4)
     group.position.setZ(0.5)
-    group.scale.set(0.03, 0.03, 0.03)
+    group.scale.set(0.017, 0.017, 0.017)
     group.add(mesh)
     scene.add(group)
 
@@ -84,7 +86,7 @@ export const useScreenTexture = ({
   )
 
   // composer
-  const composer = useMemo(() => {
+  const { composer, passes } = useMemo(() => {
     const composer = new EffectComposer(gl, fbo)
 
     const renderPass = new RenderPass(scene, camera)
@@ -95,21 +97,22 @@ export const useScreenTexture = ({
      * saturation: -1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)
      */
     const hueSaturationPass = new ShaderPass(HueSaturationShader)
-
     hueSaturationPass.uniforms['hue'].value = -0.05
     hueSaturationPass.uniforms['saturation'].value = -0.5
     composer.addPass(hueSaturationPass)
 
     const rgbShiftPass = new ShaderPass(RGBShiftShader)
-
     rgbShiftPass.uniforms['amount'].value = 0.03
     composer.addPass(rgbShiftPass)
+
+    const glitchPass = new GlitchPass()
+    composer.addPass(glitchPass)
 
     const scanlineShader = {
       uniforms: {
         tDiffuse: { value: null },
         resolution: { value: new Vector2() },
-        scanlineIntensity: { value: 0.05 }, // Adjust as needed
+        scanlineIntensity: { value: 0.08 }, // Adjust as needed
       },
       vertexShader: `
             varying vec2 vUv;
@@ -133,31 +136,41 @@ export const useScreenTexture = ({
         `,
     }
     const scanlinePass = new ShaderPass(scanlineShader)
-    scanlinePass.uniforms['resolution'].value.set(
-      resolution * 1.5,
-      resolution * 1.5,
-    )
+    scanlinePass.uniforms['resolution'].value.set(resolution, resolution)
     composer.addPass(scanlinePass)
 
     const outputPass = new OutputPass()
     composer.addPass(outputPass)
 
     composer.setSize(resolution, resolution)
-    return composer
-  }, [])
+    return {
+      composer,
+      passes: {
+        renderPass,
+        hueSaturationPass,
+        rgbShiftPass,
+        glitchPass,
+        scanlinePass,
+        outputPass,
+      },
+    }
+  }, [camera, fbo, gl, resolution, scene])
 
-  // dispose composer
+  // dispose old composer and passes on update
   useEffect(
     () => () => {
       composer.dispose()
+      for (const key in passes) {
+        passes[key].dispose()
+      }
     },
-    [composer],
+    [composer, passes],
   )
+
   useFrame((state) => {
     const rot = state.clock.getElapsedTime()
     group.rotation.set(0, rot, Math.PI / 4)
     group.matrixWorldNeedsUpdate = true
-
     composer.render()
   }, renderPriority)
 
