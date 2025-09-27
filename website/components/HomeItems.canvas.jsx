@@ -1,6 +1,7 @@
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useItemGeometry } from '../hooks/useItemGeometry.canvas'
 import { Vector2, Vector3 } from 'three'
+import { MeshTransmissionMaterial } from '@react-three/drei'
 
 export const HomeItems = forwardRef(function HomeItems(
   {
@@ -21,6 +22,9 @@ export const HomeItems = forwardRef(function HomeItems(
   },
   forwardedRef,
 ) {
+  // refs
+  const mesh = useRef()
+  const material = useRef()
   // geometry
   const { geometry, depth } = useItemGeometry()
 
@@ -184,17 +188,38 @@ export const HomeItems = forwardRef(function HomeItems(
     topBottomPadding,
   ])
 
+  useImperativeHandle(
+    forwardedRef,
+    () => ({
+      item: mesh.current,
+      material: material.current,
+    }),
+    [],
+  )
   return (
     <>
-      {focusScales && (
-        <mesh
-          geometry={geometry}
-          scale={focusScales[0]}
-          position={focusPositions[0]}
-        >
-          <meshStandardMaterial color='red' />
-        </mesh>
-      )}
+      <mesh
+        ref={mesh}
+        geometry={geometry}
+        scale={focusScales ? focusScales[0] : undefined}
+        position={focusPositions ? focusPositions[0] : undefined}
+      >
+        {/* <meshStandardMaterial color='red' /> */}
+        <MeshTransmissionMaterial
+          ref={material}
+          /* backside */
+          samples={4}
+          thickness={2}
+          chromaticAberration={0.025}
+          anisotropy={0.1}
+          distortion={0.1}
+          distortionScale={0.5}
+          temporalDistortion={0.2}
+          iridescence={1}
+          iridescenceIOR={1}
+          iridescenceThicknessRange={[0, 1400]}
+        />
+      </mesh>
     </>
   )
 })

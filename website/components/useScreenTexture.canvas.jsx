@@ -12,13 +12,21 @@ import {
   MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
+  Vector2,
 } from 'three'
-
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
 import { contain } from 'website/utils/texture'
+import {
+  HueSaturationShader,
+  RGBShiftShader,
+  ShaderPass,
+} from 'three/examples/jsm/Addons.js'
 
 export const useScreenTexture = ({
   aspect = 1,
-  resolution = 256,
+  resolution = 64,
   renderPriority = -1,
 }) => {
   // theme
@@ -39,7 +47,7 @@ export const useScreenTexture = ({
   const { scene, camera, geometry, material, group } = useMemo(() => {
     // scene
     const scene = new Scene()
-    scene.background = new Color('#000')
+    scene.background = new Color(colors.slate)
 
     // camera
     const camera = new PerspectiveCamera(10)
@@ -75,14 +83,82 @@ export const useScreenTexture = ({
     [geometry, material],
   )
 
-  // render
-  useFrame((state, delta) => {
+  // composer
+  const composer = useMemo(() => {
+    const composer = new EffectComposer(gl, fbo)
+
+    const renderPass = new RenderPass(scene, camera)
+    composer.addPass(renderPass)
+
+    /*
+     * hue: -1 to 1 (-1 is 180 degrees in the negative direction, 0 is no change, etc.
+     * saturation: -1 to 1 (-1 is solid gray, 0 is no change, and 1 is maximum contrast)
+     */
+    const hueSaturationPass = new ShaderPass(HueSaturationShader)
+
+    hueSaturationPass.uniforms['hue'].value = -0.05
+    hueSaturationPass.uniforms['saturation'].value = -0.5
+    composer.addPass(hueSaturationPass)
+
+    const rgbShiftPass = new ShaderPass(RGBShiftShader)
+
+    rgbShiftPass.uniforms['amount'].value = 0.03
+    composer.addPass(rgbShiftPass)
+
+    const scanlineShader = {
+      uniforms: {
+        tDiffuse: { value: null },
+        resolution: { value: new Vector2() },
+        scanlineIntensity: { value: 0.05 }, // Adjust as needed
+      },
+      vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+      fragmentShader: `
+            uniform sampler2D tDiffuse;
+            uniform vec2 resolution;
+            uniform float scanlineIntensity;
+            varying vec2 vUv;
+
+            void main() {
+                vec4 color = texture2D(tDiffuse, vUv);
+                float scanline = sin(vUv.y * resolution.y * 2.0) * scanlineIntensity; // Adjust frequency and intensity
+                color.rgb -= scanline;
+                gl_FragColor = color;
+            }
+        `,
+    }
+    const scanlinePass = new ShaderPass(scanlineShader)
+    scanlinePass.uniforms['resolution'].value.set(
+      resolution * 1.5,
+      resolution * 1.5,
+    )
+    composer.addPass(scanlinePass)
+
+    const outputPass = new OutputPass()
+    composer.addPass(outputPass)
+
+    composer.setSize(resolution, resolution)
+    return composer
+  }, [])
+
+  // dispose composer
+  useEffect(
+    () => () => {
+      composer.dispose()
+    },
+    [composer],
+  )
+  useFrame((state) => {
     const rot = state.clock.getElapsedTime()
     group.rotation.set(0, rot, Math.PI / 4)
     group.matrixWorldNeedsUpdate = true
-    gl.setRenderTarget(fbo)
-    gl.render(scene, camera)
-    gl.setRenderTarget(null)
+
+    composer.render()
   }, renderPriority)
 
   return fbo

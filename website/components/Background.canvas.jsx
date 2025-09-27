@@ -167,8 +167,8 @@ const _Background = forwardRef(function Background(
   useImperativeHandle(
     forwardedRef,
     () => ({
-      background,
-      backing,
+      background: background.current,
+      backing: backing.current,
       texture,
       forceCallbackRef,
     }),

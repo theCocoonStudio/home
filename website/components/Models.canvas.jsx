@@ -173,8 +173,8 @@ export const Models = forwardRef(function Models(
   useImperativeHandle(
     forwardedRef,
     () => ({
-      desk,
-      laptop,
+      desk: desk.current,
+      laptop: laptop.current,
     }),
     [],
   )

@@ -7,12 +7,14 @@ import {
   Vignette,
 } from '@react-three/postprocessing'
 import { useEffect, useState } from 'react'
+import { compileSceneAsync } from '../../utils/gl'
 
 export const Effects = function Effects({
   enabled = false,
   renderPriority,
   animationTargets,
   ready,
+  setReady,
 }) {
   const { get } = useThree(({ get }) => ({
     get,
@@ -21,12 +23,22 @@ export const Effects = function Effects({
   const [sun, setSun] = useState()
   useEffect(() => {
     if (!sun && ready) {
-      setSun(animationTargets.refs.background.current.background.current)
+      setSun(animationTargets.refs.background.current.background)
     }
   }, [animationTargets, ready, sun])
 
+  useEffect(() => {
+    if (!ready) {
+      const { gl, scene, camera } = get()
+      compileSceneAsync(gl, scene, camera, () => {
+        setReady(true)
+      })
+    }
+  }, [])
+
   return (
-    enabled && (
+    enabled &&
+    ready && (
       <EffectComposer
         disableNormalPass
         multisampling={8}

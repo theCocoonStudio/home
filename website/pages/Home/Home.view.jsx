@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Stars } from '@react-three/drei'
+import { Lightformer, PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
@@ -52,10 +52,6 @@ export const Home = ({ config, setReady, ready }) => {
 
   // child derived data
   const [modelsSize, setModelsSize] = useState()
-  // reactive dependent data
-  useEffect(() => {
-    setReady(true)
-  }, [])
 
   return (
     <Suspense>
@@ -68,7 +64,39 @@ export const Home = ({ config, setReady, ready }) => {
         position-z={5}
         fov={10}
       ></PerspectiveCamera>
-      <Environment preset='city' environmentIntensity={0.7} />
+      {/* <Environment preset='city' environmentIntensity={0.7} /> */}
+      <Environment resolution={1024}>
+        <group rotation={[-Math.PI / 3, 0, 0]}>
+          <Lightformer
+            intensity={4}
+            rotation-x={Math.PI / 2}
+            position={[0, 5, -9]}
+            scale={[10, 10, 1]}
+          />
+          {[2, 0, 2, 0, 2, 0, 2, 0].map((x, i) => (
+            <Lightformer
+              key={i}
+              form='circle'
+              intensity={4}
+              rotation={[Math.PI / 2, 0, 0]}
+              position={[x, 4, i * 4]}
+              scale={[4, 1, 1]}
+            />
+          ))}
+          <Lightformer
+            intensity={2}
+            rotation-y={Math.PI / 2}
+            position={[-5, 1, -1]}
+            scale={[50, 2, 1]}
+          />
+          <Lightformer
+            intensity={2}
+            rotation-y={-Math.PI / 2}
+            position={[10, 1, 0]}
+            scale={[50, 2, 1]}
+          />
+        </group>
+      </Environment>
       <ambientLight intensity={0.7} />
       <Background {...commonSizeDataProps} ref={background} />
       <Models
@@ -84,12 +112,13 @@ export const Home = ({ config, setReady, ready }) => {
         itemDescriptionIdBase={itemDescription}
         {...commonSizeDataProps}
       />
-      <Stars radius={50} depth={50} count={15000} factor={7} fade speed={1} />
+      <Stars radius={50} depth={50} count={15000} factor={6} fade speed={1} />
       <Effects
         renderPriority={renderPriority}
         animationTargets={animationTargets}
         enabled
         ready={ready}
+        setReady={setReady}
       />
     </Suspense>
   )
