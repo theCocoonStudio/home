@@ -33,6 +33,7 @@ export const useItemGeometry = (depth = 0.1, borderRadius = 0.02) => {
 
     const geometry = new ExtrudeGeometry(shape, settings)
     geometry.center()
+
     return geometry
   }, [borderRadius, depth, settings])
 
@@ -47,5 +48,10 @@ export const useItemGeometry = (depth = 0.1, borderRadius = 0.02) => {
     (targetDepth) => targetDepth / depth,
     [depth],
   )
-  return { geometry, getDepthScaleFactor, depth }
+
+  const returnVal = useMemo(
+    () => ({ geometry, getDepthScaleFactor, depth }),
+    [depth, geometry, getDepthScaleFactor],
+  )
+  return returnVal
 }

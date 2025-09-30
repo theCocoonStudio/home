@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useItemGeometry } from '../hooks/useItemGeometry.canvas'
 import { Vector2, Vector3 } from 'three'
-import { MeshTransmissionMaterial } from '@react-three/drei'
+import { HomeItem } from './HomeItem.canvas'
 
 export const HomeItems = forwardRef(function HomeItems(
   {
@@ -26,7 +26,7 @@ export const HomeItems = forwardRef(function HomeItems(
   const mesh = useRef()
   const material = useRef()
   // geometry
-  const { geometry, depth } = useItemGeometry()
+  const { geometry, depth } = useItemGeometry(0.08, 0.00005)
 
   // item-specific markup data
   const { focusScales, focusPositions } = useMemo(() => {
@@ -99,7 +99,7 @@ export const HomeItems = forwardRef(function HomeItems(
           modelsZScales[i] = new Vector3(
             scaleModelsZFactor,
             scaleModelsZFactor,
-            1,
+            scaleModelsZFactor,
           )
 
           // add modelsZ item position to corresponding array
@@ -141,7 +141,7 @@ export const HomeItems = forwardRef(function HomeItems(
             centerLayoutScales[i] = new Vector3(
               scaleCenterLayoutFactor,
               scaleCenterLayoutFactor,
-              1,
+              scaleCenterLayoutFactor,
             )
 
             centerLayoutPositions[i] = new Vector3(
@@ -196,30 +196,15 @@ export const HomeItems = forwardRef(function HomeItems(
     }),
     [],
   )
+
   return (
     <>
-      <mesh
+      <HomeItem
         ref={mesh}
         geometry={geometry}
-        scale={focusScales ? focusScales[0] : undefined}
-        position={focusPositions ? focusPositions[0] : undefined}
-      >
-        {/* <meshStandardMaterial color='red' /> */}
-        <MeshTransmissionMaterial
-          ref={material}
-          /* backside */
-          samples={4}
-          thickness={2}
-          chromaticAberration={0.025}
-          anisotropy={0.1}
-          distortion={0.1}
-          distortionScale={0.5}
-          temporalDistortion={0.2}
-          iridescence={1}
-          iridescenceIOR={1}
-          iridescenceThicknessRange={[0, 1400]}
-        />
-      </mesh>
+        focusScale={focusScales ? focusScales[0] : undefined}
+        focusPosition={focusPositions ? focusPositions[0] : undefined}
+      />
     </>
   )
 })

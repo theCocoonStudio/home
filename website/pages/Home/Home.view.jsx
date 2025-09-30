@@ -1,6 +1,6 @@
 import { Lightformer, PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useTargetItems } from './useTargetItems'
 import { useLightbox } from '../../hooks/useLightbox'

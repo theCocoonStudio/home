@@ -52,7 +52,7 @@ export const Effects = function Effects({
             <Sepia
               intensity={0.4} // sepia intensity
             />
-            <Noise opacity={0.07} premultiply={false} />
+            <Noise opacity={0.12} premultiply={false} />
             <Vignette
               offset={0.15} // vignette offset
               darkness={0.74} // vignette darkness
