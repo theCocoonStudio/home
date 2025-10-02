@@ -5,6 +5,7 @@ import { HomeProvider } from './HomeProvider'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
 import { ScrollContainer } from '../../components/ScrollContainer'
+import dragonfly from 'assets/photography/test.jpg'
 
 export const config = {
   context: { Provider: HomeProvider },
@@ -39,12 +40,14 @@ export const config = {
           description:
             'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
           date: 'September 1, 2025',
+          url: dragonfly,
         },
         {
           title: 'This is my title and it is the best',
           description:
             'It has survived not only five centuries, but also the leap into electronic typesetting.',
           date: 'September 1, 2025',
+          url: dragonfly,
         },
         {
           title:
@@ -52,6 +55,7 @@ export const config = {
           description:
             'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
           date: 'September 1, 2025',
+          url: dragonfly,
         },
         {
           title:
@@ -59,6 +63,7 @@ export const config = {
           description:
             'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
           date: 'September 1, 2025',
+          url: dragonfly,
         },
         {
           title:
@@ -66,6 +71,7 @@ export const config = {
           description:
             'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
           date: 'September 1, 2025',
+          url: dragonfly,
         },
       ],
     },
@@ -78,7 +84,6 @@ export const config = {
       damping: 0,
       distance: 2,
     },
-    ranges: { temp: 0 },
   },
   nav: {
     logoRenderPriority: 3,
@@ -118,5 +123,6 @@ export const config = {
     backgroundHeightProportionCss: () => {
       return `60vh`
     },
+    backgroundZ0: -80,
   },
 }

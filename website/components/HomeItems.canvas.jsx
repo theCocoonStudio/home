@@ -1,14 +1,22 @@
-import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 import { useItemGeometry } from '../hooks/useItemGeometry.canvas'
-import { Vector2, Vector3 } from 'three'
+import { MeshStandardMaterial, Vector2, Vector3 } from 'three'
 import { HomeItem } from './HomeItem.canvas'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 export const HomeItems = forwardRef(function HomeItems(
   {
     modelsSize,
-    positionZ0,
     itemsConfig,
     itemDescriptionIdBase,
+    scrollContainerId,
+    positionZ0,
     sidePadding,
     topBottomPadding,
     get,
@@ -16,6 +24,7 @@ export const HomeItems = forwardRef(function HomeItems(
     floorY,
     size,
     modelsViewportHeight,
+    modelsViewportWidth,
     modelsFactor,
     contentWidthPx,
     isMobileLayout,
@@ -23,188 +32,266 @@ export const HomeItems = forwardRef(function HomeItems(
   forwardedRef,
 ) {
   // refs
-  const mesh = useRef()
-  const material = useRef()
+  const group = useRef()
   // geometry
-  const { geometry, depth } = useItemGeometry(0.08, 0.00005)
+  const { geometry, depth: focusDepth } = useItemGeometry(0.1, 0.00005)
+  // material
+  const material = useMemo(() => {
+    return new MeshStandardMaterial({
+      transparent: true,
+      opacity: 0.3,
+      metalness: 1,
+      roughness: 0.3,
+    })
+  }, [])
+  useEffect(
+    () => () => {
+      material.dispose
+    },
+    [],
+  )
+  // animation data
+  const { focusFactor } = useSettings()
 
-  // item-specific markup data
-  const { focusScales, focusPositions } = useMemo(() => {
-    if (modelsSize) {
-      // innitialize output
-      const centerLayoutScales = []
-      const modelsZScales = []
-      const centerLayoutPositions = []
-      const mobileSidePositions = []
-      const modelsZPositions = []
+  // item-specific focus data
+  const { focusScales, focusPositions, initialPositions, ranges } =
+    useMemo(() => {
+      if (modelsSize) {
+        // initialize output
+        const centerLayoutScales = []
+        const modelsZScales = []
+        const centerLayoutPositions = []
+        const mobileSidePositions = []
+        const modelsZPositions = []
+        const modelsZInitialPositions = []
+        const centerLayoutInitialPositions = []
+        const ranges = []
 
-      // base data
+        // base data
+        const { camera } = get()
 
-      const { camera } = get()
+        // center layout viewport data
+        const centerLayoutZ =
+          positionZ0 + (modelsZ - modelsSize.z - positionZ0) / 2
 
-      // center layout viewport data
-      const centerLayoutZ =
-        positionZ0 + (modelsZ - modelsSize.z - positionZ0) / 2
+        const viewportSizeCenterLayout = camera.getViewSize(
+          Math.abs(camera.position.z - centerLayoutZ),
+          new Vector2(),
+        )
+        const factorCenterLayout = size.height / viewportSizeCenterLayout.y
 
-      const viewportSizeCenterLayout = camera.getViewSize(
-        Math.abs(camera.position.z - centerLayoutZ),
-        new Vector2(),
-      )
-      const factorCenterLayout = size.height / viewportSizeCenterLayout.y
+        // max width for center layout
+        const maxWidthCenterLayout =
+          (contentWidthPx - 2 * sidePadding) / factorCenterLayout
 
-      // max width for center layout
-      const maxWidthCenterLayout =
-        (contentWidthPx - 2 * sidePadding) / factorCenterLayout
+        // height from bottom of center-layout item to top of models (overlap), in center layout units
+        const floorYCenterLayoutBottomPx =
+          factorCenterLayout * (floorY - -viewportSizeCenterLayout.y / 2)
 
-      // height from bottom of center-layout item to top of models (overlap), in center layout units
-      const floorYCenterLayoutBottomPx =
-        factorCenterLayout * (floorY - -viewportSizeCenterLayout.y / 2)
+        const modelsTopBottomPx =
+          modelsFactor * (floorY + modelsSize.y - -modelsViewportHeight / 2)
+        const centerLayoutOverlapHeightPx =
+          modelsTopBottomPx > floorYCenterLayoutBottomPx
+            ? modelsTopBottomPx - floorYCenterLayoutBottomPx
+            : 0
 
-      const modelsTopBottomPx =
-        modelsFactor * (floorY + modelsSize.y - -modelsViewportHeight / 2)
-      const centerLayoutOverlapHeightPx =
-        modelsTopBottomPx > floorYCenterLayoutBottomPx
-          ? modelsTopBottomPx - floorYCenterLayoutBottomPx
-          : 0
+        // max width for modelsZ layout
+        const maxWidthModelsZ =
+          (contentWidthPx / 2 - 2 * sidePadding) / modelsFactor
 
-      // max width for modelsZ layout
-      const maxWidthModelsZ =
-        (contentWidthPx / 2 - 2 * sidePadding) / modelsFactor
+        // initial test for center layout
+        const hasDepthForCenterLayout =
+          Math.abs(modelsZ - positionZ0) - modelsSize.z - 0.002 > focusDepth * 3
 
-      // initial test for center layout
-      const hasDepthForCenterLayout =
-        Math.abs(modelsZ - positionZ0) - modelsSize.z - 0.002 > depth * 3
+        let isCenterLayout = hasDepthForCenterLayout
 
-      let isCenterLayout = hasDepthForCenterLayout
+        for (let i = 0; i < itemsConfig.length; i++) {
+          // calculate range
+          const start = i * (1 / itemsConfig.length)
+          const fullLength = 1 / itemsConfig.length
+          const animationLength = fullLength * ((1 - focusFactor) / 2)
+          const end = start + fullLength
+          ranges[i] = {
+            in: [start, animationLength],
+            out: [end - animationLength, animationLength],
+          }
 
-      for (let i = 0; i < itemsConfig.length; i++) {
-        // item's description markup bottom
-        const bottomPx = document
-          .getElementById(`${itemDescriptionIdBase}-${i}`)
-          .getBoundingClientRect().bottom
+          // item's description markup bottom
+          const bottomPx = document
+            .getElementById(`${itemDescriptionIdBase}-${i}`)
+            .getBoundingClientRect().bottom
 
-        // model layout calculations, only if not mobile
-        if (!isMobileLayout) {
-          // item max height in modelsZ layout
-          const maxHeightModelsZ =
-            modelsViewportHeight / 2 -
-            bottomPx / modelsFactor -
-            floorY -
-            topBottomPadding / modelsFactor
+          // model layout calculations, only if not mobile
+          if (!isMobileLayout) {
+            // item max height in modelsZ layout
+            const maxHeightModelsZ =
+              modelsViewportHeight / 2 -
+              bottomPx / modelsFactor -
+              floorY -
+              topBottomPadding / modelsFactor
 
-          // item final scale in modelsZ layout
-          const scaleModelsZFactor = Math.min(maxWidthModelsZ, maxHeightModelsZ)
+            // item final scale in modelsZ layout
+            const scaleModelsZFactor = Math.min(
+              maxWidthModelsZ,
+              maxHeightModelsZ,
+            )
 
-          // add modelsZ item scale to corresponding array
-          modelsZScales[i] = new Vector3(
-            scaleModelsZFactor,
-            scaleModelsZFactor,
-            scaleModelsZFactor,
-          )
+            // add modelsZ item scale to corresponding array
+            modelsZScales[i] = new Vector3(
+              scaleModelsZFactor,
+              scaleModelsZFactor,
+              1,
+            )
 
-          // add modelsZ item position to corresponding array
-          modelsZPositions[i] = new Vector3(
-            (0.25 * contentWidthPx) / modelsFactor,
-            floorY + scaleModelsZFactor / 2,
-            modelsZ - depth / 2,
-          )
-        }
+            // add modelsZ item position to corresponding array
+            modelsZPositions[i] = new Vector3(
+              (0.25 * contentWidthPx) / modelsFactor,
+              floorY + scaleModelsZFactor / 2,
+              modelsZ - focusDepth / 2,
+            )
+            // add corresponding initial position
+            modelsZInitialPositions[i] = new Vector3(
+              modelsViewportWidth / 2 + 2 * modelsZScales[i].x,
+              modelsZPositions[i].y,
+              modelsZPositions[i].z,
+            )
+          }
 
-        // only while center layout still applies, calculate center-layout item scale as well
+          // only while center layout still applies, calculate center-layout item scale as well
 
-        if (isCenterLayout || isMobileLayout) {
-          // item max height in center layout
-          const maxHeightCenterLayout =
-            viewportSizeCenterLayout.y / 2 -
-            bottomPx / factorCenterLayout -
-            floorY -
-            topBottomPadding / factorCenterLayout
-
-          // item final scale in center layout
-          const scaleCenterLayoutFactor = Math.min(
-            maxWidthCenterLayout,
-            maxHeightCenterLayout,
-          )
-          // item pixel height in center layout
-          const heightCenterLayoutPx =
-            scaleCenterLayoutFactor * factorCenterLayout
-
-          // test if center layout still applies
-          const supportsCenterLayout =
-            heightCenterLayoutPx >= 2 * centerLayoutOverlapHeightPx
-
-          // set isCenterLayout for next iteration
-          isCenterLayout = supportsCenterLayout
-
-          // if center-layout still applies (or isMobile), add item's center-layout (or mobile) position and scale to output arrays
           if (isCenterLayout || isMobileLayout) {
-            centerLayoutScales[i] = new Vector3(
-              scaleCenterLayoutFactor,
-              scaleCenterLayoutFactor,
-              scaleCenterLayoutFactor,
-            )
+            // item max height in center layout
+            const maxHeightCenterLayout =
+              viewportSizeCenterLayout.y / 2 -
+              bottomPx / factorCenterLayout -
+              floorY -
+              topBottomPadding / factorCenterLayout
 
-            centerLayoutPositions[i] = new Vector3(
-              0,
-              floorY + scaleCenterLayoutFactor / 2,
-              centerLayoutZ - depth / 2,
+            // item final scale in center layout
+            const scaleCenterLayoutFactor = Math.min(
+              maxWidthCenterLayout,
+              maxHeightCenterLayout,
             )
-            mobileSidePositions[i] = centerLayoutPositions[i]
-              .clone()
-              .setX(maxWidthCenterLayout / 2 - scaleCenterLayoutFactor / 2)
+            // item pixel height in center layout
+            const heightCenterLayoutPx =
+              scaleCenterLayoutFactor * factorCenterLayout
+
+            // test if center layout still applies
+            const supportsCenterLayout =
+              heightCenterLayoutPx >= 2 * centerLayoutOverlapHeightPx
+
+            // set isCenterLayout for next iteration
+            isCenterLayout = supportsCenterLayout
+
+            // if center-layout still applies (or isMobile), add item's center-layout (or mobile) position and scale to output arrays
+            if (isCenterLayout || isMobileLayout) {
+              centerLayoutScales[i] = new Vector3(
+                scaleCenterLayoutFactor,
+                scaleCenterLayoutFactor,
+                1,
+              )
+
+              centerLayoutPositions[i] = new Vector3(
+                0,
+                floorY + scaleCenterLayoutFactor / 2,
+                centerLayoutZ - focusDepth / 2,
+              )
+              mobileSidePositions[i] = centerLayoutPositions[i]
+                .clone()
+                .setX(maxWidthCenterLayout / 2 - scaleCenterLayoutFactor / 2)
+
+              // also add corresponding initial position
+              centerLayoutInitialPositions[i] = new Vector3(
+                modelsViewportWidth / 2 + 2 * centerLayoutScales[i].x,
+                centerLayoutPositions[i].y,
+                centerLayoutPositions[i].z,
+              )
+            }
           }
         }
-      }
 
-      // return array corresponding to active layout and variable indicating active layout
-      const focusScales =
-        isCenterLayout || isMobileLayout ? centerLayoutScales : modelsZScales
-      const focusPositions = isCenterLayout
-        ? centerLayoutPositions
-        : isMobileLayout
-          ? mobileSidePositions
-          : modelsZPositions
-      return {
-        focusScales,
-        focusPositions,
+        // focus: return array corresponding to active layout and variable indicating active layout
+        const focusScales =
+          isCenterLayout || isMobileLayout ? centerLayoutScales : modelsZScales
+        const focusPositions = isCenterLayout
+          ? centerLayoutPositions
+          : isMobileLayout
+            ? mobileSidePositions
+            : modelsZPositions
+
+        const initialPositions = isCenterLayout
+          ? centerLayoutInitialPositions
+          : modelsZInitialPositions
+        return {
+          focusScales,
+          focusPositions,
+          initialPositions,
+          ranges,
+        }
       }
-    }
-    return {}
-  }, [
-    contentWidthPx,
-    depth,
-    floorY,
-    get,
-    isMobileLayout,
-    itemDescriptionIdBase,
-    itemsConfig,
-    modelsFactor,
-    modelsSize,
-    modelsViewportHeight,
-    modelsZ,
-    positionZ0,
-    sidePadding,
-    size,
-    topBottomPadding,
-  ])
+      return {}
+    }, [
+      contentWidthPx,
+      focusDepth,
+      floorY,
+      get,
+      isMobileLayout,
+      itemDescriptionIdBase,
+      itemsConfig,
+      modelsFactor,
+      modelsSize,
+      modelsViewportHeight,
+      modelsViewportWidth,
+      modelsZ,
+      positionZ0,
+      sidePadding,
+      size,
+      topBottomPadding,
+      focusFactor,
+    ])
 
   useImperativeHandle(
     forwardedRef,
     () => ({
-      item: mesh.current,
-      material: material.current,
+      group: group.current,
+      material,
     }),
-    [],
+    [material],
   )
 
-  return (
-    <>
-      <HomeItem
-        ref={mesh}
-        geometry={geometry}
-        focusScale={focusScales ? focusScales[0] : undefined}
-        focusPosition={focusPositions ? focusPositions[0] : undefined}
-      />
-    </>
-  )
+  const items = useMemo(() => {
+    const returnItems = []
+    for (let index = 0; index < itemsConfig.length; index++) {
+      returnItems[index] = (
+        <HomeItem
+          key={`item-${index}`}
+          geometry={geometry}
+          focusScale={focusScales && focusScales[index]}
+          focusPosition={focusPositions && focusPositions[index]}
+          initialPosition={initialPositions && initialPositions[0]}
+          scrollContainerId={scrollContainerId}
+          index={index}
+          range={ranges && ranges[index]}
+          url={itemsConfig[index].url}
+          get={get}
+          focusDepth={focusDepth}
+          material={material}
+        />
+      )
+    }
+    return returnItems
+  }, [
+    focusDepth,
+    focusPositions,
+    focusScales,
+    geometry,
+    get,
+    initialPositions,
+    itemsConfig,
+    material,
+    ranges,
+    scrollContainerId,
+  ])
+
+  return <group ref={group}>{items}</group>
 })

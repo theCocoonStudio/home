@@ -15,10 +15,9 @@ export const Home = ({ config, setReady, ready }) => {
   const {
     effects: { renderPriority, Component: Effects },
 
-    main: { EventDispatcherComponent },
     data: {
       content: { items: itemsConfig },
-      markupIds: { itemDescription },
+      markupIds: { itemDescription, scrollContainerId },
     },
   } = config
 
@@ -26,7 +25,7 @@ export const Home = ({ config, setReady, ready }) => {
 
   // theme
   const {
-    page: { backgroundHeightProportion },
+    page: { backgroundHeightProportion, backgroundZ0 },
   } = useTheme()
 
   // imperative component refs
@@ -45,7 +44,7 @@ export const Home = ({ config, setReady, ready }) => {
 
   // common child size data
   const commonSizeDataProps = useCommonSizeData({
-    positionZ0: -80,
+    positionZ0: backgroundZ0,
     heightProportion0: backgroundHeightProportion,
     heightProportion1: backgroundHeightProportion,
   })
@@ -110,6 +109,7 @@ export const Home = ({ config, setReady, ready }) => {
         modelsSize={modelsSize}
         itemsConfig={itemsConfig}
         itemDescriptionIdBase={itemDescription}
+        scrollContainerId={scrollContainerId}
         {...commonSizeDataProps}
       />
       <Stars radius={50} depth={50} count={15000} factor={6} fade speed={1} />

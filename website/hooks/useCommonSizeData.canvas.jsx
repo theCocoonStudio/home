@@ -54,6 +54,7 @@ export const useCommonSizeData = ({
     contentWidthPx,
     floorY,
     modelsViewportHeight,
+    modelsViewportWidth,
     modelsFactor,
     modelsZ,
   } = useMemo(() => {
@@ -78,10 +79,8 @@ export const useCommonSizeData = ({
     const modelsZ = getZpos(floorY, itemDescriptionBottom, size.height, camera)
 
     // viewport height and factor at models position-z
-    const modelsViewportHeight = camera.getViewSize(
-      Math.abs(camera.position.z - modelsZ),
-      new Vector2(),
-    ).y
+    const { x: modelsViewportWidth, y: modelsViewportHeight } =
+      camera.getViewSize(Math.abs(camera.position.z - modelsZ), new Vector2())
     const modelsFactor = size.height / modelsViewportHeight
 
     return {
@@ -90,6 +89,7 @@ export const useCommonSizeData = ({
       contentWidthPx,
       floorY,
       modelsViewportHeight,
+      modelsViewportWidth,
       modelsFactor,
       modelsZ,
     }
@@ -117,6 +117,7 @@ export const useCommonSizeData = ({
     size,
     get,
     backgroundViewportHeight,
+    modelsViewportWidth,
     backgroundFactor,
     contentWidthPx,
     isMobileLayout: size.width <= modelsLayoutBreakpoint,

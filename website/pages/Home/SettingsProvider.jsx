@@ -4,7 +4,9 @@ import { SettingsContext } from './SettingsContext'
 export const SettingsProvider = ({
   children,
   config: {
-    data: { focusFactor: defaultFocusFactor },
+    data: {
+      constants: { focusFactor: defaultFocusFactor },
+    },
   },
 }) => {
   const defaultSettings = useMemo(

@@ -1,4 +1,4 @@
-import { MeshTransmissionMaterial, useTexture } from '@react-three/drei'
+import { useScroll, useTexture } from '@react-three/drei'
 import {
   forwardRef,
   useEffect,
@@ -6,7 +6,6 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import dragonfly from 'assets/photography/test.jpg'
 import {
   DoubleSide,
   RepeatWrapping,
@@ -18,24 +17,36 @@ import { setImageScale } from '../utils/bounds'
 import metal from 'website/assets/canvas/metal.png'
 import norm from 'website/assets/canvas/norm.png'
 import rough from 'website/assets/canvas/rough.png'
-import { useTheme } from '../hooks/useTheme'
 import { contain } from 'website/utils/texture'
+import { useFrame } from '@react-three/fiber'
+import { damp } from 'maath/easing'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const HomeItem = forwardRef(function HomeItem(
-  { geometry, focusPosition, focusScale },
+  {
+    geometry,
+    focusScale,
+    focusPosition,
+    initialPosition,
+    range,
+    url,
+    scrollContainerId,
+    index,
+    get,
+    focusDepth,
+    material,
+  },
   forwardedRef,
 ) {
+  // refs
   const mesh = useRef()
-  const material = useRef()
+  useImperativeHandle(forwardedRef, () => ({ mesh: mesh.current }), [])
 
-  useImperativeHandle(
-    forwardedRef,
-    () => ({ mesh: mesh.current, material: material.current }),
-    [],
-  )
+  // independent data
+  const size = useResizeEvent()
 
-  const { colors } = useTheme()
-  const texture = useTexture(dragonfly)
+  // textures
+  const texture = useTexture(url)
   const canvasTextures = useTexture([metal, norm, rough])
 
   useEffect(() => {
@@ -54,7 +65,7 @@ export const HomeItem = forwardRef(function HomeItem(
     [canvasTextures],
   )
 
-  const { scale, repeat } = useMemo(() => {
+  const repeat = useMemo(() => {
     if (texture && focusScale) {
       const scale = new Vector3(0, 0, 0.8)
       setImageScale(
@@ -69,10 +80,77 @@ export const HomeItem = forwardRef(function HomeItem(
         repeatFactor,
         (repeatFactor * scale.y) / scale.x,
       )
-      return { repeat, scale }
+      return repeat
     }
     return {}
   }, [focusScale, texture])
+
+  // target data
+  const { targetScale, targetPosition } = useMemo(() => {
+    const { camera } = get()
+
+    const { width } = size
+
+    const { top, left, bottom, right } = document
+      .getElementById(`${scrollContainerId}-${index}`)
+      .getBoundingClientRect()
+
+    const targetZ = 0
+    const targetViewportSize = camera.getViewSize(
+      Math.abs(camera.position.z - targetZ),
+      new Vector2(),
+    )
+    const targetFactor = width / targetViewportSize.x
+
+    // scale
+    const scaleX = Math.abs(right - left) / targetFactor
+    const scaleY = Math.abs(bottom - top) / targetFactor
+    const scaleZ = Math.min(scaleX, scaleY) / 5
+
+    // position
+    const positionX =
+      -targetViewportSize.x / 2 +
+      (left + Math.abs(right - left) / 2) / targetFactor
+    const positionY =
+      targetViewportSize.y / 2 -
+      (top + Math.abs(bottom - top) / 2) / targetFactor
+    const positionZ = targetZ - scaleZ / 2
+    // return values
+    const targetScale = new Vector3(scaleX, scaleY, scaleZ / focusDepth)
+    const targetPosition = new Vector3(positionX, positionY, positionZ)
+    return { targetScale, targetPosition }
+  }, [focusDepth, get, index, scrollContainerId, size]) // must include size for resize changes
+
+  // animation
+  const scroll = useScroll()
+  const inOffset = useRef(0.0)
+  const outOffset = useRef(0.0)
+  const activePosition = useRef(new Vector3())
+  const activeScale = useRef(new Vector3())
+
+  useFrame((state, delta) => {
+    if (initialPosition) {
+      damp(outOffset, 'current', scroll.range(...range.out), 0.0, delta)
+      damp(inOffset, 'current', scroll.range(...range.in), 0.0, delta)
+
+      if (outOffset.current > 0) {
+        activePosition.current
+          .copy(focusPosition)
+          .lerp(targetPosition, outOffset.current)
+        activeScale.current
+          .copy(focusScale)
+          .lerp(targetScale, outOffset.current)
+      } else {
+        activePosition.current
+          .copy(initialPosition)
+          .lerp(focusPosition, inOffset.current)
+        activeScale.current.copy(focusScale)
+      }
+
+      mesh.current.position.copy(activePosition.current)
+      mesh.current.scale.copy(activeScale.current)
+    }
+  })
 
   return (
     <mesh
@@ -80,34 +158,12 @@ export const HomeItem = forwardRef(function HomeItem(
       geometry={geometry}
       visible={focusPosition}
       scale={focusScale}
-      position={focusPosition}
+      position={initialPosition}
+      material={material}
     >
-      <MeshTransmissionMaterial
-        ref={material}
-        backside={false}
-        samples={4}
-        thickness={2}
-        chromaticAberration={0.025}
-        anisotropy={0.05}
-        distortion={0.4}
-        distortionScale={0.1}
-        temporalDistortion={0.3}
-        reflectivity={0.1}
-        clearcoat={1}
-        clearcoatRoughness={1}
-        ior={1.03}
-        color={'#ccc'}
-        iridescence={0.9}
-        iridescenceIOR={1}
-        iridescenceThicknessRange={[0, 1400]}
-        roughness={0.11}
-        attenuationColor={colors.slate}
-        attenuationDistance={90}
-        sheen={1}
-        sheenColor={colors.slate}
-      />
       <mesh scale={0.7}>
         <meshStandardMaterial
+          fog={false}
           map={texture}
           emissiveMap={texture}
           emissive={'#fff'}
