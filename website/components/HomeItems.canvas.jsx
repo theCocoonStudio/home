@@ -53,8 +53,8 @@ export const HomeItems = forwardRef(function HomeItems(
   // animation data
   const { focusFactor } = useSettings()
 
-  // item-specific focus data
-  const { focusScales, focusPositions, initialPositions, ranges } =
+  // item-specific data
+  const { focusScales, focusPositions, initialPositions, ranges, markups } =
     useMemo(() => {
       if (modelsSize) {
         // initialize output
@@ -66,6 +66,7 @@ export const HomeItems = forwardRef(function HomeItems(
         const modelsZInitialPositions = []
         const centerLayoutInitialPositions = []
         const ranges = []
+        const markups = []
 
         // base data
         const { camera } = get()
@@ -116,10 +117,12 @@ export const HomeItems = forwardRef(function HomeItems(
             out: [end - animationLength, animationLength],
           }
 
-          // item's description markup bottom
-          const bottomPx = document
-            .getElementById(`${itemDescriptionIdBase}-${i}`)
-            .getBoundingClientRect().bottom
+          // item's description markup and bottom
+          const markup = document.getElementById(
+            `${itemDescriptionIdBase}-${i}`,
+          )
+          const bottomPx = markup.getBoundingClientRect().bottom
+          markups[i] = markup
 
           // model layout calculations, only if not mobile
           if (!isMobileLayout) {
@@ -227,6 +230,7 @@ export const HomeItems = forwardRef(function HomeItems(
           focusPositions,
           initialPositions,
           ranges,
+          markups,
         }
       }
       return {}
@@ -268,7 +272,8 @@ export const HomeItems = forwardRef(function HomeItems(
           geometry={geometry}
           focusScale={focusScales && focusScales[index]}
           focusPosition={focusPositions && focusPositions[index]}
-          initialPosition={initialPositions && initialPositions[0]}
+          initialPosition={initialPositions && initialPositions[index]}
+          markup={markups && markups[index]}
           scrollContainerId={scrollContainerId}
           index={index}
           range={ranges && ranges[index]}
@@ -288,6 +293,7 @@ export const HomeItems = forwardRef(function HomeItems(
     get,
     initialPositions,
     itemsConfig,
+    markups,
     material,
     ranges,
     scrollContainerId,

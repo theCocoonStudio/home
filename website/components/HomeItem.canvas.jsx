@@ -28,6 +28,7 @@ export const HomeItem = forwardRef(function HomeItem(
     focusScale,
     focusPosition,
     initialPosition,
+    markup,
     range,
     url,
     scrollContainerId,
@@ -127,6 +128,25 @@ export const HomeItem = forwardRef(function HomeItem(
   const outOffset = useRef(0.0)
   const activePosition = useRef(new Vector3())
   const activeScale = useRef(new Vector3())
+  const markupVisible = useRef(false)
+
+  const { showMarkup, hideMarkup } = useMemo(() => {
+    const showMarkup = () => {
+      if (!markupVisible.current) {
+        markup.style.opacity = '1'
+        markup.style.pointerEvents = 'auto'
+        markupVisible.current = true
+      }
+    }
+    const hideMarkup = () => {
+      if (markupVisible.current) {
+        markup.style.opacity = '0'
+        markup.style.pointerEvents = 'none'
+        markupVisible.current = false
+      }
+    }
+    return { showMarkup, hideMarkup }
+  }, [markup])
 
   useFrame((state, delta) => {
     if (initialPosition) {
@@ -134,6 +154,7 @@ export const HomeItem = forwardRef(function HomeItem(
       damp(inOffset, 'current', scroll.range(...range.in), 0.0, delta)
 
       if (outOffset.current > 0) {
+        hideMarkup()
         activePosition.current
           .copy(focusPosition)
           .lerp(targetPosition, outOffset.current)
@@ -141,6 +162,12 @@ export const HomeItem = forwardRef(function HomeItem(
           .copy(focusScale)
           .lerp(targetScale, outOffset.current)
       } else {
+        if (inOffset.current > 1 - scroll.eps) {
+          showMarkup()
+        } else {
+          hideMarkup()
+        }
+
         activePosition.current
           .copy(initialPosition)
           .lerp(focusPosition, inOffset.current)
