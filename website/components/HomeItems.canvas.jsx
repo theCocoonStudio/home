@@ -6,7 +6,12 @@ import {
   useRef,
 } from 'react'
 import { useItemGeometry } from '../hooks/useItemGeometry.canvas'
-import { MeshStandardMaterial, Vector2, Vector3 } from 'three'
+import {
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+  Vector2,
+  Vector3,
+} from 'three'
 import { HomeItem } from './HomeItem.canvas'
 import { useSettings } from 'website/pages/Home/useSettings'
 
@@ -36,17 +41,23 @@ export const HomeItems = forwardRef(function HomeItems(
   // geometry
   const { geometry, depth: focusDepth } = useItemGeometry(0.1, 0.00005)
   // material
-  const material = useMemo(() => {
-    return new MeshStandardMaterial({
+  const { material, targetMaterial } = useMemo(() => {
+    const material = new MeshStandardMaterial({
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.4,
       metalness: 1,
-      roughness: 0.3,
+      roughness: 1,
+      depthWrite: false,
+      depthTest: true,
     })
+
+    const targetMaterial = new MeshBasicMaterial({ color: '#656565' })
+    return { material, targetMaterial }
   }, [])
   useEffect(
     () => () => {
-      material.dispose
+      material.dispose()
+      targetMaterial.dispose()
     },
     [],
   )
@@ -259,8 +270,9 @@ export const HomeItems = forwardRef(function HomeItems(
     () => ({
       group: group.current,
       material,
+      targetMaterial,
     }),
-    [material],
+    [material, targetMaterial],
   )
 
   const items = useMemo(() => {
@@ -281,6 +293,7 @@ export const HomeItems = forwardRef(function HomeItems(
           get={get}
           focusDepth={focusDepth}
           material={material}
+          targetMaterial={targetMaterial}
         />
       )
     }
@@ -297,6 +310,7 @@ export const HomeItems = forwardRef(function HomeItems(
     material,
     ranges,
     scrollContainerId,
+    targetMaterial,
   ])
 
   return <group ref={group}>{items}</group>

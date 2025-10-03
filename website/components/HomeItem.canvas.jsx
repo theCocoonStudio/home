@@ -6,14 +6,8 @@ import {
   useMemo,
   useRef,
 } from 'react'
-import {
-  DoubleSide,
-  RepeatWrapping,
-  SRGBColorSpace,
-  Vector2,
-  Vector3,
-} from 'three'
-import { setImageScale } from '../utils/bounds'
+import { RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
+
 import metal from 'website/assets/canvas/metal.png'
 import norm from 'website/assets/canvas/norm.png'
 import rough from 'website/assets/canvas/rough.png'
@@ -36,12 +30,18 @@ export const HomeItem = forwardRef(function HomeItem(
     get,
     focusDepth,
     material,
+    targetMaterial,
   },
   forwardedRef,
 ) {
   // refs
   const mesh = useRef()
-  useImperativeHandle(forwardedRef, () => ({ mesh: mesh.current }), [])
+  const inner = useRef()
+  useImperativeHandle(
+    forwardedRef,
+    () => ({ mesh: mesh.current, inner: inner.current }),
+    [],
+  )
 
   // independent data
   const size = useResizeEvent()
@@ -67,24 +67,13 @@ export const HomeItem = forwardRef(function HomeItem(
   )
 
   const repeat = useMemo(() => {
-    if (texture && focusScale) {
-      const scale = new Vector3(0, 0, 0.8)
-      setImageScale(
-        0.8,
-        0.8,
-        texture.source.data.width,
-        texture.source.data.height,
-        scale,
-      )
-      const repeatFactor = focusScale.x * 0.075
-      const repeat = new Vector2(
-        repeatFactor,
-        (repeatFactor * scale.y) / scale.x,
-      )
+    if (focusScale) {
+      const repeatFactor = focusScale.x * 0.065
+      const repeat = new Vector2(repeatFactor, repeatFactor)
       return repeat
     }
     return {}
-  }, [focusScale, texture])
+  }, [focusScale])
 
   // target data
   const { targetScale, targetPosition } = useMemo(() => {
@@ -129,8 +118,9 @@ export const HomeItem = forwardRef(function HomeItem(
   const activePosition = useRef(new Vector3())
   const activeScale = useRef(new Vector3())
   const markupVisible = useRef(false)
+  const isTargetMaterial = useRef(false)
 
-  const { showMarkup, hideMarkup } = useMemo(() => {
+  const { showMarkup, hideMarkup, setMaterial } = useMemo(() => {
     const showMarkup = () => {
       if (!markupVisible.current) {
         markup.style.opacity = '1'
@@ -145,13 +135,33 @@ export const HomeItem = forwardRef(function HomeItem(
         markupVisible.current = false
       }
     }
-    return { showMarkup, hideMarkup }
-  }, [markup])
+    const setMaterial = () => {
+      if (outOffset.current > 1 - scroll.eps) {
+        if (!isTargetMaterial.current) {
+          mesh.current.material = targetMaterial
+          isTargetMaterial.current = true
+        }
+      } else if (isTargetMaterial.current) {
+        mesh.current.material = material
+        isTargetMaterial.current = false
+      }
+    }
+    return { showMarkup, hideMarkup, setMaterial }
+  }, [markup, scroll.eps, targetMaterial, material])
 
   useFrame((state, delta) => {
     if (initialPosition) {
+      setMaterial()
+
       damp(outOffset, 'current', scroll.range(...range.out), 0.0, delta)
       damp(inOffset, 'current', scroll.range(...range.in), 0.0, delta)
+      damp(
+        inner.current.material,
+        'opacity',
+        1.5 * (1 - outOffset.current),
+        0.0,
+        delta,
+      )
 
       if (outOffset.current > 0) {
         hideMarkup()
@@ -188,14 +198,17 @@ export const HomeItem = forwardRef(function HomeItem(
       position={initialPosition}
       material={material}
     >
-      <mesh scale={0.7}>
+      <mesh scale={0.7} ref={inner}>
         <meshStandardMaterial
           fog={false}
           map={texture}
+          depthWrite={false}
+          depthTest={true}
+          transparent
+          opacity={1}
           emissiveMap={texture}
           emissive={'#fff'}
-          emissiveIntensity={0.9}
-          side={DoubleSide}
+          emissiveIntensity={0.35}
           metalnessMap={canvasTextures[0]}
           normalMap={canvasTextures[1]}
           roughnessMap={canvasTextures[2]}

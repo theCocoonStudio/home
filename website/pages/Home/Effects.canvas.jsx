@@ -50,7 +50,7 @@ export const Effects = function Effects({
           <>
             <GodRays sun={sun} exposure={0.7} weight={2.4} density={0.8} blur />
             <Sepia
-              intensity={0.4} // sepia intensity
+              intensity={0.45} // sepia intensity
             />
             <Noise opacity={0.12} premultiply={false} />
             <Vignette
