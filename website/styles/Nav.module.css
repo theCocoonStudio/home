@@ -114,3 +114,15 @@
     max-height: 17px;
   }
 }
+
+.activeContainer {
+  position: relative;
+}
+.active {
+  position: absolute;
+  top: calc(100% + 6px);
+  width: 3px;
+  height: 3px;
+  background-color: var(--theme-colors-white);
+  border-radius: 50%;
+}

@@ -33,7 +33,7 @@ export const Laptop = forwardRef(function Laptop({ ...props }, forwardedRef) {
     <group
       ref={laptop}
       /* dispose={null} */
-      position={[0.3, 0.756, -0.4]}
+      position={[0.3, 0.75, -0.4]}
       scale={0.05}
     >
       <group position={[0.002, -0.038, 0.414]} rotation={[0.014, 0, 0]}>

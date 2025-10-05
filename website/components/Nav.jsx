@@ -7,6 +7,7 @@ import { useLightbox } from '../hooks/useLightbox'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
+import { useMenu } from 'website/hooks/useMenu'
 
 export const Nav = ({ config, scrollContainer }) => {
   const {
@@ -21,6 +22,11 @@ export const Nav = ({ config, scrollContainer }) => {
     scrollTo(0.0)
   }, [scrollTo])
 
+  const { showMenu, setShowMenu } = useMenu()
+
+  const toggleMenu = useCallback(() => {
+    setShowMenu((prev) => !prev)
+  }, [setShowMenu])
   return (
     <div className={`${styles.nav}`}>
       <div className={`${styles.inner}`}>
@@ -83,8 +89,14 @@ export const Nav = ({ config, scrollContainer }) => {
 
           <div className={`${styles.divider}`} />
 
-          <div>
+          <div
+            onClick={() => {
+              toggleMenu()
+            }}
+            className={styles.activeContainer}
+          >
             <SettingsApplicationsIcon fontSize='inherit' />
+            {showMenu && <div className={styles.active} />}
           </div>
         </div>
       </div>

@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import { raleway } from '../utils/styles'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
   { children, styles, setShowMenu, onBeforeMaximize, padding, droppableHeight },
@@ -30,7 +29,8 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const {
     colors: { black },
-    lengths: { footerHeight },
+    lengths: { topBottomPadding },
+    page: { scrollContainerHeight },
   } = useTheme()
 
   const [minimized, setMinimized] = useState(false)
@@ -46,9 +46,9 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const draggableStyle = useMemo(
     () => ({
       left: `${padding || 0}px`,
-      bottom: `${footerHeight}px`,
+      bottom: `${topBottomPadding + scrollContainerHeight}px`,
     }),
-    [footerHeight, padding],
+    [padding, scrollContainerHeight, topBottomPadding],
   )
 
   const minimizeStyle = useMemo(
@@ -56,40 +56,41 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     [minimized],
   )
 
-  const { style: panelStyle, className: panelClassName } = useMemo(
-    () =>
-      raleway(
-        700,
-        false,
-        !minimized
-          ? undefined
-          : {
-              boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px',
-              transform: 'rotate(0)',
-            },
-        styles.panel,
-      ),
-    [minimized, styles.panel],
-  )
+  const { style: panelStyle, className: panelClassName } = useMemo(() => {
+    const className = `${styles.panel} raleway`
+    const style = !minimized
+      ? {
+          boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px',
+          transform: 'rotate(0)',
+        }
+      : undefined
+    return { className, style }
+  }, [minimized, styles])
+
   const { style: contentStyle, className: contentClassName } = useMemo(() => {
-    return raleway(
-      400,
-      false,
-      markupHeights && {
-        overflowY:
-          !minimized &&
-          droppableHeight - footerHeight - markupHeights.panel <
-            markupHeights.content
-            ? 'auto'
-            : 'hidden',
-        maxHeight: minimized
-          ? '0'
-          : `${droppableHeight - footerHeight - markupHeights.panel}px`,
-      },
-      undefined,
-      styles.content,
-    )
-  }, [droppableHeight, footerHeight, markupHeights, minimized, styles.content])
+    const className = `${styles.content} raleway`
+    const style = markupHeights && {
+      overflowY:
+        !minimized &&
+        droppableHeight -
+          (topBottomPadding + scrollContainerHeight) -
+          markupHeights.panel <
+          markupHeights.content
+          ? 'auto'
+          : 'hidden',
+      maxHeight: minimized
+        ? '0'
+        : `${droppableHeight - (topBottomPadding + scrollContainerHeight) - markupHeights.panel}px`,
+    }
+    return { className, style }
+  }, [
+    droppableHeight,
+    topBottomPadding,
+    scrollContainerHeight,
+    markupHeights,
+    minimized,
+    styles,
+  ])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
@@ -98,18 +99,21 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const toggleMinimized = useCallback(() => {
     if (minimized) {
       const isScroll =
-        droppableHeight - footerHeight - markupHeights.panel <
+        droppableHeight -
+          (topBottomPadding + scrollContainerHeight) -
+          markupHeights.panel <
         markupHeights.content
       onBeforeMaximize(
         isScroll
-          ? droppableHeight - footerHeight
+          ? droppableHeight - (topBottomPadding + scrollContainerHeight)
           : markupHeights.content + markupHeights.panel,
       )
     }
     setMinimized((prev) => !prev)
   }, [
     droppableHeight,
-    footerHeight,
+    topBottomPadding,
+    scrollContainerHeight,
     markupHeights,
     minimized,
     onBeforeMaximize,

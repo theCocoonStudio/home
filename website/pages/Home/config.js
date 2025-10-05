@@ -79,7 +79,7 @@ export const config = {
 
   scroll: {
     scrollControlsProps: {
-      pages: 20,
+      pages: 15,
       enabled: true,
       damping: 0,
       distance: 2,
@@ -124,5 +124,8 @@ export const config = {
       return `60vh`
     },
     backgroundZ0: -80,
+    scrollContainerHeight: (size, { lengths: { topBottomPadding } }) => {
+      return topBottomPadding / 2
+    },
   },
 }

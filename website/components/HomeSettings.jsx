@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import { changaOne, raleway } from '../utils/styles'
 import styles from 'website/styles/HomeSettings.module.css'
 import Switch from '@mui/material/Switch'
 import CheckIcon from '@mui/icons-material/Check'
@@ -9,45 +8,14 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline'
 import Popover from '@mui/material/Popover'
 import { ClickAwayListener, Slider } from '@mui/material'
 import { useSettings } from 'website/pages/Home/useSettings'
-import { useScrollEvent } from '../pages/Home/useScrollEvent'
 
 export const HomeSettings = ({
   /* config, */
   setScrollDistanceFactor,
-  setShowMenu,
 }) => {
   const {
     colors: { white, black },
-    lengths: { atomicPadding },
   } = useTheme()
-
-  const { style: titleStyle, className: titleClassName } = useMemo(
-    () => changaOne(true, undefined, styles.title),
-    [],
-  )
-  const { style: switchStyle, className: switchClassName } = useMemo(
-    () => raleway(400, false, undefined, styles.switch),
-    [],
-  )
-  const { style: sliderStyle, className: sliderClassName } = useMemo(
-    () => raleway(400, false, undefined, styles.slider),
-    [],
-  )
-  const { style: popoverStyle, className: popoverClassName } = useMemo(
-    () =>
-      raleway(
-        400,
-        false,
-        { padding: `${2 * atomicPadding}px` },
-        styles.popover,
-      ),
-    [atomicPadding],
-  )
-
-  const { style: buttonStyle, className: buttonClassname } = useMemo(
-    () => raleway(350, false, undefined, styles.button),
-    [],
-  )
 
   const [performanceAnchor, setPerformanceAnchor] = useState(null)
   const [scrollAnchor, setScrollAnchor] = useState(null)
@@ -69,6 +37,7 @@ export const HomeSettings = ({
     setScrollDistance,
     defaultSettings,
   } = useSettings()
+
   const labelStyles = useMemo(
     () => ({
       autoThrottle: {
@@ -95,16 +64,9 @@ export const HomeSettings = ({
     setScrollDistanceFactor(scrollDistance)
   }, [scrollDistance, setScrollDistanceFactor])
 
-  const section = useScrollEvent()
-  useEffect(() => {
-    if (section === 'preScroll' || section === 'postScroll') {
-      setShowMenu(false)
-    }
-  }, [section, setShowMenu])
-
   return (
     <div className={styles.container}>
-      <div className={titleClassName} style={titleStyle}>
+      <div className={`${styles.title} changa-one-regular-italic`}>
         <h4>Performance</h4>
         <div
           onClick={(e) => {
@@ -133,7 +95,7 @@ export const HomeSettings = ({
                 }
               }}
             >
-              <p style={popoverStyle} className={popoverClassName}>
+              <p className={`${styles.popover} raleway`}>
                 Graphics quality and frame rate (fps) have an inverse
                 relationship. If your battery is low or your screen resolution
                 is very high may, you may need to compromise on graphics or on
@@ -151,7 +113,7 @@ export const HomeSettings = ({
           </Popover>
         </div>
       </div>
-      <div style={switchStyle} className={switchClassName}>
+      <div className={`${styles.switch} raleway`}>
         <div>
           <h5>Auto-throttle:</h5>
           <div style={labelStyles.autoThrottle}>
@@ -189,7 +151,7 @@ export const HomeSettings = ({
           />
         </div>
       </div>
-      <div style={sliderStyle} className={sliderClassName}>
+      <div className={`${styles.slider} raleway`}>
         <div>
           <h5>Fluid Resolution:</h5>
           <div style={labelStyles.resolution}>
@@ -213,7 +175,7 @@ export const HomeSettings = ({
           />
         </div>
       </div>
-      <div style={sliderStyle} className={sliderClassName}>
+      <div className={`${styles.slider} raleway`}>
         <div>
           <h5>Fluid Frames:</h5>
           <div style={labelStyles.frames}>
@@ -237,7 +199,7 @@ export const HomeSettings = ({
           />
         </div>
       </div>
-      <div style={sliderStyle} className={sliderClassName}>
+      <div className={`${styles.slider} raleway`}>
         <div>
           <h5>Light Resolution:</h5>
           <div style={labelStyles.mapsize}>
@@ -261,7 +223,7 @@ export const HomeSettings = ({
           />
         </div>
       </div>
-      <div className={titleClassName} style={titleStyle}>
+      <div className={`${styles.title} changa-one-regular-italic`}>
         <h4>Scroll</h4>
         <div
           onClick={(e) => {
@@ -290,7 +252,7 @@ export const HomeSettings = ({
                 }
               }}
             >
-              <p style={popoverStyle} className={popoverClassName}>
+              <p className={`${styles.popover} raleway`}>
                 These settings let you modify the scroll-based interaction with
                 the page content.
                 <br />
@@ -308,7 +270,7 @@ export const HomeSettings = ({
           </Popover>
         </div>
       </div>
-      <div style={sliderStyle} className={sliderClassName}>
+      <div className={`${styles.slider} raleway`}>
         <div>
           <h5>Scroll Distance:</h5>
           <div>
@@ -331,7 +293,7 @@ export const HomeSettings = ({
           />
         </div>
       </div>
-      <div style={sliderStyle} className={sliderClassName}>
+      <div className={`${styles.slider} raleway`}>
         <div>
           <h5>Focus Factor:</h5>
           <div>
@@ -357,8 +319,7 @@ export const HomeSettings = ({
       <div className={styles.buttons}>
         <div
           onClick={original ? undefined : resetSettings}
-          className={`${buttonClassname} ${original ? styles.disabledButton : styles.activeButton}`}
-          style={buttonStyle}
+          className={`raleway ${styles.button} ${original ? styles.disabledButton : styles.activeButton}`}
         >
           reset
         </div>

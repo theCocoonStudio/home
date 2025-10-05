@@ -198,7 +198,7 @@ export const HomeItem = forwardRef(function HomeItem(
       position={initialPosition}
       material={material}
     >
-      <mesh scale={0.7} ref={inner}>
+      <mesh scale={0.8} ref={inner}>
         <meshStandardMaterial
           fog={false}
           map={texture}

@@ -51,7 +51,7 @@ export const HomeItems = forwardRef(function HomeItems(
       depthTest: true,
     })
 
-    const targetMaterial = new MeshBasicMaterial({ color: '#656565' })
+    const targetMaterial = new MeshBasicMaterial({ color: '#777' })
     return { material, targetMaterial }
   }, [])
   useEffect(

@@ -1,13 +1,12 @@
 import { Droppable } from './Droppable'
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
 import { useMenu } from 'website/hooks/useMenu'
 import styles from 'website/styles/Menu.module.css'
 import { useTheme } from '../hooks/useTheme'
-import { ResizeEventContext } from '../../src/context/ResizeEventContext'
-import { useLightbox } from '../hooks/useLightbox'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Menu = ({
   config,
@@ -16,7 +15,8 @@ export const Menu = ({
   scrollContainer,
 }) => {
   const {
-    lengths: { footerHeight, sidePadding },
+    lengths: { topBottomPadding, sidePadding },
+    page: { scrollContainerHeight },
   } = useTheme()
 
   const draggable = useRef()
@@ -29,10 +29,8 @@ export const Menu = ({
 
   const { droppableWidth, droppableHeight } = useMemo(() => {
     if (showMenu) {
-      const width = scrollContainer.clientWidth
-
       return {
-        droppableWidth: width,
+        droppableWidth: scrollContainer.clientWidth,
 
         droppableHeight: scrollContainer.clientHeight,
       }
@@ -58,8 +56,8 @@ export const Menu = ({
                 (typeof height === 'number'
                   ? height
                   : draggable.current.container.clientHeight) -
-                footerHeight),
-            footerHeight,
+                (scrollContainerHeight + topBottomPadding)),
+            scrollContainerHeight + topBottomPadding,
           ),
         }
         offset.current = { x: 0, y: 0 }
@@ -68,7 +66,7 @@ export const Menu = ({
         draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
       }
     },
-    [droppableWidth, footerHeight, sidePadding],
+    [droppableWidth, scrollContainerHeight, sidePadding, topBottomPadding],
   )
 
   const onMenuDragMove = useCallback(
@@ -89,21 +87,12 @@ export const Menu = ({
     onDragStart: onMenuDragStart,
   })
 
-  const { showLightbox } = useLightbox()
-
-  const { entries } = useContext(ResizeEventContext)
+  const size = useResizeEvent()
 
   // hide menu on resize
   useEffect(() => {
     setShowMenu(false)
-  }, [entries, setShowMenu])
-
-  // hide menu on lightbox open
-  useEffect(() => {
-    if (showLightbox) {
-      setShowMenu(false)
-    }
-  }, [setShowMenu, showLightbox])
+  }, [size])
 
   useEffect(() => {
     if (!showMenu) {

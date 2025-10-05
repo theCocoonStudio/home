@@ -65,7 +65,6 @@ function _Layout() {
   } = config || { main: {}, context: {}, scroll: {}, lightbox: {}, menu: {} }
 
   const muiTheme = createTheme({
-    spacing: theme.atomicPadding / 2,
     palette: {
       common: { black: theme.colors.black, white: theme.colors.white },
       primary: { main: theme.colors.black },
@@ -75,7 +74,7 @@ function _Layout() {
 
   const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
-  const [scrollDistanceFactor, setScrollDistanceFactor] = useState()
+  const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [copied, setCopied] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
 

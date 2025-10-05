@@ -32,6 +32,7 @@
 }
 
 .switch {
+  font-weight: 400;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -52,8 +53,8 @@
     column-gap: 1em;
     align-items: center;
     > div {
-      /* background-color: var(--black); */
-      border: 1px solid var(--black);
+      /* background-color: var(--theme-colors-black); */
+      border: 1px solid var(--theme-colors-black);
       transition: all 0.1s ease-out;
       font-size: 1.2rem;
       text-transform: uppercase;
@@ -80,16 +81,19 @@
 }
 
 .popover {
+  font-weight: 400;
+  padding: calc(3 * var(--theme-lengths-atomicPadding));
   font-size: 1.2rem;
   /* text-transform: uppercase; */
   line-height: 1.2em;
   font-weight: 400;
-  background-color: var(--white);
-  color: var(--black);
+  background-color: var(--theme-colors-white);
+  color: var(--theme-colors-black);
   max-width: 200px;
 }
 
 .slider {
+  font-weight: 400;
   height: 38px;
   display: flex;
   flex-wrap: nowrap;
@@ -110,8 +114,8 @@
     column-gap: 1em;
     align-items: center;
     > div {
-      /* background-color: var(--black); */
-      border: 1px solid var(--black);
+      /* background-color: var(--theme-colors-black); */
+      border: 1px solid var(--theme-colors-black);
       transition: all 0.1s ease-out;
       font-size: 1.2rem;
       text-transform: uppercase;
@@ -148,6 +152,7 @@
 }
 
 .button {
+  font-weight: 350;
   text-transform: uppercase;
   text-align: center;
   width: 100%;
@@ -157,25 +162,25 @@
   align-items: center;
   padding: 6px;
   border-radius: 4px;
-  border: 1px solid var(--black);
+  border: 1px solid var(--theme-colors-black);
   transition: all 0.1s ease-out;
 }
 
 .activeButton {
   opacity: 1;
   background-color: transparent;
-  color: var(--black);
+  color: var(--theme-colors-black);
   box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 2px;
   &:hover {
     cursor: pointer;
-    background-color: var(--black);
-    color: var(--white);
+    background-color: var(--theme-colors-black);
+    color: var(--theme-colors-white);
   }
 }
 .disabledButton {
   opacity: 0.2;
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--theme-colors-black);
+  color: var(--theme-colors-white);
   &:hover {
     cursor: not-allowed;
   }
