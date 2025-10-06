@@ -192,7 +192,7 @@ export const HomeItems = forwardRef(function HomeItems(
 
             // test if center layout still applies
             const supportsCenterLayout =
-              heightCenterLayoutPx >= 2 * centerLayoutOverlapHeightPx
+              heightCenterLayoutPx >= 1.5 * centerLayoutOverlapHeightPx
 
             // set isCenterLayout for next iteration
             isCenterLayout = supportsCenterLayout
@@ -233,9 +233,11 @@ export const HomeItems = forwardRef(function HomeItems(
             ? mobileSidePositions
             : modelsZPositions
 
-        const initialPositions = isCenterLayout
-          ? centerLayoutInitialPositions
-          : modelsZInitialPositions
+        const initialPositions =
+          isCenterLayout || isMobileLayout
+            ? centerLayoutInitialPositions
+            : modelsZInitialPositions
+
         return {
           focusScales,
           focusPositions,
