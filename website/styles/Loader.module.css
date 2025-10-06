@@ -21,4 +21,73 @@
   bottom: 0;
   backdrop-filter: blur(30px) grayscale(1) invert(1) brightness(0.7)
     contrast(1.5);
+  color: var(--theme-colors-white);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  justify-content: center;
+}
+
+.contentInner {
+  position: relative;
+  width: 100%;
+  h1 {
+    font-size: 4rem;
+    letter-spacing: 0.03em;
+    margin: 0 auto;
+    text-align: center;
+    @media (max-width: 400px) {
+      font-size: 3.6rem;
+    }
+    @media (max-height: 600px) {
+      font-size: 3.6rem;
+    }
+  }
+  h3 {
+    font-size: 1.6rem;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    font-weight: 400;
+    margin: 0 auto;
+    padding-right: var(--theme-lengths-sidePadding);
+    width: 50%;
+    text-align: left;
+    @media (max-width: 400px) {
+      font-size: 1.4rem;
+    }
+    @media (max-height: 600px) {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+.progress {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 75%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  @media (max-height: 600px) {
+    top: 80%;
+  }
+  h4 {
+    padding-top: 12px;
+    position: relative;
+    font-weight: 300;
+    font-size: 1.2rem;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    @media (max-width: 600px) {
+      font-size: 1rem;
+      padding-top: 8px;
+    }
+    @media (max-height: 700px) {
+      font-size: 1rem;
+      padding-top: 8px;
+    }
+  }
 }

@@ -8,8 +8,14 @@ import {
   useState,
 } from 'react'
 import { useStatelessFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useTheme } from '../hooks/useTheme'
+import { useProgress } from '@react-three/drei'
 
 export const Loader = ({ ready }) => {
+  const {
+    lengths: { loaderSize },
+  } = useTheme()
   // refs
   const video = useRef()
   const loader = useRef()
@@ -47,10 +53,13 @@ export const Loader = ({ ready }) => {
     }
   }, [mountVideo])
 
+  // progress
+  const { active, loaded, total } = useProgress()
+
   return (
-    <div className={ready ? 'loader loaderReady' : 'loader'} ref={loader}>
-      <div className={`${styles.background}`}>
-        {mountVideo && (
+    mountVideo && (
+      <div className={ready ? 'loader loaderReady' : 'loader'} ref={loader}>
+        <div className={`${styles.background}`}>
           <video
             muted
             loop
@@ -62,9 +71,27 @@ export const Loader = ({ ready }) => {
           >
             <source src={Video} type='video/mp4' />
           </video>
-        )}
-        <div className={`${styles.content}`}></div>
+          )
+          <div className={`${styles.content}`}>
+            <div className={`${styles.contentInner}`}>
+              <h1 className='changa-one-regular'>Izzy Erlich</h1>
+              <h3 className='raleway'>software and stuff.</h3>
+            </div>
+            <div className={`${styles.progress}`}>
+              <CircularProgress
+                disableShrink
+                color='common.white'
+                size={loaderSize}
+              />
+              <h4 className='raleway'>
+                {active
+                  ? `Loading GPU resources... (${loaded}/${total})`
+                  : `Compiling scene...`}
+              </h4>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    )
   )
 }

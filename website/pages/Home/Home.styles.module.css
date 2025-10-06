@@ -128,27 +128,3 @@
     }
   }
 }
-
-/* .button {
-  opacity: 0;
-  font-weight: 350;
-  font-variation-settings: 'wdth' 100;
-  text-transform: uppercase;
-  border-radius: 4px;
-  background-color: transparent;
-  border: 1px solid var(--theme-colors-white);
-  color: var(--theme-colors-white);
-  font-size: 1.2rem;
-  width: 100%;
-  margin: 0 auto;
-  display: block;
-  line-height: 1.75em;
-  margin-top: calc(5 * var(--theme-lengths-atomicPadding));
-  transition: all 0.1s ease-out;
-  &:hover {
-    cursor: pointer;
-    border: 1px solid var(--theme-colors-black);
-    background-color: var(--theme-colors-white);
-    color: var(--theme-colors-black);
-  }
-} */

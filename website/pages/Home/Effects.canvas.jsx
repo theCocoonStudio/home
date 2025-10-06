@@ -7,14 +7,12 @@ import {
   Vignette,
 } from '@react-three/postprocessing'
 import { useEffect, useState } from 'react'
-import { compileSceneAsync } from '../../utils/gl'
 
 export const Effects = function Effects({
   enabled = false,
   renderPriority,
   animationTargets,
   ready,
-  setReady,
 }) {
   const { get } = useThree(({ get }) => ({
     get,
@@ -26,15 +24,6 @@ export const Effects = function Effects({
       setSun(animationTargets.refs.background.current.background)
     }
   }, [animationTargets, ready, sun])
-
-  useEffect(() => {
-    if (!ready) {
-      const { gl, scene, camera } = get()
-      compileSceneAsync(gl, scene, camera, () => {
-        setReady(true)
-      })
-    }
-  }, [])
 
   return (
     enabled &&

@@ -11,7 +11,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { HomeItems } from '../../components/HomeItems.canvas'
 import { useCommonSizeData } from '../../hooks/useCommonSizeData.canvas'
 
-export const Home = ({ config, setReady, ready }) => {
+export const Home = ({ config, ready }) => {
   const {
     effects: { renderPriority, Component: Effects },
 
@@ -118,7 +118,6 @@ export const Home = ({ config, setReady, ready }) => {
         animationTargets={animationTargets}
         enabled
         ready={ready}
-        setReady={setReady}
       />
     </Suspense>
   )

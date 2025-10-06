@@ -30,6 +30,7 @@ import pagesConfig from 'website/pages'
 import { useParams } from 'react-router'
 import { WrongWay } from './WrongWay'
 import { Loader } from './Loader'
+import { CanvasLoader } from './Loader.canvas'
 
 const theme = {
   colors: {
@@ -50,6 +51,9 @@ const theme = {
     },
     topBottomPadding: 24,
     maxWidth: 1280,
+    loaderSize: ({ width, height }) => {
+      return width > 600 && height > 700 ? 50 : 30
+    },
   },
 }
 
@@ -162,6 +166,12 @@ function _Layout() {
                                   config={config}
                                   scrollContainer={scrollContainer}
                                 />
+                                {showLoader && (
+                                  <CanvasLoader
+                                    ready={ready}
+                                    setReady={setReady}
+                                  />
+                                )}
                                 <EventLayerOn />
                               </View>
                             )}
