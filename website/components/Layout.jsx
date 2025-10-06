@@ -29,6 +29,7 @@ import { Dialog } from '@mui/material'
 import pagesConfig from 'website/pages'
 import { useParams } from 'react-router'
 import { WrongWay } from './WrongWay'
+import { Loader } from './Loader'
 
 const theme = {
   colors: {
@@ -62,6 +63,7 @@ function _Layout() {
     lightbox: { Component: LightBoxComponent },
     menu: { Component: MenuComponent },
     theme: pageTheme,
+    loader: { showLoader },
   } = config || { main: {}, context: {}, scroll: {}, lightbox: {}, menu: {} }
 
   const muiTheme = createTheme({
@@ -116,6 +118,7 @@ function _Layout() {
     },
   })
   const sensors = useSensors(mouseSensor, touchSensor)
+
   return (
     <ResizeEventProvider ready={ready}>
       <ThemeProvider theme={theme} pageTheme={pageTheme}>
@@ -131,7 +134,12 @@ function _Layout() {
                       <ThreeApp eventPrefix={'client'}>
                         <ScrollControls
                           {...scrollControlsProps}
-                          distance={scrollDistanceFactor}
+                          distance={
+                            scrollControlsProps?.distance
+                              ? scrollDistanceFactor *
+                                scrollControlsProps.distance
+                              : scrollDistanceFactor
+                          }
                         >
                           <View.Port />
                           <ScrollHTMLRef setContainer={setScrollContainer} />
@@ -197,6 +205,7 @@ function _Layout() {
                           setScrollDistanceFactor={setScrollDistanceFactor}
                         />
                       )}
+                      {showLoader && <Loader config={config} ready={ready} />}
                       <Dialog open={contactOpen} onClose={closeContact}>
                         <div className={contactClass} style={contactStyle}>
                           <h1>Send me an email!</h1>

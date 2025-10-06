@@ -97,7 +97,7 @@ export const Home = ({ config, setReady, ready }) => {
         </group>
       </Environment>
       <ambientLight intensity={0.7} />
-      <Background {...commonSizeDataProps} ref={background} />
+      <Background {...commonSizeDataProps} ready={ready} ref={background} />
       <Models
         ref={models}
         setModelsSize={setModelsSize}

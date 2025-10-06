@@ -7,6 +7,43 @@ import { HomeLogo } from '../../components/HomeLogo.view'
 import { ScrollContainer } from '../../components/ScrollContainer'
 import dragonfly from 'assets/photography/test.jpg'
 
+const items = [
+  {
+    title: 'This is my title and it is the best. Made longer for testing.',
+    description:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    date: 'September 1, 2025',
+    url: dragonfly,
+  },
+  {
+    title: 'This is my title and it is the best',
+    description:
+      'It has survived not only five centuries, but also the leap into electronic typesetting.',
+    date: 'September 1, 2025',
+    url: dragonfly,
+  },
+  {
+    title: 'This is my title and it is the best. Made longer for testing.',
+    description:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    date: 'September 1, 2025',
+    url: dragonfly,
+  },
+  {
+    title: 'This is my title and it is the best. Made longer for testing.',
+    description:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    date: 'September 1, 2025',
+    url: dragonfly,
+  },
+  {
+    title: 'This is my title and it is the best. Made longer for testing.',
+    description:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    date: 'September 1, 2025',
+    url: dragonfly,
+  },
+]
 export const config = {
   context: { Provider: HomeProvider },
   main: {
@@ -24,6 +61,9 @@ export const config = {
   menu: {
     Component: HomeSettings,
   },
+  loader: {
+    showLoader: true,
+  },
   data: {
     constants: {
       focusFactor: 0.46,
@@ -33,53 +73,13 @@ export const config = {
       itemDescription: 'home-item-description',
     },
     content: {
-      items: [
-        {
-          title:
-            'This is my title and it is the best. Made longer for testing.',
-          description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
-          date: 'September 1, 2025',
-          url: dragonfly,
-        },
-        {
-          title: 'This is my title and it is the best',
-          description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting.',
-          date: 'September 1, 2025',
-          url: dragonfly,
-        },
-        {
-          title:
-            'This is my title and it is the best. Made longer for testing.',
-          description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
-          date: 'September 1, 2025',
-          url: dragonfly,
-        },
-        {
-          title:
-            'This is my title and it is the best. Made longer for testing.',
-          description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
-          date: 'September 1, 2025',
-          url: dragonfly,
-        },
-        {
-          title:
-            'This is my title and it is the best. Made longer for testing.',
-          description:
-            'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
-          date: 'September 1, 2025',
-          url: dragonfly,
-        },
-      ],
+      items,
     },
   },
 
   scroll: {
     scrollControlsProps: {
-      pages: 15,
+      pages: items.length,
       enabled: true,
       damping: 0,
       distance: 2,

@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import styles from './Home.styles.module.css'
 
 export const Main = function Main({
-  scrollContainer,
-  ready,
+  /* scrollContainer,
+  ready, */
   config: {
     data: {
       content: { items },

@@ -39,6 +39,7 @@ const _Background = forwardRef(function Background(
     backgroundViewportHeight,
     backgroundFactor,
     contentWidthPx,
+    ready,
   },
   forwardedRef,
 ) {
@@ -195,6 +196,7 @@ const _Background = forwardRef(function Background(
           <planeGeometry args={[1, 1]} />
           <meshBasicMaterial color={'#656565'} fog={false}>
             <VideoTexture
+              play={ready}
               video={Video}
               speed={1}
               fit={{
