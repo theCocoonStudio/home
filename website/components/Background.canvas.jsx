@@ -11,7 +11,6 @@ import { useSettings } from 'website/pages/Home/useSettings'
 import { useBoundPathForce } from '../hooks/useBoundPathForce.canvas'
 import { useFluidTexture } from 'src/hooks/useFluidTexture'
 import { VideoTexture } from './VideoTexture.canvas'
-import Video from 'assets/colors3.mp4'
 
 const _opts = {
   poissonIterations: 32,
@@ -39,7 +38,7 @@ const _Background = forwardRef(function Background(
     backgroundViewportHeight,
     backgroundFactor,
     contentWidthPx,
-    ready,
+    videoId,
   },
   forwardedRef,
 ) {
@@ -196,9 +195,7 @@ const _Background = forwardRef(function Background(
           <planeGeometry args={[1, 1]} />
           <meshBasicMaterial color={'#656565'} fog={false}>
             <VideoTexture
-              play={ready}
-              video={Video}
-              speed={1}
+              videoId={videoId}
               fit={{
                 aspect: size.width / (size.height * heightProportion0),
               }}

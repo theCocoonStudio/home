@@ -10,7 +10,8 @@ import { useThree } from '@react-three/fiber'
 
 export const VideoTexture = forwardRef(function VideoTexture(
   {
-    video: videoSrc,
+    videoSrc,
+    videoId,
     play = true,
     loop = true,
     speed = 1.0,
@@ -23,29 +24,49 @@ export const VideoTexture = forwardRef(function VideoTexture(
   },
   ref,
 ) {
+  // ref
   const texture = useRef()
-
   useImperativeHandle(ref, () => texture.current)
-  const video = useMemo(
-    () =>
-      Object.assign(document.createElement('video'), {
-        src: videoSrc,
-        crossOrigin: 'Anonymous',
-        loop,
-        muted: true,
-        playbackRate: speed,
-      }),
-    [loop, speed, videoSrc],
+
+  // video element
+  const video = useMemo(() => {
+    return videoId
+      ? document.getElementById(videoId)
+      : Object.assign(document.createElement('video'), {
+          src: videoSrc,
+          crossOrigin: 'Anonymous',
+          loop,
+          muted: true,
+          playbackRate: speed,
+        })
+  }, [loop, speed, videoId, videoSrc])
+
+  // dispose stale texture
+  useEffect(
+    () => {
+      // keep reference to previous texture using local scope
+      const oldTexture = texture.current
+      return () => {
+        if (oldTexture) {
+          oldTexture.dispose()
+        }
+      }
+    },
+    [video], // keep video to trigger hook correctly
   )
 
+  // play/stop trigger if controlling video element internally
   useEffect(() => {
-    if (play) {
-      video.play()
-    } else {
-      video.pause()
+    if (!videoId) {
+      if (play) {
+        video.play()
+      } else {
+        video.pause()
+      }
     }
-  }, [play, video])
+  }, [play, video, videoId])
 
+  // texture sizing
   const viewportAspect = useThree(({ viewport: { aspect } }) => aspect)
 
   useEffect(() => {
@@ -71,16 +92,8 @@ export const VideoTexture = forwardRef(function VideoTexture(
         texture.current.offset.y = (1 - texture.current.repeat.y) / 2
       }
     }
-  }, [customAspect, type, videoAspect, videoSrc, viewportAspect]) // keep videoSrc to resize on src change
-
-  useEffect(
-    () => () => {
-      if (texture.current) {
-        texture.current.dispose()
-      }
-    },
-    [],
-  )
+    // keep video to resize on src change
+  }, [customAspect, type, videoAspect, video, viewportAspect])
 
   return (
     <videoTexture

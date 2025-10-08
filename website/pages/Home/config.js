@@ -71,6 +71,7 @@ export const config = {
     markupIds: {
       scrollContainerId: 'home-scroll-container',
       itemDescription: 'home-item-description',
+      loaderVideo: 'home-loader-video',
     },
     content: {
       items,

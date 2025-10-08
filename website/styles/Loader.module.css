@@ -63,7 +63,25 @@
   }
 }
 
+@keyframes float {
+  from {
+    transform: translateY(-5%);
+  }
+
+  to {
+    transform: translateY(20%);
+  }
+}
+.float {
+  animation-name: float;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+}
 .progress {
+  line-height: 0;
+  font-size: var(--theme-lengths-loaderSize);
   display: inline-block;
   position: absolute;
   left: 50%;

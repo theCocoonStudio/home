@@ -17,7 +17,7 @@ export const Home = ({ config, ready }) => {
 
     data: {
       content: { items: itemsConfig },
-      markupIds: { itemDescription, scrollContainerId },
+      markupIds: { itemDescription, scrollContainerId, loaderVideo },
     },
   } = config
 
@@ -54,7 +54,6 @@ export const Home = ({ config, ready }) => {
 
   return (
     <Suspense>
-      {/* <EventDispatcherComponent config={config} /> */}
       <color attach='background' args={['#111']} />
       <fog attach='fog' args={['#111', 82, 115]} />
       <Performance />
@@ -97,7 +96,11 @@ export const Home = ({ config, ready }) => {
         </group>
       </Environment>
       <ambientLight intensity={0.7} />
-      <Background {...commonSizeDataProps} ready={ready} ref={background} />
+      <Background
+        {...commonSizeDataProps}
+        videoId={loaderVideo}
+        ref={background}
+      />
       <Models
         ref={models}
         setModelsSize={setModelsSize}

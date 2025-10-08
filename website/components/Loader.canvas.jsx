@@ -1,9 +1,9 @@
-import { useProgress } from '@react-three/drei'
-import { useThree } from '@react-three/fiber'
+import { useProgress, useScroll } from '@react-three/drei'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
 
-export const CanvasLoader = ({ setReady }) => {
+export const CanvasLoader = ({ setReady, setHasScrolled }) => {
   const { active } = useProgress()
 
   const compiledSceneId = useRef()
@@ -22,4 +22,21 @@ export const CanvasLoader = ({ setReady }) => {
       })
     }
   }, [active, camera, gl, scene, setReady])
+
+  const zeroScroll = useRef(true)
+  const scroll = useScroll()
+
+  useFrame(() => {
+    if (scroll.offset > scroll.eps) {
+      if (zeroScroll.current) {
+        setHasScrolled(true)
+        zeroScroll.current = false
+      }
+    } else {
+      if (!zeroScroll.current) {
+        setHasScrolled(false)
+        zeroScroll.current = true
+      }
+    }
+  })
 }

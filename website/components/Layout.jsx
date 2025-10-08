@@ -80,6 +80,7 @@ function _Layout() {
 
   const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
+  const [hasScrolled, setHasScrolled] = useState(false)
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [copied, setCopied] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
@@ -170,6 +171,8 @@ function _Layout() {
                                   <CanvasLoader
                                     ready={ready}
                                     setReady={setReady}
+                                    hasScrolled={hasScrolled}
+                                    setHasScrolled={setHasScrolled}
                                   />
                                 )}
                                 <EventLayerOn />
@@ -215,7 +218,13 @@ function _Layout() {
                           setScrollDistanceFactor={setScrollDistanceFactor}
                         />
                       )}
-                      {showLoader && <Loader config={config} ready={ready} />}
+                      {showLoader && (
+                        <Loader
+                          config={config}
+                          ready={ready}
+                          hasScrolled={hasScrolled}
+                        />
+                      )}
                       <Dialog open={contactOpen} onClose={closeContact}>
                         <div className={contactClass} style={contactStyle}>
                           <h1>Send me an email!</h1>
