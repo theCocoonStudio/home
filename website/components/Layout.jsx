@@ -80,7 +80,11 @@ function _Layout() {
 
   const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
-  const [hasScrolled, setHasScrolled] = useState(false)
+  const [atStartOrFinish, setAtStartOrFinish] = useState({
+    start: true,
+    finish: false,
+    either: true,
+  })
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [copied, setCopied] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
@@ -166,14 +170,14 @@ function _Layout() {
                                   setReady={setReady}
                                   config={config}
                                   scrollContainer={scrollContainer}
-                                  hasScrolled={hasScrolled}
+                                  atStartOrFinish={atStartOrFinish}
                                 />
                                 {showLoader && (
                                   <CanvasLoader
                                     ready={ready}
                                     setReady={setReady}
-                                    hasScrolled={hasScrolled}
-                                    setHasScrolled={setHasScrolled}
+                                    atStartOrFinish={atStartOrFinish}
+                                    setAtStartOrFinish={setAtStartOrFinish}
                                   />
                                 )}
                                 <EventLayerOn />
@@ -223,7 +227,7 @@ function _Layout() {
                         <Loader
                           config={config}
                           ready={ready}
-                          hasScrolled={hasScrolled}
+                          atStartOrFinish={atStartOrFinish}
                         />
                       )}
                       <Dialog open={contactOpen} onClose={closeContact}>

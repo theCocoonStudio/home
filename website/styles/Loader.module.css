@@ -65,11 +65,11 @@
 
 @keyframes float {
   from {
-    transform: translateY(-5%);
+    transform: translateY(-10%);
   }
 
   to {
-    transform: translateY(20%);
+    transform: translateY(10%);
   }
 }
 .float {
@@ -79,6 +79,19 @@
   animation-direction: alternate;
   animation-timing-function: ease-in-out;
 }
+
+.scrollIcon {
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+
+.upsideDown {
+  > *:first-child {
+    transform: rotate(180deg);
+  }
+}
+
 .progress {
   line-height: 0;
   font-size: var(--theme-lengths-loaderSize);

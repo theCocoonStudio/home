@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
 
-export const CanvasLoader = ({ setReady, setHasScrolled }) => {
+export const CanvasLoader = ({ setReady, setAtStartOrFinish }) => {
   const { active } = useProgress()
 
   const compiledSceneId = useRef()
@@ -23,19 +23,30 @@ export const CanvasLoader = ({ setReady, setHasScrolled }) => {
     }
   }, [active, camera, gl, scene, setReady])
 
-  const zeroScroll = useRef(true)
+  const atStart = useRef(true)
+  const atFinish = useRef(false)
   const scroll = useScroll()
 
   useFrame(() => {
-    if (scroll.offset > 0) {
-      if (zeroScroll.current) {
-        setHasScrolled(true)
-        zeroScroll.current = false
+    if (scroll.offset > 0 && scroll.offset < 1) {
+      if (atStart.current || atFinish.current) {
+        setAtStartOrFinish({ start: false, finish: false, either: false })
+        atStart.current = false
+        atFinish.current = false
       }
     } else {
-      if (!zeroScroll.current) {
-        setHasScrolled(false)
-        zeroScroll.current = true
+      if (scroll.offset === 0) {
+        if (!atStart.current || atFinish.current) {
+          setAtStartOrFinish({ start: true, finish: false, either: true })
+          atStart.current = true
+          atFinish.current = false
+        }
+      } else {
+        if (atStart.current || !atFinish.current) {
+          setAtStartOrFinish({ start: false, finish: true, either: true })
+          atStart.current = false
+          atFinish.current = true
+        }
       }
     }
   })

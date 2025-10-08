@@ -11,7 +11,7 @@ import { useTheme } from '../../hooks/useTheme'
 import { HomeItems } from '../../components/HomeItems.canvas'
 import { useCommonSizeData } from '../../hooks/useCommonSizeData.canvas'
 
-export const Home = ({ config, ready, hasScrolled }) => {
+export const Home = ({ config, ready, atStartOrFinish }) => {
   const {
     effects: { renderPriority, Component: Effects },
 
@@ -99,7 +99,7 @@ export const Home = ({ config, ready, hasScrolled }) => {
       <Background
         {...commonSizeDataProps}
         videoId={loaderVideo}
-        pause={!hasScrolled}
+        pause={atStartOrFinish.either}
         ref={background}
       />
       <Models
