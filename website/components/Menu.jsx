@@ -13,6 +13,7 @@ export const Menu = ({
   MenuComponent,
   setScrollDistanceFactor,
   scrollContainer,
+  atStartOrFinish,
 }) => {
   const {
     lengths: { topBottomPadding, sidePadding },
@@ -92,7 +93,14 @@ export const Menu = ({
   // hide menu on resize
   useEffect(() => {
     setShowMenu(false)
-  }, [size])
+  }, [setShowMenu, size])
+
+  // hide menu on atStartOrFinish
+  useEffect(() => {
+    if (atStartOrFinish.either) {
+      setShowMenu(false)
+    }
+  }, [atStartOrFinish.either, setShowMenu])
 
   useEffect(() => {
     if (!showMenu) {

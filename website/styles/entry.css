@@ -292,6 +292,7 @@ html {
 }
 
 div.loader-global {
+  z-index: 400;
   position: absolute;
   top: 0;
   left: 0;

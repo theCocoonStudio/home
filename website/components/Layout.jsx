@@ -203,6 +203,13 @@ function _Layout() {
                               ready={ready}
                               atStartOrFinish={atStartOrFinish}
                             />
+                            {showLoader && (
+                              <Loader
+                                config={config}
+                                ready={ready}
+                                atStartOrFinish={atStartOrFinish}
+                              />
+                            )}
                           </>,
                           scrollContainer.children[0],
                         )}
@@ -223,15 +230,10 @@ function _Layout() {
                           scrollContainer={scrollContainer}
                           MenuComponent={MenuComponent}
                           setScrollDistanceFactor={setScrollDistanceFactor}
-                        />
-                      )}
-                      {showLoader && (
-                        <Loader
-                          config={config}
-                          ready={ready}
                           atStartOrFinish={atStartOrFinish}
                         />
                       )}
+
                       <Dialog open={contactOpen} onClose={closeContact}>
                         <div className={contactClass} style={contactStyle}>
                           <h1>Send me an email!</h1>

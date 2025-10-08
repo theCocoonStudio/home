@@ -99,8 +99,12 @@ export const Loader = ({
                   className={`${styles.scrollIcon} ${upsideDownClass}`}
                   style={
                     atStartOrFinish.either
-                      ? {}
-                      : { opacity: 0, transform: transformStyle }
+                      ? { pointerEvents: 'auto' }
+                      : {
+                          pointerEvents: 'none',
+                          opacity: 0,
+                          transform: transformStyle,
+                        }
                   }
                 >
                   <KeyboardDoubleArrowDownIcon
