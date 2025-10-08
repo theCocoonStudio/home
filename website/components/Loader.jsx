@@ -27,8 +27,9 @@ export const Loader = ({
 
   return (
     <div
-      className={ready && hasScrolled ? 'loader loaderReady' : 'loader'}
+      className={'loader-global'}
       ref={loader}
+      style={{ opacity: hasScrolled && ready ? 0 : 1 }}
     >
       <div className={`${styles.background}`}>
         <video

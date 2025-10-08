@@ -27,7 +27,7 @@ export const CanvasLoader = ({ setReady, setHasScrolled }) => {
   const scroll = useScroll()
 
   useFrame(() => {
-    if (scroll.offset > scroll.eps) {
+    if (scroll.offset > 0) {
       if (zeroScroll.current) {
         setHasScrolled(true)
         zeroScroll.current = false

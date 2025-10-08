@@ -291,7 +291,7 @@ html {
   }
 }
 
-div.loader {
+div.loader-global {
   position: absolute;
   top: 0;
   left: 0;
@@ -302,10 +302,6 @@ div.loader {
   video {
     pointer-events: none;
   }
-}
-
-div.loaderReady {
-  opacity: 0;
 }
 
 /* END global styles */
