@@ -8,6 +8,7 @@ export const ScrollContainer = ({
       content: { items },
     },
   },
+  atStartOrFinish,
   /* scrollContainer,
   ready,
   openContact, */
@@ -25,7 +26,11 @@ export const ScrollContainer = ({
   }, [items, scrollContainerId])
 
   return (
-    <div id={scrollContainerId} className={`${styles.container}`}>
+    <div
+      id={scrollContainerId}
+      className={`${styles.container}`}
+      style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
+    >
       {scrollItems}
     </div>
   )
