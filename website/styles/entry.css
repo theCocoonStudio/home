@@ -298,7 +298,7 @@ div.loader {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  transition: all 0.5s;
+  transition: all 1s;
   video {
     pointer-events: none;
   }

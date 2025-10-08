@@ -166,6 +166,7 @@ function _Layout() {
                                   setReady={setReady}
                                   config={config}
                                   scrollContainer={scrollContainer}
+                                  hasScrolled={hasScrolled}
                                 />
                                 {showLoader && (
                                   <CanvasLoader

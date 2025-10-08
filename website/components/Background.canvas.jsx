@@ -39,6 +39,7 @@ const _Background = forwardRef(function Background(
     backgroundFactor,
     contentWidthPx,
     videoId,
+    pause,
   },
   forwardedRef,
 ) {
@@ -150,16 +151,17 @@ const _Background = forwardRef(function Background(
           Math.max(heightProportion0, heightProportion1) *
           resolution,
       ),
+      pause,
     }
   }, [
     heightProportion0,
     heightProportion1,
     maxWidth,
+    pause,
     resolution,
     runEvery,
     sidePadding,
-    size.height,
-    size.width,
+    size,
   ])
   const { texture } = useFluidTexture(options)
 

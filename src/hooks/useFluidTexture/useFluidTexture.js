@@ -485,9 +485,16 @@ export const useFluidTexture = ({
     frameSplitter.set(render, runEvery)
   }, [frameSplitter, render, runEvery])
   // simulation updates
+  const initialFramesRendered = useRef(0)
   useFrame((state, delta) => {
-    if (!manual && !pause && !pauseRef?.current && !manualRef?.current) {
+    // render at least 5 frames to initialize
+    if (initialFramesRendered.current > 4) {
+      if (!manual && !pause && !pauseRef?.current && !manualRef?.current) {
+        frameSplitter.frame(state, delta)
+      }
+    } else {
       frameSplitter.frame(state, delta)
+      initialFramesRendered.current++
     }
   }, priority)
 
