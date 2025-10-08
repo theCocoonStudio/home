@@ -23,9 +23,6 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
-  > * {
-    pointer-events: auto;
-  }
 }
 
 .logoContainer {
@@ -71,7 +68,6 @@
   color: var(--theme-colors-white);
   > * {
     line-height: 1em;
-    pointer-events: auto;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;

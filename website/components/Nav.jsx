@@ -9,7 +9,7 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
 import { useMenu } from 'website/hooks/useMenu'
 
-export const Nav = ({ config, scrollContainer }) => {
+export const Nav = ({ config, scrollContainer, atStartOrFinish }) => {
   const {
     nav: { logoRenderPriority, LogoComponent },
   } = config
@@ -17,7 +17,7 @@ export const Nav = ({ config, scrollContainer }) => {
   const { colors } = useTheme()
   const { showLightbox } = useLightbox()
 
-  const scrollTo = useScroll(scrollContainer)
+  const scrollTo = useScroll(scrollContainer, { smoothTime: 0.1 })
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
@@ -27,10 +27,14 @@ export const Nav = ({ config, scrollContainer }) => {
   const toggleMenu = useCallback(() => {
     setShowMenu((prev) => !prev)
   }, [setShowMenu])
+
   return (
     <div className={`${styles.nav}`}>
       <div className={`${styles.inner}`}>
-        <div className={`${styles.logoContainer}`}>
+        <div
+          className={`${styles.logoContainer}`}
+          style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
+        >
           <div className={`${styles.logo}`} onClick={scrollHome}>
             <View index={logoRenderPriority} frames={1}>
               <LogoComponent>
@@ -38,10 +42,16 @@ export const Nav = ({ config, scrollContainer }) => {
               </LogoComponent>
             </View>
           </div>
-          <h1 className={`${styles.name} changa-one-regular`}>Izzy Erlich</h1>
+          <h1
+            onClick={scrollHome}
+            className={`${styles.name} changa-one-regular`}
+          >
+            Izzy Erlich
+          </h1>
         </div>
         <div className={`${styles.pages}`}>
           <svg
+            style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
             width={18}
             height={18}
             viewBox='0 0 48 48'
@@ -62,6 +72,7 @@ export const Nav = ({ config, scrollContainer }) => {
           </svg>
 
           <svg
+            style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
             width={18}
             height={18}
             viewBox='0 0 48 48'
@@ -83,13 +94,16 @@ export const Nav = ({ config, scrollContainer }) => {
             </defs>
           </svg>
 
-          <div>
+          <div
+            style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
+          >
             <AlternateEmailIcon fontSize='inherit' />
           </div>
 
           <div className={`${styles.divider}`} />
 
           <div
+            style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
             onClick={() => {
               toggleMenu()
             }}

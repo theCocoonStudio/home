@@ -194,12 +194,14 @@ function _Layout() {
                             <Nav
                               config={config}
                               scrollContainer={scrollContainer}
+                              atStartOrFinish={atStartOrFinish}
                             />
                             <Footer
                               config={config}
                               scrollContainer={scrollContainer}
                               openContact={openContact}
                               ready={ready}
+                              atStartOrFinish={atStartOrFinish}
                             />
                           </>,
                           scrollContainer.children[0],
