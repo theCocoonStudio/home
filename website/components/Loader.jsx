@@ -1,10 +1,11 @@
 import styles from 'website/styles/Loader.module.css'
 import Video from 'website/assets/colors3.mp4'
-import { useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '../hooks/useTheme'
 import { useProgress } from '@react-three/drei'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
+import { useScroll } from 'src/hooks'
 
 export const Loader = ({
   ready,
@@ -14,6 +15,9 @@ export const Loader = ({
       markupIds: { loaderVideo },
     },
   },
+  scrollDownTarget,
+  scrollUpTarget,
+  scrollContainer,
 }) => {
   const {
     lengths: { loaderSize },
@@ -59,6 +63,14 @@ export const Loader = ({
     return prevStyling.current
   }, [atStartOrFinish])
 
+  // scroll up/down callback
+  const scrollTo = useScroll(scrollContainer)
+  const scrollToTarget = useCallback(() => {
+    if (atStartOrFinish.either) {
+      scrollTo(atStartOrFinish.start ? scrollDownTarget : scrollUpTarget)
+    }
+  }, [atStartOrFinish, scrollDownTarget, scrollTo, scrollUpTarget])
+
   return (
     <div
       className={'loader-global'}
@@ -96,6 +108,7 @@ export const Loader = ({
                 />
               ) : (
                 <div
+                  onClick={scrollToTarget}
                   className={`${styles.scrollIcon} ${upsideDownClass}`}
                   style={
                     atStartOrFinish.either

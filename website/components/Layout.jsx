@@ -67,7 +67,7 @@ function _Layout() {
     lightbox: { Component: LightBoxComponent },
     menu: { Component: MenuComponent },
     theme: pageTheme,
-    loader: { showLoader },
+    loader: { showLoader, scrollDownTarget, scrollUpTarget },
   } = config || { main: {}, context: {}, scroll: {}, lightbox: {}, menu: {} }
 
   const muiTheme = createTheme({
@@ -208,6 +208,9 @@ function _Layout() {
                                 config={config}
                                 ready={ready}
                                 atStartOrFinish={atStartOrFinish}
+                                scrollDownTarget={scrollDownTarget}
+                                scrollUpTarget={scrollUpTarget}
+                                scrollContainer={scrollContainer}
                               />
                             )}
                           </>,
