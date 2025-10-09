@@ -1,12 +1,6 @@
 import styles from 'website/styles/Footer.module.css'
 
-export const Footer = ({
-  config,
-  scrollContainer,
-  ready,
-  openContact,
-  atStartOrFinish,
-}) => {
+export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
   const {
     footer: { FooterComponent },
   } = config
@@ -17,7 +11,6 @@ export const Footer = ({
         <FooterComponent
           scrollContainer={scrollContainer}
           ready={ready}
-          openContact={openContact}
           config={config}
           atStartOrFinish={atStartOrFinish}
         />

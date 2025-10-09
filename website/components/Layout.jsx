@@ -4,9 +4,8 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import { raleway, changaOne } from '../utils/styles'
 import { Footer } from './Footer'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
@@ -25,12 +24,12 @@ import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles'
-import { Dialog } from '@mui/material'
 import pagesConfig from 'website/pages'
 import { useParams } from 'react-router'
 import { WrongWay } from './WrongWay'
 import { Loader } from './Loader'
 import { CanvasLoader } from './Loader.canvas'
+import { ContactDialog } from './ContactDialog'
 
 const theme = {
   colors: {
@@ -86,37 +85,8 @@ function _Layout() {
     either: true,
   })
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
-  const [copied, setCopied] = useState(false)
+
   const [contactOpen, setContactOpen] = useState(false)
-
-  const closeContact = useCallback(() => {
-    setContactOpen(false)
-    setCopied(false)
-  }, [])
-  const openContact = useCallback(() => {
-    setContactOpen(true)
-  }, [])
-
-  const { style: contactStyle, className: contactClass } = useMemo(
-    () => changaOne(false, undefined, 'contact-dialog'),
-    [],
-  )
-  const { style: emailStyle, className: emailClass } = useMemo(
-    () => raleway(400, false, undefined, 'contact-email'),
-    [],
-  )
-
-  const copy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText('izzy.erlich@thecooon.studio')
-      setCopied(true)
-      setTimeout(() => {
-        setCopied(false)
-      }, 6000)
-    } catch (error) {
-      console.error('caught error copying text programmatically')
-    }
-  }, [])
 
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor, {
@@ -195,11 +165,12 @@ function _Layout() {
                               config={config}
                               scrollContainer={scrollContainer}
                               atStartOrFinish={atStartOrFinish}
+                              setContactOpen={setContactOpen}
+                              contactOpen={contactOpen}
                             />
                             <Footer
                               config={config}
                               scrollContainer={scrollContainer}
-                              openContact={openContact}
                               ready={ready}
                               atStartOrFinish={atStartOrFinish}
                             />
@@ -237,17 +208,11 @@ function _Layout() {
                         />
                       )}
 
-                      <Dialog open={contactOpen} onClose={closeContact}>
-                        <div className={contactClass} style={contactStyle}>
-                          <h1>Send me an email!</h1>
-                          <p style={emailStyle} className={emailClass}>
-                            <span>izzy@thecocoon.studio</span>
-                            <span onClick={copy}>
-                              <span>{copied ? 'copied' : 'copy'}</span>
-                            </span>
-                          </p>
-                        </div>
-                      </Dialog>
+                      <ContactDialog
+                        contactOpen={contactOpen}
+                        setContactOpen={setContactOpen}
+                        atStartOrFinish={atStartOrFinish}
+                      />
                     </div>
                   </Provider>
                 )}

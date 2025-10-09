@@ -9,7 +9,13 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
 import { useMenu } from 'website/hooks/useMenu'
 
-export const Nav = ({ config, scrollContainer, atStartOrFinish }) => {
+export const Nav = ({
+  config,
+  scrollContainer,
+  atStartOrFinish,
+  setContactOpen,
+  contactOpen,
+}) => {
   const {
     nav: { logoRenderPriority, LogoComponent },
   } = config
@@ -27,6 +33,10 @@ export const Nav = ({ config, scrollContainer, atStartOrFinish }) => {
   const toggleMenu = useCallback(() => {
     setShowMenu((prev) => !prev)
   }, [setShowMenu])
+
+  const openContact = useCallback(() => {
+    setContactOpen(true)
+  }, [setContactOpen])
 
   return (
     <div className={`${styles.nav}`}>
@@ -95,9 +105,12 @@ export const Nav = ({ config, scrollContainer, atStartOrFinish }) => {
           </svg>
 
           <div
+            onClick={openContact}
             style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
+            className={styles.activeContainer}
           >
             <AlternateEmailIcon fontSize='inherit' />
+            {contactOpen && <div className={styles.active} />}
           </div>
 
           <div className={`${styles.divider}`} />

@@ -11,8 +11,7 @@ export const ScrollContainer = ({
   },
   atStartOrFinish,
   scrollContainer,
-  /* ready,
-  openContact, */
+  /* ready */
 }) => {
   const scrollTo = useScroll(scrollContainer)
 
