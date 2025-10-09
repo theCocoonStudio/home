@@ -5,11 +5,8 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react'
-import { useFrameCallback } from 'src/hooks/useFrameCallback/useFrameCallback'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { damp } from 'maath/easing'
-import { useLightbox } from '../hooks/useLightbox'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
@@ -21,8 +18,6 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
   useEffect(() => {
     get().setEvents({ enabled: false })
   }, [get])
-
-  const { showLightbox } = useLightbox()
 
   const scale = useCallback(() => {
     if (ref.current) {
@@ -38,26 +33,6 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
   }, [get])
 
   useResizeEvent(scale)
-
-  const frameCallback = useCallback(
-    (state, delta) => {
-      if (material.current) {
-        if (showLightbox) {
-          return damp(material.current, 'opacity', 0.0, 100.0, delta)
-        } else {
-          return damp(material.current, 'opacity', 1.0, 100.0, delta)
-        }
-      }
-      return false
-    },
-    [showLightbox],
-  )
-
-  const frame = useFrameCallback()
-
-  useEffect(() => {
-    frame(frameCallback)
-  }, [frame, frameCallback, showLightbox])
 
   useImperativeHandle(
     forwardedRef,

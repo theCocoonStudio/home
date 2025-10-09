@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
 import { useScroll } from 'src/hooks'
-import { useLightbox } from '../hooks/useLightbox'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
@@ -21,7 +20,6 @@ export const Nav = ({
   } = config
 
   const { colors } = useTheme()
-  const { showLightbox } = useLightbox()
 
   const scrollTo = useScroll(scrollContainer, { smoothTime: 0.1 })
   const scrollHome = useCallback(() => {
@@ -48,7 +46,7 @@ export const Nav = ({
           <div className={`${styles.logo}`} onClick={scrollHome}>
             <View index={logoRenderPriority} frames={1}>
               <LogoComponent>
-                <Logo showLightbox={showLightbox} />
+                <Logo />
               </LogoComponent>
             </View>
           </div>

@@ -55,9 +55,7 @@ export const config = {
     renderPriority: 2,
     Component: Effects,
   },
-  lightbox: {
-    /* Component: Gallery, */
-  },
+
   menu: {
     Component: HomeSettings,
   },

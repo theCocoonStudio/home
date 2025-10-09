@@ -3,7 +3,6 @@ import { Environment } from '@react-three/drei'
 import { Suspense, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useTargetItems } from './useTargetItems'
-import { useLightbox } from '../../hooks/useLightbox'
 import { Background } from '../../components/Background.canvas'
 import { Floor } from '../../components/Floor.canvas'
 import { Models } from '../../components/Models.canvas'
@@ -20,8 +19,6 @@ export const Home = ({ config, ready, atStartOrFinish }) => {
       markupIds: { itemDescription, scrollContainerId, loaderVideo },
     },
   } = config
-
-  const { showLightbox } = useLightbox()
 
   // theme
   const {
