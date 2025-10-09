@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import styles from 'website/styles/ScrollContainer.module.css'
+import { useScroll } from 'src/hooks'
 
 export const ScrollContainer = ({
   config: {
@@ -9,21 +10,24 @@ export const ScrollContainer = ({
     },
   },
   atStartOrFinish,
-  /* scrollContainer,
-  ready,
+  scrollContainer,
+  /* ready,
   openContact, */
 }) => {
+  const scrollTo = useScroll(scrollContainer)
+
   const scrollItems = useMemo(() => {
     return items.map((item, index) => {
       return (
         <div
+          onClick={() => scrollTo((1 / items.length) * (index + 0.5))}
           id={`${scrollContainerId}-${index}`}
           key={`scrollItem-${index}`}
           className={styles.item}
         />
       )
     })
-  }, [items, scrollContainerId])
+  }, [items, scrollContainerId, scrollTo])
 
   return (
     <div
