@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
-import { Layout } from 'website/components/Layout'
+import { SubRouter } from './SubRouter'
 
 export const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='*' element={<Layout />} />
+        <Route path='*' element={<SubRouter />} />
       </Routes>
     </BrowserRouter>
   )

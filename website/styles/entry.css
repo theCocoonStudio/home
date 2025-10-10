@@ -108,7 +108,7 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  color: var(--theme-colors-black);
+  color: #122629;
 }
 /* body {
   overscroll-behavior: none;
@@ -173,7 +173,7 @@ html {
 
 .contact-dialog {
   background-color: var(--theme-colors-white);
-  color: var(--theme-colors-black);
+  color: #122629;
   padding: calc(4 * var(--theme-lengths-atomicPadding));
   h1 {
     text-align: center;
@@ -195,10 +195,10 @@ html {
   margin-top: 16px;
   padding-left: 16px;
   font-weight: 400;
-  background-color: var(--theme-colors-black);
+  background-color: #122629;
   color: var(--theme-colors-white);
   border-radius: 4px;
-  border: 1px solid var(--theme-colors-black);
+  border: 1px solid #122629;
   span:last-child {
     display: inline-block;
     height: 100%;
@@ -213,7 +213,7 @@ html {
     align-items: center;
     border-radius: 4px;
     background-color: var(--theme-colors-white);
-    color: var(--theme-colors-black);
+    color: #122629;
     &:hover {
       cursor: pointer;
       font-weight: 500;
@@ -231,7 +231,7 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(-45deg, var(--theme-colors-white), #899394);
+  background: linear-gradient(-45deg, #eaeaea, #899394);
   transition: opacity 1s;
   display: flex;
   flex-wrap: nowrap;
@@ -242,7 +242,17 @@ html {
 .bg-404 > div {
   position: relative;
   width: 100%;
-  padding: 0 var(--theme-lengths-sidePadding);
+  padding: 0 64px;
+}
+@media (max-width: 768px) {
+  .bg-404 > div {
+    padding: 0 32px;
+  }
+}
+@media (max-width: 400px) {
+  .bg-404 > div {
+    padding: 0 24px;
+  }
 }
 
 .title-404 {
@@ -283,21 +293,42 @@ html {
 
 .home-container-404 {
   line-height: 0;
-  font-size: var(--theme-lengths-loaderSize);
+  font-size: 45px;
   position: fixed;
   top: 0;
   left: 50%;
   width: 100%;
   bottom: 0;
-  max-width: var(--theme-lengths-maxWidth);
+  max-width: 1280px;
   transform: translateX(-50%);
+  color: #122629;
+}
+@media (max-width: 600px) {
+  .home-container-404 {
+    font-size: 30px;
+  }
+}
+@media (max-height: 700px) {
+  .home-container-404 {
+    font-size: 30px;
+  }
 }
 
 .home-404 {
   position: absolute;
   left: 0;
-  top: var(--theme-lengths-topBottomPadding);
-  padding-left: var(--theme-lengths-sidePadding);
+  top: 24px;
+  padding-left: 64px;
+}
+@media (max-width: 768px) {
+  .home-404 {
+    padding-left: 32px;
+  }
+}
+@media (max-width: 400px) {
+  .home-404 {
+    padding-left: 24px;
+  }
 }
 
 .home-404 > *:hover {

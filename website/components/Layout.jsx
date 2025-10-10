@@ -22,9 +22,6 @@ import {
   createTheme,
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles'
-import pagesConfig from 'website/pages'
-import { useParams } from 'react-router'
-import { WrongWay } from './WrongWay'
 import { Loader } from './Loader'
 import { CanvasLoader } from './Loader.canvas'
 import { ContactDialog } from './ContactDialog'
@@ -54,9 +51,7 @@ const theme = {
   },
 }
 
-function _Layout() {
-  const { '*': splat } = useParams()
-  const config = splat === '' ? pagesConfig['home'] : pagesConfig[splat]
+function _Layout({ config }) {
   const {
     main: { Component, ViewComponent, renderPriority },
     context: { Provider },
@@ -101,106 +96,101 @@ function _Layout() {
         <MenuProvider>
           <DndContext sensors={sensors}>
             <MuiThemeProvider theme={muiTheme}>
-              {typeof config === 'undefined' ? (
-                <WrongWay />
-              ) : (
-                <Provider config={config}>
-                  <div className={styles.layout}>
-                    <ThreeApp eventPrefix={'client'}>
-                      <ScrollControls
-                        {...scrollControlsProps}
-                        distance={
-                          scrollControlsProps?.distance
-                            ? scrollDistanceFactor *
-                              scrollControlsProps.distance
-                            : scrollDistanceFactor
-                        }
-                      >
-                        <View.Port />
-                        <ScrollHTMLRef setContainer={setScrollContainer} />
-                      </ScrollControls>
-                    </ThreeApp>
+              <Provider config={config}>
+                <div className={styles.layout}>
+                  <ThreeApp eventPrefix={'client'}>
+                    <ScrollControls
+                      {...scrollControlsProps}
+                      distance={
+                        scrollControlsProps?.distance
+                          ? scrollDistanceFactor * scrollControlsProps.distance
+                          : scrollDistanceFactor
+                      }
+                    >
+                      <View.Port />
+                      <ScrollHTMLRef setContainer={setScrollContainer} />
+                    </ScrollControls>
+                  </ThreeApp>
 
-                    {(Component || ViewComponent) &&
-                      scrollContainer &&
-                      createPortal(
-                        <>
-                          {ViewComponent && (
-                            <View
-                              className={styles.view}
-                              index={renderPriority}
-                              /* frames={1} */
-                            >
-                              <ViewComponent
-                                ready={ready}
-                                setReady={setReady}
-                                config={config}
-                                scrollContainer={scrollContainer}
-                                atStartOrFinish={atStartOrFinish}
-                              />
-                              {showLoader && (
-                                <CanvasLoader
-                                  ready={ready}
-                                  setReady={setReady}
-                                  atStartOrFinish={atStartOrFinish}
-                                  setAtStartOrFinish={setAtStartOrFinish}
-                                />
-                              )}
-                              <EventLayerOn />
-                            </View>
-                          )}
-                          {Component && (
-                            <Component
+                  {(Component || ViewComponent) &&
+                    scrollContainer &&
+                    createPortal(
+                      <>
+                        {ViewComponent && (
+                          <View
+                            className={styles.view}
+                            index={renderPriority}
+                            /* frames={1} */
+                          >
+                            <ViewComponent
                               ready={ready}
                               setReady={setReady}
                               config={config}
                               scrollContainer={scrollContainer}
+                              atStartOrFinish={atStartOrFinish}
                             />
-                          )}
-                          <Nav
+                            {showLoader && (
+                              <CanvasLoader
+                                ready={ready}
+                                setReady={setReady}
+                                atStartOrFinish={atStartOrFinish}
+                                setAtStartOrFinish={setAtStartOrFinish}
+                              />
+                            )}
+                            <EventLayerOn />
+                          </View>
+                        )}
+                        {Component && (
+                          <Component
+                            ready={ready}
+                            setReady={setReady}
                             config={config}
                             scrollContainer={scrollContainer}
-                            atStartOrFinish={atStartOrFinish}
-                            setContactOpen={setContactOpen}
-                            contactOpen={contactOpen}
                           />
-                          <Footer
+                        )}
+                        <Nav
+                          config={config}
+                          scrollContainer={scrollContainer}
+                          atStartOrFinish={atStartOrFinish}
+                          setContactOpen={setContactOpen}
+                          contactOpen={contactOpen}
+                        />
+                        <Footer
+                          config={config}
+                          scrollContainer={scrollContainer}
+                          ready={ready}
+                          atStartOrFinish={atStartOrFinish}
+                        />
+                        {showLoader && (
+                          <Loader
                             config={config}
-                            scrollContainer={scrollContainer}
                             ready={ready}
                             atStartOrFinish={atStartOrFinish}
+                            scrollDownTarget={scrollDownTarget}
+                            scrollUpTarget={scrollUpTarget}
+                            scrollContainer={scrollContainer}
                           />
-                          {showLoader && (
-                            <Loader
-                              config={config}
-                              ready={ready}
-                              atStartOrFinish={atStartOrFinish}
-                              scrollDownTarget={scrollDownTarget}
-                              scrollUpTarget={scrollUpTarget}
-                              scrollContainer={scrollContainer}
-                            />
-                          )}
-                        </>,
-                        scrollContainer.children[0],
-                      )}
-                    {MenuComponent && (
-                      <Menu
-                        config={config}
-                        scrollContainer={scrollContainer}
-                        MenuComponent={MenuComponent}
-                        setScrollDistanceFactor={setScrollDistanceFactor}
-                        atStartOrFinish={atStartOrFinish}
-                      />
+                        )}
+                      </>,
+                      scrollContainer.children[0],
                     )}
-
-                    <ContactDialog
-                      contactOpen={contactOpen}
-                      setContactOpen={setContactOpen}
+                  {MenuComponent && (
+                    <Menu
+                      config={config}
+                      scrollContainer={scrollContainer}
+                      MenuComponent={MenuComponent}
+                      setScrollDistanceFactor={setScrollDistanceFactor}
                       atStartOrFinish={atStartOrFinish}
                     />
-                  </div>
-                </Provider>
-              )}
+                  )}
+
+                  <ContactDialog
+                    contactOpen={contactOpen}
+                    setContactOpen={setContactOpen}
+                    atStartOrFinish={atStartOrFinish}
+                  />
+                </div>
+              </Provider>
             </MuiThemeProvider>
           </DndContext>
         </MenuProvider>
