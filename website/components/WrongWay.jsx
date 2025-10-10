@@ -3,16 +3,27 @@ import { Link } from 'react-router'
 
 export const WrongWay = () => {
   return (
-    <div className='bg-404'>
-      <h1 className='title-404 changa-one-regular'>Oops.</h1>
-      <h2 className='subtitle-404 raleway'>
-        These aren&#39;t the droids you&#39;re looking for.
-      </h2>
-      <Link to='/'>
-        <div className='home-404'>
-          <HomeIcon />
+    <>
+      <div className='bg-404'>
+        <div>
+          <h1 className='title-404 changa-one-regular'>Oops.</h1>
+          <h3 className='subtitle-404 raleway'>
+            These aren&#39;t the droids you&#39;re looking for.
+          </h3>
         </div>
-      </Link>
-    </div>
+      </div>
+      <div className='home-container-404'>
+        <div className='home-404'>
+          <Link to='/'>
+            <HomeIcon
+              fontSize='inherit'
+              sx={{
+                color: 'common.black',
+              }}
+            />
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
