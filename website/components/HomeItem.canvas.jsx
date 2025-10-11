@@ -7,10 +7,6 @@ import {
   useRef,
 } from 'react'
 import { RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
-
-import metal from 'website/assets/canvas/metal.png'
-import norm from 'website/assets/canvas/norm.png'
-import rough from 'website/assets/canvas/rough.png'
 import { contain } from 'website/utils/texture'
 import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
@@ -20,6 +16,7 @@ export const HomeItem = forwardRef(function HomeItem(
   {
     geometry,
     focusScale,
+    focusScalesFactor,
     focusPosition,
     initialPosition,
     markup,
@@ -31,6 +28,7 @@ export const HomeItem = forwardRef(function HomeItem(
     focusDepth,
     material,
     targetMaterial,
+    canvasTextures,
   },
   forwardedRef,
 ) {
@@ -46,9 +44,8 @@ export const HomeItem = forwardRef(function HomeItem(
   // independent data
   const size = useResizeEvent()
 
-  // textures
+  // item map texture
   const texture = useTexture(url)
-  const canvasTextures = useTexture([metal, norm, rough])
 
   useEffect(() => {
     texture.colorSpace = SRGBColorSpace
@@ -59,21 +56,28 @@ export const HomeItem = forwardRef(function HomeItem(
     }
   }, [texture])
 
+  // item material textures
+  const clonedCanvasTextures = useMemo(
+    () => canvasTextures.map((texture) => texture.clone()),
+    [canvasTextures],
+  )
   useEffect(
     () => () => {
-      canvasTextures.forEach((texture) => texture.dispose())
+      clonedCanvasTextures.forEach((texture) => texture.dispose())
     },
-    [canvasTextures],
+    [clonedCanvasTextures],
   )
 
   const repeat = useMemo(() => {
     if (focusScale) {
-      const repeatFactor = focusScale.x * 0.065
+      const pxLength = focusScale.x * focusScalesFactor
+      const repeatFactor = pxLength / 1800
+
       const repeat = new Vector2(repeatFactor, repeatFactor)
       return repeat
     }
     return {}
-  }, [focusScale])
+  }, [focusScale, focusScalesFactor])
 
   // target data
   const { targetScale, targetPosition } = useMemo(() => {
@@ -209,9 +213,9 @@ export const HomeItem = forwardRef(function HomeItem(
           emissiveMap={texture}
           emissive={'#fff'}
           emissiveIntensity={0.35}
-          metalnessMap={canvasTextures[0]}
-          normalMap={canvasTextures[1]}
-          roughnessMap={canvasTextures[2]}
+          metalnessMap={clonedCanvasTextures[0]}
+          normalMap={clonedCanvasTextures[1]}
+          roughnessMap={clonedCanvasTextures[2]}
           normalMap-wrapS={RepeatWrapping}
           normalMap-wrapT={RepeatWrapping}
           metalnessMap-wrapS={RepeatWrapping}
