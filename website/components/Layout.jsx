@@ -5,7 +5,7 @@ import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
 import { Footer } from './Footer'
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
@@ -51,7 +51,7 @@ const theme = {
   },
 }
 
-function _Layout({ config }) {
+function Layout({ config }) {
   const {
     main: { Component, ViewComponent, renderPriority },
     context: { Provider },
@@ -199,4 +199,4 @@ function _Layout({ config }) {
   )
 }
 
-export const Layout = memo(_Layout)
+export default Layout

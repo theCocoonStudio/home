@@ -1,11 +1,13 @@
 import { Effects } from './Effects.canvas'
-import { Home } from './Home.view'
 import { Main } from './Main'
 import { HomeProvider } from './HomeProvider'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
 import { ScrollContainer } from '../../components/ScrollContainer'
 import dragonfly from 'assets/photography/test.jpg'
+import { lazy } from 'react'
+
+const Home = lazy(() => import('./Home.view'))
 
 const items = [
   {

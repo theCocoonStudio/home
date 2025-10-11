@@ -1,7 +1,9 @@
 import pagesConfig from 'website/pages'
 import { useParams } from 'react-router'
-import { WrongWay } from './WrongWay'
-import { Layout } from 'website/components/Layout'
+import { lazy } from 'react'
+
+const WrongWay = lazy(() => import('./WrongWay'))
+const Layout = lazy(() => import('website/components/Layout'))
 
 export const SubRouter = () => {
   const { '*': splat } = useParams()

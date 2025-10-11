@@ -1,7 +1,7 @@
 import HomeIcon from '@mui/icons-material/Home'
 import { Link } from 'react-router'
 
-export const WrongWay = () => {
+const WrongWay = () => {
   return (
     <>
       <div className='bg-404'>
@@ -27,3 +27,5 @@ export const WrongWay = () => {
     </>
   )
 }
+
+export default WrongWay
