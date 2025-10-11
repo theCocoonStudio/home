@@ -4,7 +4,6 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import { Footer } from './Footer'
 import { useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
@@ -57,9 +56,17 @@ function Layout({ config }) {
     context: { Provider },
     scroll: { scrollControlsProps },
     menu: { Component: MenuComponent },
+    footer: { FooterComponent },
     theme: pageTheme,
     loader: { showLoader, scrollDownTarget, scrollUpTarget },
-  } = config || { main: {}, context: {}, scroll: {}, menu: {}, loader: {} }
+  } = config || {
+    main: {},
+    context: {},
+    scroll: {},
+    menu: {},
+    loader: {},
+    footer: {},
+  }
 
   const muiTheme = createTheme({
     palette: {
@@ -155,12 +162,14 @@ function Layout({ config }) {
                           setContactOpen={setContactOpen}
                           contactOpen={contactOpen}
                         />
-                        <Footer
-                          config={config}
-                          scrollContainer={scrollContainer}
-                          ready={ready}
-                          atStartOrFinish={atStartOrFinish}
-                        />
+                        {FooterComponent && (
+                          <FooterComponent
+                            config={config}
+                            scrollContainer={scrollContainer}
+                            ready={ready}
+                            atStartOrFinish={atStartOrFinish}
+                          />
+                        )}
                         {showLoader && (
                           <Loader
                             config={config}

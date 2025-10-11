@@ -3,9 +3,9 @@ import { Main } from './Main'
 import { HomeProvider } from './HomeProvider'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
-import { ScrollContainer } from '../../components/ScrollContainer'
 import dragonfly from 'assets/photography/test.jpg'
 import { lazy } from 'react'
+import { Footer } from '../../components/Footer'
 
 const Home = lazy(() => import('./Home.view'))
 
@@ -93,7 +93,7 @@ export const config = {
     LogoComponent: HomeLogo,
   },
   footer: {
-    FooterComponent: ScrollContainer,
+    FooterComponent: Footer,
   },
   theme: {
     itemDescriptionBottom: ({ width, height }, theme) => {
@@ -108,12 +108,12 @@ export const config = {
         } else if (height > 400) {
           value = 2 * theme.lengths.topBottomPadding
         } else {
-          value = theme.lengths.topBottomPadding
+          value = 1.5 * theme.lengths.topBottomPadding
         }
       } else {
         value = 2 * theme.lengths.topBottomPadding
         if (height <= 500) {
-          value = theme.lengths.topBottomPadding
+          value = 1.5 * theme.lengths.topBottomPadding
         }
       }
 
