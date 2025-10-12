@@ -20,5 +20,13 @@ export const useResizeEvent = (callback) => {
     }
   }, [callback, id, size, subscriptions])
 
+  // unsubscribe on unmount
+  useEffect(
+    () => () => {
+      delete subscriptions.current[id]
+    },
+    [],
+  )
+
   return size
 }
