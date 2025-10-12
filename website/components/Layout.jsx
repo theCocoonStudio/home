@@ -4,7 +4,7 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
@@ -208,4 +208,4 @@ function Layout({ config }) {
   )
 }
 
-export default Layout
+export default memo(Layout)

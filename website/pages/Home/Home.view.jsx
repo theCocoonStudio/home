@@ -1,6 +1,6 @@
 import { Lightformer, PerspectiveCamera, Stars } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { memo, Suspense, useMemo, useRef, useState } from 'react'
 import { Performance } from '../../components/Performance.canvas'
 import { useTargetItems } from './useTargetItems'
 import { Background } from '../../components/Background.canvas'
@@ -124,4 +124,4 @@ const Home = ({ config, ready, atStartOrFinish }) => {
   )
 }
 
-export default Home
+export default memo(Home)
