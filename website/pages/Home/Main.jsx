@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import styles from './Home.styles.module.css'
+import LaunchIcon from '@mui/icons-material/Launch'
 
 export const Main = function Main({
   /* scrollContainer,
@@ -23,7 +24,10 @@ export const Main = function Main({
             <div className={`${styles.itemDescription}`}>
               <h1 className={`${styles.title} changa-one-regular`}>{title}</h1>
               <h3 className={`${styles.date} raleway`}>{date}</h3>
-              <p className={`${styles.description} raleway`}>{description}</p>
+              <p className={`${styles.description} raleway`}>
+                <span>{description + ' '}</span>
+                <LaunchIcon fontSize='inherit' />
+              </p>
             </div>
           </div>
         )

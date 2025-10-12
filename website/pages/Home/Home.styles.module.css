@@ -46,7 +46,7 @@
   position: relative;
   padding: var(--theme-lengths-sidePadding) var(--theme-lengths-sidePadding) 0
     var(--theme-lengths-sidePadding);
-  pointer-events: auto;
+  /* pointer-events: auto; */
   @media (max-height: 800px) {
     padding-top: var(--theme-lengths-topBottomPadding);
   }
@@ -112,6 +112,12 @@
   margin-top: calc(4 * var(--theme-lengths-atomicPadding));
   line-height: 1.2em;
   max-width: 450px;
+  > svg {
+    vertical-align: middle;
+    &:hover {
+      cursor: pointer;
+    }
+  }
   @media (max-height: 600px) {
     margin-top: calc(2 * var(--theme-lengths-atomicPadding));
     font-size: 1.2rem;
@@ -122,9 +128,18 @@
       font-size: 1.2rem;
     }
     @media (max-height: 400px) {
-      text-overflow: ellipsis;
-      text-wrap: nowrap;
-      overflow: hidden;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: space-between;
+      > span {
+        flex-shrink: 1;
+        flex-grow: 1;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+        display: inline-block;
+      }
     }
   }
 }
