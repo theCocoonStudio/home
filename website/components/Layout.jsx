@@ -50,7 +50,7 @@ const theme = {
   },
 }
 
-function Layout({ config }) {
+function Layout({ config, ready, setReady }) {
   const {
     main: { Component, ViewComponent, renderPriority },
     context: { Provider },
@@ -76,7 +76,6 @@ function Layout({ config }) {
     typography: { switchIcon: '2rem' },
   })
 
-  const [ready, setReady] = useState(false)
   const [scrollContainer, setScrollContainer] = useState()
   const [atStartOrFinish, setAtStartOrFinish] = useState({
     start: true,
