@@ -30,7 +30,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const {
     colors: { black },
     lengths: { topBottomPadding },
-    page: { scrollContainerHeight },
+    page: { requiredFooterHeight },
   } = useTheme()
 
   const [minimized, setMinimized] = useState(false)
@@ -46,9 +46,9 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const draggableStyle = useMemo(
     () => ({
       left: `${padding || 0}px`,
-      bottom: `${topBottomPadding + scrollContainerHeight}px`,
+      bottom: `${topBottomPadding + requiredFooterHeight}px`,
     }),
-    [padding, scrollContainerHeight, topBottomPadding],
+    [padding, requiredFooterHeight, topBottomPadding],
   )
 
   const minimizeStyle = useMemo(
@@ -73,20 +73,20 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
       overflowY:
         !minimized &&
         droppableHeight -
-          (topBottomPadding + scrollContainerHeight) -
+          (topBottomPadding + requiredFooterHeight) -
           markupHeights.panel <
           markupHeights.content
           ? 'auto'
           : 'hidden',
       maxHeight: minimized
         ? '0'
-        : `${droppableHeight - (topBottomPadding + scrollContainerHeight) - markupHeights.panel}px`,
+        : `${droppableHeight - (topBottomPadding + requiredFooterHeight) - markupHeights.panel}px`,
     }
     return { className, style }
   }, [
     droppableHeight,
     topBottomPadding,
-    scrollContainerHeight,
+    requiredFooterHeight,
     markupHeights,
     minimized,
     styles,
@@ -100,12 +100,12 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     if (minimized) {
       const isScroll =
         droppableHeight -
-          (topBottomPadding + scrollContainerHeight) -
+          (topBottomPadding + requiredFooterHeight) -
           markupHeights.panel <
         markupHeights.content
       onBeforeMaximize(
         isScroll
-          ? droppableHeight - (topBottomPadding + scrollContainerHeight)
+          ? droppableHeight - (topBottomPadding + requiredFooterHeight)
           : markupHeights.content + markupHeights.panel,
       )
     }
@@ -113,7 +113,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   }, [
     droppableHeight,
     topBottomPadding,
-    scrollContainerHeight,
+    requiredFooterHeight,
     markupHeights,
     minimized,
     onBeforeMaximize,

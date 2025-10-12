@@ -127,7 +127,7 @@ export const config = {
       return `60vh`
     },
     backgroundZ0: -80,
-    scrollContainerHeight: (size, { lengths: { topBottomPadding } }) => {
+    requiredFooterHeight: (size, { lengths: { topBottomPadding } }) => {
       return topBottomPadding / 2
     },
   },
