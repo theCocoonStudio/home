@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
 
-export const CanvasLoader = ({ setReady, setAtStartOrFinish }) => {
+export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
   const { active } = useProgress()
 
   const compiledSceneId = useRef()
@@ -15,13 +15,13 @@ export const CanvasLoader = ({ setReady, setAtStartOrFinish }) => {
   }))
 
   useEffect(() => {
-    if (scene && compiledSceneId.current !== scene.uuid && !active) {
+    if (!ready && scene && compiledSceneId.current !== scene.uuid && !active) {
       compileSceneAsync(gl, scene, camera, () => {
         setReady(true)
         compiledSceneId.current === scene.uuid
       })
     }
-  }, [active, camera, gl, scene, setReady])
+  }, [active, camera, gl, ready, scene, setReady])
 
   const atStart = useRef(true)
   const atFinish = useRef(false)
