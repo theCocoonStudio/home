@@ -4,7 +4,7 @@ import { Nav } from './Nav'
 import { ResizeEventProvider } from 'src/context/ResizeEventProvider'
 import { ThemeProvider } from 'website/context/ThemeProvider'
 import { ScrollControls, View } from '@react-three/drei'
-import { memo, useState } from 'react'
+import { memo, useLayoutEffect, useState } from 'react'
 import { ScrollHTMLRef } from './ScrollHTMLRef.canvas'
 import { createPortal } from 'react-dom'
 import { EventLayerOn } from './EventLayerOn.canvas'
@@ -51,6 +51,7 @@ const theme = {
 }
 
 function Layout({ config, ready, setReady }) {
+  // config values
   const {
     main: { Component, ViewComponent, renderPriority },
     context: { Provider },
@@ -58,7 +59,7 @@ function Layout({ config, ready, setReady }) {
     menu: { Component: MenuComponent },
     footer: { FooterComponent },
     theme: pageTheme,
-    loader: { showLoader, scrollDownTarget, scrollUpTarget },
+    loader: { scrollDownTarget, scrollUpTarget },
   } = config || {
     main: {},
     context: {},
@@ -68,6 +69,7 @@ function Layout({ config, ready, setReady }) {
     footer: {},
   }
 
+  // mui theme
   const muiTheme = createTheme({
     palette: {
       common: { black: theme.colors.black, white: theme.colors.white },
@@ -76,15 +78,25 @@ function Layout({ config, ready, setReady }) {
     typography: { switchIcon: '2rem' },
   })
 
+  // state: stable across page changes
   const [scrollContainer, setScrollContainer] = useState()
   const [atStartOrFinish, setAtStartOrFinish] = useState({
     start: true,
     finish: false,
     either: true,
   })
-  const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
 
+  // state: unstable; resets on page changes
+  const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [contactOpen, setContactOpen] = useState(false)
+
+  // reset unstable state on page change
+  useLayoutEffect(() => {
+    if (!ready) {
+      setScrollDistanceFactor(1)
+      setContactOpen(false)
+    }
+  }, [ready])
 
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor, {
@@ -135,14 +147,14 @@ function Layout({ config, ready, setReady }) {
                               scrollContainer={scrollContainer}
                               atStartOrFinish={atStartOrFinish}
                             />
-                            {showLoader && (
-                              <CanvasLoader
-                                ready={ready}
-                                setReady={setReady}
-                                atStartOrFinish={atStartOrFinish}
-                                setAtStartOrFinish={setAtStartOrFinish}
-                              />
-                            )}
+                            (
+                            <CanvasLoader
+                              ready={ready}
+                              setReady={setReady}
+                              atStartOrFinish={atStartOrFinish}
+                              setAtStartOrFinish={setAtStartOrFinish}
+                            />
+                            )
                             <EventLayerOn />
                           </View>
                         )}
@@ -169,16 +181,15 @@ function Layout({ config, ready, setReady }) {
                             atStartOrFinish={atStartOrFinish}
                           />
                         )}
-                        {showLoader && (
-                          <Loader
-                            config={config}
-                            ready={ready}
-                            atStartOrFinish={atStartOrFinish}
-                            scrollDownTarget={scrollDownTarget}
-                            scrollUpTarget={scrollUpTarget}
-                            scrollContainer={scrollContainer}
-                          />
-                        )}
+
+                        <Loader
+                          config={config}
+                          ready={ready}
+                          atStartOrFinish={atStartOrFinish}
+                          scrollDownTarget={scrollDownTarget}
+                          scrollUpTarget={scrollUpTarget}
+                          scrollContainer={scrollContainer}
+                        />
                       </>,
                       scrollContainer.children[0],
                     )}
@@ -189,6 +200,7 @@ function Layout({ config, ready, setReady }) {
                       MenuComponent={MenuComponent}
                       setScrollDistanceFactor={setScrollDistanceFactor}
                       atStartOrFinish={atStartOrFinish}
+                      ready={ready}
                     />
                   )}
 

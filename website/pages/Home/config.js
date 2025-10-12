@@ -62,7 +62,6 @@ export const config = {
     Component: HomeSettings,
   },
   loader: {
-    showLoader: true,
     scrollDownTarget: (0.5 * 1) / items.length,
     scrollUpTarget: 1 - (0.5 * 1) / items.length,
   },

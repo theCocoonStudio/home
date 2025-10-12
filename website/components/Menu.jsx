@@ -14,6 +14,7 @@ export const Menu = ({
   setScrollDistanceFactor,
   scrollContainer,
   atStartOrFinish,
+  ready,
 }) => {
   const {
     lengths: { topBottomPadding, sidePadding },
@@ -95,12 +96,12 @@ export const Menu = ({
     setShowMenu(false)
   }, [setShowMenu, size])
 
-  // hide menu on atStartOrFinish
+  // hide menu on atStartOrFinish or !ready
   useEffect(() => {
-    if (atStartOrFinish.either) {
+    if (atStartOrFinish.either || !ready) {
       setShowMenu(false)
     }
-  }, [atStartOrFinish.either, setShowMenu])
+  }, [atStartOrFinish.either, ready, setShowMenu])
 
   useEffect(() => {
     if (!showMenu) {
