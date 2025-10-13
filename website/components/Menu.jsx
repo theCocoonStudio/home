@@ -17,7 +17,7 @@ export const Menu = ({
   ready,
 }) => {
   const {
-    lengths: { topBottomPadding, sidePadding },
+    lengths: { sidePadding },
     page: { requiredFooterHeight },
   } = useTheme()
 
@@ -58,8 +58,8 @@ export const Menu = ({
                 (typeof height === 'number'
                   ? height
                   : draggable.current.container.clientHeight) -
-                (requiredFooterHeight + topBottomPadding)),
-            requiredFooterHeight + topBottomPadding,
+                requiredFooterHeight),
+            requiredFooterHeight,
           ),
         }
         offset.current = { x: 0, y: 0 }
@@ -68,7 +68,7 @@ export const Menu = ({
         draggable.current.container.style.transform = `translate3d(${base.current.x}px, ${base.current.y}px, 0)`
       }
     },
-    [droppableWidth, requiredFooterHeight, sidePadding, topBottomPadding],
+    [droppableWidth, requiredFooterHeight, sidePadding],
   )
 
   const onMenuDragMove = useCallback(

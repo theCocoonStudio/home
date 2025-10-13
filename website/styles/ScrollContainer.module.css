@@ -3,7 +3,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: var(--theme-page-requiredFooterHeight);
+  height: var(--theme-page-scrollContainerHeight);
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;

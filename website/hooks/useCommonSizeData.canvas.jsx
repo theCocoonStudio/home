@@ -13,7 +13,7 @@ export const useCommonSizeData = ({
   const {
     lengths: { maxWidth, sidePadding, topBottomPadding },
     page: {
-      itemDescriptionBottom,
+      requiredFooterHeight,
       backgroundHeightProportion,
       modelsLayoutBreakpoint,
     },
@@ -30,11 +30,11 @@ export const useCommonSizeData = ({
 
   // calculates models z position
   const getZpos = useCallback(
-    (floorY, itemDescriptionBottom, viewportHeightPx, camera) => {
+    (floorY, requiredFooterHeight, viewportHeightPx, camera) => {
       // floorToBottomLength = Math.abs(floorY - (-visibleHeight/2))
-      // we want floorToBottomLength/visibleHeight = itemDescriptionBottom / viewportHeightPx
-      // visibleHeight = viewportHeightPx / itemDescriptionBottom * floorY  / (1 - viewportHeightPx / (2 * itemDescriptionBottom)
-      const floorYProportion = viewportHeightPx / itemDescriptionBottom
+      // we want floorToBottomLength/visibleHeight = requiredFooterHeight / viewportHeightPx
+      // visibleHeight = viewportHeightPx / requiredFooterHeight * floorY  / (1 - viewportHeightPx / (2 * requiredFooterHeight)
+      const floorYProportion = viewportHeightPx / requiredFooterHeight
       const visibleHeight =
         (floorYProportion * floorY) / (1 - floorYProportion / 2)
       // plugging in:
@@ -76,7 +76,7 @@ export const useCommonSizeData = ({
     const floorY = -0.5 * backgroundViewportHeight * heightProportion0
 
     // models zPos
-    const modelsZ = getZpos(floorY, itemDescriptionBottom, size.height, camera)
+    const modelsZ = getZpos(floorY, requiredFooterHeight, size.height, camera)
 
     // viewport height and factor at models position-z
     const { x: modelsViewportWidth, y: modelsViewportHeight } =
@@ -97,7 +97,7 @@ export const useCommonSizeData = ({
     get,
     getZpos,
     heightProportion0,
-    itemDescriptionBottom,
+    requiredFooterHeight,
     maxWidth,
     positionZ0,
     sidePadding,
@@ -111,7 +111,7 @@ export const useCommonSizeData = ({
     maxWidth,
     sidePadding,
     topBottomPadding,
-    itemDescriptionBottom,
+    requiredFooterHeight,
     backgroundHeightProportion,
     modelsLayoutBreakpoint,
     size,

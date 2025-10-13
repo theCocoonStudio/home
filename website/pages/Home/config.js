@@ -95,7 +95,7 @@ export const config = {
     FooterComponent: Footer,
   },
   theme: {
-    itemDescriptionBottom: ({ width, height }, theme) => {
+    requiredFooterHeight: ({ width, height }, theme) => {
       let value
       if (width > 600) {
         if (height > 1800) {
@@ -121,7 +121,7 @@ export const config = {
       return `60vh`
     },
     backgroundZ0: -80,
-    requiredFooterHeight: (size, { lengths: { atomicPadding } }) => {
+    scrollContainerHeight: (size, { lengths: { atomicPadding } }) => {
       return atomicPadding * 2
     },
   },

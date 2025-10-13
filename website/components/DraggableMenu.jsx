@@ -29,7 +29,6 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const {
     colors: { black },
-    lengths: { topBottomPadding },
     page: { requiredFooterHeight },
   } = useTheme()
 
@@ -46,9 +45,9 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const draggableStyle = useMemo(
     () => ({
       left: `${padding || 0}px`,
-      bottom: `${topBottomPadding + requiredFooterHeight}px`,
+      bottom: `${requiredFooterHeight}px`,
     }),
-    [padding, requiredFooterHeight, topBottomPadding],
+    [padding, requiredFooterHeight],
   )
 
   const minimizeStyle = useMemo(
@@ -72,25 +71,16 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     const style = markupHeights && {
       overflowY:
         !minimized &&
-        droppableHeight -
-          (topBottomPadding + requiredFooterHeight) -
-          markupHeights.panel <
+        droppableHeight - requiredFooterHeight - markupHeights.panel <
           markupHeights.content
           ? 'auto'
           : 'hidden',
       maxHeight: minimized
         ? '0'
-        : `${droppableHeight - (topBottomPadding + requiredFooterHeight) - markupHeights.panel}px`,
+        : `${droppableHeight - requiredFooterHeight - markupHeights.panel}px`,
     }
     return { className, style }
-  }, [
-    droppableHeight,
-    topBottomPadding,
-    requiredFooterHeight,
-    markupHeights,
-    minimized,
-    styles,
-  ])
+  }, [droppableHeight, requiredFooterHeight, markupHeights, minimized, styles])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
@@ -99,20 +89,17 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   const toggleMinimized = useCallback(() => {
     if (minimized) {
       const isScroll =
-        droppableHeight -
-          (topBottomPadding + requiredFooterHeight) -
-          markupHeights.panel <
+        droppableHeight - requiredFooterHeight - markupHeights.panel <
         markupHeights.content
       onBeforeMaximize(
         isScroll
-          ? droppableHeight - (topBottomPadding + requiredFooterHeight)
+          ? droppableHeight - requiredFooterHeight
           : markupHeights.content + markupHeights.panel,
       )
     }
     setMinimized((prev) => !prev)
   }, [
     droppableHeight,
-    topBottomPadding,
     requiredFooterHeight,
     markupHeights,
     minimized,
