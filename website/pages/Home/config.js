@@ -104,19 +104,14 @@ export const config = {
           value = 6 * theme.lengths.topBottomPadding
         } else if (height > 800) {
           value = 4 * theme.lengths.topBottomPadding
-        } else if (height > 400) {
-          value = 2 * theme.lengths.topBottomPadding
         } else {
-          value = 1.5 * theme.lengths.topBottomPadding
+          value = 2 * theme.lengths.topBottomPadding
         }
       } else {
         value = 2 * theme.lengths.topBottomPadding
-        if (height <= 500) {
-          value = 1.5 * theme.lengths.topBottomPadding
-        }
       }
 
-      return value
+      return value + theme.lengths.atomicPadding * 2 // add scroll container height
     },
     modelsLayoutBreakpoint: 600,
     backgroundHeightProportion: () => {
@@ -126,8 +121,8 @@ export const config = {
       return `60vh`
     },
     backgroundZ0: -80,
-    requiredFooterHeight: (size, { lengths: { topBottomPadding } }) => {
-      return topBottomPadding / 2
+    requiredFooterHeight: (size, { lengths: { atomicPadding } }) => {
+      return atomicPadding * 2
     },
   },
 }
