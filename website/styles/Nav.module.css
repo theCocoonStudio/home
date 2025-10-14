@@ -29,10 +29,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  column-gap: calc(2.5 * var(--theme-lengths-atomicPadding));
+  column-gap: calc(3 * var(--theme-lengths-atomicPadding));
   flex-wrap: nowrap;
   @media (max-width: 600px) {
-    column-gap: calc(1.5 * var(--theme-lengths-atomicPadding));
+    column-gap: calc(2 * var(--theme-lengths-atomicPadding));
   }
 }
 .logo {
