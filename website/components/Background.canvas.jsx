@@ -183,7 +183,7 @@ const _Background = forwardRef(function Background(
         <planeGeometry args={[1, 1]} />
         <meshStandardMaterial
           fog={false}
-          color={'#000'}
+          color={'#151515'}
           roughness={0.15}
           metalness={0.5}
           transparent={true}
@@ -195,7 +195,7 @@ const _Background = forwardRef(function Background(
         />
         <mesh ref={backing} position-z={-0.01} scale={0.999}>
           <planeGeometry args={[1, 1]} />
-          <meshBasicMaterial color={'#656565'} fog={false}>
+          <meshBasicMaterial color={'#141515'} fog={false}>
             <VideoTexture
               videoId={videoId}
               fit={{

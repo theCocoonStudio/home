@@ -155,17 +155,19 @@ export const HomeItem = forwardRef(function HomeItem(
 
   useFrame((state, delta) => {
     if (initialPosition) {
-      setMaterial()
-
       damp(outOffset, 'current', scroll.range(...range.out), 0.0, delta)
       damp(inOffset, 'current', scroll.range(...range.in), 0.0, delta)
-      damp(
+
+      setMaterial()
+      mesh.current.visible = inOffset.current > 0
+
+      /* damp(
         inner.current.material,
         'opacity',
         1.5 * (1 - outOffset.current),
         0.0,
         delta,
-      )
+      ) */
 
       if (outOffset.current > 0) {
         hideMarkup()
@@ -202,7 +204,7 @@ export const HomeItem = forwardRef(function HomeItem(
       position={initialPosition}
       material={material}
     >
-      <mesh scale={0.8} ref={inner}>
+      <mesh scale={0.9} ref={inner}>
         <meshStandardMaterial
           fog={false}
           map={texture}
@@ -210,9 +212,6 @@ export const HomeItem = forwardRef(function HomeItem(
           depthTest={true}
           transparent
           opacity={1}
-          emissiveMap={texture}
-          emissive={'#fff'}
-          emissiveIntensity={0.35}
           metalnessMap={clonedCanvasTextures[0]}
           normalMap={clonedCanvasTextures[1]}
           roughnessMap={clonedCanvasTextures[2]}

@@ -51,16 +51,16 @@ const Home = ({ config, ready, atStartOrFinish }) => {
 
   return (
     <Suspense>
-      <color attach='background' args={['#111']} />
-      <fog attach='fog' args={['#111', 82, 115]} />
+      <color attach='background' args={['#050505']} />
+      <fog attach='fog' args={['#050505', 82, 115]} />
       <Performance />
       <PerspectiveCamera
         makeDefault
         position-z={5}
         fov={10}
       ></PerspectiveCamera>
-      {/* <Environment preset='city' environmentIntensity={0.7} /> */}
-      <Environment resolution={1024}>
+      {/*  <Environment preset='city' environmentIntensity={0.12} /> */}
+      <Environment resolution={1024} environmentIntensity={0.4}>
         <group rotation={[-Math.PI / 3, 0, 0]}>
           <Lightformer
             intensity={4}
@@ -92,7 +92,7 @@ const Home = ({ config, ready, atStartOrFinish }) => {
           />
         </group>
       </Environment>
-      <ambientLight intensity={0.7} />
+      <ambientLight intensity={0.5} />
       <Background
         {...commonSizeDataProps}
         videoId={loaderVideo}

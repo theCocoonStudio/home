@@ -37,11 +37,11 @@ export const Effects = function Effects({
       >
         {sun && (
           <>
-            <GodRays sun={sun} exposure={0.7} weight={2.4} density={0.8} blur />
+            <GodRays sun={sun} exposure={2.8} weight={1.8} density={1.2} blur />
             <Sepia
               intensity={0.45} // sepia intensity
             />
-            <Noise opacity={0.12} premultiply={false} />
+            <Noise opacity={0.09} premultiply={false} />
             <Vignette
               offset={0.15} // vignette offset
               darkness={0.74} // vignette darkness
