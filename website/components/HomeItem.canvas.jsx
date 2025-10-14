@@ -77,7 +77,7 @@ export const HomeItem = forwardRef(function HomeItem(
   const repeat = useMemo(() => {
     if (focusScale) {
       const pxLength = focusScale.x * focusScalesFactor
-      const repeatFactor = pxLength / 1800
+      const repeatFactor = pxLength / 1600
 
       const repeat = new Vector2(repeatFactor, repeatFactor)
       return repeat
