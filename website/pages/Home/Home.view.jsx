@@ -37,7 +37,7 @@ const Home = ({ config, ready, atStartOrFinish }) => {
     }),
     [],
   )
-  useTargetItems(animationTargets)
+  useTargetItems(animationTargets, 'home')
 
   // common child size data
   const commonSizeDataProps = useCommonSizeData({

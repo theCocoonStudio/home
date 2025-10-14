@@ -11,6 +11,7 @@ import { contain } from 'website/utils/texture'
 import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useTargetItems } from '../pages/Home/useTargetItems'
 
 export const HomeItem = forwardRef(function HomeItem(
   {
@@ -40,6 +41,11 @@ export const HomeItem = forwardRef(function HomeItem(
     () => ({ mesh: mesh.current, inner: inner.current }),
     [],
   )
+
+  // controls targets
+  const {
+    controls: { setDisableReadMoreControl },
+  } = useTargetItems()
 
   // independent data
   const size = useResizeEvent()
@@ -123,35 +129,65 @@ export const HomeItem = forwardRef(function HomeItem(
   const activeScale = useRef(new Vector3())
   const markupVisible = useRef(false)
   const isTargetMaterial = useRef(false)
+  const isReadMoreButtonDisabled = useRef(true)
 
-  const { showMarkup, hideMarkup, setMaterial } = useMemo(() => {
-    const showMarkup = () => {
-      if (!markupVisible.current) {
-        markup.style.opacity = '1'
-        markup.style.pointerEvents = 'auto'
-        markupVisible.current = true
-      }
-    }
-    const hideMarkup = () => {
-      if (markupVisible.current) {
-        markup.style.opacity = '0'
-        markup.style.pointerEvents = 'none'
-        markupVisible.current = false
-      }
-    }
-    const setMaterial = () => {
-      if (outOffset.current > 1 - scroll.eps) {
-        if (!isTargetMaterial.current) {
-          mesh.current.material = targetMaterial
-          isTargetMaterial.current = true
+  const { showMarkup, hideMarkup, setMaterial, toggleReadMoreButton } =
+    useMemo(() => {
+      const showMarkup = () => {
+        if (!markupVisible.current) {
+          markup.style.opacity = '1'
+          markup.style.pointerEvents = 'auto'
+          markupVisible.current = true
         }
-      } else if (isTargetMaterial.current) {
-        mesh.current.material = material
-        isTargetMaterial.current = false
       }
-    }
-    return { showMarkup, hideMarkup, setMaterial }
-  }, [markup, scroll.eps, targetMaterial, material])
+      const hideMarkup = () => {
+        if (markupVisible.current) {
+          markup.style.opacity = '0'
+          markup.style.pointerEvents = 'none'
+          markupVisible.current = false
+        }
+      }
+      const setMaterial = () => {
+        if (outOffset.current > 1 - scroll.eps) {
+          if (!isTargetMaterial.current) {
+            mesh.current.material = targetMaterial
+            isTargetMaterial.current = true
+          }
+        } else if (isTargetMaterial.current) {
+          mesh.current.material = material
+          isTargetMaterial.current = false
+        }
+      }
+
+      const toggleReadMoreButton = () => {
+        // if in focus range
+        if (inOffset.current > 1 - scroll.eps && !(outOffset.current > 0)) {
+          // if button not yet enabled, enabled it and flag as enabled
+          if (isReadMoreButtonDisabled.current) {
+            setDisableReadMoreControl(false)
+            isReadMoreButtonDisabled.current = false
+          }
+          // if in item's visible range but not in focus range
+        } else if (inOffset.current > 0 && outOffset.current < 1) {
+          // if button not yet disabled, disabled it and flag as disabled
+          if (!isReadMoreButtonDisabled.current) {
+            setDisableReadMoreControl(true)
+            isReadMoreButtonDisabled.current = true
+          }
+          // if not in item's visible range
+        } else {
+          // flag as disabled -- it will be by another item
+          isReadMoreButtonDisabled.current = true
+        }
+      }
+      return { showMarkup, hideMarkup, setMaterial, toggleReadMoreButton }
+    }, [
+      markup,
+      scroll.eps,
+      targetMaterial,
+      material,
+      setDisableReadMoreControl,
+    ])
 
   useFrame((state, delta) => {
     if (initialPosition) {
@@ -160,14 +196,15 @@ export const HomeItem = forwardRef(function HomeItem(
 
       setMaterial()
       mesh.current.visible = inOffset.current > 0
+      toggleReadMoreButton()
 
-      /* damp(
+      damp(
         inner.current.material,
         'opacity',
         1.5 * (1 - outOffset.current),
         0.0,
         delta,
-      ) */
+      )
 
       if (outOffset.current > 0) {
         hideMarkup()

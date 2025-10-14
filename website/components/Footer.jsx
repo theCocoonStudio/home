@@ -5,8 +5,22 @@ import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useMemo, useState } from 'react'
+import { useTargetItems } from '../pages/Home/useTargetItems'
 
 export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
+  // control targets to pass to view component
+  const [disableReadMoreControl, setDisableReadMoreControl] = useState(true)
+
+  const controlTargets = useMemo(
+    () => ({
+      setDisableReadMoreControl,
+    }),
+    [],
+  )
+
+  useTargetItems(controlTargets, 'controls')
+  // viewport width in pixels
   const { width } = useResizeEvent()
 
   return (
@@ -34,7 +48,7 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
             <KeyboardDoubleArrowLeftIcon fontSize='inherit' />
           </IconButton>
           <IconButton
-            disabled={true}
+            disabled={disableReadMoreControl}
             aria-label='fingerprint'
             sx={{
               color: 'common.white',
