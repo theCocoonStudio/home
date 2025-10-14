@@ -74,6 +74,9 @@ function Layout({ config, ready, setReady }) {
     palette: {
       common: { black: theme.colors.black, white: theme.colors.white },
       primary: { main: theme.colors.black },
+      action: {
+        disabled: `${theme.colors.white}55`,
+      },
     },
     typography: { switchIcon: '2rem' },
   })
@@ -86,7 +89,7 @@ function Layout({ config, ready, setReady }) {
     either: true,
   })
 
-  // state: unstable; resets on page changes
+  // state: unstable; resets on page change
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [contactOpen, setContactOpen] = useState(false)
 
@@ -98,6 +101,7 @@ function Layout({ config, ready, setReady }) {
     }
   }, [ready])
 
+  // draggable menu
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor, {
     // Press delay of 250ms, with tolerance of 5px of movement

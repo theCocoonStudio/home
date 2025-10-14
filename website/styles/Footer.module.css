@@ -10,16 +10,26 @@
   justify-content: center;
   flex-wrap: nowrap;
   color: var(--theme-colors-white);
-  padding-bottom: var(--theme-lengths-topBottomPadding);
+  height: var(--theme-page-requiredFooterHeight);
+  padding-bottom: var(--theme-page-scrollContainerHeight);
 }
 
 .inner {
+  position: relative;
   pointer-events: none;
   width: 100%;
   max-width: var(--theme-lengths-maxWidth);
-  height: var(--theme-lengths-footerHeight);
+  height: 100%;
   padding: 0 var(--theme-lengths-sidePadding);
+
   > * {
     pointer-events: auto;
   }
+}
+
+.controls {
+  position: absolute;
+  bottom: 0;
+  right: var(--theme-lengths-sidePadding);
+  padding-bottom: 8px;
 }
