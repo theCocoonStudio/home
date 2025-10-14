@@ -37,7 +37,7 @@ export const Effects = function Effects({
       >
         {sun && (
           <>
-            <GodRays sun={sun} exposure={2.8} weight={1.8} density={1.2} blur />
+            <GodRays sun={sun} exposure={2.8} weight={2.1} density={1.2} blur />
             <Sepia
               intensity={0.45} // sepia intensity
             />
