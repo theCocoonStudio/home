@@ -13,7 +13,7 @@ export const ScrollContainer = ({
   scrollContainer,
   /* ready */
 }) => {
-  const scrollTo = useScroll(scrollContainer)
+  const { scrollTo } = useScroll(scrollContainer)
 
   const scrollItems = useMemo(() => {
     return items.map((item, index) => {

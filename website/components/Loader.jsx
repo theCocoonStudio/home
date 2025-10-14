@@ -64,7 +64,7 @@ export const Loader = ({
   }, [atStartOrFinish])
 
   // scroll up/down callback
-  const scrollTo = useScroll(scrollContainer)
+  const { scrollTo } = useScroll(scrollContainer)
   const scrollToTarget = useCallback(() => {
     if (atStartOrFinish.either) {
       scrollTo(atStartOrFinish.start ? scrollDownTarget : scrollUpTarget)

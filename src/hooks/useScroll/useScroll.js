@@ -44,5 +44,10 @@ export const useScroll = (el, options = {}) => {
     [el, options],
   )
 
-  return scrollTo
+  const getOffset = useCallback(() => {
+    const scrollLength = el.scrollHeight - el.clientHeight
+    return el.scrollTop / scrollLength
+  }, [el])
+
+  return { scrollTo, getOffset }
 }

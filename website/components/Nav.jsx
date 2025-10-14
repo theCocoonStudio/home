@@ -21,7 +21,7 @@ export const Nav = ({
 
   const { colors } = useTheme()
 
-  const scrollTo = useScroll(scrollContainer, { smoothTime: 0.1 })
+  const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0.1 })
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
