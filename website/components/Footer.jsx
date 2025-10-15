@@ -5,9 +5,10 @@ import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTargetItems } from '../pages/Home/useTargetItems'
 import { useScroll } from 'src/hooks'
+import { useSettings } from 'website/pages/Home/useSettings'
 
 export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
   // control targets to pass to view component
@@ -22,11 +23,12 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
 
   useTargetItems(controlTargets, 'controls')
 
-  // scroll callback
+  // next/prev callbacks
+  const { focusFactor } = useSettings()
+
   const {
     data: {
       content: { items },
-      constants: { focusFactor },
     },
   } = config
 
@@ -84,6 +86,23 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
     scrollTo(activeTarget)
   }, [getOffset, ranges, scrollTo])
 
+  // next/prev key controls
+  const handleDirectionKeyDown = useCallback(
+    (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'Left') {
+        prev()
+      } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+        next()
+      }
+    },
+    [next, prev],
+  )
+  useEffect(() => {
+    addEventListener('keydown', handleDirectionKeyDown)
+    return () => {
+      removeEventListener('keydown', handleDirectionKeyDown)
+    }
+  }, [handleDirectionKeyDown])
   // viewport width in pixels
   const { width } = useResizeEvent()
 
