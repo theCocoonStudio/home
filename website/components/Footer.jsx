@@ -136,7 +136,7 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
             aria-label='read more'
             sx={{
               color: 'common.white',
-              fontSize: width > 600 ? 19 : 20,
+              fontSize: width > 600 ? 18 : 15,
               padding: width > 400 ? 1 : 0.75,
             }}
           >
