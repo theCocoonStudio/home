@@ -8,6 +8,7 @@ import {
 import { Environment, PerspectiveCamera } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import CityHDRI from 'website/assets/environments/city.hdr'
 
 export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
   const ref = useRef()
@@ -62,7 +63,7 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
         </mesh>
       </group>
 
-      <Environment preset='city' environmentIntensity={3} />
+      <Environment files={CityHDRI} environmentIntensity={3} />
       <PerspectiveCamera makeDefault position-z={1} fov={10} />
     </>
   )

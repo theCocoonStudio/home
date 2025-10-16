@@ -59,7 +59,7 @@ const Home = ({ config, ready, atStartOrFinish }) => {
         position-z={5}
         fov={10}
       ></PerspectiveCamera>
-      {/*  <Environment preset='city' environmentIntensity={0.12} /> */}
+
       <Environment resolution={1024} environmentIntensity={0.4}>
         <group rotation={[-Math.PI / 3, 0, 0]}>
           <Lightformer
