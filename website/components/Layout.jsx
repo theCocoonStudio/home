@@ -176,6 +176,7 @@ function Layout({ config, ready, setReady }) {
                           atStartOrFinish={atStartOrFinish}
                           setContactOpen={setContactOpen}
                           contactOpen={contactOpen}
+                          ready={ready}
                         />
                         {FooterComponent && (
                           <FooterComponent

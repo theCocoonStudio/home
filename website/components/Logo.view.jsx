@@ -5,7 +5,11 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react'
-import { Environment, PerspectiveCamera } from '@react-three/drei'
+import {
+  Environment,
+  PerspectiveCamera,
+  useEnvironment,
+} from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import CityHDRI from 'website/assets/environments/city.hdr'
@@ -68,3 +72,5 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
     </>
   )
 })
+
+useEnvironment.preload({ files: CityHDRI })
