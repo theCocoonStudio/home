@@ -54,3 +54,5 @@ const _Floor = forwardRef(function Floor({ floorY }, forwardedRef) {
   )
 })
 export const Floor = memo(_Floor)
+
+useTexture.preload(normal)

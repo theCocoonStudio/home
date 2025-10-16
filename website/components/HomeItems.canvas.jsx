@@ -18,6 +18,9 @@ import metal from 'website/assets/canvas/metal.png'
 import norm from 'website/assets/canvas/norm.png'
 import rough from 'website/assets/canvas/rough.png'
 import { useTexture } from '@react-three/drei'
+import { items } from 'website/pages/Home/config'
+
+const urls = items.map((item) => item.url)
 
 export const HomeItems = forwardRef(function HomeItems(
   {
@@ -339,3 +342,5 @@ export const HomeItems = forwardRef(function HomeItems(
 
   return <group ref={group}>{items}</group>
 })
+
+useTexture.preload([metal, norm, rough, ...urls])

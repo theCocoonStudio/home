@@ -9,7 +9,7 @@ import { Footer } from '../../components/Footer'
 
 const Home = lazy(() => import('./Home.view'))
 
-const items = [
+export const items = [
   {
     title: 'This is my title and it is the best. Made longer for testing.',
     description:
