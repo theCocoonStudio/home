@@ -14,15 +14,12 @@ const _Floor = forwardRef(function Floor({ floorY }, forwardedRef) {
   // textures
   const texture = useTexture(normal)
 
-  useEffect(() => {
-    const repeat = 35
-    texture.wrapS = RepeatWrapping
-    texture.wrapT = RepeatWrapping
-    texture.repeat.set(repeat, repeat)
-    return () => {
+  useEffect(
+    () => () => {
       texture.dispose()
-    }
-  }, [texture])
+    },
+    [texture],
+  )
 
   return (
     <mesh
@@ -48,6 +45,9 @@ const _Floor = forwardRef(function Floor({ floorY }, forwardedRef) {
         color={'#111'}
         metalness={0.75}
         normalMap={texture}
+        normalMap-wrapS={RepeatWrapping}
+        normalMap-wrapT={RepeatWrapping}
+        normalMap-repeat={[35, 35]}
         normalScale={8}
       />
     </mesh>
