@@ -1,5 +1,5 @@
 import styles from 'website/styles/Nav.module.css'
-import { useCallback } from 'react'
+import { Suspense, useCallback } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
 import { useScroll } from 'src/hooks'
@@ -45,9 +45,11 @@ export const Nav = ({
         >
           <div className={`${styles.logo}`} onClick={scrollHome}>
             <View index={logoRenderPriority} frames={1}>
-              <LogoComponent>
-                <Logo />
-              </LogoComponent>
+              <Suspense>
+                <LogoComponent config={config}>
+                  <Logo />
+                </LogoComponent>
+              </Suspense>
             </View>
           </div>
           <h1
