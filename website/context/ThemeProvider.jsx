@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { ThemeContext } from './ThemeContext'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
-export const ThemeProvider = ({ children, theme, pageTheme }) => {
+export const ThemeProvider = ({ children, theme, pageTheme = {} }) => {
   const size = useResizeEvent()
 
   /* theme values */

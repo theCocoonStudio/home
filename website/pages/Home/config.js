@@ -1,11 +1,11 @@
 import { Effects } from './Effects.canvas'
 import { Main } from './Main'
-import { HomeProvider } from './HomeProvider'
 import { HomeSettings } from '../../components/HomeSettings'
 import { HomeLogo } from '../../components/HomeLogo.view'
 import dragonfly from 'assets/photography/test.jpg'
 import { lazy } from 'react'
 import { Footer } from '../../components/Footer'
+import { useHomeData } from './useHomeData'
 
 const Home = lazy(() => import('./Home.view'))
 
@@ -47,7 +47,7 @@ export const items = [
   },
 ]
 export const config = {
-  context: { Provider: HomeProvider },
+  context: { usePageProviderHook: useHomeData },
   main: {
     Component: Main,
     ViewComponent: Home,

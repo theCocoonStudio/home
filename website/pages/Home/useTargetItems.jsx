@@ -1,8 +1,10 @@
-import { useContext, useEffect } from 'react'
-import { TargetItemContext } from './TargetItemContext'
+import { useEffect } from 'react'
+import { usePage } from 'website/pages/Home/usePage'
 
 export const useTargetItems = (items, key) => {
-  const { targetItems, setTargetItems } = useContext(TargetItemContext)
+  const {
+    targetItems: { targetItems, setTargetItems },
+  } = usePage()
 
   // set target items with key
   useEffect(() => {

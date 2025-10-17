@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { lazy, useEffect, useRef, useState } from 'react'
 
 const WrongWay = lazy(() => import('./WrongWay'))
-const Layout = lazy(() => import('website/components/Layout'))
+const GlobalProvider = lazy(() => import('website/components/GlobalProvider'))
 
 export const SubRouter = () => {
   // retrieve config
@@ -32,6 +32,6 @@ export const SubRouter = () => {
   return typeof config === 'undefined' ? (
     <WrongWay />
   ) : (
-    <Layout config={config} ready={ready} setReady={setReady} />
+    <GlobalProvider config={config} ready={ready} setReady={setReady} />
   )
 }

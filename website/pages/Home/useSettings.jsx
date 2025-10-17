@@ -1,8 +1,7 @@
-import { useContext } from 'react'
-import { SettingsContext } from './SettingsContext'
+import { usePage } from 'website/pages/Home/usePage'
 
 export const useSettings = () => {
-  const value = useContext(SettingsContext)
+  const { settings } = usePage()
 
-  return value
+  return settings
 }
