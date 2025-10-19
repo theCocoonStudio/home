@@ -1,6 +1,6 @@
 import { useScroll } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
-import { memo, useEffect } from 'react'
+import { memo, useLayoutEffect } from 'react'
 
 const _ScrollHTMLRef = function ScrollHTMLRef({ setContainer }) {
   const { el } = useScroll()
@@ -10,14 +10,14 @@ const _ScrollHTMLRef = function ScrollHTMLRef({ setContainer }) {
   }))
 
   /* turn off events, will be turned on for child View */
-  useEffect(() => {
+  useLayoutEffect(() => {
     get().setEvents({
       enabled: false,
       priority: 2,
     })
   }, [get])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (el) {
       setContainer(el)
       el.classList.add('no-scroll')

@@ -6,7 +6,9 @@ export const useHomeData = ({
   },
 }) => {
   // targetItems
-  const [targetItems, setTargetItems] = useState()
+  const [targetItems, setTargetItems] = useState({
+    controls: { setDisableReadMoreControl: () => {} },
+  })
 
   // settings
   const defaultSettings = useMemo(

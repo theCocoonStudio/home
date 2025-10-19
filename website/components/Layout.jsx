@@ -10,6 +10,11 @@ import { Menu } from './Menu'
 import { Loader } from './Loader'
 import { CanvasLoader } from './Loader.canvas'
 import { ContactDialog } from './ContactDialog'
+import { ResizeEventContext } from 'src/context/ResizeEventContext'
+import { ThemeContext } from 'website/context/ThemeContext'
+import { MenuContext } from 'website/context/MenuContext'
+import { PageContext } from '../context/PageContext'
+import { useContextBridge } from '@react-three/drei'
 
 function Layout({
   config,
@@ -33,6 +38,14 @@ function Layout({
     loader: { scrollDownTarget, scrollUpTarget },
   } = config
 
+  // context bridge
+  const ContextBridge = useContextBridge(
+    ResizeEventContext,
+    ThemeContext,
+    MenuContext,
+    PageContext,
+  )
+
   return (
     <div className={styles.layout}>
       <ThreeApp eventPrefix={'client'}>
@@ -52,30 +65,6 @@ function Layout({
       {scrollContainer &&
         createPortal(
           <>
-            <View
-              className={styles.view}
-              index={renderPriority}
-              /* frames={1} */
-            >
-              {ViewComponent && (
-                <ViewComponent
-                  ready={ready}
-                  setReady={setReady}
-                  config={config}
-                  scrollContainer={scrollContainer}
-                  atStartOrFinish={atStartOrFinish}
-                />
-              )}
-
-              <CanvasLoader
-                ready={ready}
-                setReady={setReady}
-                atStartOrFinish={atStartOrFinish}
-                setAtStartOrFinish={setAtStartOrFinish}
-              />
-              <EventLayerOn />
-            </View>
-
             {Component && (
               <Component
                 ready={ready}
@@ -109,6 +98,31 @@ function Layout({
               scrollUpTarget={scrollUpTarget}
               scrollContainer={scrollContainer}
             />
+            <View
+              className={styles.view}
+              index={renderPriority}
+              /* frames={1} */
+            >
+              <ContextBridge>
+                {ViewComponent && (
+                  <ViewComponent
+                    ready={ready}
+                    setReady={setReady}
+                    config={config}
+                    scrollContainer={scrollContainer}
+                    atStartOrFinish={atStartOrFinish}
+                  />
+                )}
+
+                <CanvasLoader
+                  ready={ready}
+                  setReady={setReady}
+                  atStartOrFinish={atStartOrFinish}
+                  setAtStartOrFinish={setAtStartOrFinish}
+                />
+                <EventLayerOn />
+              </ContextBridge>
+            </View>
           </>,
           scrollContainer.children[0],
         )}

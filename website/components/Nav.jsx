@@ -7,6 +7,11 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
 import { useMenu } from 'website/hooks/useMenu'
+import { ResizeEventContext } from '../../src/context/ResizeEventContext'
+import { ThemeContext } from 'website/context/ThemeContext'
+import { MenuContext } from 'website/context/MenuContext'
+import { PageContext } from '../context/PageContext'
+import { useContextBridge } from '@react-three/drei'
 
 export const Nav = ({
   config,
@@ -37,6 +42,13 @@ export const Nav = ({
     setContactOpen(true)
   }, [setContactOpen])
 
+  // context bridge
+  const ContextBridge = useContextBridge(
+    ResizeEventContext,
+    ThemeContext,
+    MenuContext,
+    PageContext,
+  )
   return (
     <div className={`${styles.nav}`}>
       <div className={`${styles.inner}`}>
@@ -46,11 +58,13 @@ export const Nav = ({
         >
           <div className={`${styles.logo}`} onClick={scrollHome}>
             <View index={logoRenderPriority} frames={1}>
-              {ready && (
-                <LogoComponent config={config}>
-                  <Logo />
-                </LogoComponent>
-              )}
+              <ContextBridge>
+                {ready && (
+                  <LogoComponent config={config}>
+                    <Logo />
+                  </LogoComponent>
+                )}
+              </ContextBridge>
             </View>
           </div>
           <h1
