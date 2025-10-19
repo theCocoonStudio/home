@@ -12,7 +12,7 @@ import { ThemeProvider } from 'website/context/ThemeProvider'
 import { MenuProvider } from 'website/context/MenuProvider'
 import Layout from './Layout'
 import { PageProvider } from '../pages/Home/PageProvider'
-
+import { useScroll } from 'src/hooks'
 const theme = {
   colors: {
     white: '#EAEAEA',
@@ -66,13 +66,16 @@ const GlobalProvider = ({ config, ready, setReady }) => {
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [contactOpen, setContactOpen] = useState(false)
 
-  // reset unstable state on page change
+  // scroll callback
+  const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0 })
+  // reset unstable state on page change and scroll to 0 (top)
   useLayoutEffect(() => {
     if (!ready) {
+      scrollTo(0)
       setScrollDistanceFactor(1)
       setContactOpen(false)
     }
-  }, [ready])
+  }, [ready, scrollTo])
 
   // draggable menu
   const mouseSensor = useSensor(MouseSensor)

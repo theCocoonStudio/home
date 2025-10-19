@@ -2,6 +2,7 @@ import { useProgress, useScroll } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
+import { useScroll as useMarkupScroll } from 'src/hooks'
 
 export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
   const { active } = useProgress()
@@ -25,17 +26,19 @@ export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
 
   const atStart = useRef(true)
   const atFinish = useRef(false)
-  const scroll = useScroll()
+  const { el } = useScroll()
+  const { getOffset } = useMarkupScroll(el)
 
   useFrame(() => {
-    if (scroll.offset > 0 && scroll.offset < 1) {
+    const offset = getOffset()
+    if (offset > 0 && offset < 1) {
       if (atStart.current || atFinish.current) {
         setAtStartOrFinish({ start: false, finish: false, either: false })
         atStart.current = false
         atFinish.current = false
       }
     } else {
-      if (scroll.offset === 0) {
+      if (offset === 0) {
         if (!atStart.current || atFinish.current) {
           setAtStartOrFinish({ start: true, finish: false, either: true })
           atStart.current = true
