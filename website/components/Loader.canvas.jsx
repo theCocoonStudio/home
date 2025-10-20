@@ -1,36 +1,62 @@
 import { useProgress, useScroll } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
-import { useEffect, useRef } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useTransition,
+} from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
 import { useScroll as useMarkupScroll } from 'src/hooks'
+import { useResizeEvent } from 'src/hooks/useResizeEvent'
 
 export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
   const { active } = useProgress()
 
+  const [isPending, startTransition] = useTransition()
   const compiledSceneId = useRef()
 
+  // compile scene and set page ready = true
   const { scene, camera, gl } = useThree(({ scene, camera, gl }) => ({
     scene,
     camera,
     gl,
   }))
-
   useEffect(() => {
     if (!ready && scene && compiledSceneId.current !== scene.uuid && !active) {
       compileSceneAsync(gl, scene, camera, () => {
-        setReady(true)
+        document.documentElement.style.setProperty(
+          '--reserved-loader-global-transition-speed',
+          '1s',
+        )
+        startTransition(() => {
+          setReady(true)
+        })
         compiledSceneId.current === scene.uuid
       })
     }
   }, [active, camera, gl, ready, scene, setReady])
 
+  // scroll data
+  const { el } = useScroll()
+
+  const [scrollLength, setScrollLength] = useState(
+    el.scrollHeight - el.clientHeight,
+  )
+  const size = useResizeEvent()
+
+  useLayoutEffect(() => {
+    setScrollLength(el.scrollHeight - el.clientHeight)
+  }, [el, size]) // must keep size to work on resizes
+
+  const { getClampedOffset } = useMarkupScroll(el)
+
   const atStart = useRef(true)
   const atFinish = useRef(false)
-  const { el } = useScroll()
-  const { getOffset } = useMarkupScroll(el)
-
   useFrame(() => {
-    const offset = getOffset()
+    const offset = getClampedOffset(1, scrollLength, scrollLength)
+
     if (offset > 0 && offset < 1) {
       if (atStart.current || atFinish.current) {
         setAtStartOrFinish({ start: false, finish: false, either: false })

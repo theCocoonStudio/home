@@ -97,6 +97,10 @@ textarea:not([rows]) {
 /* END css reset */
 
 /* START global styles */
+:root {
+  --reserved-loader-global-transition-speed: 1s;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -232,7 +236,7 @@ html {
   right: 0;
   bottom: 0;
   background: linear-gradient(-45deg, #eaeaea, #899394);
-  transition: opacity 1s;
+  transition: opacity var(--reserved-loader-global-transition-speed);
   display: flex;
   flex-wrap: nowrap;
   align-items: center;

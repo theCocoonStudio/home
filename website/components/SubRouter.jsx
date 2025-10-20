@@ -1,6 +1,6 @@
 import pagesConfig from 'website/pages'
 import { useParams } from 'react-router'
-import { lazy, useEffect, useRef, useState } from 'react'
+import { lazy, useLayoutEffect, useRef, useState } from 'react'
 
 const WrongWay = lazy(() => import('./WrongWay'))
 const GlobalProvider = lazy(() => import('website/components/GlobalProvider'))
@@ -13,15 +13,17 @@ export const SubRouter = () => {
   // global ready-state
   const [ready, setReady] = useState(false)
 
-  // ref to prev splat
+  // reset ready state on page change
   const prevSplat = useRef()
-
-  // reset global ready-state on page change
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       typeof prevSplat.current !== 'undefined' &&
       prevSplat.current !== splat
     ) {
+      document.documentElement.style.setProperty(
+        '--reserved-loader-global-transition-speed',
+        '0s',
+      )
       setReady(false)
     }
     return () => {

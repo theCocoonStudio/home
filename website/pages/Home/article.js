@@ -1,4 +1,3 @@
-import { HomeSettings } from '../../components/HomeSettings'
 import { lazy } from 'react'
 import { useArticleData } from 'website/hooks/useArticleData'
 
@@ -17,7 +16,9 @@ export const articleConfig = {
   }, */
 
   menu: {
-    Component: HomeSettings,
+    Component: function ArticleMenu() {
+      return null
+    },
   },
   loader: {
     scrollDownTarget: 0.5,

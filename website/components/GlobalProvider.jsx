@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material'
-import { useLayoutEffect, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import {
   DndContext,
   MouseSensor,
@@ -13,6 +13,8 @@ import { MenuProvider } from 'website/context/MenuProvider'
 import Layout from './Layout'
 import { PageProvider } from '../pages/Home/PageProvider'
 import { useScroll } from 'src/hooks'
+import { useParams } from 'react-router'
+
 const theme = {
   colors: {
     white: '#EAEAEA',
@@ -54,6 +56,9 @@ const GlobalProvider = ({ config, ready, setReady }) => {
     typography: { switchIcon: '2rem' },
   })
 
+  // page route
+  const { '*': splat } = useParams()
+
   // state: stable across page changes
   const [scrollContainer, setScrollContainer] = useState()
   const [atStartOrFinish, setAtStartOrFinish] = useState({
@@ -68,14 +73,26 @@ const GlobalProvider = ({ config, ready, setReady }) => {
 
   // scroll callback
   const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0 })
-  // reset unstable state on page change and scroll to 0 (top)
+
+  // reset unstable state on page change; scroll to 0 (top); manage loader transition time
+  const resetPage = useCallback(() => {
+    setContactOpen(false)
+    scrollTo(0.0)
+    setScrollDistanceFactor(1)
+  }, [scrollTo])
+
+  const prevSplat = useRef()
   useLayoutEffect(() => {
-    if (!ready) {
-      scrollTo(0)
-      setScrollDistanceFactor(1)
-      setContactOpen(false)
+    if (
+      typeof prevSplat.current !== 'undefined' &&
+      prevSplat.current !== splat
+    ) {
+      resetPage()
     }
-  }, [ready, scrollTo])
+    return () => {
+      prevSplat.current = splat
+    }
+  }, [resetPage, splat])
 
   // draggable menu
   const mouseSensor = useSensor(MouseSensor)

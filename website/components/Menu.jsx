@@ -1,5 +1,5 @@
 import { Droppable } from './Droppable'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 import { useDndMonitor } from '@dnd-kit/core'
 import { DraggableMenu } from './DraggableMenu'
@@ -7,6 +7,7 @@ import { useMenu } from 'website/hooks/useMenu'
 import styles from 'website/styles/Menu.module.css'
 import { useTheme } from '../hooks/useTheme'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useParams } from 'react-router'
 
 export const Menu = ({
   config,
@@ -91,17 +92,33 @@ export const Menu = ({
 
   const size = useResizeEvent()
 
+  const { '*': splat } = useParams()
+
   // hide menu on resize
-  useEffect(() => {
+  useLayoutEffect(() => {
     setShowMenu(false)
   }, [setShowMenu, size])
 
   // hide menu on atStartOrFinish or !ready
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (atStartOrFinish.either || !ready) {
       setShowMenu(false)
     }
-  }, [atStartOrFinish.either, ready, setShowMenu])
+  }, [atStartOrFinish.either, ready, setShowMenu, splat])
+
+  // hide menu on page change
+  const prevSplat = useRef()
+  useLayoutEffect(() => {
+    if (
+      typeof prevSplat.current !== 'undefined' &&
+      prevSplat.current !== splat
+    ) {
+      setShowMenu(false)
+    }
+    return () => {
+      prevSplat.current = splat
+    }
+  }, [setShowMenu, splat])
 
   useEffect(() => {
     if (!showMenu) {
@@ -109,7 +126,8 @@ export const Menu = ({
       offset.current = { x: 0, y: 0 }
     }
   }, [showMenu])
-  return showMenu ? (
+
+  return showMenu && ready ? (
     <>
       <DraggableMenu
         styles={styles}
