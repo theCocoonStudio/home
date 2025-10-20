@@ -32,4 +32,5 @@
   bottom: 0;
   right: var(--theme-lengths-sidePadding);
   padding-bottom: 8px;
+  opacity: 0;
 }

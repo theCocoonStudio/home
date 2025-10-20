@@ -117,7 +117,10 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
       <div className={`${styles.inner}`}>
         <div
           className={`${styles.controls}`}
-          style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
+          style={{
+            pointerEvents: atStartOrFinish.either ? 'none' : 'auto',
+            opacity: !ready ? 0 : 1,
+          }}
         >
           <IconButton
             onClick={prev}

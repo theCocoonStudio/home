@@ -3,8 +3,7 @@ import styles from './Home.styles.module.css'
 import ReadMoreIcon from '@mui/icons-material/ReadMore'
 
 export const Main = function Main({
-  /* scrollContainer,
-  ready, */
+  ready,
   config: {
     data: {
       content: { items },
@@ -36,7 +35,7 @@ export const Main = function Main({
   )
 
   return (
-    <div className={styles.main}>
+    <div className={styles.main} style={{ opacity: ready ? 1 : 0 }}>
       <div className={styles.inner}>
         <div className={`${styles.titleContainer}`}>{itemDescriptions}</div>
       </div>
