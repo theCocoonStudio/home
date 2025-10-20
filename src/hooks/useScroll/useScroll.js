@@ -1,5 +1,6 @@
 import { damp } from 'maath/easing'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { clamp } from 'three/src/math/MathUtils.js'
 
 export const useScroll = (el, options = {}) => {
   const scrollTo = useCallback(
@@ -44,10 +45,33 @@ export const useScroll = (el, options = {}) => {
     [el, options],
   )
 
-  const getOffset = useCallback(() => {
-    const scrollLength = el.scrollHeight - el.clientHeight
-    return el.scrollTop / scrollLength
-  }, [el])
+  // can pass resize-triggered, declaratively-calculated scrollLength;
+  // this prevents length calculation each frame and still work on resizes
+  const getOffset = useCallback(
+    (scrollLength) => {
+      const length = scrollLength || el.scrollHeight - el.clientHeight
+      return el.scrollTop / length
+    },
+    [el],
+  )
 
-  return { scrollTo, getOffset }
+  const getClampedOffset = useCallback(
+    (min, max, scrollLength) => {
+      const resolvedMin = min || 0
+      const resolvedMax =
+        max || scrollLength || el.scrollHeight - el.clientHeight
+      const resolvedLength = resolvedMax - resolvedMin
+
+      const scrollTop = clamp(el.scrollTop - resolvedMin, 0, resolvedLength)
+
+      return scrollTop / resolvedLength
+    },
+    [el],
+  )
+
+  const value = useMemo(
+    () => ({ scrollTo, getOffset, getClampedOffset }),
+    [getClampedOffset, getOffset, scrollTo],
+  )
+  return value
 }
