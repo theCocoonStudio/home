@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { useArticleData } from 'website/hooks/useArticleData'
+import { ArticleSettings } from '../../components/ArticleSettings'
 
 const Article = lazy(() => import('../../components/Article.view'))
 
@@ -16,9 +17,7 @@ export const articleConfig = {
   }, */
 
   menu: {
-    Component: function ArticleMenu() {
-      return null
-    },
+    Component: ArticleSettings,
   },
   loader: {
     scrollDownTarget: 0.5,
@@ -48,5 +47,5 @@ export const articleConfig = {
   footer: {
     FooterComponent: undefined,
   },
-  theme: {},
+  theme: { requiredFooterHeight: 30 },
 }
