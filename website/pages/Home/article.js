@@ -23,6 +23,12 @@ export const articleConfig = {
   loader: {
     scrollDownTarget: 0.5,
     scrollUpTarget: 0.5,
+    startTitle: 'This is my title and it is the best. Made longer for testing.',
+    startDescription:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    endTitle: 'This is my title and it is the best. Made longer for testing.',
+    endDescription:
+      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
   },
   data: { markupIds: { loaderVideo: 'home-loader-video' } },
   scroll: {

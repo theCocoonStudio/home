@@ -30,8 +30,67 @@
 }
 
 .contentInner {
+  position: absolute;
+  width: 100%;
+  max-width: var(--theme-lengths-maxWidth);
+
+  h1 {
+    font-size: 4rem;
+    letter-spacing: 0.03em;
+    margin: 0 auto;
+    text-align: left;
+    padding: 0 var(--theme-lengths-sidePadding);
+    @media (max-height: 600px) {
+      font-size: 3.6rem;
+    }
+    @media (max-width: 768px) {
+      max-width: 100%;
+      @media (max-height: 800px) {
+        font-size: 3.6rem;
+      }
+      @media (max-height: 500px) {
+        font-size: 2.4rem;
+      }
+    }
+    @media (max-width: 400px) {
+      font-size: 3.6rem;
+      @media (max-height: 800px) {
+        font-size: 2.4rem;
+      }
+    }
+  }
+  h3 {
+    font-size: 1.6rem;
+    line-height: 1.2em;
+    font-weight: 400;
+    margin-right: auto;
+    padding: 0 var(--theme-lengths-sidePadding);
+    padding-top: 1em;
+    max-width: 650px;
+    text-align: left;
+    @media (max-height: 600px) {
+      font-size: 1.4rem;
+    }
+    @media (max-height: 400px) {
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      max-width: 100%;
+      @media (max-height: 800px) {
+        font-size: 1.4rem;
+      }
+    }
+    @media (max-width: 400px) {
+      font-size: 1.4rem;
+    }
+  }
+}
+.contentInnerCenter {
   position: relative;
   width: 100%;
+  max-width: var(--theme-lengths-maxWidth);
   h1 {
     font-size: 4rem;
     letter-spacing: 0.03em;

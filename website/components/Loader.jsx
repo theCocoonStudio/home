@@ -6,6 +6,7 @@ import { useTheme } from '../hooks/useTheme'
 import { useProgress } from '@react-three/drei'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import { useScroll } from 'src/hooks'
+import { Logo } from './Logo'
 
 export const Loader = ({
   ready,
@@ -13,6 +14,13 @@ export const Loader = ({
   config: {
     data: {
       markupIds: { loaderVideo },
+    },
+    loader: {
+      centerLayout,
+      startTitle,
+      endTitle,
+      startDescription,
+      endDescription,
     },
   },
   scrollDownTarget,
@@ -30,19 +38,25 @@ export const Loader = ({
   const { active, loaded, total } = useProgress()
 
   // copy
-  const prevCopy = useRef({ scrollCopy: undefined, subtitleCopy: undefined })
-  const { scrollCopy, subtitleCopy } = useMemo(() => {
+  const prevCopy = useRef({
+    scrollCopy: undefined,
+    subtitleCopy: undefined,
+    titleCopy: undefined,
+  })
+  const { scrollCopy, titleCopy, subtitleCopy } = useMemo(() => {
     if (atStartOrFinish.either) {
       if (atStartOrFinish.start) {
         prevCopy.current.scrollCopy = 'scroll down'
-        prevCopy.current.subtitleCopy = 'software and stuff.'
+        prevCopy.current.subtitleCopy = startDescription
+        prevCopy.current.titleCopy = startTitle
       } else {
         prevCopy.current.scrollCopy = 'scroll up'
-        prevCopy.current.subtitleCopy = 'La fin.'
+        prevCopy.current.subtitleCopy = endDescription
+        prevCopy.current.titleCopy = endTitle
       }
     }
     return prevCopy.current
-  }, [atStartOrFinish])
+  }, [atStartOrFinish, endDescription, endTitle, startDescription, startTitle])
 
   // classes
   const prevStyling = useRef({
@@ -92,8 +106,11 @@ export const Loader = ({
           <source src={Video} type='video/mp4' />
         </video>
         <div className={`${styles.content}`}>
-          <div className={`${styles.contentInner}`}>
-            <h1 className='changa-one-regular'>Izzy Erlich</h1>
+          <Logo />
+          <div
+            className={`${centerLayout ? styles.contentInnerCenter : styles.contentInner}`}
+          >
+            <h1 className='changa-one-regular'>{titleCopy}</h1>
             <h3 className='raleway'>{subtitleCopy}</h3>
           </div>
           <div className={`${styles.progress}`}>

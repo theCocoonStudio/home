@@ -62,8 +62,13 @@ export const config = {
     Component: HomeSettings,
   },
   loader: {
+    centerLayout: true,
     scrollDownTarget: (0.5 * 1) / items.length,
     scrollUpTarget: 1 - (0.5 * 1) / items.length,
+    startTitle: 'Izzy Erlich',
+    endTitle: 'Izzy Erlich',
+    startDescription: 'software and stuff.',
+    endDescription: 'La fin.',
   },
   data: {
     constants: {
