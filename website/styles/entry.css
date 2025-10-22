@@ -236,7 +236,6 @@ html {
   right: 0;
   bottom: 0;
   background: linear-gradient(-45deg, #eaeaea, #899394);
-  transition: opacity var(--reserved-loader-global-transition-speed);
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -366,7 +365,7 @@ div.loader-global {
   right: 0;
   bottom: 0;
   pointer-events: none;
-  transition: all 1s;
+  transition: all var(--reserved-loader-global-transition-speed);
   video {
     pointer-events: none;
   }
