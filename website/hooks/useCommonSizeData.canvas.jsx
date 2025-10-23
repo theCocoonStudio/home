@@ -23,10 +23,10 @@ export const useCommonSizeData = ({
   const size = useResizeEvent()
 
   // reactive three app data
-  const stateCallback = useCallback(({ get }) => {
-    return get
+  const stateCallback = useCallback(({ camera, get }) => {
+    return { camera, get }
   }, [])
-  const get = useThree(stateCallback)
+  const { camera, get } = useThree(stateCallback)
 
   // calculates models z position
   const getZpos = useCallback(
@@ -58,9 +58,6 @@ export const useCommonSizeData = ({
     modelsFactor,
     modelsZ,
   } = useMemo(() => {
-    // independent data
-    const { camera } = get()
-
     // viewport height and factor at background position-z
     const backgroundViewportHeight = camera.getViewSize(
       Math.abs(camera.position.z - positionZ0),
@@ -94,7 +91,7 @@ export const useCommonSizeData = ({
       modelsZ,
     }
   }, [
-    get,
+    camera,
     getZpos,
     heightProportion0,
     requiredFooterHeight,
