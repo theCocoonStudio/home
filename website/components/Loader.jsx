@@ -21,6 +21,8 @@ export const Loader = ({
       endTitle,
       startDescription,
       endDescription,
+      showName = true,
+      clickNavigation = true,
     },
   },
   scrollDownTarget,
@@ -106,7 +108,12 @@ export const Loader = ({
           <source src={Video} type='video/mp4' />
         </video>
         <div className={`${styles.content}`}>
-          <Logo />
+          <Logo
+            showName={showName}
+            scrollContainer={scrollContainer}
+            clickNavigation={clickNavigation}
+            pointerEvents={atStartOrFinish.either}
+          />
           <div
             className={`${centerLayout ? styles.contentInnerCenter : styles.contentInner}`}
             style={{ opacity: atStartOrFinish.either ? 1 : 0 }}

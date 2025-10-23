@@ -12,6 +12,7 @@ import { ThemeContext } from 'website/context/ThemeContext'
 import { MenuContext } from 'website/context/MenuContext'
 import { PageContext } from '../context/PageContext'
 import { useContextBridge } from '@react-three/drei'
+import { useNavigate } from 'react-router'
 
 export const Nav = ({
   config,
@@ -23,6 +24,7 @@ export const Nav = ({
 }) => {
   const {
     nav: { logoRenderPriority, LogoComponent },
+    loader: { clickNavigation = true },
   } = config
 
   const { colors } = useTheme()
@@ -31,6 +33,13 @@ export const Nav = ({
   const scrollHome = useCallback(() => {
     scrollTo(0.0)
   }, [scrollTo])
+
+  const navigate = useNavigate()
+  const navigateHome = useCallback(() => {
+    navigate('/')
+  }, [navigate])
+
+  const action = clickNavigation ? navigateHome : scrollHome
 
   const { showMenu, setShowMenu } = useMenu()
 
@@ -56,7 +65,7 @@ export const Nav = ({
           className={`${styles.logoContainer}`}
           style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
         >
-          <div className={`${styles.logo}`} onClick={scrollHome}>
+          <div className={`${styles.logo}`} onClick={action}>
             <View index={logoRenderPriority} frames={1}>
               <ContextBridge>
                 {ready && (
@@ -67,10 +76,7 @@ export const Nav = ({
               </ContextBridge>
             </View>
           </div>
-          <h1
-            onClick={scrollHome}
-            className={`${styles.name} changa-one-regular`}
-          >
+          <h1 onClick={action} className={`${styles.name} changa-one-regular`}>
             Izzy Erlich
           </h1>
         </div>

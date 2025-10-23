@@ -69,6 +69,8 @@ export const config = {
     endTitle: 'Izzy Erlich',
     startDescription: 'software and stuff.',
     endDescription: 'La fin.',
+    showName: false,
+    clickNavigation: false,
   },
   data: {
     constants: {
@@ -127,7 +129,7 @@ export const config = {
     },
     backgroundZ0: -80,
     scrollContainerHeight: (size, { lengths: { atomicPadding } }) => {
-      return atomicPadding * 2
+      return atomicPadding
     },
   },
 }
