@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTheme } from '../hooks/useTheme'
-import styles from 'website/styles/HomeSettings.module.css'
-import Switch from '@mui/material/Switch'
-import CheckIcon from '@mui/icons-material/Check'
-import CloseIcon from '@mui/icons-material/Close'
-import InfoOutlineIcon from '@mui/icons-material/InfoOutline'
-import Popover from '@mui/material/Popover'
-import { ClickAwayListener, Slider } from '@mui/material'
 import { useSettings } from 'website/pages/Home/useSettings'
+import { MenuTitle } from './MenuTitle'
+import { MenuSwitch } from './MenuSwitch'
+import { MenuSlider } from './MenuSlider'
+import { MenuButton } from './MenuButton'
+import { MenuContainer } from './MenuContainer'
 
 export const HomeSettings = ({
   /* config, */
@@ -19,6 +17,34 @@ export const HomeSettings = ({
 
   const [performanceAnchor, setPerformanceAnchor] = useState(null)
   const [scrollAnchor, setScrollAnchor] = useState(null)
+
+  const onPerfPopoverClick = useCallback(
+    (e) => {
+      if (!performanceAnchor) {
+        setPerformanceAnchor(e.target)
+      }
+    },
+    [performanceAnchor],
+  )
+  const onPerfPopoverClose = useCallback(() => {
+    if (performanceAnchor) {
+      setPerformanceAnchor(null)
+    }
+  }, [performanceAnchor])
+
+  const onScrollPopoverClose = useCallback(
+    (e) => {
+      if (!scrollAnchor) {
+        setScrollAnchor(e.target)
+      }
+    },
+    [scrollAnchor],
+  )
+  const onScrollClickAwayClick = useCallback(() => {
+    if (scrollAnchor) {
+      setScrollAnchor(null)
+    }
+  }, [scrollAnchor])
 
   const {
     original,
@@ -61,269 +87,148 @@ export const HomeSettings = ({
   )
 
   useEffect(() => {
-    setScrollDistanceFactor(scrollDistance)
+    /* setScrollDistanceFactor(scrollDistance) */
   }, [scrollDistance, setScrollDistanceFactor])
 
   return (
-    <div className={styles.container}>
-      <div className={`${styles.title} changa-one-regular-italic`}>
-        <h4>Performance</h4>
-        <div
-          onClick={(e) => {
-            if (!performanceAnchor) {
-              setPerformanceAnchor(e.target)
-            }
-          }}
-        >
-          <InfoOutlineIcon />
-          <Popover
-            open={performanceAnchor}
-            anchorEl={performanceAnchor}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'left',
-            }}
-          >
-            <ClickAwayListener
-              onClickAway={() => {
-                if (performanceAnchor) {
-                  setPerformanceAnchor(null)
-                }
-              }}
-            >
-              <p className={`${styles.popover} raleway`}>
-                Graphics quality and frame rate (fps) have an inverse
-                relationship. If your battery is low or your screen resolution
-                is very high may, you may need to compromise on graphics or on
-                frame rate. <br />
-                <br />
-                <i>Auto-throttle</i> will automatically degrade/boost graphics
-                to reach an ideal frame rate and UX.
-                <br />
-                <br />
-                <strong>
-                  Toggling <i>auto-throttle</i> is recommended for nerds only.
-                </strong>
-              </p>
-            </ClickAwayListener>
-          </Popover>
-        </div>
-      </div>
-      <div className={`${styles.switch} raleway`}>
-        <div>
-          <h5>Auto-throttle:</h5>
-          <div style={labelStyles.autoThrottle}>
-            <span>{auto ? 'ON' : 'OFF'}</span>
-          </div>
-        </div>
-        <div>
-          <Switch
-            checkedIcon={
-              <CheckIcon
-                sx={{
-                  fontSize: 'switchIcon',
-                  borderRadius: '50%',
-                  backgroundColor: 'common.black',
-                  p: '3px',
-                  color: 'common.white',
-                }}
-              />
-            }
-            icon={
-              <CloseIcon
-                sx={{
-                  fontSize: 'switchIcon',
-                  borderRadius: '50%',
-                  backgroundColor: 'common.black',
-                  p: '4px',
-                }}
-              />
-            }
-            edge='end'
-            checked={auto}
-            onChange={() => {
-              setAuto((prev) => !prev)
-            }}
-          />
-        </div>
-      </div>
-      <div className={`${styles.slider} raleway`}>
-        <div>
-          <h5>Fluid Resolution:</h5>
-          <div style={labelStyles.resolution}>
-            <span>{resolution}</span>
-          </div>
-        </div>
-        <div>
-          <Slider
-            aria-label='Fluid resolution'
-            value={resolution}
-            valueLabelDisplay='off'
-            onChange={(e, newVal) => {
-              setResolution(parseFloat(newVal.toFixed(2)))
-            }}
-            color='common.black'
-            min={defaultSettings.performance.resolution.min}
-            max={defaultSettings.performance.resolution.max}
-            shiftStep={defaultSettings.performance.resolution.step}
-            step={defaultSettings.performance.resolution.step}
-            disabled={auto}
-          />
-        </div>
-      </div>
-      <div className={`${styles.slider} raleway`}>
-        <div>
-          <h5>Fluid Frames:</h5>
-          <div style={labelStyles.frames}>
-            <span>{`1 / ${frames}`}</span>
-          </div>
-        </div>
-        <div>
-          <Slider
-            aria-label='Fluid Frames'
-            value={frames}
-            valueLabelDisplay='off'
-            onChange={(e, newVal) => {
-              setFrames(parseInt(newVal))
-            }}
-            color='common.black'
-            min={defaultSettings.performance.frames.min}
-            max={defaultSettings.performance.frames.max}
-            shiftStep={defaultSettings.performance.frames.step}
-            step={defaultSettings.performance.frames.step}
-            disabled={auto}
-          />
-        </div>
-      </div>
-      <div className={`${styles.slider} raleway`}>
-        <div>
-          <h5>Light Resolution:</h5>
-          <div style={labelStyles.mapsize}>
-            <span>{parseInt(2 ** mapSize)}</span>
-          </div>
-        </div>
-        <div>
-          <Slider
-            aria-label='Light Resolution'
-            value={mapSize}
-            valueLabelDisplay='off'
-            onChange={(e, newVal) => {
-              setMapsize(parseInt(newVal))
-            }}
-            color='common.black'
-            min={defaultSettings.performance.mapSize.min}
-            max={defaultSettings.performance.mapSize.max}
-            shiftStep={defaultSettings.performance.mapSize.step}
-            step={defaultSettings.performance.mapSize.step}
-            disabled={auto}
-          />
-        </div>
-      </div>
-      <div className={`${styles.title} changa-one-regular-italic`}>
-        <h4>Scroll</h4>
-        <div
-          onClick={(e) => {
-            if (!scrollAnchor) {
-              setScrollAnchor(e.target)
-            }
-          }}
-        >
-          <InfoOutlineIcon />
-          <Popover
-            open={scrollAnchor}
-            anchorEl={scrollAnchor}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'left',
-            }}
-          >
-            <ClickAwayListener
-              onClickAway={() => {
-                if (scrollAnchor) {
-                  setScrollAnchor(null)
-                }
-              }}
-            >
-              <p className={`${styles.popover} raleway`}>
-                These settings let you modify the scroll-based interaction with
-                the page content.
-                <br />
-                <br />
-                <i>Scroll Distance:</i>
-                <br /> Greater distance, slower scroll. Smaller distance, faster
-                scroll.
-                <br />
-                <br />
-                <i>Focus Factor:</i> <br />
-                The proportion of animation time during which items are in focus
-                and stationary.
-              </p>
-            </ClickAwayListener>
-          </Popover>
-        </div>
-      </div>
-      <div className={`${styles.slider} raleway`}>
-        <div>
-          <h5>Scroll Distance:</h5>
-          <div>
-            <span>{scrollDistance}</span>
-          </div>
-        </div>
-        <div>
-          <Slider
-            aria-label='Scroll Distance'
-            value={scrollDistance}
-            valueLabelDisplay='off'
-            onChange={(e, newVal) => {
-              setScrollDistance(parseFloat(newVal.toFixed(2)))
-            }}
-            color='common.black'
-            min={defaultSettings.scroll.scrollDistance.min}
-            max={defaultSettings.scroll.scrollDistance.max}
-            shiftStep={defaultSettings.scroll.scrollDistance.step}
-            step={defaultSettings.scroll.scrollDistance.step}
-          />
-        </div>
-      </div>
-      <div className={`${styles.slider} raleway`}>
-        <div>
-          <h5>Focus Factor:</h5>
-          <div>
-            <span>{focusFactor}</span>
-          </div>
-        </div>
-        <div>
-          <Slider
-            aria-label='Focus Factor'
-            value={focusFactor}
-            valueLabelDisplay='off'
-            onChange={(e, newVal) => {
-              setFocusFactor(parseFloat(newVal.toFixed(2)))
-            }}
-            color='common.black'
-            min={defaultSettings.scroll.focusFactor.min}
-            max={defaultSettings.scroll.focusFactor.max}
-            shiftStep={defaultSettings.scroll.focusFactor.step}
-            step={defaultSettings.scroll.focusFactor.step}
-          />
-        </div>
-      </div>
-      <div className={styles.buttons}>
-        <div
-          onClick={original ? undefined : resetSettings}
-          className={`raleway ${styles.button} ${original ? styles.disabledButton : styles.activeButton}`}
-        >
-          reset
-        </div>
-      </div>
-    </div>
+    <MenuContainer>
+      <MenuTitle
+        open={performanceAnchor}
+        anchorEl={performanceAnchor}
+        onPopoverClick={onPerfPopoverClick}
+        onClickAwayClick={onPerfPopoverClose}
+        title={'Performance'}
+      >
+        Graphics quality and frame rate (fps) have an inverse relationship. If
+        your battery is low or your screen resolution is very high may, you may
+        need to compromise on graphics or on frame rate. <br />
+        <br />
+        <i>Auto-throttle</i> will automatically degrade/boost graphics to reach
+        an ideal frame rate and UX.
+        <br />
+        <br />
+        <strong>
+          Toggling <i>auto-throttle</i> is recommended for nerds only.
+        </strong>
+      </MenuTitle>
+      <MenuSwitch
+        statusColor={labelStyles.autoThrottle.color}
+        statusBackgroundColor={labelStyles.autoThrottle.backgroundColor}
+        statusText={auto ? 'ON' : 'OFF'}
+        labelText={'Auto-throttle:'}
+        checked={auto}
+        onChange={() => {
+          setAuto((prev) => !prev)
+        }}
+      />
+      <MenuSlider
+        labelText='Fluid Resolution:'
+        statusColor={labelStyles.resolution.color}
+        statusBackgroundColor={labelStyles.resolution.backgroundColor}
+        statusText={resolution}
+        aria-label='Fluid resolution'
+        value={resolution}
+        valueLabelDisplay='off'
+        onChange={(e, newVal) => {
+          setResolution(parseFloat(newVal.toFixed(2)))
+        }}
+        color='common.black'
+        min={defaultSettings.performance.resolution.min}
+        max={defaultSettings.performance.resolution.max}
+        shiftStep={defaultSettings.performance.resolution.step}
+        step={defaultSettings.performance.resolution.step}
+        disabled={auto}
+      />
+      <MenuSlider
+        labelText='Fluid Frames:'
+        statusColor={labelStyles.frames.color}
+        statusBackgroundColor={labelStyles.frames.backgroundColor}
+        statusText={frames}
+        aria-label='Fluid Frames'
+        value={frames}
+        valueLabelDisplay='off'
+        onChange={(e, newVal) => {
+          setFrames(parseInt(newVal))
+        }}
+        color='common.black'
+        min={defaultSettings.performance.frames.min}
+        max={defaultSettings.performance.frames.max}
+        shiftStep={defaultSettings.performance.frames.step}
+        step={defaultSettings.performance.frames.step}
+        disabled={auto}
+      />
+      <MenuSlider
+        labelText='Light Resolution:'
+        statusColor={labelStyles.mapsize.color}
+        statusBackgroundColor={labelStyles.mapsize.backgroundColor}
+        statusText={parseInt(2 ** mapSize)}
+        aria-label='Light Resolution'
+        value={mapSize}
+        valueLabelDisplay='off'
+        onChange={(e, newVal) => {
+          setMapsize(parseInt(newVal))
+        }}
+        color='common.black'
+        min={defaultSettings.performance.mapSize.min}
+        max={defaultSettings.performance.mapSize.max}
+        shiftStep={defaultSettings.performance.mapSize.step}
+        step={defaultSettings.performance.mapSize.step}
+        disabled={auto}
+      />
+      <MenuTitle
+        open={scrollAnchor}
+        anchorEl={scrollAnchor}
+        onPopoverClick={onScrollPopoverClose}
+        onClickAwayClick={onScrollClickAwayClick}
+        title={'Scroll'}
+      >
+        These settings let you modify the scroll-based interaction with the page
+        content.
+        <br />
+        <br />
+        <i>Scroll Distance:</i>
+        <br /> Greater distance, slower scroll. Smaller distance, faster scroll.
+        <br />
+        <br />
+        <i>Focus Factor:</i> <br />
+        The proportion of animation time during which items are in focus and
+        stationary.
+      </MenuTitle>
+      <MenuSlider
+        labelText='Scroll Distance:'
+        statusText={scrollDistance}
+        aria-label='Scroll Distance'
+        value={scrollDistance}
+        valueLabelDisplay='off'
+        onChange={(e, newVal) => {
+          setScrollDistance(parseFloat(newVal.toFixed(2)))
+        }}
+        color='common.black'
+        min={defaultSettings.scroll.scrollDistance.min}
+        max={defaultSettings.scroll.scrollDistance.max}
+        shiftStep={defaultSettings.scroll.scrollDistance.step}
+        step={defaultSettings.scroll.scrollDistance.step}
+      />
+      <MenuSlider
+        labelText='Focus Factor:'
+        statusText={focusFactor}
+        aria-label='Focus Factor'
+        value={focusFactor}
+        valueLabelDisplay='off'
+        onChange={(e, newVal) => {
+          setFocusFactor(parseFloat(newVal.toFixed(2)))
+        }}
+        color='common.black'
+        min={defaultSettings.scroll.focusFactor.min}
+        max={defaultSettings.scroll.focusFactor.max}
+        shiftStep={defaultSettings.scroll.focusFactor.step}
+        step={defaultSettings.scroll.focusFactor.step}
+      />
+      <MenuButton
+        labelText='reset'
+        enabled={!original}
+        onClick={resetSettings}
+      />
+    </MenuContainer>
   )
 }
