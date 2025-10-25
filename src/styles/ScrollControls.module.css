@@ -1,0 +1,76 @@
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  ::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }
+}
+
+.fixed {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.canvasContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+.fixedMarkup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  pointer-events: auto;
+  h1 {
+    text-align: center;
+  }
+}
+
+.fill {
+  width: 100%;
+  pointer-events: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+}
+
+.markup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  padding: 0;
+  margin: 0;
+  > * {
+    pointer-events: auto;
+  }
+}

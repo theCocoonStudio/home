@@ -4,9 +4,14 @@ import { clamp } from 'three/src/math/MathUtils.js'
 
 export const useScroll = (el, options = {}) => {
   const scrollTo = useCallback(
-    (scrollFactor) => {
+    (scrollFactor, _options) => {
       if (el) {
-        const { smoothTime = 0.25, maxSpeed, easing, eps = 1.0 } = options
+        const {
+          smoothTime = 0.25,
+          maxSpeed,
+          easing,
+          eps = 1.0,
+        } = _options || options
         const scrollLength = el.scrollHeight - el.clientHeight
         const scrollTop = Math.round(scrollFactor * scrollLength)
 
