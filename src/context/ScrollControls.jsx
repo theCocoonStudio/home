@@ -1,9 +1,19 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styles from '../styles/ScrollControls.module.css'
 import { ScrollContext } from './ScrollContext'
 import { useScroll, useResizeEvent } from 'src'
 
-export const ScrollControls = ({ children, pages = 1, distance = 1 }) => {
+export const ScrollControls = forwardRef(function _ScrollControls(
+  { children, pages = 1, distance = 1 },
+  forwardedRef,
+) {
   const scrollElement = useRef()
   const fixedMarkupContainer = useRef()
   const scrollMarkupContainer = useRef()
@@ -40,6 +50,7 @@ export const ScrollControls = ({ children, pages = 1, distance = 1 }) => {
 
   const contextValue = useMemo(
     () => ({
+      _ScrollControlsContext: ScrollContext,
       scrollLength,
       scrollTo,
       getOffset: () => _getOffset(scrollLength),
@@ -48,6 +59,8 @@ export const ScrollControls = ({ children, pages = 1, distance = 1 }) => {
     }),
     [_getClampedOffset, _getOffset, markupState, scrollLength, scrollTo],
   )
+
+  useImperativeHandle(forwardedRef, () => contextValue, [contextValue])
 
   return (
     <ScrollContext.Provider value={contextValue}>
@@ -68,4 +81,4 @@ export const ScrollControls = ({ children, pages = 1, distance = 1 }) => {
       </div>
     </ScrollContext.Provider>
   )
-}
+})

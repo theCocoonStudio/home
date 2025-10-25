@@ -49,9 +49,6 @@
   padding: 0;
   margin: 0;
   pointer-events: auto;
-  h1 {
-    text-align: center;
-  }
 }
 
 .fill {
