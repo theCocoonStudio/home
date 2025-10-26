@@ -5,10 +5,11 @@ import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTargetItems } from '../pages/Home/useTargetItems'
 import { useScrollControls } from 'src/hooks'
 import { useSettings } from 'website/pages/Home/useSettings'
+import { simulateMouseDownDuration } from '../utils/vanilla'
 
 export const Footer = ({ config, ready, atStartOrFinish }) => {
   // control targets to pass to view component
@@ -49,6 +50,7 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
 
   const { getOffset, scrollTo } = useScrollControls()
 
+  // control onClick callbacks
   const next = useCallback(() => {
     const offset = getOffset()
 
@@ -86,23 +88,39 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
     scrollTo(activeTarget)
   }, [getOffset, ranges, scrollTo])
 
-  // next/prev key controls
-  const handleDirectionKeyDown = useCallback(
+  const launch = useCallback(() => {
+    if (!disableReadMoreControl) {
+      console.log('hi')
+    }
+  }, [disableReadMoreControl])
+
+  // next/prev/launch keyboard controls
+  const prevButton = useRef()
+  const nextButton = useRef()
+  const launchButton = useRef()
+
+  const handleControlKeyDown = useCallback(
     (e) => {
       if (e.key === 'ArrowLeft' || e.key === 'Left') {
+        simulateMouseDownDuration(prevButton.current, 100)
         prev()
       } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+        simulateMouseDownDuration(nextButton.current, 100)
         next()
+      } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault()
+        simulateMouseDownDuration(launchButton.current, 200)
+        launch()
       }
     },
-    [next, prev],
+    [launch, next, prev],
   )
   useEffect(() => {
-    addEventListener('keydown', handleDirectionKeyDown)
+    addEventListener('keydown', handleControlKeyDown)
     return () => {
-      removeEventListener('keydown', handleDirectionKeyDown)
+      removeEventListener('keydown', handleControlKeyDown)
     }
-  }, [handleDirectionKeyDown])
+  }, [handleControlKeyDown])
   // viewport width in pixels
   const { width } = useResizeEvent()
 
@@ -122,6 +140,7 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
           }}
         >
           <IconButton
+            ref={prevButton}
             onClick={prev}
             aria-label='previous item'
             edge='start'
@@ -134,6 +153,8 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
             <KeyboardDoubleArrowLeftIcon fontSize='inherit' />
           </IconButton>
           <IconButton
+            ref={launchButton}
+            onClick={launch}
             disabled={disableReadMoreControl}
             aria-label='read more'
             sx={{
@@ -145,6 +166,7 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
             <LaunchOutlinedIcon fontSize='inherit' />
           </IconButton>
           <IconButton
+            ref={nextButton}
             onClick={next}
             aria-label='next item'
             edge='end'
