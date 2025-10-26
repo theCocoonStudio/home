@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import styles from './Home.styles.module.css'
-import ReadMoreIcon from '@mui/icons-material/ReadMore'
+import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
 
 export const Main = function Main({
   ready,
@@ -25,7 +25,7 @@ export const Main = function Main({
               <h3 className={`${styles.date} raleway`}>{date}</h3>
               <p className={`${styles.description} raleway`}>
                 <span>{description + ' '}</span>
-                <ReadMoreIcon fontSize='inherit' />
+                <LaunchOutlinedIcon fontSize='inherit' />
               </p>
             </div>
           </div>
