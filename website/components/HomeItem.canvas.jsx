@@ -1,6 +1,7 @@
 import { useTexture } from '@react-three/drei'
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -9,7 +10,7 @@ import {
 import { RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
 import { contain } from 'website/utils/texture'
 import { useFrame } from '@react-three/fiber'
-import { damp } from 'maath/easing'
+import { damp, damp3 } from 'maath/easing'
 import { useResizeEvent, useScrollControls } from 'src'
 import { useTargetItems } from '../pages/Home/useTargetItems'
 
@@ -36,6 +37,7 @@ export const HomeItem = forwardRef(function HomeItem(
   // refs
   const mesh = useRef()
   const inner = useRef()
+
   useImperativeHandle(
     forwardedRef,
     () => ({ mesh: mesh.current, inner: inner.current }),
@@ -122,7 +124,7 @@ export const HomeItem = forwardRef(function HomeItem(
   }, [focusDepth, get, index, scrollContainerId, size]) // must include size for resize changes
 
   // animation
-  const { getClampedOffset, scrollLength } = useScrollControls()
+  const { getClampedOffset, scrollLength, scrollElement } = useScrollControls()
 
   const { inRange, outRange } = useMemo(
     () => ({
@@ -144,6 +146,7 @@ export const HomeItem = forwardRef(function HomeItem(
   const markupVisible = useRef(false)
   const isTargetMaterial = useRef(false)
   const isReadMoreButtonDisabled = useRef(true)
+  const isHovered = useRef(false)
 
   const { showMarkup, hideMarkup, setMaterial, toggleReadMoreButton } =
     useMemo(() => {
@@ -199,8 +202,20 @@ export const HomeItem = forwardRef(function HomeItem(
 
   useFrame((state, delta) => {
     if (initialPosition) {
-      damp(outOffset, 'current', getClampedOffset(...outRange), 0.0, delta)
-      damp(inOffset, 'current', getClampedOffset(...inRange), 0.0, delta)
+      const dampOut = damp(
+        outOffset,
+        'current',
+        getClampedOffset(...outRange),
+        0.0,
+        delta,
+      )
+      const dampIn = damp(
+        inOffset,
+        'current',
+        getClampedOffset(...inRange),
+        0.0,
+        delta,
+      )
 
       setMaterial()
       mesh.current.visible = inOffset.current > 0
@@ -237,8 +252,28 @@ export const HomeItem = forwardRef(function HomeItem(
 
       mesh.current.position.copy(activePosition.current)
       mesh.current.scale.copy(activeScale.current)
+
+      if (isHovered.current && (dampIn || dampOut)) {
+        scrollElement.classList.remove('simulated-hover')
+        isHovered.current = false
+      }
+      damp3(inner.current.scale, isHovered.current ? 0.925 : 0.9, 0.1, delta)
     }
   })
+
+  // hover callbacks
+  const onPointerMove = useCallback(() => {
+    if (!isHovered.current && !isReadMoreButtonDisabled.current) {
+      scrollElement.classList.add('simulated-hover')
+      isHovered.current = true
+    }
+  }, [scrollElement])
+  const onPointerOut = useCallback(() => {
+    if (isHovered.current) {
+      scrollElement.classList.remove('simulated-hover')
+      isHovered.current = false
+    }
+  }, [scrollElement])
 
   return (
     <mesh
@@ -248,6 +283,8 @@ export const HomeItem = forwardRef(function HomeItem(
       scale={focusScale}
       position={initialPosition}
       material={material}
+      onPointerMove={onPointerMove}
+      onPointerOut={onPointerOut}
     >
       <mesh scale={0.9} ref={inner}>
         <meshStandardMaterial

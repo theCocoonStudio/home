@@ -175,6 +175,10 @@ html {
   }
 }
 
+.simulated-hover:hover {
+  cursor: pointer;
+}
+
 .contact-dialog {
   background-color: var(--theme-colors-white);
   color: #122629;
