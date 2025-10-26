@@ -12,7 +12,7 @@ import { ThemeProvider } from 'website/context/ThemeProvider'
 import { MenuProvider } from 'website/context/MenuProvider'
 import Layout from './Layout'
 import { PageProvider } from '../pages/Home/PageProvider'
-import { useScroll } from 'src/hooks'
+import { ScrollControls } from 'src'
 import { useParams } from 'react-router'
 
 const theme = {
@@ -42,7 +42,10 @@ const theme = {
 
 const GlobalProvider = ({ config, ready, setReady }) => {
   // config values
-  const { theme: pageTheme } = config
+  const {
+    theme: pageTheme,
+    scroll: { scrollControlsProps },
+  } = config
 
   // mui theme
   const muiTheme = createTheme({
@@ -60,7 +63,6 @@ const GlobalProvider = ({ config, ready, setReady }) => {
   const { '*': splat } = useParams()
 
   // state: stable across page changes
-  const [scrollContainer, setScrollContainer] = useState()
   const [atStartOrFinish, setAtStartOrFinish] = useState({
     start: true,
     finish: false,
@@ -72,14 +74,14 @@ const GlobalProvider = ({ config, ready, setReady }) => {
   const [contactOpen, setContactOpen] = useState(false)
 
   // scroll callback
-  const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0 })
+  const scroll = useRef()
 
   // reset unstable state on page change; scroll to 0 (top); manage loader transition time
   const resetPage = useCallback(() => {
     setContactOpen(false)
-    scrollTo(0.0)
+    scroll.current.scrollTo(0.0, { smoothTime: 0.0 })
     setScrollDistanceFactor(1)
-  }, [scrollTo])
+  }, [])
 
   const prevSplat = useRef()
   useLayoutEffect(() => {
@@ -112,19 +114,26 @@ const GlobalProvider = ({ config, ready, setReady }) => {
           <DndContext sensors={sensors}>
             <MuiThemeProvider theme={muiTheme}>
               <PageProvider config={config}>
-                <Layout
-                  config={config}
-                  ready={ready}
-                  setReady={setReady}
-                  scrollContainer={scrollContainer}
-                  setScrollContainer={setScrollContainer}
-                  atStartOrFinish={atStartOrFinish}
-                  setAtStartOrFinish={setAtStartOrFinish}
-                  scrollDistanceFactor={scrollDistanceFactor}
-                  setScrollDistanceFactor={setScrollDistanceFactor}
-                  contactOpen={contactOpen}
-                  setContactOpen={setContactOpen}
-                />
+                <ScrollControls
+                  ref={scroll}
+                  {...scrollControlsProps}
+                  distance={
+                    scrollControlsProps?.distance
+                      ? scrollDistanceFactor * scrollControlsProps.distance
+                      : scrollDistanceFactor
+                  }
+                >
+                  <Layout
+                    config={config}
+                    ready={ready}
+                    setReady={setReady}
+                    atStartOrFinish={atStartOrFinish}
+                    setAtStartOrFinish={setAtStartOrFinish}
+                    setScrollDistanceFactor={setScrollDistanceFactor}
+                    contactOpen={contactOpen}
+                    setContactOpen={setContactOpen}
+                  />
+                </ScrollControls>
               </PageProvider>
             </MuiThemeProvider>
           </DndContext>

@@ -8,12 +8,12 @@ import styles from 'website/styles/Menu.module.css'
 import { useTheme } from '../hooks/useTheme'
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useParams } from 'react-router'
+import { useScrollControls } from 'src'
 
 export const Menu = ({
   config,
   MenuComponent,
   setScrollDistanceFactor,
-  scrollContainer,
   atStartOrFinish,
   ready,
 }) => {
@@ -30,16 +30,17 @@ export const Menu = ({
 
   const { showMenu, setShowMenu } = useMenu()
 
+  const { scrollElement } = useScrollControls()
   const { droppableWidth, droppableHeight } = useMemo(() => {
     if (showMenu) {
       return {
-        droppableWidth: scrollContainer.clientWidth,
+        droppableWidth: scrollElement.clientWidth,
 
-        droppableHeight: scrollContainer.clientHeight,
+        droppableHeight: scrollElement.clientHeight,
       }
     }
     return {}
-  }, [scrollContainer, showMenu])
+  }, [scrollElement, showMenu])
 
   const onMenuDragEnd = useCallback(
     (height) => {
@@ -75,14 +76,19 @@ export const Menu = ({
   const onMenuDragMove = useCallback(
     ({ delta: { x: deltaX, y: deltaY } }) => {
       offset.current = { x: deltaX, y: deltaY }
-      draggable.current.container.style.transform = `translate3d(${base.current.x + offset.current.x}px, ${base.current.y + offset.current.y}px, 0)`
+      if (draggable.current) {
+        draggable.current.container.style.transform = `translate3d(${base.current.x + offset.current.x}px, ${base.current.y + offset.current.y}px, 0)`
+      }
     },
     [draggable],
   )
 
-  const onMenuDragStart = useCallback((e) => {
-    draggable.current.container.style.transition = 'none'
-  }, [])
+  const onMenuDragStart = useCallback(
+    (/* e */) => {
+      draggable.current.container.style.transition = 'none'
+    },
+    [],
+  )
 
   useDndMonitor({
     onDragEnd: onMenuDragEnd,
@@ -128,7 +134,7 @@ export const Menu = ({
   }, [showMenu])
 
   return showMenu && ready ? (
-    <>
+    <div className={styles.container}>
       <DraggableMenu
         styles={styles}
         ref={draggable}
@@ -145,6 +151,6 @@ export const Menu = ({
         />
       </DraggableMenu>
       <Droppable ref={droppable} styles={styles} />
-    </>
+    </div>
   ) : null
 }

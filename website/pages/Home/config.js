@@ -89,8 +89,6 @@ export const config = {
   scroll: {
     scrollControlsProps: {
       pages: items.length,
-      enabled: true,
-      damping: 0,
       distance: 2,
     },
   },

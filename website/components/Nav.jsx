@@ -2,7 +2,7 @@ import styles from 'website/styles/Nav.module.css'
 import { useCallback } from 'react'
 import { View } from '@react-three/drei'
 import { Logo } from './Logo.view'
-import { useScroll } from 'src/hooks'
+import { useScrollControls } from 'src'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications'
 import { useTheme } from '../hooks/useTheme'
@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router'
 
 export const Nav = ({
   config,
-  scrollContainer,
   atStartOrFinish,
   setContactOpen,
   contactOpen,
@@ -29,9 +28,10 @@ export const Nav = ({
 
   const { colors } = useTheme()
 
-  const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0.1 })
+  const { _ScrollControlsContext, scrollTo } = useScrollControls()
+
   const scrollHome = useCallback(() => {
-    scrollTo(0.0)
+    scrollTo(0.0, { smoothTime: 0.1 })
   }, [scrollTo])
 
   const navigate = useNavigate()
@@ -57,6 +57,7 @@ export const Nav = ({
     ThemeContext,
     MenuContext,
     PageContext,
+    _ScrollControlsContext,
   )
   return (
     <div className={`${styles.nav}`}>

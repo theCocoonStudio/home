@@ -1,8 +1,8 @@
-import { useScroll } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Children, cloneElement, useCallback, useMemo, useRef } from 'react'
 import { clamp, inverseLerp, lerp } from 'three/src/math/MathUtils.js'
 import { useSettings } from 'website/pages/Home/useSettings'
+import { useScrollControls } from 'src'
 
 export const HomeLogo = function HomeLogo({
   config: {
@@ -21,12 +21,12 @@ export const HomeLogo = function HomeLogo({
     }
   }, [children])
 
-  const scroll = useScroll()
+  const { getOffset } = useScrollControls()
   const { focusFactor } = useSettings()
   const range = 1 / items.length
   const inEndThreshold = (1 - focusFactor) / 2
   const outStartThreshold = 1 - inEndThreshold
-  const prevOffset = useRef(scroll.offset)
+  const prevOffset = useRef(getOffset())
   const getOffsetRotation = useCallback(
     (scrollOffset) => {
       const offset = scrollOffset / range - Math.floor(scrollOffset / range)
@@ -47,9 +47,9 @@ export const HomeLogo = function HomeLogo({
   )
 
   useFrame(() => {
-    const offset = scroll.offset
+    const offset = getOffset()
     // only run if scrolled between frames
-    if (!(Math.abs(offset - prevOffset.current) < scroll.eps)) {
+    if (Math.abs(offset - prevOffset.current) > 0) {
       const rotationY = getOffsetRotation(offset)
       logo.current.group.rotation.y = rotationY
     }

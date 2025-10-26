@@ -87,7 +87,7 @@ export const HomeSettings = ({
   )
 
   useEffect(() => {
-    /* setScrollDistanceFactor(scrollDistance) */
+    setScrollDistanceFactor(scrollDistance)
   }, [scrollDistance, setScrollDistanceFactor])
 
   return (

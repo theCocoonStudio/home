@@ -33,8 +33,6 @@ export const articleConfig = {
   scroll: {
     scrollControlsProps: {
       pages: 2,
-      enabled: true,
-      damping: 0,
       distance: 2,
     },
   },

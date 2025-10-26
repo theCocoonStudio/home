@@ -1,18 +1,13 @@
 import styles from 'website/styles/Nav.module.css'
 import LogoPNG from 'website/assets/logo.png'
-import { useScroll } from 'src/hooks'
+import { useScrollControls } from 'src'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 
-export const Logo = ({
-  showName,
-  scrollContainer,
-  clickNavigation,
-  pointerEvents,
-}) => {
-  const { scrollTo } = useScroll(scrollContainer, { smoothTime: 0.1 })
+export const Logo = ({ showName, clickNavigation, pointerEvents }) => {
+  const { scrollTo } = useScrollControls()
   const scrollHome = useCallback(() => {
-    scrollTo(0.0)
+    scrollTo(0.0, { smoothTime: 0.1 })
   }, [scrollTo])
 
   const navigate = useNavigate()

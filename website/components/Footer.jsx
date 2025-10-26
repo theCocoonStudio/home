@@ -7,10 +7,10 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import { useResizeEvent } from 'src/hooks/useResizeEvent'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTargetItems } from '../pages/Home/useTargetItems'
-import { useScroll } from 'src/hooks'
+import { useScrollControls } from 'src/hooks'
 import { useSettings } from 'website/pages/Home/useSettings'
 
-export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
+export const Footer = ({ config, ready, atStartOrFinish }) => {
   // control targets to pass to view component
   const [disableReadMoreControl, setDisableReadMoreControl] = useState(true)
 
@@ -47,7 +47,7 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
     return _ranges
   }, [focusFactor, items])
 
-  const { getOffset, scrollTo } = useScroll(scrollContainer)
+  const { getOffset, scrollTo } = useScrollControls()
 
   const next = useCallback(() => {
     const offset = getOffset()
@@ -109,7 +109,6 @@ export const Footer = ({ config, scrollContainer, ready, atStartOrFinish }) => {
   return (
     <div className={`${styles.footer}`}>
       <ScrollContainer
-        scrollContainer={scrollContainer}
         ready={ready}
         config={config}
         atStartOrFinish={atStartOrFinish}

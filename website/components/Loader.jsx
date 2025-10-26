@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '../hooks/useTheme'
 import { useProgress } from '@react-three/drei'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
-import { useScroll } from 'src/hooks'
+import { useScrollControls } from 'src'
 import { Logo } from './Logo'
 
 export const Loader = ({
@@ -27,7 +27,6 @@ export const Loader = ({
   },
   scrollDownTarget,
   scrollUpTarget,
-  scrollContainer,
 }) => {
   const {
     lengths: { loaderSize },
@@ -80,7 +79,7 @@ export const Loader = ({
   }, [atStartOrFinish])
 
   // scroll up/down callback
-  const { scrollTo } = useScroll(scrollContainer)
+  const { scrollTo } = useScrollControls()
   const scrollToTarget = useCallback(() => {
     if (atStartOrFinish.either) {
       scrollTo(atStartOrFinish.start ? scrollDownTarget : scrollUpTarget)
@@ -110,7 +109,6 @@ export const Loader = ({
         <div className={`${styles.content}`}>
           <Logo
             showName={showName}
-            scrollContainer={scrollContainer}
             clickNavigation={clickNavigation}
             pointerEvents={atStartOrFinish.either}
           />

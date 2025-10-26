@@ -1,15 +1,8 @@
-import { useProgress, useScroll } from '@react-three/drei'
+import { useProgress } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useTransition,
-} from 'react'
+import { useEffect, useRef, useTransition } from 'react'
 import { compileSceneAsync } from 'website/utils/gl'
-import { useScroll as useMarkupScroll } from 'src/hooks'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useScrollControls } from 'src'
 
 export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
   const { active } = useProgress()
@@ -39,23 +32,13 @@ export const CanvasLoader = ({ ready, setReady, setAtStartOrFinish }) => {
   }, [active, camera, gl, ready, scene, setReady])
 
   // scroll data
-  const { el } = useScroll()
 
-  const [scrollLength, setScrollLength] = useState(
-    el.scrollHeight - el.clientHeight,
-  )
-  const size = useResizeEvent()
-
-  useLayoutEffect(() => {
-    setScrollLength(el.scrollHeight - el.clientHeight)
-  }, [el, size]) // must keep size to work on resizes
-
-  const { getClampedOffset } = useMarkupScroll(el)
+  const { getOffset } = useScrollControls()
 
   const atStart = useRef(true)
   const atFinish = useRef(false)
   useFrame(() => {
-    const offset = getClampedOffset(1, scrollLength, scrollLength)
+    const offset = getOffset()
 
     if (offset > 0 && offset < 1) {
       if (atStart.current || atFinish.current) {

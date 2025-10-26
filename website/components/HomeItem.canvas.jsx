@@ -1,4 +1,4 @@
-import { useScroll, useTexture } from '@react-three/drei'
+import { useTexture } from '@react-three/drei'
 import {
   forwardRef,
   useEffect,
@@ -10,7 +10,7 @@ import { RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
 import { contain } from 'website/utils/texture'
 import { useFrame } from '@react-three/fiber'
 import { damp } from 'maath/easing'
-import { useResizeEvent } from 'src/hooks/useResizeEvent'
+import { useResizeEvent, useScrollControls } from 'src'
 import { useTargetItems } from '../pages/Home/useTargetItems'
 
 export const HomeItem = forwardRef(function HomeItem(
@@ -21,7 +21,7 @@ export const HomeItem = forwardRef(function HomeItem(
     focusPosition,
     initialPosition,
     markup,
-    range,
+    range = { in: [0, 1], out: [0, 1] },
     url,
     scrollContainerId,
     index,
@@ -122,7 +122,21 @@ export const HomeItem = forwardRef(function HomeItem(
   }, [focusDepth, get, index, scrollContainerId, size]) // must include size for resize changes
 
   // animation
-  const scroll = useScroll()
+  const { getClampedOffset, scrollLength } = useScrollControls()
+
+  const { inRange, outRange } = useMemo(
+    () => ({
+      inRange: [
+        range.in[0] * scrollLength,
+        (range.in[0] + range.in[1]) * scrollLength,
+      ],
+      outRange: [
+        range.out[0] * scrollLength,
+        (range.out[0] + range.out[1]) * scrollLength,
+      ],
+    }),
+    [range, scrollLength],
+  )
   const inOffset = useRef(0.0)
   const outOffset = useRef(0.0)
   const activePosition = useRef(new Vector3())
@@ -148,7 +162,7 @@ export const HomeItem = forwardRef(function HomeItem(
         }
       }
       const setMaterial = () => {
-        if (outOffset.current > 1 - scroll.eps) {
+        if (!(outOffset.current < 1)) {
           if (!isTargetMaterial.current) {
             mesh.current.material = targetMaterial
             isTargetMaterial.current = true
@@ -161,7 +175,7 @@ export const HomeItem = forwardRef(function HomeItem(
 
       const toggleReadMoreButton = () => {
         // if in focus range
-        if (inOffset.current > 1 - scroll.eps && !(outOffset.current > 0)) {
+        if (!(inOffset.current < 1) && !(outOffset.current > 0)) {
           // if button not yet enabled, enabled it and flag as enabled
           if (isReadMoreButtonDisabled.current) {
             setDisableReadMoreControl(false)
@@ -181,18 +195,12 @@ export const HomeItem = forwardRef(function HomeItem(
         }
       }
       return { showMarkup, hideMarkup, setMaterial, toggleReadMoreButton }
-    }, [
-      markup,
-      scroll.eps,
-      targetMaterial,
-      material,
-      setDisableReadMoreControl,
-    ])
+    }, [markup, targetMaterial, material, setDisableReadMoreControl])
 
   useFrame((state, delta) => {
     if (initialPosition) {
-      damp(outOffset, 'current', scroll.range(...range.out), 0.0, delta)
-      damp(inOffset, 'current', scroll.range(...range.in), 0.0, delta)
+      damp(outOffset, 'current', getClampedOffset(...outRange), 0.0, delta)
+      damp(inOffset, 'current', getClampedOffset(...inRange), 0.0, delta)
 
       setMaterial()
       mesh.current.visible = inOffset.current > 0
@@ -215,7 +223,7 @@ export const HomeItem = forwardRef(function HomeItem(
           .copy(focusScale)
           .lerp(targetScale, outOffset.current)
       } else {
-        if (inOffset.current > 1 - scroll.eps) {
+        if (!(inOffset.current < 1)) {
           showMarkup()
         } else {
           hideMarkup()
