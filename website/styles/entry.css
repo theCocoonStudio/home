@@ -165,6 +165,12 @@ html {
   font-style: italic;
 }
 
+.space-mono-regular {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .no-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
