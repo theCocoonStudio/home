@@ -10,6 +10,7 @@ import { useTargetItems } from '../pages/Home/useTargetItems'
 import { useScrollControls } from 'src/hooks'
 import { useSettings } from 'website/pages/Home/useSettings'
 import { simulateMouseDownDuration } from '../utils/vanilla'
+import { TerminalText } from 'website/components/TerminalText'
 
 export const Footer = ({ config, ready, atStartOrFinish }) => {
   // control targets to pass to view component
@@ -178,6 +179,18 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
           >
             <KeyboardDoubleArrowRightIcon fontSize='inherit' />
           </IconButton>
+        </div>
+        <div
+          className={`${styles.terminal}`}
+          style={{
+            pointerEvents: atStartOrFinish.either ? 'none' : 'auto',
+            opacity: !ready ? 0 : 1,
+            height: width > 600 ? 48 : width > 400 ? 44 : 40,
+          }}
+        >
+          {!atStartOrFinish.either && (
+            <TerminalText>scroll to browse...</TerminalText>
+          )}
         </div>
       </div>
     </div>

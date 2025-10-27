@@ -34,3 +34,14 @@
   padding-bottom: 8px;
   opacity: 0;
 }
+
+.terminal {
+  position: absolute;
+  bottom: 0;
+  left: var(--theme-lengths-sidePadding);
+  padding-bottom: 8px;
+  opacity: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
