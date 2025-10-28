@@ -2,12 +2,10 @@
   font-size: 12px;
   line-height: 14px;
   vertical-align: middle;
-  padding-right: 0.12em;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: 0.24em solid var(--theme-colors-white); /* The typwriter cursor */
   white-space: nowrap; /* Keeps the content on a single line */
   margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: 0.12em; /* Adjust as needed */
   @media (max-width: 600px) {
     font-size: 10px;
   }
