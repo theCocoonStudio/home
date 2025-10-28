@@ -32,13 +32,12 @@
 .contentInner {
   position: absolute;
   width: 100%;
-  max-width: var(--theme-lengths-maxWidth);
-
+  max-width: 650px;
+  text-align: center;
   h1 {
     font-size: 4rem;
     letter-spacing: 0.03em;
     margin: 0 auto;
-    text-align: left;
     padding: 0 var(--theme-lengths-sidePadding);
     @media (max-height: 600px) {
       font-size: 3.6rem;
@@ -63,11 +62,10 @@
     font-size: 1.6rem;
     line-height: 1.2em;
     font-weight: 400;
-    margin-right: auto;
+    margin: 0 auto;
     padding: 0 var(--theme-lengths-sidePadding);
     padding-top: 1em;
     max-width: 650px;
-    text-align: left;
     @media (max-height: 600px) {
       font-size: 1.4rem;
     }
@@ -124,11 +122,11 @@
 
 @keyframes float {
   from {
-    transform: translateY(-10%);
+    transform: translateY(-15%);
   }
 
   to {
-    transform: translateY(10%);
+    transform: translateY(15%);
   }
 }
 .float {
@@ -167,20 +165,12 @@
     top: 80%;
   }
   h4 {
-    padding-top: 12px;
+    padding-top: 8px;
     position: relative;
     font-weight: 300;
-    font-size: 1.2rem;
+    font-size: 1rem;
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    @media (max-width: 600px) {
-      font-size: 1rem;
-      padding-top: 8px;
-    }
-    @media (max-height: 700px) {
-      font-size: 1rem;
-      padding-top: 8px;
-    }
   }
 }

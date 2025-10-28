@@ -34,8 +34,8 @@ const theme = {
     },
     topBottomPadding: 24,
     maxWidth: 1280,
-    loaderSize: ({ width, height }) => {
-      return width > 600 && height > 700 ? 45 : 30
+    loaderSize: ({ width }) => {
+      return width > 600 ? 24 : 20
     },
   },
 }
