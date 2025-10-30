@@ -110,7 +110,7 @@ export const Menu = ({
     if (atStartOrFinish.either || !ready) {
       setShowMenu(false)
     }
-  }, [atStartOrFinish.either, ready, setShowMenu, splat])
+  }, [atStartOrFinish, ready, setShowMenu])
 
   // hide menu on page change
   const prevSplat = useRef()

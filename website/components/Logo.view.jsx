@@ -67,7 +67,7 @@ export const Logo = forwardRef(function Logo({ ...props }, forwardedRef) {
         </mesh>
       </group>
 
-      <Environment files={CityHDRI} environmentIntensity={3} />
+      <Environment files={CityHDRI} environmentIntensity={1.5} />
       <PerspectiveCamera makeDefault position-z={1} fov={10} />
     </>
   )

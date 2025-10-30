@@ -44,7 +44,7 @@ export const ContactDialog = ({
   return (
     <Dialog open={contactOpen} onClose={closeContact}>
       <div className={'changa-one-regular contact-dialog'}>
-        <h1>Send me an email!</h1>
+        <h1>Send me an email</h1>
         <p className={'raleway contact-email'}>
           <span>izzy@thecocoon.studio</span>
           <span onClick={copy}>

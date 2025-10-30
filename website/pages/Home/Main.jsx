@@ -21,7 +21,9 @@ export const Main = function Main({
             id={`${itemDescription}-${index}`}
           >
             <div className={`${styles.itemDescription}`}>
-              <h1 className={`${styles.title} changa-one-regular`}>{title}</h1>
+              <h1 className={`${styles.title} changa-one-regular-italic`}>
+                {title}
+              </h1>
               <h3 className={`${styles.date} raleway`}>{date}</h3>
               <p className={`${styles.description} raleway`}>
                 <span>{description + ' '}</span>

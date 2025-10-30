@@ -116,7 +116,11 @@ export const Loader = ({
             className={`${centerLayout ? styles.contentInnerCenter : styles.contentInner}`}
             style={{ opacity: atStartOrFinish.either ? 1 : 0 }}
           >
-            <h1 className='changa-one-regular'>{titleCopy}</h1>
+            <h1
+              className={`changa-one-regular${!centerLayout ? '-italic' : ''}`}
+            >
+              {titleCopy}
+            </h1>
             <h3 className='raleway'>{subtitleCopy}</h3>
           </div>
           <div className={`${styles.progress}`}>

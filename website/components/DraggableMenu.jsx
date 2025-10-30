@@ -56,7 +56,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   )
 
   const { style: panelStyle, className: panelClassName } = useMemo(() => {
-    const className = `${styles.panel} raleway`
+    const className = `${styles.panel} changa-one-regular`
     const style = !minimized
       ? {
           boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px',

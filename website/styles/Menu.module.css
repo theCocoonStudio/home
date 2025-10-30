@@ -44,10 +44,10 @@
   flex-wrap: nowrap;
 
   h3 {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     text-transform: uppercase;
     line-height: 1.1em;
-    /* letter-spacing: 0.04rem; */
+    letter-spacing: 0.08rem;
     position: absolute;
     top: 50%;
     left: 50%;
