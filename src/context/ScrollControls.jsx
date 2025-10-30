@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  useCallback,
   useImperativeHandle,
   useLayoutEffect,
   useMemo,
@@ -14,11 +15,11 @@ export const ScrollControls = forwardRef(function _ScrollControls(
   { children, pages = 1, distance = 1, enabled = true },
   forwardedRef,
 ) {
+  // markup elements
   const scrollElement = useRef()
   const fixedMarkupContainer = useRef()
   const scrollMarkupContainer = useRef()
 
-  // reference to markup elements
   const [markupState, setMarkupState] = useState({
     scrollElement: null,
     scrollContainer: null,
@@ -39,10 +40,23 @@ export const ScrollControls = forwardRef(function _ScrollControls(
     [distance, pages, size], // must keep size to work on resizes
   )
 
-  // scroll to 0 if disabled
+  // abort callback
+  const abort = useRef(false)
+  const abortScrollCallback = useCallback(() => {
+    if (abort.current) {
+      scrollElement.current.scrollTop = 0
+      return true
+    }
+    return false
+  }, [])
+
+  // scroll to 0 if disabled; toggle abort ref
   useLayoutEffect(() => {
     if (!enabled) {
+      abort.current = true
       scrollElement.current.scrollTop = 0
+    } else {
+      abort.current = false
     }
   }, [enabled])
 
@@ -51,7 +65,7 @@ export const ScrollControls = forwardRef(function _ScrollControls(
     scrollTo,
     getOffset: _getOffset,
     getClampedOffset: _getClampedOffset,
-  } = useScroll(markupState.scrollElement)
+  } = useScroll(markupState.scrollElement, abortScrollCallback)
 
   const contextValue = useMemo(
     () => ({
