@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material'
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   DndContext,
   MouseSensor,
@@ -13,7 +13,7 @@ import { MenuProvider } from 'website/context/MenuProvider'
 import Layout from './Layout'
 import { PageProvider } from '../pages/Home/PageProvider'
 import { ScrollControls } from 'src'
-import { useParams } from 'react-router'
+import { NavigationProvider } from './NavigationProvider'
 
 const theme = {
   colors: {
@@ -59,9 +59,6 @@ const GlobalProvider = ({ config, ready, setReady }) => {
     typography: { switchIcon: '2rem' },
   })
 
-  // page route
-  const { '*': splat } = useParams()
-
   // state: stable across page changes
   const [atStartOrFinish, setAtStartOrFinish] = useState({
     start: true,
@@ -76,25 +73,16 @@ const GlobalProvider = ({ config, ready, setReady }) => {
   // scroll callback
   const scroll = useRef()
 
-  // reset unstable state on page change; scroll to 0 (top); manage loader transition time
+  // state reset callback
   const resetPage = useCallback(() => {
+    document.documentElement.style.setProperty(
+      '--reserved-loader-global-transition-speed',
+      '0s',
+    )
+    setReady(false)
     setContactOpen(false)
-    scroll.current.scrollTo(0.0, { smoothTime: 0.0 })
     setScrollDistanceFactor(1)
-  }, [])
-
-  const prevSplat = useRef()
-  useLayoutEffect(() => {
-    if (
-      typeof prevSplat.current !== 'undefined' &&
-      prevSplat.current !== splat
-    ) {
-      resetPage()
-    }
-    return () => {
-      prevSplat.current = splat
-    }
-  }, [resetPage, splat])
+  }, [setReady])
 
   // draggable menu
   const mouseSensor = useSensor(MouseSensor)
@@ -122,17 +110,20 @@ const GlobalProvider = ({ config, ready, setReady }) => {
                       ? scrollDistanceFactor * scrollControlsProps.distance
                       : scrollDistanceFactor
                   }
+                  enabled={ready}
                 >
-                  <Layout
-                    config={config}
-                    ready={ready}
-                    setReady={setReady}
-                    atStartOrFinish={atStartOrFinish}
-                    setAtStartOrFinish={setAtStartOrFinish}
-                    setScrollDistanceFactor={setScrollDistanceFactor}
-                    contactOpen={contactOpen}
-                    setContactOpen={setContactOpen}
-                  />
+                  <NavigationProvider onNavigation={resetPage}>
+                    <Layout
+                      config={config}
+                      ready={ready}
+                      setReady={setReady}
+                      atStartOrFinish={atStartOrFinish}
+                      setAtStartOrFinish={setAtStartOrFinish}
+                      setScrollDistanceFactor={setScrollDistanceFactor}
+                      contactOpen={contactOpen}
+                      setContactOpen={setContactOpen}
+                    />
+                  </NavigationProvider>
                 </ScrollControls>
               </PageProvider>
             </MuiThemeProvider>

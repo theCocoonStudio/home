@@ -12,7 +12,8 @@ import { ThemeContext } from 'website/context/ThemeContext'
 import { MenuContext } from 'website/context/MenuContext'
 import { PageContext } from '../context/PageContext'
 import { useContextBridge } from '@react-three/drei'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
+import { useNavigation } from 'website/hooks/useNavigation'
 
 export const Nav = ({
   config,
@@ -34,7 +35,7 @@ export const Nav = ({
     scrollTo(0.0, { smoothTime: 0.1 })
   }, [scrollTo])
 
-  const navigate = useNavigate()
+  const navigate = useNavigation()
   const navigateHome = useCallback(() => {
     navigate('/')
   }, [navigate])

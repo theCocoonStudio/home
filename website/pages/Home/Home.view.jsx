@@ -55,6 +55,7 @@ const Home = ({ config, ready, atStartOrFinish }) => {
       <fog attach='fog' args={['#050505', 82, 115]} />
       <Performance />
       <PerspectiveCamera
+        userData={{ splat: '' }}
         makeDefault
         position-z={5}
         fov={10}
