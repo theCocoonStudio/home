@@ -2,16 +2,11 @@ import { damp } from 'maath/easing'
 import { useCallback, useMemo } from 'react'
 import { clamp } from 'three/src/math/MathUtils.js'
 
-export const useScroll = (el, options = {}) => {
+export const useScroll = (el, abortCallback = () => false) => {
   const scrollTo = useCallback(
-    (scrollFactor, _options) => {
+    (scrollFactor, options = {}) => {
       if (el) {
-        const {
-          smoothTime = 0.25,
-          maxSpeed,
-          easing,
-          eps = 1.0,
-        } = _options || options
+        const { smoothTime = 0.25, maxSpeed, easing, eps = 1.0 } = options
         const scrollLength = el.scrollHeight - el.clientHeight
         const scrollTop = Math.round(scrollFactor * scrollLength)
 
@@ -40,14 +35,14 @@ export const useScroll = (el, options = {}) => {
           )
           el.scrollTop = state.current
 
-          if (next) {
+          if (next && !abortCallback()) {
             requestAnimationFrame(dampScroll)
           }
         }
         requestAnimationFrame(dampScroll)
       }
     },
-    [el, options],
+    [abortCallback, el],
   )
 
   // can pass resize-triggered, declaratively-calculated scrollLength;
