@@ -13,6 +13,7 @@ import { useFrame } from '@react-three/fiber'
 import { damp, damp3 } from 'maath/easing'
 import { useResizeEvent, useScrollControls } from 'src'
 import { useTargetItems } from '../pages/Home/useTargetItems'
+import { useNavigation } from 'website/hooks/useNavigation'
 
 export const HomeItem = forwardRef(function HomeItem(
   {
@@ -31,6 +32,7 @@ export const HomeItem = forwardRef(function HomeItem(
     material,
     targetMaterial,
     canvasTextures,
+    route,
   },
   forwardedRef,
 ) {
@@ -51,7 +53,7 @@ export const HomeItem = forwardRef(function HomeItem(
 
   // independent data
   const size = useResizeEvent()
-
+  const navigate = useNavigation()
   // item map texture
   const texture = useTexture(url)
 
@@ -181,7 +183,7 @@ export const HomeItem = forwardRef(function HomeItem(
         if (!(inOffset.current < 1) && !(outOffset.current > 0)) {
           // if button not yet enabled, enabled it and flag as enabled
           if (isReadMoreButtonDisabled.current) {
-            setDisableReadMoreControl(false)
+            setDisableReadMoreControl(false, index)
             isReadMoreButtonDisabled.current = false
           }
           // if in item's visible range but not in focus range
@@ -198,7 +200,7 @@ export const HomeItem = forwardRef(function HomeItem(
         }
       }
       return { showMarkup, hideMarkup, setMaterial, toggleReadMoreButton }
-    }, [markup, targetMaterial, material, setDisableReadMoreControl])
+    }, [markup, targetMaterial, material, setDisableReadMoreControl, index])
 
   useFrame((state, delta) => {
     if (initialPosition) {
@@ -262,18 +264,35 @@ export const HomeItem = forwardRef(function HomeItem(
   })
 
   // hover callbacks
-  const onPointerMove = useCallback(() => {
-    if (!isHovered.current && !isReadMoreButtonDisabled.current) {
-      scrollElement.classList.add('simulated-hover')
-      isHovered.current = true
-    }
-  }, [scrollElement])
-  const onPointerOut = useCallback(() => {
-    if (isHovered.current) {
-      scrollElement.classList.remove('simulated-hover')
-      isHovered.current = false
-    }
-  }, [scrollElement])
+  const onPointerMove = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (!isHovered.current && !isReadMoreButtonDisabled.current) {
+        scrollElement.classList.add('simulated-hover')
+        isHovered.current = true
+      }
+    },
+    [scrollElement],
+  )
+  const onPointerOut = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (isHovered.current) {
+        scrollElement.classList.remove('simulated-hover')
+        isHovered.current = false
+      }
+    },
+    [scrollElement],
+  )
+  const onPointerDown = useCallback(
+    (e) => {
+      e.stopPropagation()
+      if (!isReadMoreButtonDisabled.current) {
+        navigate(route)
+      }
+    },
+    [navigate, route],
+  )
 
   return (
     <mesh
@@ -285,6 +304,7 @@ export const HomeItem = forwardRef(function HomeItem(
       material={material}
       onPointerMove={onPointerMove}
       onPointerOut={onPointerOut}
+      onPointerDown={onPointerDown}
     >
       <mesh scale={0.9} ref={inner}>
         <meshStandardMaterial

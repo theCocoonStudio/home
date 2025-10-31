@@ -11,21 +11,28 @@ import { useScrollControls } from 'src/hooks'
 import { useSettings } from 'website/pages/Home/useSettings'
 import { simulateMouseDownDuration } from '../utils/vanilla'
 import { TerminalText } from 'website/components/TerminalText'
+import { useNavigation } from 'website/hooks/useNavigation'
 
 export const Footer = ({ config, ready, atStartOrFinish }) => {
   // control targets to pass to view component
-  const [disableReadMoreControl, setDisableReadMoreControl] = useState(true)
+  const activeItemIndex = useRef()
+  const [disableReadMoreControl, _setDisableReadMoreControl] = useState(true)
+
+  const setDisableReadMoreControl = useCallback((val, index) => {
+    activeItemIndex.current = index
+    _setDisableReadMoreControl(val)
+  }, [])
 
   const controlTargets = useMemo(
     () => ({
       setDisableReadMoreControl,
     }),
-    [],
+    [setDisableReadMoreControl],
   )
 
   useTargetItems(controlTargets, 'controls')
 
-  // next/prev callbacks
+  // controls data
   const { focusFactor } = useSettings()
 
   const {
@@ -50,6 +57,8 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
   }, [focusFactor, items])
 
   const { getOffset, scrollTo } = useScrollControls()
+
+  const navigate = useNavigation()
 
   // control onClick callbacks
   const next = useCallback(() => {
@@ -91,9 +100,9 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
 
   const launch = useCallback(() => {
     if (!disableReadMoreControl) {
-      console.log('hi')
+      navigate(items[activeItemIndex.current].route)
     }
-  }, [disableReadMoreControl])
+  }, [disableReadMoreControl, items, navigate])
 
   // next/prev/launch keyboard controls
   const prevButton = useRef()

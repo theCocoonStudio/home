@@ -314,6 +314,7 @@ export const HomeItems = forwardRef(function HomeItems(
           index={index}
           range={ranges && ranges[index]}
           url={itemsConfig[index].url}
+          route={itemsConfig[index].route}
           get={get}
           focusDepth={focusDepth}
           material={material}

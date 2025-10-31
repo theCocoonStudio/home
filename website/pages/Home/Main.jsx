@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import styles from './Home.styles.module.css'
 import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined'
+import { useNavigation } from 'website/hooks/useNavigation'
 
 export const Main = function Main({
   ready,
@@ -11,9 +12,10 @@ export const Main = function Main({
     },
   },
 }) {
+  const navigate = useNavigation()
   const itemDescriptions = useMemo(
     () =>
-      items.map(({ title, description, date }, index) => {
+      items.map(({ title, description, date, route }, index) => {
         return (
           <div
             key={`itemDescription-${index}`}
@@ -27,13 +29,18 @@ export const Main = function Main({
               <h3 className={`${styles.date} raleway`}>{date}</h3>
               <p className={`${styles.description} raleway`}>
                 <span>{description + ' '}</span>
-                <LaunchOutlinedIcon fontSize='inherit' />
+                <LaunchOutlinedIcon
+                  fontSize='inherit'
+                  onClick={() => {
+                    navigate(route)
+                  }}
+                />
               </p>
             </div>
           </div>
         )
       }),
-    [itemDescription, items],
+    [itemDescription, items, navigate],
   )
 
   return (
