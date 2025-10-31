@@ -12,7 +12,7 @@ import { ThemeContext } from 'website/context/ThemeContext'
 import { MenuContext } from 'website/context/MenuContext'
 import { PageContext } from '../context/PageContext'
 import { useContextBridge } from '@react-three/drei'
-import { useScrollControls, FixedMarkup } from 'src'
+import { useScrollControls, FixedMarkup, ScrollMarkup } from 'src'
 
 function Layout({
   config,
@@ -26,7 +26,7 @@ function Layout({
 }) {
   // config values
   const {
-    main: { Component, ViewComponent, renderPriority },
+    main: { Component, ScrollComponent, ViewComponent, renderPriority },
     menu: { Component: MenuComponent },
     footer: { FooterComponent },
     loader: { scrollDownTarget, scrollUpTarget },
@@ -114,6 +114,11 @@ function Layout({
           atStartOrFinish={atStartOrFinish}
         />
       </FixedMarkup>
+      {ScrollComponent && (
+        <ScrollMarkup>
+          <ScrollComponent ready={ready} setReady={setReady} config={config} />
+        </ScrollMarkup>
+      )}
     </>
   )
 }

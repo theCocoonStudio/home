@@ -12,32 +12,52 @@ import { ScrollContext } from './ScrollContext'
 import { useScroll, useResizeEvent } from 'src'
 
 export const ScrollControls = forwardRef(function _ScrollControls(
-  { children, pages = 1, distance = 1, enabled = true },
+  {
+    children,
+    useScrollMarkupHeight = false,
+    pages = 1,
+    distance = 1,
+    enabled = true,
+  },
   forwardedRef,
 ) {
+  // independent data
+  const size = useResizeEvent()
   // markup elements
   const scrollElement = useRef()
+  const fillElement = useRef()
   const fixedMarkupContainer = useRef()
   const scrollMarkupContainer = useRef()
 
   const [markupState, setMarkupState] = useState({
     scrollElement: null,
+    fillElement: null,
     scrollContainer: null,
     fixedContainer: null,
   })
   useLayoutEffect(() => {
     setMarkupState({
       scrollElement: scrollElement.current,
+      fillElement: fillElement.current,
       scrollContainer: scrollMarkupContainer.current,
       fixedContainer: fixedMarkupContainer.current,
     })
   }, [])
 
   // scroll length
-  const size = useResizeEvent()
-  const scrollLength = useMemo(
-    () => pages * distance * size.height,
-    [distance, pages, size], // must keep size to work on resizes
+  const [scrollLength, setScrollLength] = useState()
+  useLayoutEffect(
+    () => {
+      if (markupState.scrollContainer && markupState.fixedContainer) {
+        setScrollLength(
+          useScrollMarkupHeight
+            ? markupState.scrollContainer?.clientHeight -
+                markupState.fixedContainer?.clientHeight
+            : pages * distance * size.height,
+        )
+      }
+    },
+    [distance, markupState, pages, size, useScrollMarkupHeight], // must keep size to work on resizes/navigation
   )
 
   // abort callback
@@ -109,13 +129,18 @@ export const ScrollControls = forwardRef(function _ScrollControls(
           <div ref={fixedMarkupContainer} className={styles.fixedMarkup}></div>
         </div>
         <div
+          ref={fillElement}
           className={styles.fill}
-          style={{ height: `${pages * distance * 100}%` }}
+          style={{ height: `${scrollLength}px` }}
         />
         <div
           ref={scrollMarkupContainer}
           className={styles.markup}
-          style={{ height: `${pages * distance * 100 + 100}%` }}
+          style={{
+            height: useScrollMarkupHeight
+              ? 'auto'
+              : `calc(${scrollLength}px + 100%)`,
+          }}
         />
       </div>
     </ScrollContext.Provider>
