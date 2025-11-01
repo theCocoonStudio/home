@@ -4,6 +4,7 @@ import { articleConfig } from './Home/article'
 const config = {
   home: { ...homeConfig },
   article: { ...articleConfig },
+  test: { ...articleConfig },
 }
 
 export default config

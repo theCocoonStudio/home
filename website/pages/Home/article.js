@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { useArticleData } from 'website/hooks/useArticleData'
 import { ArticleSettings } from '../../components/ArticleSettings'
+import { ArticleMarkup } from 'website/pages/Home/ArticleMarkup'
 
 const Article = lazy(() => import('../../components/Article.view'))
 
@@ -8,6 +9,7 @@ export const articleConfig = {
   context: { usePageProviderHook: useArticleData },
   main: {
     Component: null,
+    ScrollComponent: ArticleMarkup,
     ViewComponent: Article,
     renderPriority: 1,
   },
@@ -32,6 +34,7 @@ export const articleConfig = {
   data: { markupIds: { loaderVideo: 'home-loader-video' } },
   scroll: {
     scrollControlsProps: {
+      useScrollMarkupHeight: true,
       pages: 2,
       distance: 2,
     },
