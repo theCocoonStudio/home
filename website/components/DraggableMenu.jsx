@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
   { children, styles, setShowMenu, onBeforeMaximize, padding, droppableHeight },
@@ -34,6 +35,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const [minimized, setMinimized] = useState(false)
   const [markupHeights, setMarkupHeights] = useState()
+  const [isScroll, setIsScroll] = useState(false)
 
   useLayoutEffect(() => {
     setMarkupHeights({
@@ -41,6 +43,15 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
       panel: panel.current.clientHeight,
     })
   }, [])
+
+  useLayoutEffect(() => {
+    if (markupHeights) {
+      setIsScroll(
+        droppableHeight - requiredFooterHeight - markupHeights.panel <
+          markupHeights.content,
+      )
+    }
+  }, [droppableHeight, markupHeights, requiredFooterHeight])
 
   const draggableStyle = useMemo(
     () => ({
@@ -67,20 +78,22 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
   }, [minimized, styles])
 
   const { style: contentStyle, className: contentClassName } = useMemo(() => {
-    const className = `${styles.content} raleway`
+    const className = `${styles.content} raleway no-scroll`
     const style = markupHeights && {
-      overflowY:
-        !minimized &&
-        droppableHeight - requiredFooterHeight - markupHeights.panel <
-          markupHeights.content
-          ? 'auto'
-          : 'hidden',
+      overflowY: !minimized && isScroll ? 'auto' : 'hidden',
       maxHeight: minimized
         ? '0'
         : `${droppableHeight - requiredFooterHeight - markupHeights.panel}px`,
     }
     return { className, style }
-  }, [droppableHeight, requiredFooterHeight, markupHeights, minimized, styles])
+  }, [
+    styles,
+    markupHeights,
+    minimized,
+    isScroll,
+    droppableHeight,
+    requiredFooterHeight,
+  ])
 
   const closeMenu = useCallback(() => {
     setShowMenu(false)
@@ -88,9 +101,6 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
 
   const toggleMinimized = useCallback(() => {
     if (minimized) {
-      const isScroll =
-        droppableHeight - requiredFooterHeight - markupHeights.panel <
-        markupHeights.content
       onBeforeMaximize(
         isScroll
           ? droppableHeight - requiredFooterHeight
@@ -99,6 +109,7 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     }
     setMinimized((prev) => !prev)
   }, [
+    isScroll,
     droppableHeight,
     requiredFooterHeight,
     markupHeights,
@@ -182,6 +193,13 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
         </div>
         <div style={contentStyle} className={contentClassName} ref={content}>
           {children}
+          {!minimized && isScroll && (
+            <div className={styles.footer}>
+              <div>
+                <UnfoldMoreIcon fontSize='inherit' />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

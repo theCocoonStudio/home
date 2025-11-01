@@ -22,7 +22,12 @@ export const MenuSlider = ({
         </div>
       </div>
       <div>
-        <Slider {...sliderProps} />
+        <Slider
+          sx={{
+            '& .MuiSlider-thumb': { width: 20, height: 20 },
+          }}
+          {...sliderProps}
+        />
       </div>
     </div>
   )

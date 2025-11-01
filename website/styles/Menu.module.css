@@ -23,13 +23,14 @@
   border-radius: 10px;
   position: absolute;
   width: 350px;
-  @media screen and (max-width: 450px) {
+  @media (max-width: 450px) {
     max-width: calc(100% - 2 * var(--theme-lengths-sidePadding));
   }
 }
 .settings {
   background: var(--theme-colors-white);
   border-radius: 10px;
+  position: relative;
 }
 .panel {
   font-weight: 700;
@@ -52,6 +53,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    @media (max-width: 360px) {
+      font-size: 1.6rem;
+    }
   }
 
   > div {
@@ -63,7 +67,7 @@
     &:last-child {
       padding-right: 24px;
     }
-    @media screen and (max-width: 450px) {
+    @media (max-width: 450px) {
       column-gap: 4px;
     }
   }
@@ -98,5 +102,35 @@
   &:hover {
     cursor: pointer;
     backdrop-filter: invert(100%) opacity(0.1);
+  }
+}
+
+.footer {
+  height: 24px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--theme-colors-white)
+  );
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  color: var(--theme-colors-black);
+  font-size: 1.5rem;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  > div {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
   }
 }

@@ -1,6 +1,5 @@
 .container {
   padding-bottom: 24px;
-  padding-top: 8px;
 }
 
 .title {
@@ -72,11 +71,15 @@
     }
   }
   > div:last-child {
-    width: 80px;
+    width: 90px;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
+    padding-right: 10px;
+    @media (max-width: 360px) {
+      width: 70px;
+    }
   }
 }
 
@@ -138,6 +141,10 @@
     flex-wrap: nowrap;
     align-items: center;
     justify-content: flex-end;
+    margin: 0 10px; /* slider thumb radius / 2 */
+    @media (max-width: 360px) {
+      width: 50px;
+    }
   }
 }
 
