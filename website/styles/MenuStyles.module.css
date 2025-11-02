@@ -9,7 +9,7 @@
   align-items: center;
   padding: 16px 24px 8px 24px;
   column-gap: 1em;
-  /* box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px; */
+
   h4 {
     font-size: 1.5rem;
     text-transform: uppercase;
@@ -159,6 +159,7 @@
 }
 
 .button {
+  font-size: 1rem;
   font-weight: 350;
   text-transform: uppercase;
   text-align: center;
