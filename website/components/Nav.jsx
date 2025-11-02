@@ -14,6 +14,8 @@ import { PageContext } from '../context/PageContext'
 import { useContextBridge } from '@react-three/drei'
 import { Link } from 'react-router'
 import { useNavigation } from 'website/hooks/useNavigation'
+import { Badge } from '@mui/material'
+import { useResizeEvent } from 'src'
 
 export const Nav = ({
   config,
@@ -29,6 +31,8 @@ export const Nav = ({
 
   const { colors } = useTheme()
 
+  const { width } = useResizeEvent()
+
   const { _ScrollControlsContext, scrollTo } = useScrollControls()
 
   const scrollHome = useCallback(() => {
@@ -42,7 +46,11 @@ export const Nav = ({
 
   const action = clickNavigation ? navigateHome : scrollHome
 
-  const { showMenu, setShowMenu } = useMenu()
+  const {
+    showMenu,
+    setShowMenu,
+    notification: { show: showBadge },
+  } = useMenu()
 
   const toggleMenu = useCallback(() => {
     setShowMenu((prev) => !prev)
@@ -162,7 +170,31 @@ export const Nav = ({
             }}
             className={styles.activeContainer}
           >
-            <SettingsApplicationsIcon fontSize='inherit' />
+            <Badge
+              badgeContent={<span className={styles.badgeText}>1</span>}
+              showZero
+              invisible={!showBadge}
+              color={'secondary'}
+              sx={{
+                '& .MuiBadge-badge': {
+                  color: 'common.black',
+                  backgroundColor: 'common.white',
+                  border: '1px solid',
+                  borderColor: 'common.black',
+                  fontSize: '1rem',
+                  transform: 'translate(50%, -50%)',
+                  lineHeight: '100%',
+                  verticalAlign: 'middle',
+                  minWidth: width > 600 ? 16 : 14,
+                  width: width > 600 ? 16 : 14,
+                  height: width > 600 ? 16 : 14,
+                  borderRadius: '50%',
+                  padding: '0',
+                },
+              }}
+            >
+              <SettingsApplicationsIcon fontSize='inherit' />
+            </Badge>
             {showMenu && <div className={styles.active} />}
           </div>
         </div>

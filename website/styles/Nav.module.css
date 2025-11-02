@@ -122,3 +122,9 @@
   background-color: var(--theme-colors-white);
   border-radius: 50%;
 }
+
+.badgeText {
+  vertical-align: middle;
+  /* font itself isn't vertically aligned; required for vertical alignment */
+  padding-bottom: 12%;
+}
