@@ -56,7 +56,10 @@ const GlobalProvider = ({ config, ready, setReady }) => {
         disabled: `${theme.colors.white}55`,
       },
     },
-    typography: { switchIcon: '2rem' },
+    typography: {
+      switchIcon: '2rem',
+      fontFamily: ['Raleway', 'sans-serif'].join(','),
+    },
   })
 
   // state: stable across page changes

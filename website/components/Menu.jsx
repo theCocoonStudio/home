@@ -28,7 +28,7 @@ export const Menu = ({
   const offset = useRef({ x: 0, y: 0 })
   const base = useRef({ x: 0, y: 0 })
 
-  const { showMenu, setShowMenu } = useMenu()
+  const { showMenu, setShowMenu, setNotification } = useMenu()
 
   const { scrollElement } = useScrollControls()
   const { droppableWidth, droppableHeight } = useMemo(() => {
@@ -42,8 +42,15 @@ export const Menu = ({
     return {}
   }, [scrollElement, showMenu])
 
+  // onMenuDragEnd is also used to clamp transforms before maximizing minimized menu
   const onMenuDragEnd = useCallback(
-    (height) => {
+    /* 
+    expandedHeight arg is needed when invoking pre-maximization, 
+    i.e. when menu is minimized; In this event, 
+    `draggable.current.container.clientHeight` would give the current, minimized
+    height, which would lead to incorrect calculations
+    */
+    (expandedHeight) => {
       if (droppableWidth && sidePadding) {
         base.current = {
           x: clamp(
@@ -57,8 +64,8 @@ export const Menu = ({
             base.current.y + offset.current.y,
             -1 *
               (droppable.current.clientHeight -
-                (typeof height === 'number'
-                  ? height
+                (typeof expandedHeight === 'number'
+                  ? expandedHeight
                   : draggable.current.container.clientHeight) -
                 requiredFooterHeight),
             requiredFooterHeight,
@@ -112,7 +119,7 @@ export const Menu = ({
     }
   }, [atStartOrFinish, ready, setShowMenu])
 
-  // hide menu on page change
+  // hide menu on page change and dismiss notification
   const prevSplat = useRef()
   useLayoutEffect(() => {
     if (
@@ -120,11 +127,12 @@ export const Menu = ({
       prevSplat.current !== splat
     ) {
       setShowMenu(false)
+      setNotification((prev) => ({ ...prev, show: false }))
     }
     return () => {
       prevSplat.current = splat
     }
-  }, [setShowMenu, splat])
+  }, [setNotification, setShowMenu, splat])
 
   useEffect(() => {
     if (!showMenu) {

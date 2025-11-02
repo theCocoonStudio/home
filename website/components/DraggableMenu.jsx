@@ -2,57 +2,123 @@ import { useDraggable } from '@dnd-kit/core'
 import {
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { useMenu } from 'website/hooks/useMenu'
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore'
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred'
+import { IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
 export const DraggableMenu = forwardRef(function DraggableMenu(
   { children, styles, setShowMenu, onBeforeMaximize, padding, droppableHeight },
   forwardedRef,
 ) {
+  // internal refs
   const container = useRef()
   const content = useRef()
   const panel = useRef()
+
+  // DnD data
   const { attributes, listeners, setNodeRef, node } = useDraggable({
     id: 'draggable',
   })
 
+  // external handle
   useImperativeHandle(
     forwardedRef,
     () => ({ handle: node.current, container: container.current }),
     [node],
   )
 
+  // menu API
+  const {
+    notification: { show: showNotification, content: notificationContent },
+    setNotification,
+  } = useMenu()
+
+  // theme data
   const {
     colors: { black },
     page: { requiredFooterHeight },
   } = useTheme()
 
+  // internal state
   const [minimized, setMinimized] = useState(false)
-  const [markupHeights, setMarkupHeights] = useState()
   const [isScroll, setIsScroll] = useState(false)
+  const [contentStyles, setContentStyles] = useState({
+    marginTop: showNotification ? 16 : 8,
+  })
 
-  useLayoutEffect(() => {
-    setMarkupHeights({
-      content: content.current.clientHeight,
-      panel: panel.current.clientHeight,
-    })
+  // internal calculation callbacks
+  const getPanelHeight = useCallback(() => {
+    return panel.current.clientHeight
   }, [])
 
-  useLayoutEffect(() => {
-    if (markupHeights) {
-      setIsScroll(
-        droppableHeight - requiredFooterHeight - markupHeights.panel <
-          markupHeights.content,
+  const getContentHeight = useCallback(() => {
+    // returns full height of content, even when overflowing container (isScroll=true)
+
+    /* 
+    Memo styles trigger a nonzero css transition duration, so we can't use 
+    element.clientHeight. This is not a problem since element.scrollHeight gives us
+    the height we want regardlesss of the element's current height. 
+     */
+    const contentHeight =
+      content.current.children[1].scrollHeight +
+      (showNotification ? content.current.children[0].scrollHeight : 0)
+
+    // add correct margin as scrollHeight doesn't include margin
+    const contentMarginTop = showNotification ? 16 : 8
+    return contentHeight + contentMarginTop
+  }, [showNotification])
+
+  const getIsScroll = useCallback(
+    (panelHeight, contentHeight) => {
+      return (
+        droppableHeight - requiredFooterHeight - panelHeight < contentHeight
+      )
+    },
+    [droppableHeight, requiredFooterHeight],
+  )
+
+  // menu control callbacks
+  const closeMenu = useCallback(() => {
+    setShowMenu(false)
+  }, [setShowMenu])
+
+  const dismissNotification = useCallback(() => {
+    setNotification((prev) => ({ ...prev, show: false }))
+  }, [setNotification])
+
+  const toggleMinimized = useCallback(() => {
+    if (minimized) {
+      const panelHeight = getPanelHeight()
+      const contentHeight = getContentHeight()
+      const isScroll = getIsScroll(panelHeight, contentHeight)
+      // pass expanded height as argument
+      onBeforeMaximize(
+        isScroll
+          ? droppableHeight - requiredFooterHeight // i.e. content maxHeight
+          : contentHeight + panelHeight, // full content width since no scroll
       )
     }
-  }, [droppableHeight, markupHeights, requiredFooterHeight])
+    setMinimized((prev) => !prev)
+  }, [
+    droppableHeight,
+    getContentHeight,
+    getIsScroll,
+    getPanelHeight,
+    minimized,
+    onBeforeMaximize,
+    requiredFooterHeight,
+  ])
 
+  // markup styles
   const draggableStyle = useMemo(
     () => ({
       left: `${padding || 0}px`,
@@ -70,51 +136,68 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
     const className = `${styles.panel} changa-one-regular`
     const style = !minimized
       ? {
-          boxShadow: 'rgba(0, 0, 0, 0.3) 0px 0px 0px',
-          transform: 'rotate(0)',
+          boxShadow: 'rgba(0, 0, 0, 0.3) 0px 2px 10px',
+          borderBottomLeftRadius: '0px',
+          borderBottomRightRadius: '0px',
         }
       : undefined
     return { className, style }
   }, [minimized, styles])
 
-  const { style: contentStyle, className: contentClassName } = useMemo(() => {
-    const className = `${styles.content} raleway no-scroll`
-    const style = markupHeights && {
+  const notificationStyle = useMemo(
+    () =>
+      showNotification
+        ? undefined
+        : {
+            overflow: 'hidden',
+            maxHeight: 0,
+            opacity: '0',
+          },
+    [showNotification],
+  )
+  /* 
+  If `showNotification` changes while menu is open, isScroll needs to be recalculated 
+  with content height changes. Content style calculations need to run after the rest 
+  of the markup has been updated so that it can use updated markup heights to 
+  determine whether to apply isScroll=true styles. This is why these styles use an
+  effect and not a memo like the others.
+  */
+
+  useEffect(() => {
+    const panelHeight = getPanelHeight() // doesn't change
+    const contentHeight = getContentHeight() // now reflects heights updated with memos
+    const isScroll = getIsScroll(panelHeight, contentHeight)
+    setIsScroll(isScroll)
+    // now we can apply the proper styles to content.current
+    const maximizedMarginTop = showNotification ? 16 : 8 // subtracted from maxHeight
+    setContentStyles({
+      marginTop: minimized ? 0 : maximizedMarginTop,
       overflowY: !minimized && isScroll ? 'auto' : 'hidden',
       maxHeight: minimized
         ? '0'
-        : `${droppableHeight - requiredFooterHeight - markupHeights.panel}px`,
-    }
-    return { className, style }
-  }, [
-    styles,
-    markupHeights,
-    minimized,
-    isScroll,
-    droppableHeight,
-    requiredFooterHeight,
-  ])
-
-  const closeMenu = useCallback(() => {
-    setShowMenu(false)
-  }, [setShowMenu])
-
-  const toggleMinimized = useCallback(() => {
-    if (minimized) {
+        : `${droppableHeight - requiredFooterHeight - panelHeight - maximizedMarginTop}px`,
+    })
+    /* 
+    In case !isScroll and !minimized and showNotification changed to true, run 
+    onBeforeMaximize so that height increase from notification doesn't take 
+    menu out of bounds
+    */
+    if (!minimized) {
       onBeforeMaximize(
         isScroll
           ? droppableHeight - requiredFooterHeight
-          : markupHeights.content + markupHeights.panel,
+          : contentHeight + panelHeight,
       )
     }
-    setMinimized((prev) => !prev)
   }, [
-    isScroll,
     droppableHeight,
-    requiredFooterHeight,
-    markupHeights,
+    getContentHeight,
+    getIsScroll,
+    getPanelHeight,
     minimized,
     onBeforeMaximize,
+    requiredFooterHeight,
+    showNotification,
   ])
 
   return (
@@ -191,7 +274,35 @@ export const DraggableMenu = forwardRef(function DraggableMenu(
             </div>
           </div>
         </div>
-        <div style={contentStyle} className={contentClassName} ref={content}>
+        <div
+          className={`${styles.content} raleway no-scroll`}
+          style={contentStyles}
+          ref={content}
+        >
+          <div className={styles.notification} style={notificationStyle}>
+            <div className='raleway'>
+              <div className={styles.notificationIcon}>
+                <ReportGmailerrorredIcon fontSize='inherit' />
+              </div>
+              <div className={styles.notificationText}>
+                {notificationContent}
+              </div>
+              <div className={styles.notificationIcon}>
+                <IconButton
+                  onClick={dismissNotification}
+                  aria-label='dismiss notification'
+                  sx={{
+                    color: 'common.white',
+                    fontSize: 14,
+                    padding: 0,
+                  }}
+                >
+                  <CloseIcon fontSize='inherit' />
+                </IconButton>
+              </div>
+            </div>
+          </div>
+
           {children}
           {!minimized && isScroll && (
             <div className={styles.footer}>
