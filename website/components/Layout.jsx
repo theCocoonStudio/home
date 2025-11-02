@@ -64,6 +64,7 @@ function Layout({
           <FooterComponent
             config={config}
             ready={ready}
+            contactOpen={contactOpen}
             atStartOrFinish={atStartOrFinish}
           />
         )}

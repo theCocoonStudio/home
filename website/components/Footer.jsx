@@ -12,8 +12,9 @@ import { useSettings } from 'website/pages/Home/useSettings'
 import { simulateMouseDownDuration } from '../utils/vanilla'
 import { TerminalText } from 'website/components/TerminalText'
 import { useNavigation } from 'website/hooks/useNavigation'
+import { useMenu } from 'website/hooks/useMenu'
 
-export const Footer = ({ config, ready, atStartOrFinish }) => {
+export const Footer = ({ config, ready, atStartOrFinish, contactOpen }) => {
   // control targets to pass to view component
   const activeItemIndex = useRef()
   const [disableReadMoreControl, _setDisableReadMoreControl] = useState(true)
@@ -33,6 +34,7 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
   useTargetItems(controlTargets, 'controls')
 
   // controls data
+  const { showMenu } = useMenu()
   const { focusFactor } = useSettings()
 
   const {
@@ -111,19 +113,21 @@ export const Footer = ({ config, ready, atStartOrFinish }) => {
 
   const handleControlKeyDown = useCallback(
     (e) => {
-      if (e.key === 'ArrowLeft' || e.key === 'Left') {
-        simulateMouseDownDuration(prevButton.current, 100)
-        prev()
-      } else if (e.key === 'ArrowRight' || e.key === 'Right') {
-        simulateMouseDownDuration(nextButton.current, 100)
-        next()
-      } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault()
-        simulateMouseDownDuration(launchButton.current, 200)
-        launch()
+      if (!showMenu && !contactOpen) {
+        if (e.key === 'ArrowLeft' || e.key === 'Left') {
+          simulateMouseDownDuration(prevButton.current, 100)
+          prev()
+        } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+          simulateMouseDownDuration(nextButton.current, 100)
+          next()
+        } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault() // prevent system-level scroll on space
+          simulateMouseDownDuration(launchButton.current, 200)
+          launch()
+        }
       }
     },
-    [launch, next, prev],
+    [contactOpen, launch, next, prev, showMenu],
   )
   useEffect(() => {
     addEventListener('keydown', handleControlKeyDown)
