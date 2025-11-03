@@ -73,7 +73,7 @@ const GlobalProvider = ({ config, ready, setReady }) => {
   const [scrollDistanceFactor, setScrollDistanceFactor] = useState(1)
   const [contactOpen, setContactOpen] = useState(false)
 
-  // scroll callback
+  // scroll handle
   const scroll = useRef()
 
   // state reset callback

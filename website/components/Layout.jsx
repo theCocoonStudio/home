@@ -50,9 +50,7 @@ function Layout({
         <View.Port />
       </ThreeApp>
       <FixedMarkup>
-        {Component && (
-          <Component ready={ready} setReady={setReady} config={config} />
-        )}
+        {Component && <Component ready={ready} config={config} />}
         <Nav
           config={config}
           atStartOrFinish={atStartOrFinish}
