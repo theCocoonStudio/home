@@ -46,19 +46,15 @@ export const ScrollControls = forwardRef(function _ScrollControls(
 
   // scroll length
   const [scrollLength, setScrollLength] = useState()
-  useLayoutEffect(
-    () => {
-      if (markupState.scrollContainer && markupState.fixedContainer) {
-        setScrollLength(
-          useScrollMarkupHeight
-            ? markupState.scrollContainer?.clientHeight -
-                markupState.fixedContainer?.clientHeight
-            : pages * distance * size.height,
-        )
-      }
-    },
-    [distance, markupState, pages, size, useScrollMarkupHeight], // must keep size to work on resizes/navigation
-  )
+  useLayoutEffect(() => {
+    if (markupState.scrollContainer) {
+      setScrollLength(
+        useScrollMarkupHeight
+          ? markupState.scrollContainer.clientHeight - size.height
+          : pages * distance * size.height,
+      )
+    }
+  }, [distance, markupState, pages, size, useScrollMarkupHeight])
 
   // abort callback
   const abort = useRef(false)
@@ -124,24 +120,23 @@ export const ScrollControls = forwardRef(function _ScrollControls(
           }
         }}
       >
-        <div className={styles.fixed}>
-          <div className={styles.canvasContainer}>{children}</div>
-          <div ref={fixedMarkupContainer} className={styles.fixedMarkup}></div>
-        </div>
+        <div className={styles.fixed}>{children}</div>
         <div
           ref={fillElement}
           className={styles.fill}
           style={{ height: `${scrollLength}px` }}
         />
         <div
-          ref={scrollMarkupContainer}
           className={styles.markup}
           style={{
-            height: useScrollMarkupHeight
-              ? 'auto'
-              : `calc(${scrollLength}px + 100%)`,
+            height: `calc(${scrollLength}px + 100%)`,
           }}
-        />
+        >
+          <div ref={fixedMarkupContainer} className={styles.fixedMarkup} />
+          <div className={styles.scrollMarkup}>
+            <div ref={scrollMarkupContainer} />
+          </div>
+        </div>
       </div>
     </ScrollContext.Provider>
   )

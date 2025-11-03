@@ -50,30 +50,6 @@ function Layout({
         <View.Port />
       </ThreeApp>
       <FixedMarkup>
-        {Component && <Component ready={ready} config={config} />}
-        <Nav
-          config={config}
-          atStartOrFinish={atStartOrFinish}
-          setContactOpen={setContactOpen}
-          contactOpen={contactOpen}
-          ready={ready}
-        />
-        {FooterComponent && (
-          <FooterComponent
-            config={config}
-            ready={ready}
-            contactOpen={contactOpen}
-            atStartOrFinish={atStartOrFinish}
-          />
-        )}
-
-        <Loader
-          config={config}
-          ready={ready}
-          atStartOrFinish={atStartOrFinish}
-          scrollDownTarget={scrollDownTarget}
-          scrollUpTarget={scrollUpTarget}
-        />
         <View
           className={styles.view}
           index={renderPriority}
@@ -97,6 +73,23 @@ function Layout({
             />
           </ContextBridge>
         </View>
+
+        {Component && <Component ready={ready} config={config} />}
+        <Nav
+          config={config}
+          atStartOrFinish={atStartOrFinish}
+          setContactOpen={setContactOpen}
+          contactOpen={contactOpen}
+          ready={ready}
+        />
+        {FooterComponent && (
+          <FooterComponent
+            config={config}
+            ready={ready}
+            contactOpen={contactOpen}
+            atStartOrFinish={atStartOrFinish}
+          />
+        )}
         {MenuComponent && (
           <Menu
             config={config}
@@ -106,11 +99,17 @@ function Layout({
             ready={ready}
           />
         )}
-
         <ContactDialog
           contactOpen={contactOpen}
           setContactOpen={setContactOpen}
           atStartOrFinish={atStartOrFinish}
+        />
+        <Loader
+          config={config}
+          ready={ready}
+          atStartOrFinish={atStartOrFinish}
+          scrollDownTarget={scrollDownTarget}
+          scrollUpTarget={scrollUpTarget}
         />
       </FixedMarkup>
       {ScrollComponent && (
