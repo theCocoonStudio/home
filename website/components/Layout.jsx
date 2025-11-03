@@ -49,31 +49,31 @@ function Layout({
       <ThreeApp eventSource={scrollElement} eventPrefix={'client'}>
         <View.Port />
       </ThreeApp>
-      <FixedMarkup>
-        <View
-          className={styles.view}
-          index={renderPriority}
-          /* frames={1} */
-        >
-          <ContextBridge>
-            {ViewComponent && (
-              <ViewComponent
-                ready={ready}
-                setReady={setReady}
-                config={config}
-                atStartOrFinish={atStartOrFinish}
-              />
-            )}
-
-            <CanvasLoader
+      <View
+        className={styles.view}
+        index={renderPriority}
+        /* frames={1} */
+      >
+        <ContextBridge>
+          {ViewComponent && (
+            <ViewComponent
               ready={ready}
               setReady={setReady}
+              config={config}
               atStartOrFinish={atStartOrFinish}
-              setAtStartOrFinish={setAtStartOrFinish}
             />
-          </ContextBridge>
-        </View>
+          )}
 
+          <CanvasLoader
+            ready={ready}
+            setReady={setReady}
+            atStartOrFinish={atStartOrFinish}
+            setAtStartOrFinish={setAtStartOrFinish}
+          />
+        </ContextBridge>
+      </View>
+
+      <FixedMarkup>
         {Component && <Component ready={ready} config={config} />}
         <Nav
           config={config}

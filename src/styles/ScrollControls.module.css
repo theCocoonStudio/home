@@ -37,6 +37,7 @@
 }
 
 .markup {
+  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -46,7 +47,6 @@
 }
 
 .scrollMarkup {
-  pointer-events: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -57,7 +57,6 @@
 }
 
 .fixedMarkup {
-  pointer-events: none;
   position: sticky;
   top: 0;
   left: 0;

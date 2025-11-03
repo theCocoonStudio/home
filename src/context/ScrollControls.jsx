@@ -132,10 +132,10 @@ export const ScrollControls = forwardRef(function _ScrollControls(
             height: `calc(${scrollLength}px + 100%)`,
           }}
         >
-          <div ref={fixedMarkupContainer} className={styles.fixedMarkup} />
           <div className={styles.scrollMarkup}>
             <div ref={scrollMarkupContainer} />
           </div>
+          <div ref={fixedMarkupContainer} className={styles.fixedMarkup} />
         </div>
       </div>
     </ScrollContext.Provider>
