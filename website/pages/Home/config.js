@@ -67,13 +67,16 @@ export const config = {
     Component: HomeSettings,
   },
   loader: {
+    autoPause: false,
     centerLayout: true,
     scrollDownTarget: (0.5 * 1) / items.length,
     scrollUpTarget: 1 - (0.5 * 1) / items.length,
-    startTitle: 'Izzy Erlich',
-    endTitle: 'Izzy Erlich',
-    startDescription: 'software and stuff.',
-    endDescription: 'La fin.',
+    titles: {
+      startTitle: 'Izzy Erlich',
+      endTitle: 'Izzy Erlich',
+      startDescription: 'software and stuff.',
+      endDescription: 'La fin.',
+    },
     showName: false,
     clickNavigation: false,
   },
@@ -84,7 +87,8 @@ export const config = {
     markupIds: {
       scrollContainerId: 'home-scroll-container',
       itemDescription: 'home-item-description',
-      loaderVideo: 'home-loader-video',
+      loaderVideo: 'global-loader-video',
+      loaderProgress: 'global-loader-progress',
     },
     content: {
       items,

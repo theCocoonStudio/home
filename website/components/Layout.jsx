@@ -74,7 +74,13 @@ function Layout({
       </View>
 
       <FixedMarkup>
-        {Component && <Component ready={ready} config={config} />}
+        {Component && (
+          <Component
+            ready={ready}
+            config={config}
+            atStartOrFinish={atStartOrFinish}
+          />
+        )}
         <Nav
           config={config}
           atStartOrFinish={atStartOrFinish}

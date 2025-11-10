@@ -1,6 +1,6 @@
 import styles from 'website/styles/Loader.module.css'
 import Video from 'website/assets/colors3.mp4'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '../hooks/useTheme'
 import { useProgress } from '@react-three/drei'
@@ -13,16 +13,14 @@ export const Loader = ({
   atStartOrFinish,
   config: {
     data: {
-      markupIds: { loaderVideo },
+      markupIds: { loaderVideo, loaderProgress },
     },
     loader: {
       centerLayout,
-      startTitle,
-      endTitle,
-      startDescription,
-      endDescription,
+      titles,
       showName = true,
       clickNavigation = true,
+      autoPause = true,
     },
   },
   scrollDownTarget,
@@ -46,6 +44,8 @@ export const Loader = ({
   })
   const { scrollCopy, titleCopy, subtitleCopy } = useMemo(() => {
     if (atStartOrFinish.either) {
+      const { startTitle, endTitle, startDescription, endDescription } =
+        titles || {}
       if (atStartOrFinish.start) {
         prevCopy.current.scrollCopy = 'scroll down'
         prevCopy.current.subtitleCopy = startDescription
@@ -57,7 +57,7 @@ export const Loader = ({
       }
     }
     return prevCopy.current
-  }, [atStartOrFinish, endDescription, endTitle, startDescription, startTitle])
+  }, [atStartOrFinish, titles])
 
   // classes
   const prevStyling = useRef({
@@ -86,6 +86,16 @@ export const Loader = ({
     }
   }, [atStartOrFinish, scrollDownTarget, scrollTo, scrollUpTarget])
 
+  // play/pause video as needed
+  useLayoutEffect(() => {
+    if (atStartOrFinish.either) {
+      video.current.play()
+    } else {
+      if (autoPause) {
+        video.current.pause()
+      }
+    }
+  }, [atStartOrFinish, autoPause])
   return (
     <div
       className={'loader-global'}
@@ -112,18 +122,19 @@ export const Loader = ({
             clickNavigation={clickNavigation}
             pointerEvents={atStartOrFinish.either}
           />
-          <div
-            className={`${centerLayout ? styles.contentInnerCenter : styles.contentInner}`}
-            style={{ opacity: atStartOrFinish.either ? 1 : 0 }}
-          >
-            <h1
-              className={`changa-one-regular${!centerLayout ? '-italic' : ''}`}
+          {titles && (
+            <div
+              className={`${centerLayout ? styles.contentInnerCenter : styles.contentInner}`}
             >
-              {titleCopy}
-            </h1>
-            <h3 className='raleway'>{subtitleCopy}</h3>
-          </div>
-          <div className={`${styles.progress}`}>
+              <h1
+                className={`changa-one-regular${!centerLayout ? '-italic' : ''}`}
+              >
+                {titleCopy}
+              </h1>
+              <h3 className='raleway'>{subtitleCopy}</h3>
+            </div>
+          )}
+          <div className={`${styles.progress}`} id={loaderProgress}>
             <div
               className={!ready || !atStartOrFinish.either ? '' : styles.float}
             >
