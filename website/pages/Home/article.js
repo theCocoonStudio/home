@@ -1,15 +1,18 @@
 import { lazy } from 'react'
 import { useArticleData } from 'website/hooks/useArticleData'
 import { ArticleSettings } from '../../components/ArticleSettings'
-import { ArticleMarkup } from 'website/pages/Home/ArticleMarkup'
+import { ArticleScrollMarkup } from 'website/pages/Home/ArticleScrollMarkup'
+import { ArticleFixedMarkup } from './ArticleFixedMarkup'
+import { items } from './config'
 
 const Article = lazy(() => import('../../components/Article.view'))
 
 export const articleConfig = {
+  ...items[0],
   context: { usePageProviderHook: useArticleData },
   main: {
-    Component: null,
-    ScrollComponent: ArticleMarkup,
+    Component: ArticleFixedMarkup,
+    ScrollComponent: ArticleScrollMarkup,
     ViewComponent: Article,
     renderPriority: 1,
   },
@@ -24,14 +27,14 @@ export const articleConfig = {
   loader: {
     scrollDownTarget: 0.5,
     scrollUpTarget: 0.5,
-    startTitle: 'This is my title and it is the best. Made longer for testing.',
-    startDescription:
-      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
-    endTitle: 'This is my title and it is the best. Made longer for testing.',
-    endDescription:
-      'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages.',
+    titles: false,
   },
-  data: { markupIds: { loaderVideo: 'home-loader-video' } },
+  data: {
+    markupIds: {
+      loaderVideo: 'global-loader-video',
+      loaderProgress: 'global-loader-progress',
+    },
+  },
   scroll: {
     scrollControlsProps: {
       useScrollMarkupHeight: true,
