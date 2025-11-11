@@ -1,6 +1,6 @@
 .container {
   font-size: 12px;
-  line-height: 14px;
+  line-height: 1em;
   vertical-align: middle;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: 0.24em solid var(--theme-colors-white); /* The typwriter cursor */
