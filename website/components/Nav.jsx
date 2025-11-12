@@ -182,7 +182,7 @@ export const Nav = ({
                   border: '1px solid',
                   borderColor: 'common.black',
                   fontSize: '1rem',
-                  transform: 'translate(50%, -50%)',
+
                   lineHeight: '100%',
                   verticalAlign: 'middle',
                   minWidth: width > 600 ? 16 : 14,
