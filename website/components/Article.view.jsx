@@ -1,9 +1,10 @@
 import { PerspectiveCamera } from '@react-three/drei'
 import { useParams } from 'react-router'
+import { useTheme } from 'website/hooks/useTheme'
 
 const Article = () => {
   const { '*': splat } = useParams()
-
+  const { colors } = useTheme()
   return (
     <>
       {splat === 'test' ? (
@@ -11,7 +12,7 @@ const Article = () => {
       ) : (
         <PerspectiveCamera makeDefault userData={{ splat: 'article' }} />
       )}
-      <color attach='background' args={['red']} />
+      <color attach='background' args={[colors.black]} />
     </>
   )
 }
