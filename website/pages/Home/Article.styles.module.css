@@ -4,6 +4,8 @@
   pointer-events: none;
 
   h1 {
+    opacity: 0;
+    color: var(--theme-colors-white);
     text-align: center;
     font-size: 8rem;
     transform: translateY(80vh);
@@ -19,88 +21,4 @@
   left: 0;
   right: 0;
   bottom: 0;
-}
-
-.titleContainer {
-  position: absolute;
-  top: calc(
-    var(--theme-lengths-navHeight) + var(--theme-lengths-topBottomPadding)
-  );
-  left: 0;
-  right: 0;
-  padding: calc(2 * var(--theme-lengths-topBottomPadding)) 0;
-  @media (max-height: 600px) {
-    padding: calc(1 * var(--theme-lengths-topBottomPadding)) 0;
-  }
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  > div {
-    max-width: var(--theme-lengths-maxWidth);
-    padding: 0 var(--theme-lengths-sidePadding);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    row-gap: calc(2 * var(--theme-lengths-topBottomPadding));
-    @media (max-height: 1000px) {
-      row-gap: calc(1.5 * var(--theme-lengths-topBottomPadding));
-    }
-    @media (max-height: 600px) {
-      row-gap: calc(1 * var(--theme-lengths-topBottomPadding));
-    }
-  }
-}
-
-.titleText {
-  pointer-events: auto;
-  text-align: center;
-  font-size: 5rem;
-  line-height: 1.15em;
-  color: var(--theme-colors-white);
-  letter-spacing: 0.04em;
-  flex-grow: 0;
-  max-width: 768px;
-  @media (max-height: 800px) {
-    font-size: 4.2rem;
-  }
-  @media (max-height: 600px) {
-    font-size: 3.2rem;
-  }
-  @media (max-height: 400px) {
-    font-size: 2.4rem;
-  }
-  @media (max-width: 600px) {
-    font-size: 4.2rem;
-    @media (max-height: 800px) {
-      font-size: 3.2rem;
-    }
-    @media (max-height: 400px) {
-      font-size: 2.4rem;
-    }
-  }
-  @media (max-width: 400px) {
-    font-size: 3.2rem;
-    @media (max-height: 800px) {
-      font-size: 2.4rem;
-    }
-  }
-}
-
-.titleImage {
-  box-shadow: rgba(0, 0, 0, 0.36) 0px 0px 20px 1px;
-  flex-grow: 1;
-  height: 100%;
-  aspect-ratio: 1/1;
-  max-height: 200px;
-  @media (max-height: 1000px) {
-    max-height: 150px;
-  }
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 50%;
 }

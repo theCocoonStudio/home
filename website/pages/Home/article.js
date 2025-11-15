@@ -51,5 +51,36 @@ export const articleConfig = {
   footer: {
     FooterComponent: undefined,
   },
-  theme: { requiredFooterHeight: 30 },
+  theme: {
+    requiredFooterHeight: 30,
+    loaderTitleFontSizeInitial: ({ width, height }) => {
+      let value
+      if (width <= 400) {
+        value = 3.2
+        if (height <= 800) {
+          value = 2.4
+        }
+      } else if (width <= 600) {
+        value = 4.2
+        if (height <= 400) {
+          value = 2.4
+        } else if (height <= 800) {
+          value = 3.2
+        }
+      } else {
+        value = 5
+        if (height <= 400) {
+          value = 2.4
+        } else if (height <= 600) {
+          value = 3.2
+        } else if (height <= 800) {
+          value = 4.2
+        }
+      }
+      return `${value}rem`
+    },
+    loaderTitleFontSizeFinal: ({ width, height }) => {
+      return `3.2rem`
+    },
+  },
 }
