@@ -14,7 +14,6 @@ import {
 import {
   Color,
   Euler,
-  MathUtils,
   Matrix4,
   Quaternion,
   Spherical,
@@ -169,7 +168,7 @@ export class ScrollDamper {
       const toScale = Array.isArray(toScaleArray)
         ? toScaleArray[index]
         : toScaleArray
-      const thresholdOffset = MathUtils.inverseLerp(
+      const thresholdOffset = inverseLerp(
         this.#offsetThresholds[targetIndex - 1],
         this.#offsetThresholds[targetIndex],
         rangeOffset,
@@ -840,5 +839,62 @@ export class Scrub {
 
     // return instance
     return this
+  }
+}
+
+export class OffsetStagger {
+  #count
+  #startArray
+  #endArray
+
+  #setParams = ({ count, start, end }) => {
+    if (typeof count !== 'undefined') {
+      this.#count = count
+    }
+    const getStart = start || this.#defaultStart
+    const getEnd = end || this.#defaultEnd
+
+    const startArray = []
+    const endArray = []
+    for (let i = 0; i < this.#count; i++) {
+      startArray.push(getStart(i))
+      endArray.push(getEnd(i))
+    }
+    this.#startArray = startArray
+    this.#endArray = endArray
+  }
+
+  #defaultStart = (index) => {
+    return (1 / this.#count) * index
+  }
+  #defaultEnd = (index) => {
+    return (1 / this.#count) * (index + 1)
+  }
+
+  updateParams(...args) {
+    this.#setParams(...args)
+  }
+
+  get count() {
+    return this.#count
+  }
+
+  get startArray() {
+    return [...this.#startArray]
+  }
+
+  get endArray() {
+    return [...this.#endArray]
+  }
+
+  offset(index, baseOffset) {
+    return inverseLerp(
+      this.#startArray[index],
+      this.#endArray[index],
+      clamp(baseOffset, this.#startArray[index], this.#endArray[index]),
+    )
+  }
+  constructor(...args) {
+    this.#setParams(...args)
   }
 }
