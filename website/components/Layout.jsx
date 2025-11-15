@@ -13,6 +13,10 @@ import { MenuContext } from 'website/context/MenuContext'
 import { PageContext } from '../context/PageContext'
 import { useContextBridge } from '@react-three/drei'
 import { useScrollControls, FixedMarkup, ScrollMarkup } from 'src'
+import tunnel from 'tunnel-rat'
+
+// three app tunnel
+const threeTunnel = tunnel()
 
 function Layout({
   config,
@@ -63,7 +67,7 @@ function Layout({
               atStartOrFinish={atStartOrFinish}
             />
           )}
-
+          <threeTunnel.Out />
           <CanvasLoader
             ready={ready}
             setReady={setReady}
@@ -79,6 +83,7 @@ function Layout({
             ready={ready}
             config={config}
             atStartOrFinish={atStartOrFinish}
+            threeTunnel={threeTunnel}
           />
         )}
         <Nav
@@ -120,7 +125,12 @@ function Layout({
       </FixedMarkup>
       {ScrollComponent && (
         <ScrollMarkup>
-          <ScrollComponent ready={ready} setReady={setReady} config={config} />
+          <ScrollComponent
+            ready={ready}
+            setReady={setReady}
+            config={config}
+            threeTunnel={threeTunnel}
+          />
         </ScrollMarkup>
       )}
     </>
