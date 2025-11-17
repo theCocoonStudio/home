@@ -9,14 +9,18 @@ import { Models } from '../../components/Models.canvas'
 import { useTheme } from '../../hooks/useTheme'
 import { HomeItems } from '../../components/HomeItems.canvas'
 import { useCommonSizeData } from '../../hooks/useCommonSizeData.canvas'
+import { globalStaticData } from 'website/pages'
 
 const Home = ({ config, ready, atStartOrFinish }) => {
+  const {
+    markupIds: { loaderVideo },
+  } = globalStaticData
   const {
     effects: { renderPriority, Component: Effects },
 
     data: {
       content: { items: itemsConfig },
-      markupIds: { itemDescription, scrollContainerId, loaderVideo },
+      markupIds: { itemDescription, scrollContainerId },
     },
   } = config
 

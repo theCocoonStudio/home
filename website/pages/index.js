@@ -6,5 +6,11 @@ const config = {
   article: { ...articleConfig },
   test: { ...articleConfig },
 }
-
 export default config
+
+export const globalStaticData = {
+  markupIds: {
+    loaderVideo: 'global-loader-video',
+    loaderProgress: 'global-loader-progress',
+  },
+}

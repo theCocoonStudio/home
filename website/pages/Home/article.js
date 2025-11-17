@@ -30,10 +30,7 @@ export const articleConfig = {
     titles: false,
   },
   data: {
-    markupIds: {
-      loaderVideo: 'global-loader-video',
-      loaderProgress: 'global-loader-progress',
-    },
+    markupIds: {},
   },
   scroll: {
     scrollControlsProps: {

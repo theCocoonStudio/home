@@ -7,14 +7,12 @@ import { useProgress } from '@react-three/drei'
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown'
 import { useScrollControls } from 'src'
 import { Logo } from './Logo'
+import { globalStaticData } from 'website/pages'
 
 export const Loader = ({
   ready,
   atStartOrFinish,
   config: {
-    data: {
-      markupIds: { loaderVideo, loaderProgress },
-    },
     loader: {
       centerLayout,
       titles,
@@ -26,6 +24,9 @@ export const Loader = ({
   scrollDownTarget,
   scrollUpTarget,
 }) => {
+  const {
+    markupIds: { loaderVideo, loaderProgress },
+  } = globalStaticData
   const {
     lengths: { loaderSize },
   } = useTheme()

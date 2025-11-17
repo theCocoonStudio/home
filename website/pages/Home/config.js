@@ -87,8 +87,6 @@ export const config = {
     markupIds: {
       scrollContainerId: 'home-scroll-container',
       itemDescription: 'home-item-description',
-      loaderVideo: 'global-loader-video',
-      loaderProgress: 'global-loader-progress',
     },
     content: {
       items,

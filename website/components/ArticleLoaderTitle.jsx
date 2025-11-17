@@ -6,17 +6,12 @@ import { useScrollControls } from 'src'
 import { useTheme } from 'website/hooks/useTheme'
 import { Fragment } from 'react'
 import { OffsetStagger } from '../utils/damping'
+import { globalStaticData } from 'website/pages'
 
-export const ArticleLoaderTitle = ({
-  config: {
-    title,
-    url,
-    data: {
-      markupIds: { loaderProgress },
-    },
-  },
-  threeTunnel,
-}) => {
+export const ArticleLoaderTitle = ({ config: { title, url }, threeTunnel }) => {
+  const {
+    markupIds: { loaderProgress },
+  } = globalStaticData
   // refs
   const titleText = useRef()
   const titleImage = useRef()
