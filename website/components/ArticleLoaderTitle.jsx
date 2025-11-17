@@ -131,8 +131,8 @@ const Animation = ({
       start: (index) => {
         return index / textTarget.current.children.length
       },
-      end: (index) => {
-        return 1
+      end: (index, start) => {
+        return start + 1 / textTarget.current.children.length
       },
     }),
   )

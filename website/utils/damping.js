@@ -857,8 +857,9 @@ export class OffsetStagger {
     const startArray = []
     const endArray = []
     for (let i = 0; i < this.#count; i++) {
-      startArray.push(getStart(i))
-      endArray.push(getEnd(i))
+      const start = getStart(i)
+      startArray.push(start)
+      endArray.push(getEnd(i, start))
     }
     this.#startArray = startArray
     this.#endArray = endArray
