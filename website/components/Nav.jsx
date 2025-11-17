@@ -16,6 +16,7 @@ import { Link } from 'react-router'
 import { useNavigation } from 'website/hooks/useNavigation'
 import { Badge } from '@mui/material'
 import { useResizeEvent } from 'src'
+import { globalStaticData } from 'website/pages'
 
 export const Nav = ({
   config,
@@ -24,6 +25,9 @@ export const Nav = ({
   contactOpen,
   ready,
 }) => {
+  const {
+    markupIds: { logoContainer },
+  } = globalStaticData
   const {
     nav: { logoRenderPriority, LogoComponent },
     loader: { clickNavigation = true },
@@ -72,6 +76,7 @@ export const Nav = ({
     <div className={`${styles.nav}`}>
       <div className={`${styles.inner}`}>
         <div
+          id={logoContainer}
           className={`${styles.logoContainer}`}
           style={{ pointerEvents: atStartOrFinish.either ? 'none' : 'auto' }}
         >

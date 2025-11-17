@@ -12,5 +12,6 @@ export const globalStaticData = {
   markupIds: {
     loaderVideo: 'global-loader-video',
     loaderProgress: 'global-loader-progress',
+    logoContainer: 'global-logo-container',
   },
 }
